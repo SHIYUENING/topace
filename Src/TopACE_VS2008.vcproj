@@ -408,11 +408,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\TOP_ACE.rc"
+			RelativePath=".\TOP_ACE.ico"
 			>
 		</File>
 		<File
-			RelativePath=".\TopACE-blue.ico"
+			RelativePath=".\TOP_ACE.rc"
 			>
 		</File>
 		<File
