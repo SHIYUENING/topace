@@ -16,3 +16,4 @@ cd..
 cd Src
 del *.ncb /F /Q
 del *.cache /F /Q
+del *.APS /F /Q
