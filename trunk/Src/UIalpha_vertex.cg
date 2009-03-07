@@ -1,0 +1,32 @@
+//Vertex Shader
+struct vertex
+{
+float4 position : POSITION;
+float4 color0 : COLOR0;
+float2 texcoord0 : TEXCOORD0;
+};
+
+struct fragment
+{
+float4 position : POSITION;
+float4 color0 : TEXCOORD1;
+float2 texcoord0 : TEXCOORD0;
+};
+
+// This binding semantic requires CG_PROFILE_ARBVP1 or higher.
+uniform float4x4 modelViewProj : state.matrix.mvp;
+//uniform float4x4 ShadowMapmvmatrix;
+//uniform float4x4 ShadowMapprojmatrix;
+fragment main( vertex IN )
+{
+fragment OUT;
+//float4x4 modelViewProj2=mul(ShadowMapprojmatrix,ShadowMapmvmatrix);
+float4 colortmp=mul( modelViewProj, IN.position );
+OUT.position = colortmp;
+
+//OUT.color0 = normalize(colortmp);
+OUT.color0 = colortmp;
+OUT.texcoord0 = IN.texcoord0;
+
+return OUT;
+}
