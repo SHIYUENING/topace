@@ -1,7 +1,6 @@
 //Prints.h
 #pragma once
 #include "Textures.h"
-
 GLuint	base;//字符显示相关编号
 GLuint	smokelist;
 float tmplockRenge=10000.0f;//临时导弹锁定范围
