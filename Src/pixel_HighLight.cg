@@ -1,0 +1,52 @@
+void main(
+		  float4 position	:	TEXCOORD0,
+		  float3 normal		:	TEXCOORD1,
+		  float4 objectPos2	:	TEXCOORD2,
+		  float2 texcoord3	:	TEXCOORD3,
+
+		  out float4 color	:	COLOR,
+
+		  uniform sampler2D	testTexture,
+		uniform float3 globalAmbient,
+		uniform float3 paraLightColor,
+		uniform float3 paraLightDirection,
+		uniform float3 eyePosition,
+		uniform float3 Ke,
+		uniform float3 Ka,
+		uniform float3 Kd,
+		uniform float3 Ks,
+		uniform float shininess)
+{
+	float3 P = position.xyz;
+	float3 N = normalize(normal);
+
+	// Compute the emissive term
+	//float3 emissive = Ke;
+
+	//Compute the ambient term
+	//float3 ambient = Ka * globalAmbient;
+
+	//Compute the diffuse term
+	float3 L = -normalize(paraLightDirection);
+	float diffuseLight = max(dot(N, L), 0);
+	//float3 diffuse =  paraLightColor * diffuseLight;
+
+	// Compute the specular term
+	float3 V = normalize(eyePosition - P);
+	float3 H = normalize(L + V);
+	float specularLight = pow(max(dot(N, H), 0), shininess);
+
+	if(diffuseLight<=0) specularLight=0;
+	float3 specular = paraLightColor * specularLight;
+
+	float3 tmp;
+	float4 colorposZ=tex2D( testTexture, texcoord3 );
+	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*4.5);
+	
+	color.x=0;
+	color.y=0;
+	color.z=0;
+	if(objectPos2.z<posz) color.xyz=specular;
+	color.w = 1;
+
+}

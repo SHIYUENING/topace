@@ -1,0 +1,144 @@
+BODY {
+	BACKGROUND: white; MARGIN-LEFT: 20px; COLOR: black; MARGIN-RIGHT: 20px
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-ALIGN: center; TEXT-DECORATION: none
+}
+H2 {
+	FONT-WEIGHT: bold; COLOR: white; FONT-FAMILY: Geneva, Arial, Helvetica, sans-serif; BACKGROUND-COLOR: black; TEXT-DECORATION: none
+}
+H3 {
+	TEXT-DECORATION: underline
+}
+CAPTION {
+	FONT-WEIGHT: bold
+}
+DIV.qindex {
+	BORDER-RIGHT: #eeeeff 4px solid; BORDER-TOP: #eeeeff 4px solid; MARGIN-BOTTOM: 2px; BORDER-LEFT: #eeeeff 4px solid; WIDTH: 100%; BORDER-BOTTOM: #eeeeff 4px solid; BACKGROUND-COLOR: #eeeeff; TEXT-ALIGN: center
+}
+A.qindex {
+	FONT-WEIGHT: bold; COLOR: #0000ee; TEXT-DECORATION: none
+}
+A.qindex:visited {
+	FONT-WEIGHT: bold; COLOR: #0000ee; TEXT-DECORATION: none
+}
+A.qindex:hover {
+	BACKGROUND-COLOR: #ddddff; TEXT-DECORATION: none
+}
+A.qindexHL {
+	FONT-WEIGHT: bold; COLOR: #ffffff; BACKGROUND-COLOR: #6666cc; TEXT-DECORATION: none
+}
+A.qindexHL:hover {
+	COLOR: #ffffff; BACKGROUND-COLOR: #6666cc; TEXT-DECORATION: none
+}
+A.qindexHL:visited {
+	COLOR: #ffffff; BACKGROUND-COLOR: #6666cc; TEXT-DECORATION: none
+}
+A.el {
+	FONT-WEIGHT: bold; TEXT-DECORATION: none
+}
+A.elRef {
+	FONT-WEIGHT: bold
+}
+A.code {
+	FONT-WEIGHT: normal; COLOR: #4444ee; TEXT-DECORATION: none
+}
+A.codeRef {
+	FONT-WEIGHT: normal; COLOR: #4444ee
+}
+A:hover {
+	BACKGROUND-COLOR: #f2f2ff; TEXT-DECORATION: none
+}
+DL.el {
+	MARGIN-LEFT: -1cm
+}
+DIV.fragment {
+	BORDER-RIGHT: #cccccc 1px solid; BORDER-TOP: #cccccc 1px solid; PADDING-LEFT: 4px; MARGIN: 4px; BORDER-LEFT: #cccccc 1px solid; WIDTH: 98%; BORDER-BOTTOM: #cccccc 1px solid; BACKGROUND-COLOR: #f5f5f5
+}
+DIV.ah {
+	MARGIN-TOP: 3px; FONT-WEIGHT: bold; MARGIN-BOTTOM: 3px; COLOR: #ffffff; BACKGROUND-COLOR: black
+}
+TD.md {
+	FONT-WEIGHT: bold; BACKGROUND-COLOR: #f2f2ff
+}
+TD.mdname1 {
+	FONT-WEIGHT: bold; COLOR: #602020; BACKGROUND-COLOR: #f2f2ff
+}
+TD.mdname {
+	FONT-WEIGHT: bold; WIDTH: 600px; COLOR: #602020; BACKGROUND-COLOR: #f2f2ff
+}
+DIV.groupHeader {
+	MARGIN-TOP: 12px; FONT-WEIGHT: bold; MARGIN-BOTTOM: 6px; MARGIN-LEFT: 16px
+}
+DIV.groupText {
+	FONT-SIZE: smaller; MARGIN-LEFT: 16px; FONT-STYLE: italic
+}
+TD.indexkey {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; PADDING-BOTTOM: 2px; MARGIN: 2px 0px; PADDING-TOP: 2px; BACKGROUND-COLOR: #eeeeff
+}
+TD.indexvalue {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 2px; MARGIN: 2px 0px; PADDING-TOP: 2px; FONT-STYLE: italic; BACKGROUND-COLOR: #eeeeff
+}
+TR.memlist {
+	BACKGROUND-COLOR: #f0f0f0
+}
+P.formulaDsp {
+	TEXT-ALIGN: center
+}
+IMG.formulaDsp {
+	
+}
+IMG.formulaInl {
+	VERTICAL-ALIGN: middle
+}
+SPAN.keyword {
+	COLOR: #008000
+}
+SPAN.keywordtype {
+	COLOR: #604020
+}
+SPAN.keywordflow {
+	COLOR: #e08000
+}
+SPAN.comment {
+	COLOR: #800000
+}
+SPAN.preprocessor {
+	COLOR: #806020
+}
+SPAN.stringliteral {
+	COLOR: #002080
+}
+SPAN.charliteral {
+	COLOR: #008080
+}
+.mdTable {
+	BORDER-RIGHT: #868686 1px solid; BORDER-TOP: #868686 1px solid; BORDER-LEFT: #868686 1px solid; BORDER-BOTTOM: #868686 1px solid; BACKGROUND-COLOR: #f2f2ff
+}
+.mdRow {
+	PADDING-RIGHT: 20px; PADDING-LEFT: 20px; PADDING-BOTTOM: 8px; PADDING-TOP: 8px
+}
+.mdescLeft {
+	BORDER-RIGHT: #e0e0e0 1px; BORDER-TOP: #e0e0e0 1px; PADDING-LEFT: 8px; FONT-SIZE: smaller; MARGIN: 0px; BORDER-LEFT: #e0e0e0 1px; BORDER-BOTTOM: #e0e0e0 1px; FONT-FAMILY: Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #fafafa
+}
+.mdescRight {
+	BORDER-RIGHT: #e0e0e0 1px; PADDING-RIGHT: 8px; BORDER-TOP: #e0e0e0 1px; PADDING-LEFT: 4px; FONT-SIZE: smaller; PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: #e0e0e0 1px; BORDER-BOTTOM: #e0e0e0 1px; FONT-STYLE: italic; FONT-FAMILY: Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #fafafa
+}
+.memItemLeft {
+	BORDER-RIGHT: #e0e0e0 1px; PADDING-RIGHT: 0px; BORDER-TOP: #e0e0e0 1px solid; PADDING-LEFT: 8px; FONT-SIZE: 12px; PADDING-BOTTOM: 0px; MARGIN: 4px; BORDER-LEFT: #e0e0e0 1px; PADDING-TOP: 1px; BORDER-BOTTOM: #e0e0e0 1px; FONT-FAMILY: Geneva, Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #fafafa
+}
+.memItemRight {
+	BORDER-RIGHT: #e0e0e0 1px; PADDING-RIGHT: 0px; BORDER-TOP: #e0e0e0 1px solid; PADDING-LEFT: 8px; FONT-SIZE: 13px; PADDING-BOTTOM: 0px; MARGIN: 4px; BORDER-LEFT: #e0e0e0 1px; PADDING-TOP: 1px; BORDER-BOTTOM: #e0e0e0 1px; FONT-FAMILY: Geneva, Arial, Helvetica, sans-serif; BACKGROUND-COLOR: #fafafa
+}
+.search {
+	FONT-WEIGHT: bold; COLOR: #0000ee
+}
+FORM.search {
+	MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px
+}
+INPUT.search {
+	FONT-WEIGHT: normal; FONT-SIZE: 75%; COLOR: #000080; BACKGROUND-COLOR: #eeeeff
+}
+TD.tiny {
+	FONT-SIZE: 75%
+}
