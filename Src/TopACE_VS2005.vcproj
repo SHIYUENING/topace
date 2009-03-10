@@ -1,180 +1,450 @@
 <?xml version="1.0" encoding="gb2312"?>
-<VisualStudioProject ProjectType="Visual C++" Version="8.00" Name="TOP_ACE_VS2005" ProjectGUID="{A0D4C2AC-3D4C-49E8-955D-841E8AA2D26B}" RootNamespace="StrangeFighter" Keyword="Win32Proj" TargetFrameworkVersion="131072">
-  <Platforms>
-    <Platform Name="Win32" />
-  </Platforms>
-  <ToolFiles>
-  </ToolFiles>
-  <Configurations>
-    <Configuration Name="Debug|Win32" OutputDirectory="$(SolutionDir)..\Bin\" IntermediateDirectory="$(SolutionDir)..\Bin\" ConfigurationType="1" UseOfMFC="0" CharacterSet="2" BuildLogFile="$(SolutionDir)..\Bin\BuildLog.htm">
-      <Tool Name="VCPreBuildEventTool" />
-      <Tool Name="VCCustomBuildTool" AdditionalDependencies="" />
-      <Tool Name="VCXMLDataGeneratorTool" />
-      <Tool Name="VCWebServiceProxyGeneratorTool" />
-      <Tool Name="VCMIDLTool" />
-      <Tool Name="VCCLCompilerTool" Optimization="0" AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include" PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS" MinimalRebuild="true" BasicRuntimeChecks="3" RuntimeLibrary="1" FloatingPointModel="0" FloatingPointExceptions="false" UsePrecompiledHeader="0" ObjectFile="$(IntDir)\" ProgramDataBaseFileName="$(IntDir)\vc90.pdb" XMLDocumentationFileName="$(IntDir)\Bin\" WarningLevel="3" DebugInformationFormat="4" DisableSpecificWarnings="4996" />
-      <Tool Name="VCManagedResourceCompilerTool" />
-      <Tool Name="VCResourceCompilerTool" />
-      <Tool Name="VCPreLinkEventTool" />
-      <Tool Name="VCLinkerTool" OutputFile="$(OutDir)\TOP_ACE.exe" LinkIncremental="2" AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib" ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest" GenerateDebugInformation="true" ProgramDatabaseFile="$(TargetDir)\$(TargetName).pdb" SubSystem="2" TargetMachine="1" />
-      <Tool Name="VCALinkTool" />
-      <Tool Name="VCManifestTool" OutputManifestFile="$(IntDir)\$(TargetFileName).embed.manifest" ManifestResourceFile="$(IntDir)\$(TargetFileName).embed.manifest.res" DependencyInformationFile="$(IntDir)\mt.dep" />
-      <Tool Name="VCXDCMakeTool" OutputDocumentFile="$(TargetDir)$(TargetName).xml" />
-      <Tool Name="VCBscMakeTool" />
-      <Tool Name="VCFxCopTool" />
-      <Tool Name="VCAppVerifierTool" />
-      <Tool Name="VCPostBuildEventTool" CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#xD;&#xA;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;" />
-    </Configuration>
-    <Configuration Name="Release|Win32" OutputDirectory="$(SolutionDir)..\Bin\" IntermediateDirectory="$(SolutionDir)..\Bin\" ConfigurationType="1" CharacterSet="2" WholeProgramOptimization="1" BuildLogFile="$(SolutionDir)..\Bin\BuildLog.htm">
-      <Tool Name="VCPreBuildEventTool" />
-      <Tool Name="VCCustomBuildTool" />
-      <Tool Name="VCXMLDataGeneratorTool" />
-      <Tool Name="VCWebServiceProxyGeneratorTool" />
-      <Tool Name="VCMIDLTool" />
-      <Tool Name="VCCLCompilerTool" Optimization="2" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include" PreprocessorDefinitions="WIN32;_WINDOWS" RuntimeLibrary="0" EnableFunctionLevelLinking="true" UsePrecompiledHeader="0" WarningLevel="3" DebugInformationFormat="3" DisableSpecificWarnings="4996" />
-      <Tool Name="VCManagedResourceCompilerTool" />
-      <Tool Name="VCResourceCompilerTool" />
-      <Tool Name="VCPreLinkEventTool" />
-      <Tool Name="VCLinkerTool" OutputFile="$(OutDir)\TOP_ACE.exe" LinkIncremental="1" AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib" IgnoreAllDefaultLibraries="false" GenerateDebugInformation="true" SubSystem="2" OptimizeReferences="2" EnableCOMDATFolding="2" TargetMachine="1" />
-      <Tool Name="VCALinkTool" />
-      <Tool Name="VCManifestTool" />
-      <Tool Name="VCXDCMakeTool" />
-      <Tool Name="VCBscMakeTool" />
-      <Tool Name="VCFxCopTool" />
-      <Tool Name="VCAppVerifierTool" />
-      <Tool Name="VCPostBuildEventTool" CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#xD;&#xA;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#xD;&#xA;" />
-    </Configuration>
-  </Configurations>
-  <References>
-  </References>
-  <Files>
-    <Filter Name="CG">
-      <File RelativePath=".\g_BloomL1_pixel.cg">
-      </File>
-      <File RelativePath=".\g_BloomL2_pixel.cg">
-      </File>
-      <File RelativePath=".\g_BloomL3_pixel.cg">
-      </File>
-      <File RelativePath=".\pixel_HighLight.cg">
-      </File>
-      <File RelativePath=".\pixel_NOBloom.cg">
-      </File>
-      <File RelativePath=".\pixel_phongLight.cg">
-      </File>
-      <File RelativePath=".\pixel_t.cg">
-      </File>
-      <File RelativePath=".\RenderShadowMap_pixel.cg">
-      </File>
-      <File RelativePath=".\RenderShadowMap_vertex.cg">
-      </File>
-      <File RelativePath=".\UIalpha_pixel.cg">
-      </File>
-      <File RelativePath=".\UIalpha_vertex.cg">
-      </File>
-      <File RelativePath=".\vertex_basicLight.cg">
-      </File>
-      <File RelativePath=".\vertex_HighLight.cg">
-      </File>
-      <File RelativePath=".\vertex_phongLight.cg">
-      </File>
-      <File RelativePath=".\vertex_t.cg">
-      </File>
-    </Filter>
-    <File RelativePath=".\ACMD.cpp">
-    </File>
-    <File RelativePath=".\ACMD.h">
-    </File>
-    <File RelativePath=".\BomsSet.cpp">
-    </File>
-    <File RelativePath=".\BomsSet.h">
-    </File>
-    <File RelativePath=".\BomTeams.cpp">
-    </File>
-    <File RelativePath=".\BomTeams.h">
-    </File>
-    <File RelativePath=".\Cpuid.cpp">
-    </File>
-    <File RelativePath=".\Cpuid.h">
-    </File>
-    <File RelativePath=".\EffectImpact.cpp">
-    </File>
-    <File RelativePath=".\EffectImpact.h">
-    </File>
-    <File RelativePath=".\initdata.h">
-    </File>
-    <File RelativePath=".\KeyInput.cpp">
-    </File>
-    <File RelativePath=".\KeyInput.h">
-    </File>
-    <File RelativePath=".\lock.h">
-    </File>
-    <File RelativePath=".\Mathematics.cpp">
-    </File>
-    <File RelativePath=".\Mathematics.h">
-    </File>
-    <File RelativePath=".\missle.cpp">
-    </File>
-    <File RelativePath=".\missle.h">
-    </File>
-    <File RelativePath=".\MissleList.cpp">
-    </File>
-    <File RelativePath=".\MissleList.h">
-    </File>
-    <File RelativePath=".\Models.h">
-    </File>
-    <File RelativePath=".\NeHeGL.cpp">
-    </File>
-    <File RelativePath=".\NeHeGL.h">
-    </File>
-    <File RelativePath=".\Physics.h">
-    </File>
-    <File RelativePath=".\Prints.h">
-    </File>
-    <File RelativePath=".\redar.h">
-    </File>
-    <File RelativePath=".\resource.h">
-    </File>
-    <File RelativePath=".\shaders.h">
-    </File>
-    <File RelativePath=".\Smoke.cpp">
-    </File>
-    <File RelativePath=".\Smoke.h">
-    </File>
-    <File RelativePath=".\sound.h">
-    </File>
-    <File RelativePath=".\structs.h">
-    </File>
-    <File RelativePath=".\testNum.h">
-    </File>
-    <File RelativePath=".\Texture.h">
-    </File>
-    <File RelativePath=".\Textures.h">
-    </File>
-    <File RelativePath=".\Tga.h">
-    </File>
-    <File RelativePath=".\TGALoader.cpp">
-    </File>
-    <File RelativePath=".\TOP_ACE.cpp">
-    </File>
-    <File RelativePath=".\TOP_ACE.rc">
-    </File>
-    <File RelativePath=".\TopACE-blue.ico">
-    </File>
-    <File RelativePath=".\Transform.cpp">
-    </File>
-    <File RelativePath=".\Transform.h">
-    </File>
-    <File RelativePath=".\UI.h">
-    </File>
-    <File RelativePath=".\unitdata.cpp">
-    </File>
-    <File RelativePath=".\unitdata.h">
-    </File>
-    <File RelativePath=".\VBMD.cpp">
-    </File>
-    <File RelativePath=".\VBMD.h">
-    </File>
-  </Files>
-  <Globals>
-  </Globals>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="TOP_ACE_VS2005"
+	ProjectGUID="{A0D4C2AC-3D4C-49E8-955D-841E8AA2D26B}"
+	RootNamespace="StrangeFighter"
+	Keyword="Win32Proj"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)..\Bin\"
+			IntermediateDirectory="$(SolutionDir)..\Bin\"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			CharacterSet="2"
+			BuildLogFile="$(SolutionDir)..\Bin\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				AdditionalDependencies=""
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				FloatingPointModel="0"
+				FloatingPointExceptions="false"
+				UsePrecompiledHeader="0"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="$(IntDir)\vc90.pdb"
+				XMLDocumentationFileName="$(IntDir)\Bin\"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\TOP_ACE.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib"
+				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(TargetDir)\$(TargetName).pdb"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+				OutputManifestFile="$(IntDir)\$(TargetFileName).embed.manifest"
+				ManifestResourceFile="$(IntDir)\$(TargetFileName).embed.manifest.res"
+				DependencyInformationFile="$(IntDir)\mt.dep"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+				OutputDocumentFile="$(TargetDir)$(TargetName).xml"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)..\Bin\"
+			IntermediateDirectory="$(SolutionDir)..\Bin\"
+			ConfigurationType="1"
+			CharacterSet="2"
+			WholeProgramOptimization="1"
+			BuildLogFile="$(SolutionDir)..\Bin\BuildLog.htm"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include"
+				PreprocessorDefinitions="WIN32;_WINDOWS"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4996"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\TOP_ACE.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib"
+				IgnoreAllDefaultLibraries="false"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="CG"
+			>
+			<File
+				RelativePath=".\g_BloomL1_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\g_BloomL2_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\g_BloomL3_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\pixel_HighLight.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\pixel_NOBloom.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\pixel_phongLight.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\pixel_t.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderShadowMap_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderShadowMap_vertex.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\UIalpha_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\UIalpha_vertex.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\vertex_basicLight.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\vertex_HighLight.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\vertex_phongLight.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\vertex_t.cg"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\ACMD.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ACMD.h"
+			>
+		</File>
+		<File
+			RelativePath=".\BomsSet.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\BomsSet.h"
+			>
+		</File>
+		<File
+			RelativePath=".\BomTeams.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\BomTeams.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Cpuid.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Cpuid.h"
+			>
+		</File>
+		<File
+			RelativePath=".\EffectImpact.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\EffectImpact.h"
+			>
+		</File>
+		<File
+			RelativePath=".\initdata.h"
+			>
+		</File>
+		<File
+			RelativePath=".\KeyInput.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\KeyInput.h"
+			>
+		</File>
+		<File
+			RelativePath=".\lock.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Mathematics.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Mathematics.h"
+			>
+		</File>
+		<File
+			RelativePath=".\missle.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\missle.h"
+			>
+		</File>
+		<File
+			RelativePath=".\MissleList.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\MissleList.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Models.h"
+			>
+		</File>
+		<File
+			RelativePath=".\NeHeGL.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\NeHeGL.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Physics.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Prints.h"
+			>
+		</File>
+		<File
+			RelativePath=".\redar.h"
+			>
+		</File>
+		<File
+			RelativePath=".\resource.h"
+			>
+		</File>
+		<File
+			RelativePath=".\shaders.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Smoke.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Smoke.h"
+			>
+		</File>
+		<File
+			RelativePath=".\sound.h"
+			>
+		</File>
+		<File
+			RelativePath=".\structs.h"
+			>
+		</File>
+		<File
+			RelativePath=".\testNum.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Texture.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Textures.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Tga.h"
+			>
+		</File>
+		<File
+			RelativePath=".\TGALoader.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\TOP_ACE.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\TOP_ACE.rc"
+			>
+		</File>
+		<File
+			RelativePath=".\Transform.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Transform.h"
+			>
+		</File>
+		<File
+			RelativePath=".\UI.h"
+			>
+		</File>
+		<File
+			RelativePath=".\unitdata.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\unitdata.h"
+			>
+		</File>
+		<File
+			RelativePath=".\VBMD.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\VBMD.h"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
 </VisualStudioProject>

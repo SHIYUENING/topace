@@ -208,7 +208,6 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 
 BOOL DestroyWindowGL (GL_Window* window)								// Destroy The OpenGL Window & Release Resources
 {
-	//joyReleaseCapture(JOYSTICKID1);
 	if (window->hWnd != 0)												// Does The Window Have A Handle?
 	{	
 		if (window->hDC != 0)											// Does The Window Have A Device Context?
@@ -308,14 +307,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessage (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
-/*
-		case MM_JOY1BUTTONDOWN :
-		//DoJoyKeys(0,LOWORD(lParam)/2048);
-			//if (wParam & JOY_BUTTON1){
-		DoJoyKeys(0,1000);
-			//}
-		break;
-		*/
+
 	}
 
 	return DefWindowProc (hWnd, uMsg, wParam, lParam);					// Pass Unhandled Messages To DefWindowProc
@@ -416,28 +408,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			}
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
-	/*				int Jresult;
-					
-	Jresult=joySetCapture(window.hWnd,JOYSTICKID1, 10, FALSE);
 
-	if(Jresult==JOYERR_NOCANDO){
-
-
-	MessageBox(HWND_DESKTOP,"不能捕获游戏杆", NULL, MB_OK | MB_ICONEXCLAMATION);
-
-
-
-	}
-	if(Jresult==JOYERR_UNPLUGGED){
-
-
-
-	MessageBox(HWND_DESKTOP,"游戏杆未与系统连接", NULL, MB_OK | MB_ICONEXCLAMATION);
-
-
-
-	}
-*/
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
