@@ -162,25 +162,25 @@ void Delay(__int64 Us)
 
 void InitFogAndLight(void)
 {
-	glClearColorR=(float)GetPrivateProfileInt("Fog","glClearColorR",184,".\\set.ini")/255;
-	glClearColorG=(float)GetPrivateProfileInt("Fog","glClearColorG",187,".\\set.ini")/255;
-	glClearColorB=(float)GetPrivateProfileInt("Fog","glClearColorB",210,".\\set.ini")/255;
-	glClearColorA=(float)GetPrivateProfileInt("Fog","glClearColorA",255,".\\set.ini")/255;
-	fogColorR=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255;
-	fogColorG=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255;
-	fogColorB=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255;
-	fogColorA=(float)GetPrivateProfileInt("Fog","fogColorA",255,".\\set.ini")/255;
-	fogDENSITY=(float)GetPrivateProfileInt("Fog","fogDENSITY",90,".\\set.ini")/255;
+	glClearColorR=(float)GetPrivateProfileInt("Fog","glClearColorR",184,".\\set.ini")/255.0f;
+	glClearColorG=(float)GetPrivateProfileInt("Fog","glClearColorG",187,".\\set.ini")/255.0f;
+	glClearColorB=(float)GetPrivateProfileInt("Fog","glClearColorB",210,".\\set.ini")/255.0f;
+	glClearColorA=(float)GetPrivateProfileInt("Fog","glClearColorA",255,".\\set.ini")/255.0f;
+	fogColorR=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
+	fogColorG=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
+	fogColorB=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255.0f;
+	fogColorA=(float)GetPrivateProfileInt("Fog","fogColorA",255,".\\set.ini")/255.0f;
+	fogDENSITY=(float)GetPrivateProfileInt("Fog","fogDENSITY",90,".\\set.ini")/255.0f;
 	Fog_Near=(float)GetPrivateProfileInt("Fog","Fog_Near",60000,".\\set.ini");
 	Fog_Far=(float)GetPrivateProfileInt("Fog","Fog_Far",100000,".\\set.ini");
-	LightAmbientR=(float)GetPrivateProfileInt("Light","LightAmbientR",150,".\\set.ini")/255;
-	LightAmbientG=(float)GetPrivateProfileInt("Light","LightAmbientG",150,".\\set.ini")/255;
-	LightAmbientB=(float)GetPrivateProfileInt("Light","LightAmbientB",150,".\\set.ini")/255;
-	LightAmbientA=(float)GetPrivateProfileInt("Light","LightAmbientA",255,".\\set.ini")/255;
-	LightDiffuseR=(float)GetPrivateProfileInt("Light","LightDiffuseR",106,".\\set.ini")/255;
-	LightDiffuseG=(float)GetPrivateProfileInt("Light","LightDiffuseG",106,".\\set.ini")/255;
-	LightDiffuseB=(float)GetPrivateProfileInt("Light","LightDiffuseB",106,".\\set.ini")/255;
-	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255;
+	LightAmbientR=(float)GetPrivateProfileInt("Light","LightAmbientR",150,".\\set.ini")/255.0f;
+	LightAmbientG=(float)GetPrivateProfileInt("Light","LightAmbientG",150,".\\set.ini")/255.0f;
+	LightAmbientB=(float)GetPrivateProfileInt("Light","LightAmbientB",150,".\\set.ini")/255.0f;
+	LightAmbientA=(float)GetPrivateProfileInt("Light","LightAmbientA",255,".\\set.ini")/255.0f;
+	LightDiffuseR=(float)GetPrivateProfileInt("Light","LightDiffuseR",106,".\\set.ini")/255.0f;
+	LightDiffuseG=(float)GetPrivateProfileInt("Light","LightDiffuseG",106,".\\set.ini")/255.0f;
+	LightDiffuseB=(float)GetPrivateProfileInt("Light","LightDiffuseB",106,".\\set.ini")/255.0f;
+	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255.0f;
 
 	glCullFace(GL_FRONT);
 	glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);						// Black Background
