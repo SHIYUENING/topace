@@ -809,6 +809,8 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		moveSpeed=moveSpeed+Acceleration;
 		if(moveSpeed>MAXSpeed)
 			moveSpeed=MAXSpeed;
+		else
+			InertiaY=InertiaY+1.0f;
 		DrawEffectImpact=true;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedDown] == TRUE)||KeyInput.m_IskeySpeedDown)					
@@ -816,6 +818,8 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		moveSpeed=moveSpeed-Acceleration;
 		if(moveSpeed<MINSpeed)
 			moveSpeed=MINSpeed;
+		else
+			InertiaY=InertiaY-1.0f;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardL] == TRUE)||KeyInput.m_IskeyL)
 	{
@@ -1415,8 +1419,12 @@ void Drawlocksign(void)
 
 	for(int i=0;i<8;i++)
 	{
+		if(lockUnits[i].locksTGT>-1)
 		if(UDfighers[lockUnits[i].locksTGT].UDlockselect||lockUnits[i].lockON)
-		{	glPushMatrix();
+		{	
+			//::MessageBox(HWND_DESKTOP,"123","123",MB_OK | MB_ICONEXCLAMATION);
+			//testNum=lockUnits[i].locksTGT;
+			glPushMatrix();
 			LockSign[i].UDMplane=UDfighers[0].UDMplane;
 			LockSign[i].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
 			LockSign[i].UDPstate.MaxSpeed=0.0;
@@ -1721,7 +1729,7 @@ void DrawPlayer(void)
 				glPushMatrix();										// Store The Modelview Matrix
 					glLoadIdentity();	
 					
-					glTranslatef(0, -Ppos1, -Ppos2);
+					glTranslatef(0, -Ppos1, -Ppos2-InertiaY);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 1.0, 0.0);
 					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
@@ -1773,7 +1781,7 @@ void DrawSky(float ne=0.0)
 	//glBindTexture(GL_TEXTURE_2D,SkyTexture);
 	//glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_COLOR   );
 	glPushMatrix();
-	Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(ne));
+	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(ne));
 	double fogbackY;
 	//double skybackY;
 	if(MFighter.RefPos()(1)>50000.0)
@@ -1783,22 +1791,88 @@ void DrawSky(float ne=0.0)
 		fogbackY=50000.0;
 		//skybackY=(10000.0-MFighter.RefPos()(1))/10.0;
 	}
-	Msky.Translate( Vector3d( MFighter.RefPos()(0) ,fogbackY-45000.0, MFighter.RefPos()(2) ) );
+	Msky.Translate( Vector3d( MFighter.RefPos()(0) ,MFighter.RefPos()(1), MFighter.RefPos()(2) ) );
 	glMultMatrixd(Msky.Matrix4());	
 
-
+//glBindTexture(GL_TEXTURE_2D, PlayerSign);
 	
 	
-	glScaled(940.0,940.0,1000.0);
+	glScaled(5000.0,5000.0,5000.0);
 	glDisable(GL_DEPTH_TEST);
-	m_VBMD->ShowVBMD(3);
+	//m_VBMD->ShowVBMD(3);
+	glBindTexture(GL_TEXTURE_2D, SkyTex[2].texID);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+   
+	glBegin(GL_QUADS);
+		// 前面
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的左上
+	glEnd();
+		// 后面
+		glBindTexture(GL_TEXTURE_2D, SkyTex[0].texID);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+   
+	glBegin(GL_QUADS);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的右下
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的右上
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的左下
+	glEnd();
+		// 顶面
+		glBindTexture(GL_TEXTURE_2D, SkyTex[5].texID);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+   
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的左下
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// 纹理和四边形的右下
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// 纹理和四边形的右上
+	glEnd();
+		// 底面
+		glBindTexture(GL_TEXTURE_2D, SkyTex[1].texID);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+   
+	glBegin(GL_QUADS);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的右上
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的左上
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
+	glEnd();
+		// 右面
+		glBindTexture(GL_TEXTURE_2D, SkyTex[4].texID);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+   
+	glBegin(GL_QUADS);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的右下
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// 纹理和四边形的右上
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// 纹理和四边形的左上
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
+	glEnd();
+		// 左面
+		glBindTexture(GL_TEXTURE_2D, SkyTex[3].texID);
+		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+   
+	glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的左下
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
+	glEnd();
 	glEnable(GL_DEPTH_TEST);
-			
+			glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 	
 	//Msky.Translate(MFighter.RefPos()*(-1.0));
-	Msky.Translate( Vector3d( -MFighter.RefPos()(0) ,  45000.0-fogbackY , -MFighter.RefPos()(2) ) );
-	Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-ne));
+	Msky.Translate( Vector3d( -MFighter.RefPos()(0) ,  -MFighter.RefPos()(1) , -MFighter.RefPos()(2) ) );
+	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-ne));
 	glEnable(GL_BLEND);
 }
 void showloading(void)

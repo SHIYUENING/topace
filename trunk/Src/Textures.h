@@ -14,7 +14,7 @@
 
 int gpuType=0;//0未知 1NV 2ATI
 bool LoadTGA(Texture *, char *);
-Texture textureAlpha[2],textureAlphaFont[1],textureBom[22],textureSmoke[MAXSMOKE],textureLock[1];	//,textureBoms[MAXBOMS]
+Texture textureAlpha[2],textureAlphaFont[1],textureBom[22],textureSmoke[MAXSMOKE],textureLock[1],SkyTex[6];	//,textureBoms[MAXBOMS]
 GLuint	texture[2];	//gui相关纹理编号
 GLuint textureRedar,UItexture4,Maptexture;
 GLuint fbo;					// Our handle to the FBO
@@ -229,6 +229,140 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		}
 
 		free(TextureImage[0]);								// Free The Image Structure
+	}
+	if(LoadTGA(&SkyTex[0],"Data/sky/BK.tga"))
+	{
+		glGenTextures(1,&SkyTex[0].texID);
+		glBindTexture(GL_TEXTURE_2D, SkyTex[0].texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, SkyTex[0].bpp/8, SkyTex[0].width, SkyTex[0].height, 0, SkyTex[0].type, GL_UNSIGNED_BYTE, SkyTex[0].imageData);
+		if(IsSupportFBO)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		if (SkyTex[0].imageData)						// If Texture Image Exists ( CHANGE )
+			{
+				free(SkyTex[0].imageData);					// Free The Texture Image Memory ( CHANGE )
+			}
+		texture[1]=SkyTex[0].texID;
+	
+	}
+	if(LoadTGA(&SkyTex[1],"Data/sky/DN.tga"))
+	{
+		glGenTextures(1,&SkyTex[1].texID);
+		glBindTexture(GL_TEXTURE_2D, SkyTex[1].texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, SkyTex[1].bpp/8, SkyTex[1].width, SkyTex[1].height, 0, SkyTex[1].type, GL_UNSIGNED_BYTE, SkyTex[1].imageData);
+		if(IsSupportFBO)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		if (SkyTex[1].imageData)						// If Texture Image Exists ( CHANGE )
+			{
+				free(SkyTex[1].imageData);					// Free The Texture Image Memory ( CHANGE )
+			}
+		texture[1]=SkyTex[1].texID;
+	
+	}
+	if(LoadTGA(&SkyTex[2],"Data/sky/FR.tga"))
+	{
+		glGenTextures(1,&SkyTex[2].texID);
+		glBindTexture(GL_TEXTURE_2D, SkyTex[2].texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, SkyTex[2].bpp/8, SkyTex[2].width, SkyTex[2].height, 0, SkyTex[2].type, GL_UNSIGNED_BYTE, SkyTex[2].imageData);
+		if(IsSupportFBO)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		if (SkyTex[2].imageData)						// If Texture Image Exists ( CHANGE )
+			{
+				free(SkyTex[2].imageData);					// Free The Texture Image Memory ( CHANGE )
+			}
+		texture[2]=SkyTex[2].texID;
+	
+	}
+
+	if(LoadTGA(&SkyTex[3],"Data/sky/LF.tga"))
+	{
+		glGenTextures(1,&SkyTex[3].texID);
+		glBindTexture(GL_TEXTURE_2D, SkyTex[3].texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, SkyTex[3].bpp/8, SkyTex[3].width, SkyTex[3].height, 0, SkyTex[3].type, GL_UNSIGNED_BYTE, SkyTex[3].imageData);
+		if(IsSupportFBO)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		if (SkyTex[3].imageData)						// If Texture Image Exists ( CHANGE )
+			{
+				free(SkyTex[3].imageData);					// Free The Texture Image Memory ( CHANGE )
+			}
+		texture[3]=SkyTex[3].texID;
+	
+	}
+
+	if(LoadTGA(&SkyTex[4],"Data/sky/RT.tga"))
+	{
+		glGenTextures(1,&SkyTex[4].texID);
+		glBindTexture(GL_TEXTURE_2D, SkyTex[4].texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, SkyTex[4].bpp/8, SkyTex[4].width, SkyTex[4].height, 0, SkyTex[4].type, GL_UNSIGNED_BYTE, SkyTex[4].imageData);
+		if(IsSupportFBO)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		if (SkyTex[4].imageData)						// If Texture Image Exists ( CHANGE )
+			{
+				free(SkyTex[4].imageData);					// Free The Texture Image Memory ( CHANGE )
+			}
+		texture[4]=SkyTex[4].texID;
+	
+	}
+	if(LoadTGA(&SkyTex[5],"Data/sky/UP.tga"))
+	{
+		glGenTextures(1,&SkyTex[5].texID);
+		glBindTexture(GL_TEXTURE_2D, SkyTex[5].texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, SkyTex[5].bpp/8, SkyTex[5].width, SkyTex[5].height, 0, SkyTex[5].type, GL_UNSIGNED_BYTE, SkyTex[5].imageData);
+		if(IsSupportFBO)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		if (SkyTex[5].imageData)						// If Texture Image Exists ( CHANGE )
+			{
+				free(SkyTex[5].imageData);					// Free The Texture Image Memory ( CHANGE )
+			}
+		texture[5]=SkyTex[5].texID;
+	
 	}
 
 	if(LoadTGA(&textureLock[0],"Data/lock.TGA"))
