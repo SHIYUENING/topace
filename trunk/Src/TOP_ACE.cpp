@@ -474,7 +474,7 @@ void DrawDataLine1 (void)
 	if(ShaderLight)
 		strcat( szTitle, ", ShaderLight" );
 	else
-		strcat( szTitle, ", OglLight(maybe nolight)" );
+		strcat( szTitle, ", glLight(maybe nolight)" );
 	if(IsSupportFBO)
 		strcat( szTitle, ", Shadow" );
 	char tmpDDL1[32]={0};
@@ -543,10 +543,11 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 		
 
 	sprintf(DFDDistance,"%d",(int)(sqrt(DFDL)*0.15f-10.0f));
-	if( ( DFDZ < 1.0f ) && DFDlockselect)		
+	if( DFDZ < 1.0f )		
 	{
 		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  DFDDistance   , 0 ,true);
-		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 ,true);
+		if(DFDlockselect)
+			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 ,true);
 	}
 	glColor3f(1.0f,1.0f,1.0f);
 
@@ -712,38 +713,6 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
 
 	Inertia();
-	/*//SDL_Event event;
-	if(IsUseJoyStick)
-	{
-		SDL_JoystickUpdate();
-		float Pad1Z,Pad1X;
-		Pad1Z=(float)SDL_JoystickGetAxis(joystick,0)/32768.0f;
-		if((Pad1Z>0.1f)||(Pad1Z<-0.1f))
-			Pad1Z=Pad1Z*3.0f;
-		else
-			Pad1Z=0.0f;
-		Pad1X=(float)SDL_JoystickGetAxis(joystick,1)/32768.0f;
-		if((Pad1X>0.1f)||(Pad1X<-0.1f))
-			Pad1X=Pad1X*3.0f;
-		else
-			Pad1X=0.0f;
-
-		
-		InertiaX=InertiaX-Pad1X;
-		if(InertiaX>25.0f)
-			InertiaX=25.0f;
-		if(InertiaX<-25.0f)
-			InertiaX=-25.0f;
-		InertiaZ=InertiaZ+Pad1Z;
-		if(InertiaZ>25.0f)
-			InertiaZ=25.0f;
-		if(InertiaZ<-25.0f)
-			InertiaZ=-25.0f;
-		//testNum2=InertiaZ;
-
-	}*/
-	//turnX=turnY=turnZ=0;
-//	if(KeyInput.m_IsUseJoyStick)
 
 	KeyInput.UpData();
 	g_flYRot +=0.1f;		// Consistantly Rotate The Scenery
@@ -1457,7 +1426,7 @@ void Drawlocksign(void)
 void UnitMove(void)
 {
    
-
+/*
     for(int i=1;i<4;i++)
 	{
        // UDfighers[i].UDPstate.Acceleration = UDfighers[i].UDMplane.Matrix() * Vector3d(0, 0, 1) * 0.2;
@@ -1469,7 +1438,7 @@ void UnitMove(void)
 		//UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*3));
 		}
 	}
-
+*/
     
 	for(int i=4;i<maxUnits;i++)
 	{
@@ -1486,7 +1455,7 @@ void UnitMove(void)
 			}
 			else
 			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(i%4+2));
-			//UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*(6)));
+			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*(6)));
 		}
 		
 		
@@ -1687,7 +1656,7 @@ void UnitMove(void)
 
 void DrawPlayer(void)
 {
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glPushMatrix();
     glLoadIdentity();
 
@@ -1731,7 +1700,7 @@ void DrawPlayer(void)
 					
 					glTranslatef(0, -Ppos1, -Ppos2-InertiaY);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-					//glRotatef(180.0, 0.0, 1.0, 0.0);
+					glRotatef(180.0, 0.0, 0.0, 1.0);
 					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 					//glScaled(0.02, 0.02, 0.02);
 					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);

@@ -74,8 +74,8 @@ void Missledata::m_Draw(const Vector3d& m_world,int m_winwidth,int m_winheight,f
 	if(UDlife>0)
 	{
 
-		UDlife=UDlife-1;
-		timer=timer+1;
+		//UDlife=UDlife-1;
+		//timer=timer+1;
 		float tmpX=(float)(m_world(0)-UDMplane.RefPos()(0));
 		float tmpY=(float)(m_world(1)-UDMplane.RefPos()(1));
 		float tmpZ=(float)(m_world(2)-UDMplane.RefPos()(2));
