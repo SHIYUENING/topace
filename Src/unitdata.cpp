@@ -1,13 +1,14 @@
 #include "Unitdata.h"
 
 Unitdata::Unitdata(void)
-: UDPstate(UDMplane, 5, CRad(2.1), 0.1, 0.4),UDlife(0)
- 
+: UDPstate(UDMplane, 5, CRad(2.1), 0.1, 0.4)
+,UDlife(-1)
+,UDlockselect(false)
+,UDlockde(false)
+,waringde(false)
 {
-	UDlockselect=false;
-	UDlockde=false;
-	waringde=false;
-	UDlife=-1;
+
+
 	UDposflag=0;
 	smokeTime=0;
 	for(int i=0;i<MAXweapon;i++)
