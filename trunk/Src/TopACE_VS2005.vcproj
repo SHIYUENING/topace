@@ -293,6 +293,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\DDS.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\DDS.h"
+			>
+		</File>
+		<File
 			RelativePath=".\EffectImpact.cpp"
 			>
 		</File>

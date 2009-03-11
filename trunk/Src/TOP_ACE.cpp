@@ -1700,7 +1700,7 @@ void DrawPlayer(void)
 					
 					glTranslatef(0, -Ppos1, -Ppos2-InertiaY);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-					glRotatef(180.0, 0.0, 0.0, 1.0);
+					//glRotatef(180.0, 0.0, 0.0, 1.0);
 					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 					//glScaled(0.02, 0.02, 0.02);
 					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);
