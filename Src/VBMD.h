@@ -6,6 +6,7 @@
 #include <gl/glu.h>														// Header File For The GLu32 Library
 #include <gl/glaux.h>
 #include <iostream>
+#include "DDS.h"
 struct tVBMDHeader
 {
 	unsigned char	MAGIC[4];
