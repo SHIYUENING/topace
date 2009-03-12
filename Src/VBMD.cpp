@@ -115,27 +115,40 @@ bool CLoadVBMD::Init(char *filename, unsigned int MID,GLint UserTexture)
 	// ÔØÈëÌùÍ¼
 	if(UserTexture==0)
 	{
-		char TextureFileName[256] = {0};
-		sprintf(&TextureFileName[0], "%s.bmp", filename);
-
-		AUX_RGBImageRec* pTextureImage;
-		pTextureImage = auxDIBImageLoad( (char*)TextureFileName );	
-
-		glGenTextures( 1, &VBMD[MID].TextureID );							// »ñÈ¡ÌùÍ¼±àºÅ
-		glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );				// °ó¶¨ÌùÍ¼
-		glTexImage2D( GL_TEXTURE_2D, 0, 3, pTextureImage->sizeX, pTextureImage->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, pTextureImage->data );
-		if(VBOSupported&&m_IsSupportFBO)
+		char TextureDDSFileName[256] = {0};
+		sprintf(&TextureDDSFileName[0], "%s.dds", filename);
+		CDDS ddsload;
+		int ddsTexId=ddsload.loadCompressedTexture(TextureDDSFileName);
+		if(ddsTexId>0)
 		{
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+			VBMD[MID].TextureID=ddsTexId;
+		
 		}
 		else
 		{
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-		}
 
-		delete pTextureImage;
+			char TextureFileName[256] = {0};
+			sprintf(&TextureFileName[0], "%s.bmp", filename);
+
+			AUX_RGBImageRec* pTextureImage;
+			pTextureImage = auxDIBImageLoad( (char*)TextureFileName );	
+
+			glGenTextures( 1, &VBMD[MID].TextureID );							// »ñÈ¡ÌùÍ¼±àºÅ
+			glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );				// °ó¶¨ÌùÍ¼
+			glTexImage2D( GL_TEXTURE_2D, 0, 3, pTextureImage->sizeX, pTextureImage->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, pTextureImage->data );
+			if(VBOSupported&&m_IsSupportFBO)
+			{
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+			}
+			else
+			{
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+			}
+
+			delete pTextureImage;
+		}
 	}
 	else
 		VBMD[MID].TextureID=UserTexture;
