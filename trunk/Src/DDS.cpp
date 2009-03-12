@@ -23,9 +23,9 @@ DDS_IMAGE_DATA* CDDS::loadDDSTextureFile( const char *filename )
 
     if( pFile == NULL )
     {
-        char str[255];
-        sprintf( str, "loadDDSTextureFile couldn't find, or failed to load \"%s\"", filename );
-        MessageBox( NULL, str, "ERROR", MB_OK|MB_ICONEXCLAMATION );
+       // char str[255];
+       // sprintf( str, "loadDDSTextureFile couldn't find, or failed to load \"%s\"", filename );
+       // MessageBox( NULL, str, "ERROR", MB_OK|MB_ICONEXCLAMATION );
         return NULL;
     } 
 
