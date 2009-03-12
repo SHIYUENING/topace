@@ -381,6 +381,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\SkyBox.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\SkyBox.h"
+			>
+		</File>
+		<File
 			RelativePath=".\Smoke.cpp"
 			>
 		</File>

@@ -19,7 +19,7 @@
 #include "sound.h"
 #include "texture.h"
 #include "EffectImpact.h"
-
+#include "SkyBox.h"
 
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
@@ -48,7 +48,7 @@ Keys*		g_keys;
 CSmoke		PSmokes;
 
 CKeyInput KeyInput;
-
+CSkyBox SkyBox;
 typedef int (*compfn)(const void*, const void*);
 int needloadfile=0;
 
@@ -357,6 +357,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	//SkyTexture=EmptyTexture(128);
 	initlocks();
 	initUnitdata(0);
+	SkyBox.IsSupportFBO=IsSupportFBO;
+	SkyBox.Init();
+	
 	//glEnable(GL_LINE_SMOOTH);
 	//glHint(GL_LINE_SMOOTH_HINT,GL_LINE_SMOOTH_HINT);
 
@@ -1768,7 +1771,9 @@ void DrawSky(float ne=0.0)
 	
 	glScaled(5000.0,5000.0,5000.0);
 	glDisable(GL_DEPTH_TEST);
+	SkyBox.Draw();
 	//m_VBMD->ShowVBMD(3);
+	/*
 	glBindTexture(GL_TEXTURE_2D, SkyTex[2].texID);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
@@ -1835,8 +1840,9 @@ void DrawSky(float ne=0.0)
 		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
 	glEnd();
+	*/
 	glEnable(GL_DEPTH_TEST);
-			glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 	
 	//Msky.Translate(MFighter.RefPos()*(-1.0));
