@@ -14,7 +14,7 @@
 
 int gpuType=0;//0未知 1NV 2ATI
 bool LoadTGA(Texture *, char *);
-Texture textureAlpha[2],textureAlphaFont[1],textureBom[22],textureSmoke[MAXSMOKE],textureLock[1],SkyTex[6];	//,textureBoms[MAXBOMS]
+Texture textureAlpha[2],textureAlphaFont[1],textureBom[22],textureSmoke[MAXSMOKE],textureLock[1];	//,textureBoms[MAXBOMS]
 GLuint	texture[2];	//gui相关纹理编号
 GLuint textureRedar,UItexture4,Maptexture;
 GLuint fbo;					// Our handle to the FBO
@@ -230,6 +230,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 		free(TextureImage[0]);								// Free The Image Structure
 	}
+	/*
 	if(LoadTGA(&SkyTex[0],"Data/sky/BK.tga"))
 	{
 		glGenTextures(1,&SkyTex[0].texID);
@@ -364,7 +365,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		texture[5]=SkyTex[5].texID;
 	
 	}
-
+*/
 	if(LoadTGA(&textureLock[0],"Data/lock.TGA"))
 	{
 		glGenTextures(1,&textureLock[0].texID);
