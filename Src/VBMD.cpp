@@ -189,9 +189,11 @@ void CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 {
 	if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 	{
+	
 		if(BindSelfTexture)
 		glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );	
-
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
 		glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
 		glEnableClientState( GL_NORMAL_ARRAY );						// 开启法线数组
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );				// 开启纹理坐标数组
