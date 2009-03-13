@@ -183,7 +183,7 @@ void InitFogAndLight(void)
 	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255.0f;
 
 	LightSunPos[0]=(float)GetPrivateProfileInt("Light","LightPOSX",10,".\\set.ini");
-	LightSunPos[1]=-(float)GetPrivateProfileInt("Light","LightPOSY",150000,".\\set.ini");
+	LightSunPos[1]=(float)GetPrivateProfileInt("Light","LightPOSY",150000,".\\set.ini");
 	LightSunPos[2]=(float)GetPrivateProfileInt("Light","LightPOSZ",10,".\\set.ini");
 
 
@@ -1341,20 +1341,20 @@ void DrawUnit(void)
 {
 
 	LightSun.UDMplane=UDfighers[0].UDMplane;
-	LightSun.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -137.5f));
+	
 	LightSun.UDPstate.MaxSpeed=0.0;
 	LightSun.UDPstate.MaxAngleSpeed=50.0;
 	LightSun.UDPstate.VelocityResistance=0.0;
 	LightSun.UDPstate.AngleVelocityResistance=0.1;
-	LightSun.TurnTo(Vector3d(LightSunPos[0],-LightSunPos[1],LightSunPos[2]));
+	LightSun.TurnTo(Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
 	LightSun.UDPstate.NextState();
-	
-	//LightSun.TurnTo(MFighter.RefPos());
-	//LightSun.UDPstate.NextState();
-	glPushMatrix();
-		glMultMatrixd(LightSun.UDMplane.Matrix4());
-		m_VBMD->ShowVBMD(4);
-	glPopMatrix();
+	LightSun.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -137.5f));
+	LightSun.TurnTo(MFighter.RefPos());
+	LightSun.UDPstate.NextState();
+	//glPushMatrix();
+	//	glMultMatrixd(LightSun.UDMplane.Matrix4());
+	//	m_VBMD->ShowVBMD(4);
+	//glPopMatrix();
 
 	glEnable(GL_CULL_FACE);
 	locklists_index=0;
@@ -1944,8 +1944,8 @@ void DrawShadowMap(void)
 							LMView = (MWorld * LightSun.UDMplane).Invert();
 							glLoadMatrixd(MView.Matrix4());
 							glMultMatrixd(LightSun.UDMplane.Matrix4());
-							//glRotatef(180.0f,0.0f,1.0f,0.0f);
-							
+							glRotatef(180.0f,0.0f,0.0f,1.0f);
+		
 							//glTranslatef(0.0f,-10.0f*testNum,-100.0f);
 							//glTranslatef(0.0f,0.0f,-137.5f);
 							//double tmp=paraLightDirection[0]*paraLightDirection[0]+paraLightDirection[1]*paraLightDirection[1]+paraLightDirection[2]*paraLightDirection[2];

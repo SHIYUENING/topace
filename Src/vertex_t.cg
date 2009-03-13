@@ -40,7 +40,8 @@ fragment main(
 	OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
 	OUT.objectPos2 = objectPosShadowMap;
 
-	OUT.position = mul( modelViewProj2, IN.position );
+	
+	OUT.position = mul( modelViewProj, IN.position );
 	OUT.color0 = IN.color0;
 	OUT.texcoord0 = IN.texcoord0;
 	OUT.oNormal = IN.normal;
