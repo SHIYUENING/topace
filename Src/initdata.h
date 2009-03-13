@@ -21,6 +21,7 @@ void initUnitdata(int stage=0 )
 	weapon[0].SPEED=50;
 	weapon[0].type=2;
 
+
 	
 
 	for(int i=0;i<MAXBom;i++)
