@@ -108,6 +108,8 @@ struct Bom
 int Bom_index=0;
 Smoke Smokes[MAXsmoke];
 Unitdata UDfighers[maxUnits];
+Missledata LightSun;
+float LightSunPos[3];
 //Missledata missle[maxMissles];
 Bom Boms[MAXBom];
 int missle_index=0;

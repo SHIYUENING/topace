@@ -512,6 +512,9 @@ bool inifile ()
 		WritePrivateProfileString("Fog","fogDENSITY","90",".\\set.ini");
 		WritePrivateProfileString("Fog","Fog_Far","100000",".\\set.ini");
 		WritePrivateProfileString("Fog","Fog_Near","60000",".\\set.ini");
+		WritePrivateProfileString("Light","LightPOSX","0",".\\set.ini");
+		WritePrivateProfileString("Light","LightPOSY","15000",".\\set.ini");
+		WritePrivateProfileString("Light","LightPOSZ","0",".\\set.ini");
 		WritePrivateProfileString("Light","LightAmbientR","150",".\\set.ini");
 		WritePrivateProfileString("Light","LightAmbientG","150",".\\set.ini");
 		WritePrivateProfileString("Light","LightAmbientB","150",".\\set.ini");

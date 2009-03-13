@@ -182,6 +182,11 @@ void InitFogAndLight(void)
 	LightDiffuseB=(float)GetPrivateProfileInt("Light","LightDiffuseB",106,".\\set.ini")/255.0f;
 	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255.0f;
 
+	LightSunPos[0]=(float)GetPrivateProfileInt("Light","LightPOSX",10,".\\set.ini");
+	LightSunPos[1]=-(float)GetPrivateProfileInt("Light","LightPOSY",150000,".\\set.ini");
+	LightSunPos[2]=(float)GetPrivateProfileInt("Light","LightPOSZ",10,".\\set.ini");
+
+
 	glCullFace(GL_FRONT);
 	glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);						// Black Background
 	glClearDepth (10.0f);										// Depth Buffer Setup
@@ -344,7 +349,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		bloomMAPSize=1024;
 	if(BloomLevel==3)
 		bloomMAPSize=1024;
-				
+	
 	lockX=winwidth/2;
 	lockY=winheight/2;
 
@@ -1334,6 +1339,23 @@ void DrawMissle(void)
 }
 void DrawUnit(void)
 {
+
+	LightSun.UDMplane=UDfighers[0].UDMplane;
+	LightSun.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -137.5f));
+	LightSun.UDPstate.MaxSpeed=0.0;
+	LightSun.UDPstate.MaxAngleSpeed=50.0;
+	LightSun.UDPstate.VelocityResistance=0.0;
+	LightSun.UDPstate.AngleVelocityResistance=0.1;
+	LightSun.TurnTo(Vector3d(LightSunPos[0],-LightSunPos[1],LightSunPos[2]));
+	LightSun.UDPstate.NextState();
+	
+	//LightSun.TurnTo(MFighter.RefPos());
+	//LightSun.UDPstate.NextState();
+	glPushMatrix();
+		glMultMatrixd(LightSun.UDMplane.Matrix4());
+		m_VBMD->ShowVBMD(4);
+	glPopMatrix();
+
 	glEnable(GL_CULL_FACE);
 	locklists_index=0;
 	for(int i=1;i<maxUnits;i++)
@@ -1918,11 +1940,16 @@ void DrawShadowMap(void)
 							glLoadIdentity();									// Reset The Modelview Matrix
 							//glRotatef(-135.0f,0.0f,1.0f,0.0f);
 							//glTranslatef(-100.0f,-10,100.0f);
+							Transform LMView;
+							LMView = (MWorld * LightSun.UDMplane).Invert();
+							glLoadMatrixd(MView.Matrix4());
+							glMultMatrixd(LightSun.UDMplane.Matrix4());
+							//glRotatef(180.0f,0.0f,1.0f,0.0f);
 							
 							//glTranslatef(0.0f,-10.0f*testNum,-100.0f);
-							glTranslatef(0.0f,0.0f,-137.5f);
-							double tmp=paraLightDirection[0]*paraLightDirection[0]+paraLightDirection[1]*paraLightDirection[1]+paraLightDirection[2]*paraLightDirection[2];
-							glRotated(90.0f,-paraLightDirection[1]/tmp,paraLightDirection[0]/tmp,paraLightDirection[2]/tmp);
+							//glTranslatef(0.0f,0.0f,-137.5f);
+							//double tmp=paraLightDirection[0]*paraLightDirection[0]+paraLightDirection[1]*paraLightDirection[1]+paraLightDirection[2]*paraLightDirection[2];
+							//glRotated(90.0f,-paraLightDirection[1]/tmp,paraLightDirection[0]/tmp,paraLightDirection[2]/tmp);
 							//glRotatef(90.0f,1.0f,0.0f,0.0f);
 							//glRotatef(40.0f*2.05f+40.0f,0.0f,1.0f,0.0f);
 							glDisable(GL_BLEND);
@@ -2129,6 +2156,7 @@ void stage0(void)
     MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 1000));
 
 	UDfighers[0].UDMplane=MFighter;
+
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
 	
 //	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
@@ -2177,6 +2205,7 @@ void stage0(void)
 	
 
 	DrawShadowMap();
+
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
 		
