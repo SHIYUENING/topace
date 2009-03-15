@@ -39,8 +39,8 @@ int MissleList::AddMissle(Transform & Fighter,int TGT)
 	}
 	Missles[MissleNum].UDMplane=Fighter;
 	Missles[MissleNum].TGTnum=TGT;
-	Missles[MissleNum].UDlife=600;
-	Missles[MissleNum].UDMplane.TranslateInternal(Vector3d(0.0f, -75.0f, -300.0f));
+	Missles[MissleNum].UDlife=480;
+	Missles[MissleNum].UDMplane.TranslateInternal(Vector3d(0.0f, -75.0f, -290.0f));
 	Missles[MissleNum].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(180.0));
 	
 	return MissleNum;
