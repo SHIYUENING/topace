@@ -1713,7 +1713,7 @@ void DrawPlayer(void)
 				glPushMatrix();										// Store The Modelview Matrix
 					glLoadIdentity();	
 					
-					glTranslatef(0, -Ppos1, -Ppos2-InertiaY);
+					glTranslatef(0, -Ppos1, -Ppos2);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 0.0, 1.0);
 					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
