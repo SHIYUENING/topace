@@ -8,6 +8,8 @@ tVBMD	VBMD[MAX_VBMD];								// VBMD模型数据
 
 // VBMD构造器
 CLoadVBMD::CLoadVBMD()
+:TotalMid(0)
+,ModelId(0)
 {	
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
 		VBOSupported=true;
@@ -36,11 +38,12 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 {
 	if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 	{
+		
 		// 删除顶点缓存
 		if( VBMD[MID].VBOVertices )
 		{
 			unsigned int nBuffers[3] = { VBMD[MID].VBOVertices, VBMD[MID].VBONormals, VBMD[MID].VBOTexCoords };
-			//glDeleteBuffersARB( 3, nBuffers );						// 释放内存
+			glDeleteBuffersARB( 3, nBuffers );						// 释放内存
 		}
 		VBMD[MID].VBOVertices = VBMD[MID].VBONormals = VBMD[MID].VBOTexCoords = 0;
 
@@ -64,19 +67,28 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 
 		VBMD[MID].VertexCount = 0;
 	}
+	VBMD[MID].Islife=false;
+	TotalMid=TotalMid-1;
 }
 
-bool CLoadVBMD::Init(char *filename, unsigned int MID,GLint UserTexture)
+int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 {
-	
+	ModelId=0;
+	while(VBMD[ModelId].Islife)
+	{
+		if(ModelId>MAX_VBMD)
+			return -1;
+		else
+			ModelId=ModelId+1;
+	}
 	if(MID>=MAX_VBMD)
-		return false;	// 超出最大个数
+		return -1;	// 超出最大个数
 
 	CleanUpVBMD(MID);
 
 	if ((m_FilePointer=fopen(filename,"rb"))==NULL)
 	{
-		return false;	// 打开文件失败
+		return -1;	// 打开文件失败
 	}
 
 	// 计算文件大小
@@ -93,13 +105,13 @@ bool CLoadVBMD::Init(char *filename, unsigned int MID,GLint UserTexture)
 	fread(&Header, sizeof(tVBMDHeader), 1, m_FilePointer);
 
 	if(Header.MAGIC[0]!='V' || Header.MAGIC[1]!='B' || Header.MAGIC[2]!='M')
-		return false;	// 文件类型错误
+		return -1;	// 文件类型错误
 	
 	if(filesize!=Header.Size)
-		return false;	// 文件大小错误
+		return -1;	// 文件大小错误
 
 	if(filesize!=16+Header.VertexCount*(4*3*2+4*2))
-		return false;	// 文件大小错误
+		return -1;	// 文件大小错误
 
 	VBMD[MID].VertexCount = Header.VertexCount;
 	VBMD[MID].pTexCoords = new float[VBMD[MID].VertexCount*2];
@@ -113,7 +125,7 @@ bool CLoadVBMD::Init(char *filename, unsigned int MID,GLint UserTexture)
 	fclose(m_FilePointer);
 
 	// 载入贴图
-	if(UserTexture==0)
+	if((UserTexture==0)&&UseTexture)
 	{
 		char TextureDDSFileName[256] = {0};
 		sprintf(&TextureDDSFileName[0], "%s.dds", filename);
@@ -191,9 +203,7 @@ void CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 	{
 	
 		if(BindSelfTexture)
-		glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
+		glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );	 
 		glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
 		glEnableClientState( GL_NORMAL_ARRAY );						// 开启法线数组
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );				// 开启纹理坐标数组

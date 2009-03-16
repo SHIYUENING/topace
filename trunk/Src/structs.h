@@ -78,20 +78,7 @@ struct locks
 };
 locks lockUnits[8];//Ëø¶¨¿ò
 Missledata LockSign[8];
-struct Smoke
-{
-	int smokeNum;
-	int texture;
-	int life;
-	float x;
-	float y;
-	float z;
-	float winx;
-	float winy;
-	float winz;
-	float SmokeSize;
-};
-int Smokes_index=0;
+
 struct Bom
 {
 	int Frame;
@@ -106,13 +93,12 @@ struct Bom
 };
 
 int Bom_index=0;
-Smoke Smokes[MAXsmoke];
+
 Unitdata UDfighers[maxUnits];
 Missledata LightSun;
 float LightSunPos[3];
-//Missledata missle[maxMissles];
 Bom Boms[MAXBom];
-int missle_index=0;
+
 int timer[100];
 MissleList	PMissleList;
 Transform MView(Vector3d(0, 0, -40));//¹Û²ì¾ØÕó
