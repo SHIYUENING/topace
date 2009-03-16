@@ -14,7 +14,12 @@ struct tVBMDHeader
 	unsigned int	Offset;
 	unsigned int	VertexCount;
 };
-
+struct tModelID
+{
+	int Main;
+	int Normal;
+	int Low;
+};
 struct tVBMD
 {
 	bool Islife;
@@ -37,7 +42,7 @@ public:
 	CLoadVBMD();								// 初始化数据成员
 	virtual ~CLoadVBMD();
 	int Init(char *filename,bool UseTexture=true,GLint UserTexture=0);					
-	void ShowVBMD(unsigned int MID,bool BindSelfTexture=true);
+	bool ShowVBMD(unsigned int MID,bool BindSelfTexture=true);
 	void CleanUpVBMD(unsigned int MID);					// 删除模型数据
 	void BuildVBO(unsigned int MID);					// 创建顶点缓存对象
 	bool VBOSupported;

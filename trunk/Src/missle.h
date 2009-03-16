@@ -4,11 +4,9 @@
 #include "Mathematics.h"
 #include "Physics.h"
 #include "VBMD.h"
-#include <gl/gl.h>														// Header File For The OpenGL32 Library
-#include <gl/glu.h>														// Header File For The GLu32 Library
-#include <gl/glaux.h>
 //#define MAXMISSLESMOKE 150
 extern CLoadVBMD *m_VBMD;//VBMD模型对象
+extern tModelID ModelID[100];
 class Missledata
 {
 public:

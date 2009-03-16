@@ -66,14 +66,16 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 		VBMD[MID].pTexCoords = NULL;
 
 		VBMD[MID].VertexCount = 0;
+		TotalMid=TotalMid-1;
 	}
 	VBMD[MID].Islife=false;
-	TotalMid=TotalMid-1;
+	
 }
 
 int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 {
 	ModelId=0;
+
 	while(VBMD[ModelId].Islife)
 	{
 		if(ModelId>MAX_VBMD)
@@ -81,6 +83,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 		else
 			ModelId=ModelId+1;
 	}
+	int	MID=ModelId;
 	if(MID>=MAX_VBMD)
 		return -1;	// 超出最大个数
 
@@ -164,7 +167,10 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 	}
 	else
 		VBMD[MID].TextureID=UserTexture;
-	return true;
+	TotalMid=TotalMid+1;
+	BuildVBO(MID);
+	VBMD[MID].Islife=true;
+	return MID;
 
 }
 
@@ -197,40 +203,46 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 		delete [] VBMD[MID].pTexCoords; VBMD[MID].pTexCoords = NULL;
 	}
 }
-void CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
+bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 {
-	if(VBMD[MID].VertexCount && MID<MAX_VBMD)
+	if(VBMD[MID].Islife)
 	{
-	
-		if(BindSelfTexture)
-		glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );	 
-		glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
-		glEnableClientState( GL_NORMAL_ARRAY );						// 开启法线数组
-		glEnableClientState( GL_TEXTURE_COORD_ARRAY );				// 开启纹理坐标数组
-		// 设置数据指针
-		if( VBMD[MID].VBOVertices && VBOSupported ) 
+		if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 		{
-			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOVertices );
-			glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );		// Set The Vertex Pointer To The Vertex Buffer
-			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBONormals );
-			glNormalPointer( GL_FLOAT, 0, (char *) NULL );		// Set The Vertex Pointer To The Vertex Buffer
-			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTexCoords );
-			glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
-		}
-		else
-		{
-			glVertexPointer( 3, GL_FLOAT, 0, VBMD[MID].pVertices ); // Set The Vertex Pointer To Our Vertex Data
-			glNormalPointer( GL_FLOAT, 0, VBMD[MID].pNormals );
-			glTexCoordPointer( 2, GL_FLOAT, 0, VBMD[MID].pTexCoords ); // Set The Vertex Pointer To Our TexCoord Data
-		}
-		// Render
-		glDrawArrays( GL_TRIANGLES, 0, VBMD[MID].VertexCount );	// Draw All Of The Triangles At Once
+		
+			if(BindSelfTexture)
+			glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );	 
+			glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
+			glEnableClientState( GL_NORMAL_ARRAY );						// 开启法线数组
+			glEnableClientState( GL_TEXTURE_COORD_ARRAY );				// 开启纹理坐标数组
+			// 设置数据指针
+			if( VBMD[MID].VBOVertices && VBOSupported ) 
+			{
+				glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOVertices );
+				glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );		// Set The Vertex Pointer To The Vertex Buffer
+				glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBONormals );
+				glNormalPointer( GL_FLOAT, 0, (char *) NULL );		// Set The Vertex Pointer To The Vertex Buffer
+				glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTexCoords );
+				glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
+			}
+			else
+			{
+				glVertexPointer( 3, GL_FLOAT, 0, VBMD[MID].pVertices ); // Set The Vertex Pointer To Our Vertex Data
+				glNormalPointer( GL_FLOAT, 0, VBMD[MID].pNormals );
+				glTexCoordPointer( 2, GL_FLOAT, 0, VBMD[MID].pTexCoords ); // Set The Vertex Pointer To Our TexCoord Data
+			}
+			// Render
+			glDrawArrays( GL_TRIANGLES, 0, VBMD[MID].VertexCount );	// Draw All Of The Triangles At Once
 
-		// Disable Pointers
-		glDisableClientState( GL_VERTEX_ARRAY );					// Disable Vertex Arrays
-		glDisableClientState( GL_NORMAL_ARRAY );
-		glDisableClientState( GL_TEXTURE_COORD_ARRAY );				// Disable Texture Coord Arrays
+			// Disable Pointers
+			glDisableClientState( GL_VERTEX_ARRAY );					// Disable Vertex Arrays
+			glDisableClientState( GL_NORMAL_ARRAY );
+			glDisableClientState( GL_TEXTURE_COORD_ARRAY );				// Disable Texture Coord Arrays
+		}
+		return true;
 	}
+	else
+		return false;
 }
 
 

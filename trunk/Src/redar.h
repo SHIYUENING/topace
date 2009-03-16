@@ -121,7 +121,7 @@ void DrawRedar(float ne=0.0)
 			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
 			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
 			glScaled(-0.0199*DRY, 0.0199*DRY, 0.0199*DRY);
-			m_VBMD->ShowVBMD(6,false);
+			m_VBMD->ShowVBMD(ModelID_redarUI,false);
 		glEnable(GL_BLEND);
 	glPopMatrix();
 	//glDisable(GL_BLEND);

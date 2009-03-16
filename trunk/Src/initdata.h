@@ -51,14 +51,14 @@ void initUnitdata(int stage=0 )
 		UDfighers[2].UDfighterType=2;
 		//UDfighers[2].UDlife=100;
 		UDfighers[2].UDflag=1;
-		sprintf(UDfighers[2].UDname,"SU47");
+		sprintf(UDfighers[2].UDname,"Neo1");
 		UDfighers[2].UDlockselect=false;
 		UDfighers[2].UDMplane.Translate(Vector3d(1000.0f, 50500.0f, -1000.0f));
 
 		UDfighers[3].UDfighterType=2;
 		//UDfighers[3].UDlife=100;
 		UDfighers[3].UDflag=1;
-		sprintf(UDfighers[3].UDname,"SU47");
+		sprintf(UDfighers[3].UDname,"Neo1");
 		UDfighers[3].UDlockselect=false;
 		UDfighers[3].UDMplane.Translate(Vector3d(300.0f, 50100.0f, -2000.0f));
 		for(int i=4;i<maxUnits;i++)

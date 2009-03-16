@@ -127,7 +127,7 @@ void DrawUI2()
 	glScaled(1.4, 1.4, 1.4);
 	glRotated(30.0,0.0f,1.0f,0.0f);
 	//glRotated(-90,1.0f,0.0f,0.0f);
-		m_VBMD->ShowVBMD(5,false);
+		m_VBMD->ShowVBMD(ModelID_hud,false);
 	glColor3f(1.0f,1.0f,1.0f);
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
@@ -170,7 +170,7 @@ void DrawUI3()
 	glScaled(1.4, 1.4, 1.4);
 	glRotated(-30,0.0f,1.0f,0.0f);
 	//glRotated(-90,1.0f,0.0f,0.0f);
-	m_VBMD->ShowVBMD(5,false);
+	m_VBMD->ShowVBMD(ModelID_hud,false);
 
 
 	glColor3f(1.0f,1.0f,1.0f);

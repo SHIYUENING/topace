@@ -280,12 +280,12 @@ bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight
 					glPushMatrix();
 						if(UDfighterType==1)
 						{//glScaled(0.01, 0.01, 0.01);
-							m_VBMD->ShowVBMD(2);
+							m_VBMD->ShowVBMD(ModelID[UDfighterType].Normal);
 						}
 						if(UDfighterType==2)
 						{
 							glRotatef(180.0f,0.0f,1.0f,0.0f);
-							m_VBMD->ShowVBMD(8);
+							m_VBMD->ShowVBMD(ModelID[UDfighterType].Normal);
 						}
 //							m_nj->ShowACMD(0,7,0,0,0,0,180,0,1.0,1.0,1.0);
 					glPopMatrix();
