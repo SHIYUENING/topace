@@ -187,7 +187,7 @@ void InitFogAndLight(void)
 	LightSunPos[2]=(float)GetPrivateProfileInt("Light","LightPOSZ",10,".\\set.ini");
 
 
-	glCullFace(GL_FRONT);
+	glCullFace(GL_BACK);
 	glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);						// Black Background
 	glClearDepth (10.0f);										// Depth Buffer Setup
 	glDepthFunc (GL_LEQUAL);									// The Type Of Depth Testing (Less Or Equal)
@@ -416,9 +416,9 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	FMOD_Sound_Release(voice5);
 	FMOD_Sound_Release(BGMsound);
 	FMOD_System_Release(sys);
-	delete m_nj;
+	//delete m_nj;
 	delete m_VBMD;
-	delete m_VBMD_UI;
+	//delete m_VBMD;
 	//SDL_JoystickClose(joystick);
 	//SDL_Quit();
 	KeyInput.de();
@@ -1357,6 +1357,8 @@ void DrawUnit(void)
 			{
 				locklists[locklists_index].TGTnum=i;
 				locklists_index=locklists_index+1;
+				if(locklists_index==maxUnits)
+					locklists_index=0;
 			}
 		}
 		/*
@@ -1698,7 +1700,7 @@ void DrawPlayer(void)
 		glTranslatef(0.0, 0.0, -10*testNum);
 		glScaled(0.002, 0.002, 0.002);
 		
-		m_VBMD_UI->ShowVBMD(6,false);
+		m_VBMD->ShowVBMD(6,false);
 	glPopMatrix();
 */
 	if(ShaderLight)
@@ -1870,22 +1872,17 @@ void showloading(void)
 	{
 		PSmokes.Init(1);
 		initsound();
-		m_nj= new CLoadACMD;
-		m_nj->Init("Data/0002",0,1);
-		m_VBMD = new CLoadVBMD;
-		m_VBMD->m_IsSupportFBO=IsSupportFBO;
-		m_VBMD_UI = new CLoadVBMD;
-		m_VBMD_UI->m_IsSupportFBO=IsSupportFBO;
+		//m_nj= new CLoadACMD;
+		//m_nj->Init("Data/0002",0,1);
+
+		//m_VBMD = new CLoadVBMD;
+		//m_VBMD->m_IsSupportFBO=IsSupportFBO;
 		
-		LoadVBMDModels();
-		m_VBMD_UI ->Init("Data/hud", 5);
-		m_VBMD_UI ->Init("Data/redarUI", 6);
-		m_VBMD_UI ->Init("Data/smoke", 7,textureAlpha[0].texID);
-		//m_VBMD_UI ->Init("Data/locksign", 8);
+		LoadVBMDModels(IsSupportFBO);
+		
+		//m_VBMD ->Init("Data/locksign", 8);
 ;
-		m_VBMD ->BuildVBO(5);
-		m_VBMD ->BuildVBO(6);
-		m_VBMD ->BuildVBO(7);
+
 		//m_VBMD ->BuildVBO(8);
 
 		needloadfile=2;

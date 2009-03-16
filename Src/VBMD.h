@@ -17,6 +17,7 @@ struct tVBMDHeader
 
 struct tVBMD
 {
+	bool Islife;
 	// 网格数据
 	unsigned int	TextureID;								// 贴图编号
 	unsigned int	VertexCount;							// 顶点数组顶点数
@@ -35,12 +36,14 @@ class CLoadVBMD		// CLoadVBMD类处理所有的装入代码
 public:
 	CLoadVBMD();								// 初始化数据成员
 	virtual ~CLoadVBMD();
-	bool Init(char *filename, unsigned int MID ,GLint UserTexture=0);					
+	int Init(char *filename,bool UseTexture=true,GLint UserTexture=0);					
 	void ShowVBMD(unsigned int MID,bool BindSelfTexture=true);
 	void CleanUpVBMD(unsigned int MID);					// 删除模型数据
 	void BuildVBO(unsigned int MID);					// 创建顶点缓存对象
 	bool VBOSupported;
 	bool m_IsSupportFBO;
+	int TotalMid;
+	int ModelId;
 
 private:
 	FILE	*m_FilePointer;								// 文件指针

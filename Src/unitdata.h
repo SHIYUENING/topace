@@ -5,11 +5,11 @@
 #include "Mathematics.h"
 #include "Physics.h"
 #include "VBMD.h"
-#include "ACMD.h"
+//#include "ACMD.h"
 
 #define MAXweapon 4
 #define MAXUNITSMOKE 150
-extern CLoadACMD *m_nj;//ACMD模型对象
+//extern CLoadACMD *m_nj;//ACMD模型对象
 extern CLoadVBMD *m_VBMD;//VBMD模型对象
 class Unitdata
 {
@@ -47,6 +47,7 @@ public:
 	int attackedTGTNum;//被攻击的敌人编号
 	int AImode;//行动模式1 被攻击时反击 ；2被攻击时继续之前的行为
 	int AIact;//当前行为1 向指定点移动或在指定点周围盘旋 ；2攻击 ；3闪避
+	int LockListNum;//锁定编号
 
 
 	
