@@ -11,6 +11,7 @@
 #define MAXUNITSMOKE 150
 //extern CLoadACMD *m_nj;//ACMD模型对象
 extern CLoadVBMD *m_VBMD;//VBMD模型对象
+extern tModelID ModelID[100];
 class Unitdata
 {
 public:
@@ -26,7 +27,7 @@ public:
 	float UDwinx;//屏幕坐标x
 	float UDwiny;//屏幕坐标y
 	float UDwinz;//屏幕坐标深度
-	char  UDname[10];//单位名字
+	char  UDname[32];//单位名字
 	int UDfighterType;//机种
 	int UDflag;//0为一般目标，1为重要目标，2为友军，3为第三方势力
 

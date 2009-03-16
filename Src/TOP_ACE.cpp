@@ -1726,7 +1726,7 @@ void DrawPlayer(void)
 					glScaled(1.0, 1.0, 1.0);
 					shaderT();
 					
-					m_VBMD->ShowVBMD(0);
+					m_VBMD->ShowVBMD(PlayerMainModel);
 				
 				
 
@@ -1748,7 +1748,7 @@ void DrawPlayer(void)
 		glTranslatef(0, -Ppos1, -Ppos2);
 		glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 		glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-		m_VBMD->ShowVBMD(0);
+		m_VBMD->ShowVBMD(PlayerMainModel);
 
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHTING);
@@ -1956,7 +1956,7 @@ void DrawShadowMap(void)
 							
 							glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapmvmatrix);
 							glGetFloatv(GL_PROJECTION_MATRIX,ShadowMapprojmatrix);
-							m_VBMD->ShowVBMD(0);
+							m_VBMD->ShowVBMD(PlayerMainModel);
 
 							cgGLDisableProfile( g_CGprofile_pixel );
 							cgGLDisableProfile( g_CGprofile_vertex );					// Select The Projection Matrix
@@ -1984,7 +1984,7 @@ void DrawShadowMap(void)
 				HighLight();
 
 				glEnable(GL_DEPTH_TEST);
-				m_VBMD->ShowVBMD(0,false);
+				m_VBMD->ShowVBMD(PlayerMainModel,false);
 
 				cgGLDisableProfile( g_CGprofile_vertex );
 				cgGLDisableProfile( g_CGprofile_pixel );
@@ -2098,7 +2098,7 @@ void glPrintHighLight()
 	glTranslated(winwidth/2.0,winheight/2.0,0.0);
 	glScaled(winwidth/2.0,winheight/2.0,1.0);
 	BasicLight();
-	m_VBMD->ShowVBMD(7,false);
+	m_VBMD->ShowVBMD(ModelID_smoke,false);
 	cgGLDisableProfile( g_CGprofile_pixel );
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2223,7 +2223,7 @@ void stage0(void)
 			if(Bgent)
 			glEnable(GL_TEXTURE_GEN_T);	
 			glDisable(GL_BLEND);
-			m_VBMD->ShowVBMD(1);
+			m_VBMD->ShowVBMD(ModelID_SHAN);
 			glDisable(GL_TEXTURE_GEN_S);			
 			glDisable(GL_TEXTURE_GEN_T);
 			glDisable(GL_FOG);

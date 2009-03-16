@@ -101,7 +101,7 @@ void Missledata::m_Draw(const Vector3d& m_world,int m_winwidth,int m_winheight,f
 					glPushMatrix();
 					//glScaled(10, 10, 10);
 					glRotatef(180.0, 0.0, 1.0, 0.0);
-					m_VBMD->ShowVBMD(4);
+					m_VBMD->ShowVBMD(ModelID[3].Normal);
 					//m_nj->ShowACMD(0,2,0,0,0,0,180,0,1.0,1.0,1.0);
 					glPopMatrix();
 					glEnable(GL_BLEND);
