@@ -4,6 +4,9 @@
 #include "DDS.h"
 #include "texture.h"
 bool LoadTGA(Texture *, char *);
+extern float testNum;
+extern float testNum2;
+extern float testNum3;
 class CSkyBox
 {
 public:
@@ -15,6 +18,6 @@ public:
 	Texture SkyTex[6];
 	bool IsSupportFBO;
 	void Draw(void);
-	void DrawSun(float x,float y,int winwidth,int winheight);
+	void DrawSun(float x,float y,float z,int winwidth,int winheight);
 };
 #endif
