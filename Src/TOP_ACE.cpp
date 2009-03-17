@@ -182,9 +182,9 @@ void InitFogAndLight(void)
 	LightDiffuseB=(float)GetPrivateProfileInt("Light","LightDiffuseB",106,".\\set.ini")/255.0f;
 	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255.0f;
 
-	LightSunPos[0]=(float)GetPrivateProfileInt("Light","LightPOSX",10,".\\set.ini");
-	LightSunPos[1]=(float)GetPrivateProfileInt("Light","LightPOSY",150000,".\\set.ini");
-	LightSunPos[2]=(float)GetPrivateProfileInt("Light","LightPOSZ",10,".\\set.ini");
+	LightSunPos[0]=10.0f;
+	LightSunPos[1]=150000.0f;
+	LightSunPos[2]=10.0f;
 
 
 	glCullFace(GL_BACK);
@@ -2170,9 +2170,11 @@ void stage0(void)
 
 	sprintf(tmpshow,"%d %d",locklists_index,lockflagnum);
 
-	paraLightDirection[0] = (float)(MView.Matrix()(0, 1) * -1.0f);
-    paraLightDirection[1] = (float)(MView.Matrix()(1, 1) * -1.0f);
-    paraLightDirection[2] = (float)(MView.Matrix()(2, 1) * -1.0f);
+	Vector3d Pos3d;
+		Pos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
+	paraLightDirection[0] = (float)Pos3d(0);
+    paraLightDirection[1] = (float)Pos3d(1);
+    paraLightDirection[2] = (float)Pos3d(2);
 
 
 

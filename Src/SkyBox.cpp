@@ -2,6 +2,7 @@
 
 CSkyBox::CSkyBox(void)
 :IsSupportFBO(false)
+,SunTexID(0)
 {
 }
 
@@ -12,6 +13,7 @@ CSkyBox::~CSkyBox(void)
 bool CSkyBox::Init(void)
 {
 	CDDS loadDDS;
+	SunTexID=loadDDS.loadCompressedTexture("Data/sky/sun.dds");
 	SkyTexID[0]=loadDDS.loadCompressedTexture("Data/sky/BK.dds");
 	SkyTexID[1]=loadDDS.loadCompressedTexture("Data/sky/DN.dds");
 	SkyTexID[2]=loadDDS.loadCompressedTexture("Data/sky/FR.dds");
@@ -249,4 +251,36 @@ void CSkyBox::Draw(void)
 		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
 	glEnd();
+}
+
+void CSkyBox::DrawSun(float x,float y,int winwidth,int winheight)
+{
+	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(-winwidth/2,winwidth/2,-winheight/2,winheight/2,-10,20);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+
+	glEnable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, SunTexID);	
+
+		glBegin(GL_QUADS);							// Use A Quad For Each Character
+			glTexCoord2f(0.0f,0.0f);glVertex2f(x-(float)(winwidth/10),y-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+			glTexCoord2f(0.5f,0.0f);glVertex2f(x+(float)(winwidth/10),y-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+			glTexCoord2f(0.5f,0.5f);glVertex2f(x+(float)(winwidth/10),y+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+			glTexCoord2f(0.0f,0.5f);glVertex2f(x-(float)(winwidth/10),y+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+		glEnd();
+
+	
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);	
 }
