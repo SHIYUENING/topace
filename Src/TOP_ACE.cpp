@@ -107,8 +107,6 @@ bool KeyR=false;//按键“R”是否按下
 bool KeyT=false;
 double oneframetimelimit=1.0/60.0;//每桢最大时间
 int ModelsNO=499;//第一个模型的编号
-float juli[2];//测试单位到玩家的距离
-int maxcanlockUnits=4;//前一桢的总可锁定目标数，用于加速锁定处理
 int gamestage=0;
 CPUID cpu;//查询cpu
 char cpubrand[128]={0};
@@ -620,10 +618,10 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char szshownews[512]={0};
 	char szshowflag1[4]={0};
 	char szshowflag2[4]={0};
-	char test[64]={0};
+	char test[128]={0};
 	
 
-	sprintf(test,"%f %f %f %f %f",testNum,testNum2,testNum3,paraLightDirection[1],paraLightDirection[2]);
+	sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
 
 	sprintf(szshowflag1,"|");
 	sprintf(szshowflag2,"|");
@@ -2057,7 +2055,7 @@ void DrawHighLight(void)
 	}
 	glEnable(GL_BLEND);*/
 }
-void glPrintHighLight()
+void glPrintHighLight(void)
 {
 
 
@@ -2107,6 +2105,7 @@ void glPrintHighLight()
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 	glBindTexture(GL_TEXTURE_2D,0);
 }
+
 void stage0(void)
 {
 	
@@ -2138,7 +2137,6 @@ void stage0(void)
 		//MFighter2.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-100.0));
 		firstmove=false;
 	}
-
     if (turnX != 0 || turnY != 0 || turnZ != 0){
 		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
         MFighter.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
@@ -2147,14 +2145,10 @@ void stage0(void)
     }
 //Acceleration
 	if(moveSpeed>(MAXSpeed/3.0f))
-	{
 		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
-	}
 
     MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 1000));
-
 	UDfighers[0].UDMplane=MFighter;
-
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
 	
 //	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
@@ -2167,55 +2161,34 @@ void stage0(void)
     
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
-
 	sprintf(tmpshow,"%d %d",locklists_index,lockflagnum);
-
 	Vector3d Pos3d;
 		Pos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 	paraLightDirection[0] = (float)Pos3d(0);
     paraLightDirection[1] = (float)Pos3d(1);
     paraLightDirection[2] = (float)Pos3d(2);
 
-
-
 	if(ShaderBloom)
-	DrawHighLight();
-
+		DrawHighLight();
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	DrawUI1totexture(latitude);
-
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	DrawUI2totexture(moveSpeed*SpeedShowPercentage);
-
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	DrawUI3totexture(MFighter.RefPos()(1)*0.15);
-
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(!KeyT)
 		DrawRedarToTexture();
-
 	glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
 	glClear (GL_COLOR_BUFFER_BIT );
-	
 	DrawDataLine1();
-
-	
-
 	DrawShadowMap();
+	
 
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
-		
-		//glScaled(100.0,100.0,100.0);
-
-
-
 		DrawSky((float)longitude);
-
-
+		SkyBox.DrawSun(paraLightDirection[0],paraLightDirection[1],paraLightDirection[2],winwidth,winheight);
 		glEnable(GL_CULL_FACE);
 		glPushMatrix();
 			glEnable(GL_FOG);
@@ -2231,45 +2204,29 @@ void stage0(void)
 			glDisable(GL_FOG);
 		glPopMatrix();
 		glDisable(GL_CULL_FACE);
-		
-		
 		glBindTexture(GL_TEXTURE_2D,BlurTexture);
 		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
-		
-		
-		
-		DrawBom();
-		
+		DrawBom();		
 		DrawPlayer();
 		if(ShaderBloom)
-		{
 			glPrintHighLight();
-		
-		}
 		DrawUnit();
 		DrawMissle();
-
 		PSmokes.DrawSmoke(UDfighers[0].UDMplane.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
 		locksmove();
 		Drawlocksign();
-		
 	glPopMatrix();
 	glEnable(GL_BLEND);
-
 	if(UseEffectImpact)
 	EffectImpact.EffectImpactDraw(DrawEffectImpact);
 	DrawEffectImpact=false;
-
 	glEnable(GL_BLEND);
 	//Maptexture=EffectImpact.TextureID;
 	DrawUI2();
 	DrawUI3();
 	DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
 	DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
-
-	//glPrintRedar(0.0,0.0,0);
-
 	DrawUI1(rotation);
 	
 /*
