@@ -49,7 +49,7 @@ pixel main(
 
 
     //Compute the diffuse term£¬Âþ·´Éä¹â
-    float3 L = -normalize(paraLightDirection);
+    float3 L = normalize(paraLightDirection-P);
     float diffuseLight = max(dot(N, L), 0);
     float3 diffuse = paraLightColor * diffuseLight;
 

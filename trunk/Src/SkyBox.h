@@ -11,8 +11,10 @@ public:
 	~CSkyBox(void);
 	bool Init(void);
 	GLuint SkyTexID[6];
+	GLuint SunTexID;
 	Texture SkyTex[6];
 	bool IsSupportFBO;
 	void Draw(void);
+	void DrawSun(float x,float y,int winwidth,int winheight);
 };
 #endif

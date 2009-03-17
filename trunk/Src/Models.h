@@ -30,10 +30,6 @@ void LoadVBMDModels(bool IsSupportFBO)
 	ModelID_hud			=	m_VBMD ->Init("Data/hud");
 	ModelID_redarUI		=	m_VBMD ->Init("Data/redarUI");
 	ModelID_smoke		=	m_VBMD ->Init("Data/smoke",false);
-	
-
-		//m_VBMD ->Init("Data/CY-SKY", 3);
-
 
 
 }

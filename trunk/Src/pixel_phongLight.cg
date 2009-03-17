@@ -27,7 +27,7 @@ void main(
 	//float3 ambient = Ka * globalAmbient;
 
 	//Compute the diffuse term
-	float3 L = -normalize(paraLightDirection);
+	 float3 L = normalize(paraLightDirection-P);
 	float diffuseLight = max(dot(N, L), 0);
 	//float3 diffuse =  paraLightColor * diffuseLight;
 
