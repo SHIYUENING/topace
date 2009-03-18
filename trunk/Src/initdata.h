@@ -66,7 +66,7 @@ void initUnitdata(int stage=0 )
 			UDfighers[i].UDfighterType=2;
 			UDfighers[i].UDlife=100;
 			UDfighers[i].UDflag=(i/5)%4;
-			sprintf(UDfighers[i].UDname,"SU47");
+			sprintf(UDfighers[i].UDname,"Neo1");
 			UDfighers[i].UDlockselect=false;
 			UDfighers[i].UDMplane.Translate(Vector3d(500.0f*(i-maxUnits/2), 45000.0f+2000.0f*(i%4), 2000.0f*(i%20-10)));
 			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * (i%8+2));
