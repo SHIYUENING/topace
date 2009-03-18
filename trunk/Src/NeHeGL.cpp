@@ -126,7 +126,8 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 								   window->init.application->className,	// Class Name
 								   window->init.title,					// Window Title
 								   windowStyle,							// Window Style
-								   0, 0,								// Window X,Y Position
+								   (GetSystemMetrics(SM_CXFULLSCREEN)-(windowRect.right - windowRect.left))/2, 
+								   (GetSystemMetrics(SM_CYFULLSCREEN)-(windowRect.bottom - windowRect.top))/2,								// Window X,Y Position
 								   windowRect.right - windowRect.left,	// Window Width
 								   windowRect.bottom - windowRect.top,	// Window Height
 								   HWND_DESKTOP,						// Desktop Is Window's Parent

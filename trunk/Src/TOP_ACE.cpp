@@ -621,7 +621,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char test[128]={0};
 	
 
-	sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
+	//sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
 
 	sprintf(szshowflag1,"|");
 	sprintf(szshowflag2,"|");
@@ -685,7 +685,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 
 	
 	sprintf(szshowSpeed,"%4.0f-",moveSpeed*SpeedShowPercentage);
-	sprintf(szshowHigh,"-%d",(int)(high*0.15));
+	sprintf(szshowHigh,"-%d",(int)(high*0.1));
 	
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	
@@ -710,7 +710,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint(0,winheight-16,szTitle,0);
 	glPrint(0,winheight-32,szVERSION,0);
 	glPrint(0,winheight-48,cpubrand,0);
-	glPrint(winwidth/4,0,test,0);
+	//glPrint(winwidth/4,0,test,0);
 	glColor3f(1.0f,1.0f,1.0f);
 }
 
@@ -2175,7 +2175,7 @@ void stage0(void)
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawUI2totexture(moveSpeed*SpeedShowPercentage);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawUI3totexture(MFighter.RefPos()(1)*0.15);
+	DrawUI3totexture(MFighter.RefPos()(1)*0.1);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if(!KeyT)
 		DrawRedarToTexture();
