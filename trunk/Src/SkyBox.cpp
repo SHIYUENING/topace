@@ -295,24 +295,24 @@ void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 		glEnd();
 
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0f,0.0f)	;glVertex2f(-SUFwinX-(float)(winwidth/50),-SUFwinY-(float)(winwidth/50));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(0.5f,0.0f)	;glVertex2f(-SUFwinX+(float)(winwidth/50),-SUFwinY-(float)(winwidth/50));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(0.5f,0.5f)	;glVertex2f(-SUFwinX+(float)(winwidth/50),-SUFwinY+(float)(winwidth/50));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0f,0.5f)	;glVertex2f(-SUFwinX-(float)(winwidth/50),-SUFwinY+(float)(winwidth/50));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+			glTexCoord2f(0.0f,0.0f)	;glVertex2f(SUFwinX*0.75f-(float)(winwidth/10),SUFwinY*0.75f-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+			glTexCoord2f(0.5f,0.0f)	;glVertex2f(SUFwinX*0.75f+(float)(winwidth/10),SUFwinY*0.75f-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+			glTexCoord2f(0.5f,0.5f)	;glVertex2f(SUFwinX*0.75f+(float)(winwidth/10),SUFwinY*0.75f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+			glTexCoord2f(0.0f,0.5f)	;glVertex2f(SUFwinX*0.75f-(float)(winwidth/10),SUFwinY*0.75f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 		glEnd();
 
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0f,0.5f)	;glVertex2f(SUFwinX/2.0f-(float)(winwidth/50),SUFwinY/2.0f-(float)(winwidth/50));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(0.5f,0.5f)	;glVertex2f(SUFwinX/2.0f+(float)(winwidth/50),SUFwinY/2.0f-(float)(winwidth/50));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(0.5f,1.0f)	;glVertex2f(SUFwinX/2.0f+(float)(winwidth/50),SUFwinY/2.0f+(float)(winwidth/50));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0f,1.0f)	;glVertex2f(SUFwinX/2.0f-(float)(winwidth/50),SUFwinY/2.0f+(float)(winwidth/50));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+			glTexCoord2f(0.0f,0.5f)	;glVertex2f(SUFwinX*0.5f-(float)(winwidth/10),SUFwinY*0.5f-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+			glTexCoord2f(0.5f,0.5f)	;glVertex2f(SUFwinX*0.5f+(float)(winwidth/10),SUFwinY*0.5f-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+			glTexCoord2f(0.5f,1.0f)	;glVertex2f(SUFwinX*0.5f+(float)(winwidth/10),SUFwinY*0.5f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+			glTexCoord2f(0.0f,1.0f)	;glVertex2f(SUFwinX*0.5f-(float)(winwidth/10),SUFwinY*0.5f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 		glEnd();
 
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.5f,0.0f)	;glVertex2f(-SUFwinX/2.0f-(float)(winwidth/50),-SUFwinY/2.0f-(float)(winwidth/50));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(1.0f,0.0f)	;glVertex2f(-SUFwinX/2.0f+(float)(winwidth/50),-SUFwinY/2.0f-(float)(winwidth/50));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(1.0f,0.5f)	;glVertex2f(-SUFwinX/2.0f+(float)(winwidth/50),-SUFwinY/2.0f+(float)(winwidth/50));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.5f,0.5f)	;glVertex2f(-SUFwinX/2.0f-(float)(winwidth/50),-SUFwinY/2.0f+(float)(winwidth/50));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+			glTexCoord2f(0.5f,0.0f)	;glVertex2f(SUFwinX*0.25f-(float)(winwidth/10),SUFwinY*0.25f-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+			glTexCoord2f(1.0f,0.0f)	;glVertex2f(SUFwinX*0.25f+(float)(winwidth/10),SUFwinY*0.25f-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+			glTexCoord2f(1.0f,0.5f)	;glVertex2f(SUFwinX*0.25f+(float)(winwidth/10),SUFwinY*0.25f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+			glTexCoord2f(0.5f,0.5f)	;glVertex2f(SUFwinX*0.25f-(float)(winwidth/10),SUFwinY*0.25f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 		glEnd();
 
 /*

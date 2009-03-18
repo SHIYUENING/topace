@@ -95,8 +95,8 @@ float LightDiffuseR=1.0f;
 float LightDiffuseG=1.0f;
 float LightDiffuseB=1.0f;
 float LightDiffuseA=1.0f;
-bool Bgens=false;//环境贴图相关
-bool Bgent=false;//环境贴图相关
+//bool Bgens=false;//环境贴图相关
+//bool Bgent=false;//环境贴图相关
 
 bool lockedX=false;//X轴是否锁定到目标
 bool lockedY=false;//Y轴是否锁定到目标
@@ -205,7 +205,7 @@ void InitFogAndLight(void)
 	glHint(GL_FOG_HINT, GL_NICEST);	
 	glFogf(GL_FOG_START, Fog_Near);	
 	glFogf(GL_FOG_END, Fog_Far);	
-	glEnable(GL_FOG);
+	//glEnable(GL_FOG);
 	paraLightColor[0] = LightDiffuseR; 
 	paraLightColor[1] = LightDiffuseG;
 	paraLightColor[2] = LightDiffuseB;
@@ -306,14 +306,14 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	TurnRateX=GetPrivateProfileInt("FlySet","TurnRateX",50,".\\set.ini")*0.0001f;
 	TurnRateY=GetPrivateProfileInt("FlySet","TurnRateY",500,".\\set.ini")*0.0001f;
 	TurnRateZ=GetPrivateProfileInt("FlySet","TurnRateZ",50,".\\set.ini")*0.0001f;
-	if(GetPrivateProfileInt("Joke","GL_TEXTURE_GEN_S",0,".\\set.ini")==0)
-		Bgens=false;
-	else
-		Bgens=true;
-	if(GetPrivateProfileInt("Joke","GL_TEXTURE_GEN_T",0,".\\set.ini")==0)
-		Bgent=false;
-	else
-		Bgent=true;
+	//if(GetPrivateProfileInt("Joke","GL_TEXTURE_GEN_S",0,".\\set.ini")==0)
+	//	Bgens=false;
+	//else
+	//	Bgens=true;
+	//if(GetPrivateProfileInt("Joke","GL_TEXTURE_GEN_T",0,".\\set.ini")==0)
+	//	Bgent=false;
+	//else
+	//	Bgent=true;
 
 	if(GetPrivateProfileInt("Effect","MoveBlur",0,".\\set.ini")==0)
 		UseEffectImpact=false;
@@ -351,7 +351,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	lockX=winwidth/2;
 	lockY=winheight/2;
 
-	BlurTexture=EmptyTexture(512);
+	//BlurTexture=EmptyTexture(512);
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
@@ -548,7 +548,7 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 	}
 		
 
-	sprintf(DFDDistance,"%d",(int)(sqrt(DFDL)*0.15f-10.0f));
+	sprintf(DFDDistance,"%d",(int)(sqrt(DFDL)*0.10f-10.0f));
 	if( DFDZ < 1.0f )		
 	{
 		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  DFDDistance   , 0 ,true);
@@ -1469,7 +1469,7 @@ void UnitMove(void)
 				UDfighers[i].UDPstate.NextState();
 			}
 			else
-			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(i%4+2));
+			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*(6)));
 		}
 		
@@ -2193,19 +2193,19 @@ void stage0(void)
 		glPushMatrix();
 			glEnable(GL_FOG);
 			glScaled(500.0,500.0,500.0);
-			if(Bgens)
-			glEnable(GL_TEXTURE_GEN_S);	
-			if(Bgent)
-			glEnable(GL_TEXTURE_GEN_T);	
+			//if(Bgens)
+			//glEnable(GL_TEXTURE_GEN_S);	
+			//if(Bgent)
+			//glEnable(GL_TEXTURE_GEN_T);	
 			glDisable(GL_BLEND);
 			m_VBMD->ShowVBMD(ModelID_SHAN);
-			glDisable(GL_TEXTURE_GEN_S);			
-			glDisable(GL_TEXTURE_GEN_T);
+			//glDisable(GL_TEXTURE_GEN_S);			
+			//glDisable(GL_TEXTURE_GEN_T);
 			glDisable(GL_FOG);
 		glPopMatrix();
 		glDisable(GL_CULL_FACE);
-		glBindTexture(GL_TEXTURE_2D,BlurTexture);
-		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
+		//glBindTexture(GL_TEXTURE_2D,BlurTexture);
+		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
 		DrawBom();		
 		DrawPlayer();
 		if(ShaderBloom)

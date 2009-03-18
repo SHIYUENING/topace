@@ -2,7 +2,7 @@
 #include <Cg/Cg.h>
 #include <Cg/cgGL.h>
 #include "Textures.h"
-GLuint BlurTexture;
+//GLuint BlurTexture;
 bool ShaderLight=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
 CGprofile   g_CGprofile_vertex;

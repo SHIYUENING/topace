@@ -23,9 +23,11 @@ void LoadVBMDModels(bool IsSupportFBO)
 	m_VBMD->m_IsSupportFBO=IsSupportFBO;
 
 	ModelID[1].Normal	=	m_VBMD ->Init("Data/models/Y-15/Normal");
+	ModelID[2].Main		=	m_VBMD ->Init("Data/models/neo1/Main");
 	ModelID[2].Normal	=	m_VBMD ->Init("Data/models/neo1/Normal");
+	ModelID[2].Low		=	m_VBMD ->Init("Data/models/neo1/Low");
 	ModelID[3].Normal	=	m_VBMD ->Init("Data/models/aim7_t/Normal");
-	PlayerMainModel		=	m_VBMD ->Init("Data/models/neo1/Main");
+	PlayerMainModel		=	ModelID[2].Main;
 	ModelID_SHAN		=	m_VBMD ->Init("Data/SHAN");
 	ModelID_hud			=	m_VBMD ->Init("Data/hud");
 	ModelID_redarUI		=	m_VBMD ->Init("Data/redarUI");
