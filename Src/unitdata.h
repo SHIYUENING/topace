@@ -6,6 +6,11 @@
 #include "Physics.h"
 #include "VBMD.h"
 //#include "ACMD.h"
+#define AImode_Counterattack 1//受攻击时反击
+#define AImode_Travel 2//受攻击时继续之前的行动
+#define AIact_MoveOrStandby 1//向某点移动或者在某处附近盘旋
+#define AIact_Attact 2//向某目标攻击
+#define AIact_Avoid 3//闪避
 
 #define MAXweapon 4
 #define MAXUNITSMOKE 150

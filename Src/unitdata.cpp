@@ -293,8 +293,8 @@ bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight
 							}
 							else
 							{
-								//if(ModelID[UDfighterType].Low>-1)
-								//	m_VBMD->ShowVBMD(ModelID[UDfighterType].Low);
+								if(ModelID[UDfighterType].Low>-1)
+									m_VBMD->ShowVBMD(ModelID[UDfighterType].Low);
 							}
 						}
 //							m_nj->ShowACMD(0,7,0,0,0,0,180,0,1.0,1.0,1.0);
