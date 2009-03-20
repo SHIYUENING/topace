@@ -621,7 +621,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char test[128]={0};
 	
 
-	//sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
+	sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
 
 	sprintf(szshowflag1,"|");
 	sprintf(szshowflag2,"|");
@@ -710,7 +710,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint(0,winheight-16,szTitle,0);
 	glPrint(0,winheight-32,szVERSION,0);
 	glPrint(0,winheight-48,cpubrand,0);
-	//glPrint(winwidth/4,0,test,0);
+	glPrint(winwidth/4,0,test,0);
 	glColor3f(1.0f,1.0f,1.0f);
 }
 
@@ -718,6 +718,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
 
+	FMOD_System_Update(sys);
 	Inertia();
 
 	KeyInput.UpData();
@@ -752,8 +753,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		if(InertiaZ<-25.0f)
 			InertiaZ=-25.0f;
 	}
+	
 	if ((g_keys->keyDown [KeyInput.m_keyboardRight] == TRUE)||KeyInput.m_IskeyRight)					
 	{
+		
 		if(KeyInput.m_IskeyRight)
 			InertiaZ=InertiaZ+3.0f*KeyInput.m_Right;
 		else
@@ -761,8 +764,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		if(InertiaZ>25.0f)
 			InertiaZ=25.0f;
 	}
+	testNum=KeyInput.m_keyboardUp;
 	if ((g_keys->keyDown [KeyInput.m_keyboardUp] == TRUE)||KeyInput.m_IskeyUp)					
 	{
+		testNum=KeyInput.m_keyboardUp*10;
 		if(KeyInput.m_IskeyUp)
 			InertiaX=InertiaX+3.0f*KeyInput.m_Up;
 		else

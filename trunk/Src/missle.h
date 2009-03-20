@@ -15,6 +15,7 @@ public:
 	int UDlife;//生命值，-1表示不存在，0表示已经被灭
 	int UDMissleType;//导弹种类
 	int TGTnum;//目标单位编号
+	int onwer;//发射者编号
 	/*
 	float UDposx[MAXMISSLESMOKE];//尾烟粒子坐标x
 	float UDposy[MAXMISSLESMOKE];//尾烟粒子坐标y

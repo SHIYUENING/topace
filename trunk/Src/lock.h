@@ -48,7 +48,14 @@ void fireMissle()
 				if(missle_index==maxMissles)
 					missle_index=0;
 */
-				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=PMissleList.AddMissle(MFighter,lockUnits[i].locksTGT);
+				if(lockUnits[i].locksTGT<0)||(lockUnits[i].locksTGT>=maxUnits)
+				{
+					char WaringString[64]={0};
+					sprintf(WaringString,"locksTGT in fireMissle() more than %d",maxUnits);
+					::MessageBox(HWND_DESKTOP,WaringString,"Error",MB_OK | MB_ICONEXCLAMATION);
+					return;
+				}
+				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=PMissleList.AddMissle(MFighter,lockUnits[i].locksTGT,0);
 			}
 			
 		}
