@@ -21,7 +21,7 @@ unsigned int CEffectImpact::EmptyTexture(int wh)
 	GLuint txtnumber;							// 纹理ID
 	unsigned int* data;						// 存储数据
 
-	// 为纹理数据（128*128*4）建立存储区
+	// 为纹理数据（wh*wh*4）建立存储区
 	data = (unsigned int*)new GLuint[((wh * wh)* 4 * sizeof(unsigned int))];
 	ZeroMemory(data,((wh * wh)* 4 * sizeof(unsigned int)));	// 清除存储区
 

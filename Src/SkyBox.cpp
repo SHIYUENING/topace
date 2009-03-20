@@ -279,8 +279,8 @@ void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
 
-	testNum=SUFwinX;
-	testNum2=SUFwinY;
+//	testNum=SUFwinX;
+//	testNum2=SUFwinY;
 	glEnable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, SunTexID);	
 

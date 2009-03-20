@@ -10,7 +10,7 @@ public:
 	MissleList(void);
 	~MissleList(void);
 	bool Init(void);
-	int AddMissle(Transform & Fighter,int TGT);
+	int AddMissle(Transform & Fighter,int TGT,int onwer);
 	void DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
 
 	Missledata Missles[MAXMISSLE];

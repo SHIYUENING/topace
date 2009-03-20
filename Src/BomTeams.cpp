@@ -94,6 +94,13 @@ bool CBomTeams::LoadBomTeam(int BomTeamNum)
 }
 int CBomTeams::DrawBomTeam(float posX, float posY, float posZ, int frame, unsigned int GLlistNum,float TeamSize)
 {
+	if(m_BomsNumber>MAXBOMACTS)
+			{
+				m_BomsNumber=MAXBOMACTS;
+				char WaringString[64]={0};
+				sprintf(WaringString,"Bomini%d.ini BomACTsMax more than %d",BomTeamNum,MAXBOMACTS);
+				::MessageBox(HWND_DESKTOP,WaringString,"Error",MB_OK | MB_ICONEXCLAMATION);
+			}
 	if(m_BomsNumber>0)
 		if(frame<=Bomini[m_BomsNumber-1].ShowTimeEnd)
 			for(int i=0;i<m_BomsNumber;i++)
@@ -362,7 +369,8 @@ int CBom::DrawBom(float posx, float posy, float posz, CBomType * m_pBom)
 	x=x+(float)Movex*0.01f;
 	y=y+(float)Movey*0.01f;
 	z=z+(float)Movez*0.01f;
-	
+	if((BomTeam<0)||(BomTeam>=MAXBOMINIS))
+		return 0;
 	m_pBom->BomTeams[BomTeam].DrawBomTeam(posx,posy,posz,Frame,0,(float)RandomSize/100.0f);
 	Frame=Frame+1;
 	if(Frame>m_pBom->BomTeams[BomTeam].AllFrame)

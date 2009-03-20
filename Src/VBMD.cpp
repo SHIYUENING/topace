@@ -78,7 +78,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 
 	while(VBMD[ModelId].Islife)
 	{
-		if(ModelId>MAX_VBMD)
+		if(ModelId>=MAX_VBMD)
 			return -1;
 		else
 			ModelId=ModelId+1;
