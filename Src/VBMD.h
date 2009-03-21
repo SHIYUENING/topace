@@ -17,6 +17,8 @@ struct tVBMDHeader
 struct tModelID
 {
 	int Main;
+	int MainDD1;
+	int MainDD2;
 	int Normal;
 	int Low;
 };

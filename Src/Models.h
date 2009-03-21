@@ -15,6 +15,8 @@ void LoadVBMDModels(bool IsSupportFBO)
 	for(int i=0;i<100;i++)
 	{
 		ModelID[i].Main=-1;
+		ModelID[i].MainDD1=-1;
+		ModelID[i].MainDD2=-1;
 		ModelID[i].Normal=-1;
 		ModelID[i].Low=-1;
 	
@@ -24,6 +26,8 @@ void LoadVBMDModels(bool IsSupportFBO)
 
 	ModelID[1].Normal	=	m_VBMD ->Init("Data/models/Y-15/Normal");
 	ModelID[2].Main		=	m_VBMD ->Init("Data/models/neo1/Main");
+	ModelID[2].MainDD1	=	m_VBMD ->Init("Data/models/neo1/MainDD1");
+	ModelID[2].MainDD2	=	m_VBMD ->Init("Data/models/neo1/MainDD2");
 	ModelID[2].Normal	=	m_VBMD ->Init("Data/models/neo1/Normal");
 	ModelID[2].Low		=	m_VBMD ->Init("Data/models/neo1/Low");
 	ModelID[3].Normal	=	m_VBMD ->Init("Data/models/aim7_t/Normal");
