@@ -18,7 +18,7 @@ void initlocks()
 	for(int i=0;i<locknum;i++)
 	{
 		lockUnits[i].lockON=false;
-		lockUnits[i].locksTGT=-1;
+		lockUnits[i].locksTGT=0;
 		lockUnits[i].locksX=winwidth*0.5f;
 		lockUnits[i].locksY=winheight*0.5f;
 	}
@@ -48,7 +48,7 @@ void fireMissle()
 				if(missle_index==maxMissles)
 					missle_index=0;
 */
-				if(lockUnits[i].locksTGT<0)||(lockUnits[i].locksTGT>=maxUnits)
+				if((lockUnits[i].locksTGT<0)||(lockUnits[i].locksTGT>=maxUnits))
 				{
 					char WaringString[64]={0};
 					sprintf(WaringString,"locksTGT in fireMissle() more than %d",maxUnits);
@@ -117,6 +117,12 @@ void locksmove()
 	{
 		if(lockUnits[i].locksTGT>0)
 		{
+			if(lockUnits[i].locksTGT>maxUnits)
+			{
+				char WaringString[64]={0};
+				sprintf(WaringString,"locksTGT.in locksmove more than %d",maxUnits);
+				::MessageBox(HWND_DESKTOP,WaringString,"Error",MB_OK | MB_ICONEXCLAMATION);
+			}
 			//if(lockUnits[i].locksTGT)
 			double targetx=UDfighers[ lockUnits[i].locksTGT ].UDwinx;
 			double targety=UDfighers[ lockUnits[i].locksTGT ].UDwiny;
@@ -168,8 +174,9 @@ void locksmove()
 				UDfighers[ lockUnits[i].locksTGT ].UDlockde=false;
 				if(!(UDfighers[ lockUnits[i].locksTGT ].UDwinl<(tmpredarRenge*tmpredarRenge))||(UDfighers[ lockUnits[i].locksTGT ].UDlife<1))
 				{
-					lockUnits[i].locksTGT=-1;
+					
 					UDfighers[ lockUnits[i].locksTGT ].UDlockselect=false;
+					lockUnits[i].locksTGT=0;
 				}
 			}
 			

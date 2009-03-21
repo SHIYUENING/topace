@@ -97,7 +97,7 @@ int Bom_index=0;
 Unitdata UDfighers[maxUnits];
 Missledata LightSun;
 float LightSunPos[3];
-Bom Boms[MAXBom];
+//Bom Boms[MAXBom];
 
 int timer[100];
 MissleList	PMissleList;
