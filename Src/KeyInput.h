@@ -23,6 +23,7 @@ public:
 	int m_keyL;
 	int m_keyR;
 
+	//int m_keyboardtmp;
 	int m_keyboardUp;
 	int m_keyboardDown;
 	int m_keyboardLeft;

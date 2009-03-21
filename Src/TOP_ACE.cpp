@@ -1581,7 +1581,7 @@ void UnitMove(void)
 					}
 					PMissleList.Missles[i].UDlife=-1;
 					PMissleList.Missles[i].smokeTime=100;
-					Boms[Bom_index].Frame=0;
+					//Boms[Bom_index].Frame=0;
 					
 	
 					UDfighers[PMissleList.Missles[i].TGTnum].waringde=false;

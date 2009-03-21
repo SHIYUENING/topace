@@ -98,7 +98,7 @@ int CBomTeams::DrawBomTeam(float posX, float posY, float posZ, int frame, unsign
 			{
 				m_BomsNumber=MAXBOMACTS;
 				char WaringString[64]={0};
-				sprintf(WaringString,"Bomini%d.ini BomACTsMax more than %d",BomTeamNum,MAXBOMACTS);
+				sprintf(WaringString,"m_BomsNumber in DrawBomTeam more than %d",MAXBOMACTS);
 				::MessageBox(HWND_DESKTOP,WaringString,"Error",MB_OK | MB_ICONEXCLAMATION);
 			}
 	if(m_BomsNumber>0)

@@ -23,13 +23,13 @@ void initUnitdata(int stage=0 )
 
 
 	
-
+/*
 	for(int i=0;i<MAXBom;i++)
 	{
 		Boms[i].Frame=-1;
 	
 	}
-
+*/
 	for(int i=0;i<maxUnits;i++)
 	{
 		UDfighers[i].UDlife=-1;
