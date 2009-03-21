@@ -286,7 +286,7 @@ void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 
 	//glTranslated(0,SUFwinY,0);
 
-	
+
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
 			glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX-(float)(winwidth/10),(float)SUFwinY-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
 			glTexCoord2f(1.0f,0.5f)	;glVertex2f((float)SUFwinX+(float)(winwidth/10),(float)SUFwinY-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
@@ -314,7 +314,7 @@ void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 			glTexCoord2f(1.0f,0.5f)	;glVertex2f((float)SUFwinX*0.25f+(float)(winwidth/10),(float)SUFwinY*0.25f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
 			glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX*0.25f-(float)(winwidth/10),(float)SUFwinY*0.25f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 		glEnd();
-
+		
 /*
 			glBegin(GL_QUADS);							// Use A Quad For Each Character
 				glTexCoord2f(0.5,0.5);	glVertex2i(-80,-80);						// Vertex Coord (Bottom Left)

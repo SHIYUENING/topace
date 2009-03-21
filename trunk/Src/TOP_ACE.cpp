@@ -52,12 +52,14 @@ CSkyBox SkyBox;
 typedef int (*compfn)(const void*, const void*);
 int needloadfile=0;
 
-float turnX,turnY,turnZ,moveX,moveY,moveZ;//玩家旋转和移动变量
+float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
 //GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
 //下面三个是惯性计算相关变量
 float InertiaX=0.0f;
 float InertiaY=0.0f;
 float InertiaZ=0.0f;
+float InertiaSpeed=0.0f;
+
 GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
 bool firstmove=true;//是否是第一祯，用于判断是否执行场景初始化
 
@@ -180,7 +182,7 @@ void InitFogAndLight(void)
 	LightDiffuseB=(float)GetPrivateProfileInt("Light","LightDiffuseB",106,".\\set.ini")/255.0f;
 	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255.0f;
 
-	LightSunPos[0]=10.0f;
+	LightSunPos[0]=150000.0f;
 	LightSunPos[1]=150000.0f;
 	LightSunPos[2]=10.0f;
 
@@ -425,6 +427,18 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 
 void Inertia()              //处理惯性
 {
+	testNum=InertiaSpeed;
+	if(!(InertiaSpeed==0.0f))
+	{
+		if(InertiaSpeed*InertiaSpeed<1.0f)
+			InertiaSpeed=0.0f;
+		if(InertiaSpeed>0.0f)
+			InertiaSpeed=InertiaSpeed-0.5f;
+		if(InertiaSpeed<0.0f)
+			InertiaSpeed=InertiaSpeed+0.5f;
+	}
+
+
 	if(!(InertiaZ==0.0f))
 	{
 		if(InertiaZ*InertiaZ<1.0f)
@@ -684,7 +698,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	*/
 
 	
-	sprintf(szshowSpeed,"%4.0f-",moveSpeed*SpeedShowPercentage);
+	sprintf(szshowSpeed,"%4.0f-",moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
 	sprintf(szshowHigh,"-%d",(int)(high*0.1));
 	
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
@@ -734,14 +748,14 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	}*/
 	if (g_keys->keyDown [VK_PRIOR] == TRUE)	
-		testNum=testNum+0.03f;
+		testNum=testNum+0.003f;
 	if (g_keys->keyDown [VK_NEXT] == TRUE)
-		testNum=testNum-0.03f;
+		testNum=testNum-0.003f;
 
-	if (g_keys->keyDown [VK_END] == TRUE)	
-		testNum2=testNum2+0.03f;
-	if (g_keys->keyDown [VK_HOME] == TRUE)
-		testNum2=testNum2-0.03f;
+	if (g_keys->keyDown [VK_HOME] == TRUE)	
+		testNum2=testNum2+0.003f;
+	if (g_keys->keyDown [VK_END] == TRUE)
+		testNum2=testNum2-0.003f;
 
 
 	if ((g_keys->keyDown [KeyInput.m_keyboardLeft] == TRUE)||KeyInput.m_IskeyLeft)					
@@ -764,10 +778,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		if(InertiaZ>25.0f)
 			InertiaZ=25.0f;
 	}
-	testNum=KeyInput.m_keyboardUp;
+	//testNum=KeyInput.m_keyboardUp;
 	if ((g_keys->keyDown [KeyInput.m_keyboardUp] == TRUE)||KeyInput.m_IskeyUp)					
 	{
-		testNum=KeyInput.m_keyboardUp*10;
+//		testNum=KeyInput.m_keyboardUp*10;
 		if(KeyInput.m_IskeyUp)
 			InertiaX=InertiaX+3.0f*KeyInput.m_Up;
 		else
@@ -790,7 +804,9 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		if(moveSpeed>MAXSpeed)
 			moveSpeed=MAXSpeed;
 		else
-			InertiaY=InertiaY+1.0f;
+			InertiaSpeed=InertiaSpeed+1.0f;
+		if(InertiaSpeed>50.0f)
+			InertiaSpeed=50.0f;
 		DrawEffectImpact=true;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedDown] == TRUE)||KeyInput.m_IskeySpeedDown)					
@@ -799,7 +815,9 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		if(moveSpeed<MINSpeed)
 			moveSpeed=MINSpeed;
 		else
-			InertiaY=InertiaY-1.0f;
+			InertiaSpeed=InertiaSpeed-1.0f;
+		if(InertiaSpeed<-50.0f)
+			InertiaSpeed=-50.0f;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardL] == TRUE)||KeyInput.m_IskeyL)
 	{
@@ -1475,7 +1493,7 @@ void UnitMove(void)
 			}
 			else
 			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
-			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*(6)));
+			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,30));
 		}
 		
 		
@@ -1566,7 +1584,7 @@ void UnitMove(void)
 				PMissleList.Missles[i].TurnTo(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos());
 				if(PMissleList.Missles[i].timer>15)
 					PMissleList.Missles[i].UDPstate.NextState();
-				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*10));
+				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,50));
 				if(tmpD<10000)//临时爆炸范围
 				{
 					FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, sound1, 0, &channel1);
@@ -1755,12 +1773,44 @@ void DrawPlayer(void)
 
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHTING);
-	}	
+	}
+
+
 
     glPopMatrix();
 
 	glDisable(GL_CULL_FACE);
 
+/*
+	glEnable(GL_BLEND);
+		glPushMatrix();										
+			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+			glPushMatrix();	
+				glLoadIdentity();									// Reset The Modelview Matrix
+				gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
+							10.0f,265.0f);	
+				glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+				glPushMatrix();										// Store The Modelview Matrix
+					glLoadIdentity();	
+					
+					glTranslatef(0, -Ppos1, -Ppos2);
+					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
+
+					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
+				glDepthMask(GL_FALSE);
+				glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
+				glColor4f(testNum2,testNum2,testNum2,1.0f);
+					m_VBMD->ShowVBMD(ModelID[2].MainDD1);
+					m_VBMD->ShowVBMD(ModelID[2].MainDD2);
+				glColor4f(1.0f,1.0f,1.0f,1.0f);
+				glDepthMask(GL_TRUE);
+				glPopMatrix();
+			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+			glPopMatrix();										// Restore The Old Projection Matrix
+		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+		glPopMatrix();
+	glDisable(GL_BLEND);
+*/
 }
 void DrawSky(float ne=0.0)
 {
@@ -1988,9 +2038,17 @@ void DrawShadowMap(void)
 
 				glEnable(GL_DEPTH_TEST);
 				m_VBMD->ShowVBMD(PlayerMainModel,false);
-
 				cgGLDisableProfile( g_CGprofile_vertex );
 				cgGLDisableProfile( g_CGprofile_pixel );
+				glDepthMask(GL_FALSE);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glColor4f((InertiaSpeed+50.0f)/100.0f,(InertiaSpeed+50.0f)/100.0f,(InertiaSpeed+50.0f)/100.0f,1.0f);
+					m_VBMD->ShowVBMD(ModelID[2].MainDD1);
+					m_VBMD->ShowVBMD(ModelID[2].MainDD2);
+				glColor4f(1.0f,1.0f,1.0f,1.0f);
+				glDepthMask(GL_TRUE);
+
+
 				
 			glPopMatrix();
 		}
@@ -2152,7 +2210,7 @@ void stage0(void)
 	if(moveSpeed>(MAXSpeed/3.0f))
 		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
 
-    MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 1000));
+    MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
 	UDfighers[0].UDMplane=MFighter;
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
 	
@@ -2172,6 +2230,7 @@ void stage0(void)
 	paraLightDirection[0] = (float)Pos3d(0);
     paraLightDirection[1] = (float)Pos3d(1);
     paraLightDirection[2] = (float)Pos3d(2);
+
 
 	if(ShaderBloom)
 		DrawHighLight();
