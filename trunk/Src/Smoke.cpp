@@ -168,7 +168,9 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 						glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
 						glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
 						if(Pos3d(2)<-500.0f)
-						glCallList(SmokeGLlist);
+						{
+							glCallList(SmokeGLlist);
+						}
 
 
 						glColor4f(1.0f,1.0f,1.0f,1.0f);

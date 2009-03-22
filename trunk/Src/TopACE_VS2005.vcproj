@@ -285,6 +285,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Cloud.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Cloud.h"
+			>
+		</File>
+		<File
 			RelativePath=".\Cpuid.cpp"
 			>
 		</File>
