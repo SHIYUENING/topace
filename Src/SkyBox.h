@@ -4,9 +4,9 @@
 #include "DDS.h"
 #include "texture.h"
 bool LoadTGA(Texture *, char *);
-extern float testNum;
-extern float testNum2;
-extern float testNum3;
+//extern float testNum;
+//extern float testNum2;
+//extern float testNum3;
 class CSkyBox
 {
 public:

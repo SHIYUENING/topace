@@ -31,9 +31,9 @@ void fireMissle()
 		{
 			if((lockUnits[i].locksTGT>-1)&&(lockUnits[i].locksTGT<maxUnits))
 			{
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, sound2, 0, &channel2);
+				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound2, 0, &channel2);
 				if(rand()%10<5)
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, fox2voice[rand()%3], 0, &fox2voicechannel);
+				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, fox2voice[rand()%3], 0, &fox2voicechannel);
 /*
 				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=missle_index;
 				missle[missle_index].TGTnum=lockUnits[i].locksTGT;

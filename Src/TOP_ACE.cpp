@@ -1553,7 +1553,7 @@ void UnitMove(void)
 			PMissleList.Missles[i].timer=PMissleList.Missles[i].timer+1;
 			if(PMissleList.Missles[i].UDlife==0)
 			{
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, missvoice[rand()%4], 0, &missvoicechannel);
+				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missvoice[rand()%4], 0, &missvoicechannel);
 				PMissleList.Missles[i].smokeTime=100;
 				UDfighers[PMissleList.Missles[i].TGTnum].waringde=false;
 			}
@@ -1577,7 +1577,7 @@ void UnitMove(void)
 				float tmpD=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				if((tmpD<8000000)&&(!UDfighers[PMissleList.Missles[i].TGTnum].waringde))
 				{
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, missleWarning[rand()%10], 0, &missleWarningchannel);
+						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missleWarning[rand()%10], 0, &missleWarningchannel);
 						UDfighers[PMissleList.Missles[i].TGTnum].waringde=true;
 				}
 
@@ -1587,15 +1587,15 @@ void UnitMove(void)
 				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,50));
 				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
-					FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, sound1, 0, &channel1);
+					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
 					UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-55;
 					if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>0)
 					
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, hitvoice[rand()%4], 0, &hitvoicechannel);
+						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, hitvoice[rand()%4], 0, &hitvoicechannel);
 					else
 					{
 						UDfighers[PMissleList.Missles[i].TGTnum].smokeTime=100;
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, killvoice[rand()%7], 0, &killvoicechannel);
+						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);
 					}
 					PMissleList.Missles[i].UDlife=-1;
 					PMissleList.Missles[i].smokeTime=100;
@@ -1932,12 +1932,6 @@ void showloading(void)
 		//m_VBMD->m_IsSupportFBO=IsSupportFBO;
 		
 		LoadVBMDModels(IsSupportFBO);
-		
-		//m_VBMD ->Init("Data/locksign", 8);
-;
-
-		//m_VBMD ->BuildVBO(8);
-
 		needloadfile=2;
 		
 	
@@ -1946,9 +1940,7 @@ void showloading(void)
 	if(needloadfile<2)
 	{
 		char loadingFileName[128];
-
 		sprintf(loadingFileName,"Now Loading");
-	
 		glEnable(GL_BLEND);
 		glPrint(16,16,loadingFileName,0);
 		needloadfile=1;
@@ -2237,7 +2229,7 @@ void stage0(void)
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawUI1totexture(latitude);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawUI2totexture(moveSpeed*SpeedShowPercentage);
+	DrawUI2totexture(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawUI3totexture(MFighter.RefPos()(1)*0.1);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
