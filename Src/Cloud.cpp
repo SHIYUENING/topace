@@ -2,6 +2,7 @@
 
 CCloud::CCloud(void)
 : CloudTexID(0)
+,CloudsPos_index(0)
 {
 }
 
@@ -11,6 +12,11 @@ CCloud::~CCloud(void)
 
 bool CCloud::Init(void)
 {
+	for(int i=0;i<1500;i++)
+	{
+		CloudsPos[i].islife=false;
+	
+	}
 	CDDS loadDDS;
 
 	CloudTexID=loadDDS.loadCompressedTexture("Data/sky/Cloud.dds");
@@ -46,7 +52,23 @@ bool CCloud::Init(void)
 	return true;
 }
 
-int CCloud::SetCloudPos(float posx, float posy, float posz)
+void CCloud::SetCloudPos(float posx, float posy, float posz)
 {
-	return 0;
+
+}
+
+void CCloud::addCloud(float x, float y, float z,GLuint CloudID)
+{
+	int i=0;
+	while(CloudsPos[i].islife)
+	{
+		i++;
+		if(i>=1500)
+			return;
+	
+	}
+	CloudsPos[i].islife=true;
+	CloudsPos[i].Pos[0]=x;
+	CloudsPos[i].Pos[1]=y;
+	CloudsPos[i].Pos[2]=z;
 }
