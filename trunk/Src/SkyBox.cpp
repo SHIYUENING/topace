@@ -185,6 +185,7 @@ bool CSkyBox::Init(void)
 
 void CSkyBox::Draw(void)
 {
+	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, SkyTexID[2]);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
@@ -251,6 +252,7 @@ void CSkyBox::Draw(void)
 		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
 	glEnd();
+	glEnable(GL_BLEND);
 }
 
 void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
