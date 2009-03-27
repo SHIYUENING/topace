@@ -39,6 +39,9 @@ public:
 	int GraphicLevel;//画面质量等级
 	float SmokeAlpha;
 	float SmoleL;
+	float tmpX;
+	float tmpY;
+	float tmpZ;
 
 	
 	void AddSmoke(float pos[3], float size=1.0f, float sizeMove=0.0f, float life=150.0f,int type=0);
