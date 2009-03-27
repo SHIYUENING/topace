@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="BomsDataSet" targetNamespace="http://tempuri.org/BomsSet.xsd" xmlns:mstns="http://tempuri.org/BomsSet.xsd" xmlns="http://tempuri.org/BomsSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="BomsDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="BomsDataSet" msprop:Generator_DataSetName="BomsDataSet" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="BomsTable" msprop:Generator_UserTableName="BomsTable" msprop:Generator_RowDeletedName="BomsTableRowDeleted" msprop:Generator_RowChangedName="BomsTableRowChanged" msprop:Generator_RowClassName="BomsTableRow" msprop:Generator_RowChangingName="BomsTableRowChanging" msprop:Generator_RowEvArgName="BomsTableRowChangeEvent" msprop:Generator_RowEvHandlerName="BomsTableRowChangeEventHandler" msprop:Generator_TableClassName="BomsTableDataTable" msprop:Generator_TableVarName="tableBomsTable" msprop:Generator_RowDeletingName="BomsTableRowDeleting" msprop:Generator_TablePropName="BomsTable">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Pnum" msdata:AutoIncrementSeed="1" msdata:Caption="索引" msprop:Generator_UserColumnName="Pnum" msprop:Generator_ColumnPropNameInRow="Pnum" msprop:Generator_ColumnVarNameInTable="columnPnum" msprop:Generator_ColumnPropNameInTable="PnumColumn" type="xs:int" />
+              <xs:element name="RandomSizeMIN" msdata:Caption="随机大小最小值" msprop:Generator_UserColumnName="RandomSizeMIN" msprop:Generator_ColumnPropNameInRow="RandomSizeMIN" msprop:Generator_ColumnVarNameInTable="columnRandomSizeMIN" msprop:Generator_ColumnPropNameInTable="RandomSizeMINColumn" type="xs:int" default="0" />
+              <xs:element name="RandomSizeMAX" msdata:Caption="随机大小最大值" msprop:Generator_UserColumnName="RandomSizeMAX" msprop:Generator_ColumnPropNameInRow="RandomSizeMAX" msprop:Generator_ColumnVarNameInTable="columnRandomSizeMAX" msprop:Generator_ColumnPropNameInTable="RandomSizeMAXColumn" type="xs:int" default="0" />
+              <xs:element name="RandomMoveMIN" msdata:Caption="随机移动量最小值" msprop:Generator_UserColumnName="RandomMoveMIN" msprop:Generator_ColumnPropNameInRow="RandomMoveMIN" msprop:Generator_ColumnVarNameInTable="columnRandomMoveMIN" msprop:Generator_ColumnPropNameInTable="RandomMoveMINColumn" type="xs:int" default="0" />
+              <xs:element name="RandomMoveMAX" msdata:Caption="随机移动量最大值" msprop:Generator_UserColumnName="RandomMoveMAX" msprop:Generator_ColumnPropNameInRow="RandomMoveMAX" msprop:Generator_ColumnVarNameInTable="columnRandomMoveMAX" msprop:Generator_ColumnPropNameInTable="RandomMoveMAXColumn" type="xs:int" default="0" />
+              <xs:element name="ShowTimeStart" msdata:Caption="开始时间" msprop:Generator_UserColumnName="ShowTimeStart" msprop:Generator_ColumnPropNameInRow="ShowTimeStart" msprop:Generator_ColumnVarNameInTable="columnShowTimeStart" msprop:Generator_ColumnPropNameInTable="ShowTimeStartColumn" type="xs:int" default="0" />
+              <xs:element name="ShowTimeEnd" msdata:Caption="结束时间" msprop:Generator_UserColumnName="ShowTimeEnd" msprop:Generator_ColumnPropNameInRow="ShowTimeEnd" msprop:Generator_ColumnVarNameInTable="columnShowTimeEnd" msprop:Generator_ColumnPropNameInTable="ShowTimeEndColumn" type="xs:int" default="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:BomsTable" />
+      <xs:field xpath="mstns:Pnum" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

@@ -891,8 +891,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 void LockFPS (void)
 {
 	QueryPerformanceFrequency(&feq);//每秒跳动次数
-	QueryPerformanceCounter(&t2);//测后跳动次数 
-	oneframetime=((double)t2.QuadPart-(double)t1.QuadPart)/((double)feq.QuadPart);//时间差秒
+	QueryPerformanceCounter(&t2);//测后跳动次数
+    if (t2.QuadPart >= t1.QuadPart){
+	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+    }
 	Delay(__int64((oneframetimelimit-oneframetime)*1000000));
 	QueryPerformanceCounter(&t1);//测前跳动次数
 }
