@@ -1,0 +1,16 @@
+TopACE .SET爆炸脚本
+
+Header
+4	String		Identifier		"SET" 00
+4	Int32		Count
+
+BomsSet
+(
+4	UInt32		Pnum
+4	Int32		RandomSizeMIN		随机大小最小值
+4	Int32		RandomSizeMAX		随机大小最大值
+4	Int32		RandomMoveMIN		随机移动量最小值
+4	Int32		RandomMoveMAX		随机移动量最大值
+4	Int32		ShowTimeStart		开始时间
+4	Int32		ShowTimeEnd		结束时间
+) * Count
