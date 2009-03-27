@@ -14,18 +14,18 @@
 
 int gpuType=0;//0未知 1NV 2ATI
 bool LoadTGA(Texture *, char *);
-Texture textureAlpha[2],textureAlphaFont[1],textureBom[22],textureSmoke[MAXSMOKE],textureLock[1];	//,textureBoms[MAXBOMS]
-GLuint	texture[2];	//gui相关纹理编号
+Texture textureAlphaFont[1],textureLock[1];	//,textureBoms[MAXBOMS]
+//GLuint	texture[2];	//gui相关纹理编号
 GLuint textureRedar,UItexture4,Maptexture;
 GLuint fbo;					// Our handle to the FBO
 GLuint depthBuffer;			// Our handle to the depth render buffer
 GLuint img,fboBloomImg,dtex;					// Our handle to a texture
-GLuint blurtexture2;
+//GLuint blurtexture2;
 GLuint PlayerSign;
 bool IsSupportFBO=false;
 //int SmokeNumber=0;//读取的尾烟图片总数
-int BomsNumber=0;//读取的爆炸相关设定总数
-int BomPsNumber=0;//读取的爆炸相关图片总数
+//int BomsNumber=0;//读取的爆炸相关设定总数
+//int BomPsNumber=0;//读取的爆炸相关图片总数
 /*
 struct BomsSet
 {
@@ -149,6 +149,7 @@ bool LoadBoms(int BomsNum)
 	return false;
 }
 */
+/*
 bool LoadSmoke(int SmokeNum)
 {
 	char SmokeFileName[64]={0};
@@ -188,6 +189,124 @@ bool LoadSmoke(int SmokeNum)
 
 
 }
+*/
+void initFBO()
+{
+	char szGPU[128]={0};
+	sprintf(szGPU,"%s",(char *)glGetString(GL_VENDOR));
+	if(szGPU[0]=='A')
+	{
+		gpuType=2;
+	}
+	if(szGPU[0]=='N')
+	{
+		gpuType=1;
+	}
+	if(IsSupportFBO)
+	{
+		int imagesize=1024;
+
+		glGenFramebuffersEXT(1, &fbo);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+
+		glGenTextures(1, &img);
+		glBindTexture(GL_TEXTURE_2D, img);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		glGenTextures(1, &fboBloomImg);
+		glBindTexture(GL_TEXTURE_2D, fboBloomImg);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+			
+		glGenTextures(1, &dtex);
+		glBindTexture(GL_TEXTURE_2D, dtex);
+		if(gpuType==0)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		if(gpuType==2)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		if(gpuType==1)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, img, 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, fboBloomImg, 0);
+
+		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		switch(status) 
+		{
+			case GL_FRAMEBUFFER_COMPLETE_EXT:
+				break;
+			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			default:
+				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+	         
+		}
+
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, dtex, 0);
+
+
+		status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		switch(status) 
+		{
+			case GL_FRAMEBUFFER_COMPLETE_EXT:
+				break;
+			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+				break;
+			default:
+				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+	         
+		}
+
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	// Unbind the FBO for now
+	}
+
+
+}
 int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 {
 	
@@ -200,6 +319,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 	memset(TextureImage,0,sizeof(void *)*1);           	// Set The Pointer To NULL
 
 	// Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit
+	/*
 	if (TextureImage[0]=LoadBMP("Data/Font.bmp"))
 	{
 		Status=TRUE;									// Set The Status To TRUE
@@ -230,6 +350,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 		free(TextureImage[0]);								// Free The Image Structure
 	}
+	*/
 	/*
 	if(LoadTGA(&SkyTex[0],"Data/sky/BK.tga"))
 	{
@@ -385,7 +506,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 			{
 				free(textureLock[0].imageData);					// Free The Texture Image Memory ( CHANGE )
 			}
-		texture[1]=textureLock[0].texID;
+		//texture[1]=textureLock[0].texID;
 	
 	}
 		/*
@@ -544,7 +665,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 		free(TextureImage[5]);								// Free The Image Structure
 	}
-
+/*
 	if (LoadTGA(&textureAlpha[0], "Data/fog.tga"))
 	{											
 
@@ -570,31 +691,8 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 			}
 
 	}
-	if (LoadTGA(&textureAlphaFont[0], "Data/font.tga"))
-	{											
+	*/
 
-
-			// Typical Texture Generation Using Data From The TGA ( CHANGE )textureAlphaFontFont[1]
-			glGenTextures(1, &textureAlphaFont[0].texID);				// Create The Texture ( CHANGE )
-			glBindTexture(GL_TEXTURE_2D, textureAlphaFont[0].texID);
-			glTexImage2D(GL_TEXTURE_2D, 0, textureAlphaFont[0].bpp / 8, textureAlphaFont[0].width, textureAlphaFont[0].height, 0, textureAlphaFont[0].type, GL_UNSIGNED_BYTE, textureAlphaFont[0].imageData);
-			if(IsSupportFBO)
-				{
-					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-				}
-				else
-				{
-					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-				}
-
-			if (textureAlphaFont[0].imageData)						// If Texture Image Exists ( CHANGE )
-			{
-				free(textureAlphaFont[0].imageData);					// Free The Texture Image Memory ( CHANGE )
-			}
-
-	}
 
 	
 //**************************************************
@@ -716,124 +814,6 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 //**************************************************
 //FBO
 //**************************************************
-	char szGPU[128]={0};
-	sprintf(szGPU,"%s",(char *)glGetString(GL_VENDOR));
-	if(szGPU[0]=='A')
-	{
-		gpuType=2;
-	}
-	if(szGPU[0]=='N')
-	{
-		gpuType=1;
-	}
-	if(IsSupportFBO)
-	{
-		int imagesize=1024;
 
-		glGenFramebuffersEXT(1, &fbo);
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-
-		glGenTextures(1, &img);
-		glBindTexture(GL_TEXTURE_2D, img);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		glGenTextures(1, &fboBloomImg);
-		glBindTexture(GL_TEXTURE_2D, fboBloomImg);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-
-			
-		glGenTextures(1, &dtex);
-		glBindTexture(GL_TEXTURE_2D, dtex);
-		if(gpuType==0)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		if(gpuType==2)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		if(gpuType==1)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, img, 0);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, fboBloomImg, 0);
-
-		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-		switch(status) 
-		{
-			case GL_FRAMEBUFFER_COMPLETE_EXT:
-				break;
-			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			default:
-				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-	         
-		}
-
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, dtex, 0);
-
-
-		status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-		switch(status) 
-		{
-			case GL_FRAMEBUFFER_COMPLETE_EXT:
-				break;
-			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			default:
-				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-	         
-		}
-	/*
-		GLint depthSize;
-		glGetRenderbufferParameterivEXT(GL_RENDERBUFFER_EXT,GL_RENDERBUFFER_DEPTH_SIZE_EXT,&depthSize);
-		testNum=depthSize;
-		*/
-		//GLint maxbuffers;
-		//glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT, &maxbuffers);
-
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	// Unbind the FBO for now
-	}
 	return Status;										// Return The Status
 }

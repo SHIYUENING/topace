@@ -1,7 +1,7 @@
 #pragma once
 #include "structs.h"
 #include "testNum.h"
-int locknum=3;//同时最大锁定数
+int locknum=1;//同时最大锁定数
 int lockflagnum=0;//锁定优先级
 
 

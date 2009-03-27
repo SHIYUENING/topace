@@ -112,9 +112,9 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 			{
 
 				
-				float tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
-				float tmpY=SmokesList[i].pos[1]-(float)ViewPos(1);
-				float tmpZ=SmokesList[i].pos[2]-(float)ViewPos(2);
+				tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
+				tmpY=SmokesList[i].pos[1]-(float)ViewPos(1);
+				tmpZ=SmokesList[i].pos[2]-(float)ViewPos(2);
 				SmoleL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				//SmoleL=LookRenge*LookRenge-(SmokesList[i].pos[0]-ViewPos.RefPos()(0))*(SmokesList[i].pos[0]-ViewPos.RefPos()(0))+(SmokesList[i].pos[1]-ViewPos.RefPos()(1))*(SmokesList[i].pos[1]-ViewPos.RefPos()(1))+(SmokesList[i].pos[2]-ViewPos.RefPos()(2))*(SmokesList[i].pos[2]-ViewPos.RefPos()(2));
 				if(SmoleL<LookRenge*LookRenge)//ÔÚÊÓ¾àÄÚ

@@ -20,6 +20,7 @@
 #include "texture.h"
 #include "EffectImpact.h"
 #include "SkyBox.h"
+#include "Cloud.h"
 
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
@@ -49,7 +50,8 @@ CSmoke		PSmokes;
 
 CKeyInput KeyInput;
 CSkyBox SkyBox;
-typedef int (*compfn)(const void*, const void*);
+CCloud Cloud;
+
 int needloadfile=0;
 
 float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
@@ -112,7 +114,7 @@ int ModelsNO=499;//第一个模型的编号
 int gamestage=0;
 CPUID cpu;//查询cpu
 char cpubrand[128]={0};
-char tmpshow[128]={0};
+
 int playTime=0;
 int bloomMAPSize=256;
 
@@ -268,11 +270,13 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 {
 	g_window	= window;
 	g_keys		= keys;
-	
-	//initSDLJoyStick();
-	
+	BuildFont();
+	glewInit();
+
 	KeyInput.initJoyStick();
-	//string brand = cpu.GetBrand();
+
+	
+
 	strcpy( cpubrand, cpu.GetBrand().c_str() );
 	while(cpubrand[0]==' ')
 	for(int i=0;i<126;i++)
@@ -280,9 +284,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		cpubrand[i]=cpubrand[i+1];
 	}
 
-	glewInit();
-	GraphicsLOW=GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0;
-//GL_ARB_vertex_program
+	//GL_ARB_vertex_program
     if ((glewIsSupported(
         "GL_VERSION_2_0 "
 		"GL_EXT_framebuffer_object "
@@ -290,15 +292,15 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
         "GL_ARB_fragment_program "
         ))&&(!GraphicsLOW))
 		IsSupportFBO=true;
+	initFBO();
 
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
 	g_fVBOSupported=true;
-	//glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);			// 设置s方向的纹理自动生成
-	//glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);	
 
-	PlaneBom[0].m_IsSupportFBO=IsSupportFBO;
-	if(!PlaneBom[0].InitBomType(0))
-		::MessageBox(HWND_DESKTOP,"InitBom Error","Error",MB_OK | MB_ICONEXCLAMATION);
+	
+	GraphicsLOW=GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0;
+
+
 
 	moveSpeed=GetPrivateProfileInt("FlySet","moveSpeed",100,".\\set.ini")*0.0001f;
 	MAXSpeed=GetPrivateProfileInt("FlySet","MAXSpeed",500,".\\set.ini")*0.0001f;
@@ -308,23 +310,16 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	TurnRateX=GetPrivateProfileInt("FlySet","TurnRateX",50,".\\set.ini")*0.0001f;
 	TurnRateY=GetPrivateProfileInt("FlySet","TurnRateY",500,".\\set.ini")*0.0001f;
 	TurnRateZ=GetPrivateProfileInt("FlySet","TurnRateZ",50,".\\set.ini")*0.0001f;
-	//if(GetPrivateProfileInt("Joke","GL_TEXTURE_GEN_S",0,".\\set.ini")==0)
-	//	Bgens=false;
-	//else
-	//	Bgens=true;
-	//if(GetPrivateProfileInt("Joke","GL_TEXTURE_GEN_T",0,".\\set.ini")==0)
-	//	Bgent=false;
-	//else
-	//	Bgent=true;
 
 	if(GetPrivateProfileInt("Effect","MoveBlur",0,".\\set.ini")==0)
 		UseEffectImpact=false;
 	else
 		UseEffectImpact=true;
 
-	LoadGLTextures();
-	BuildFont();
-	BuildSmoke();
+	glPrint(16,16,"Loading Textures",0);
+	
+	
+//	BuildSmoke();
 	if(!InitLoadfile())
 		return false;
 
@@ -353,17 +348,15 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	lockX=winwidth/2;
 	lockY=winheight/2;
 
-	//BlurTexture=EmptyTexture(512);
+
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
 	UItexture3=EmptyTexture(512);
-	blurtexture2=EmptyTexture(bloomMAPSize);
-	//SkyTexture=EmptyTexture(128);
+
 	initlocks();
 	initUnitdata(0);
-	SkyBox.IsSupportFBO=IsSupportFBO;
-	SkyBox.Init();
+	
 	
 	//glEnable(GL_LINE_SMOOTH);
 	//glHint(GL_LINE_SMOOTH_HINT,GL_LINE_SMOOTH_HINT);
@@ -374,7 +367,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	EffectImpact.Init();
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
-	sprintf(tmpshow,"tmpshow");
+
 	//const unsigned char *Extensions = glGetString( GL_EXTENSIONS );
 	//WritePrivateProfileString("Extensions","Extensions",(char *)Extensions,".\\set.ini");
 	QueryPerformanceCounter(&t1);
@@ -1923,14 +1916,23 @@ void showloading(void)
 	
 	if(needloadfile==1)
 	{
-		PSmokes.Init(1);
-		initsound();
-		//m_nj= new CLoadACMD;
-		//m_nj->Init("Data/0002",0,1);
 
-		//m_VBMD = new CLoadVBMD;
-		//m_VBMD->m_IsSupportFBO=IsSupportFBO;
+		LoadGLTextures();
 		
+//		glPrint(16,16,"Loading Bom",0);
+		PlaneBom[0].m_IsSupportFBO=IsSupportFBO;
+		if(!PlaneBom[0].InitBomType(0))
+		::MessageBox(HWND_DESKTOP,"InitBom Error","Error",MB_OK | MB_ICONEXCLAMATION);
+//		glPrint(16,16,"Loading Sky",0);
+		SkyBox.IsSupportFBO=IsSupportFBO;
+		SkyBox.Init();
+		Cloud.Init();
+//		glPrint(16,16,"Loading Smoke",0);
+		PSmokes.Init(1);
+//		glPrint(16,16,"Loading Sound",0);
+		initsound();
+
+	//	glPrint(16,16,"Loading Model",0);
 		LoadVBMDModels(IsSupportFBO);
 		needloadfile=2;
 		
@@ -1939,10 +1941,10 @@ void showloading(void)
 		
 	if(needloadfile<2)
 	{
-		char loadingFileName[128];
-		sprintf(loadingFileName,"Now Loading");
+		//char loadingFileName[128];
+		//sprintf(loadingFileName,"Now Loading");
 		glEnable(GL_BLEND);
-		glPrint(16,16,loadingFileName,0);
+		glPrint(16,16,"Now Loading",0);
 		needloadfile=1;
 	}
 
@@ -2186,7 +2188,7 @@ void stage0(void)
 
 	if(firstmove)
 	{
-        MFighter.Translate(Vector3d(0.0f, 50000.0f, 0.0f));
+        MFighter.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
 //		MFighter2.Translate(Vector3d(0.0f, 31000.0f, -10000.0f));
 //		MFighter3.Translate(Vector3d(0.0f, 31000.0f, -10100.0f));
 		//MFighter2.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-100.0));
@@ -2216,7 +2218,7 @@ void stage0(void)
     
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
-	sprintf(tmpshow,"%d %d",locklists_index,lockflagnum);
+
 	Vector3d Pos3d;
 		Pos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 	paraLightDirection[0] = (float)Pos3d(0);
@@ -2309,6 +2311,11 @@ void stage0(void)
 
 	playTime=playTime+1;
 	
+	for(int i=0;i<100;i++)
+	{
+		if(timer[i]>0)
+			timer[i]=timer[i]-1;
+	}
 
 
 }
@@ -2333,11 +2340,7 @@ void Draw (void)
 	showloading();
 
 
-	for(int i=0;i<100;i++)
-	{
-		if(timer[i]>0)
-			timer[i]=timer[i]-1;
-	}
+
 
 	
 	LockFPS();
