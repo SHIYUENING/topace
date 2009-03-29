@@ -53,6 +53,7 @@ CSkyBox SkyBox;
 CCloud Cloud;
 
 int needloadfile=0;
+bool loadover=false;
 
 float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
 //GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
@@ -127,26 +128,6 @@ bool DrawEffectImpact=false;
 bool GraphicsLOW=false;
 CEffectImpact EffectImpact;
 //用于等待时间以保持稳定速度
-/*
-bool initSDLJoyStick(void)
-{
-	
-	if ( SDL_Init( SDL_INIT_JOYSTICK )>-1 )
-    {
-		int tmpxxxxxx=SDL_NumJoysticks();
-		//SDL_JoystickEventState(SDL_ENABLE);
-		
-		if(tmpxxxxxx>0)
-		{
-			joystick = SDL_JoystickOpen(GetPrivateProfileInt( "JoyStick" , "JoyNum"	 , 0 , ".\\set.ini" ));
-			IsUseJoyStick=true;
-		}
-		return true;
-    }
-	MessageBox (HWND_DESKTOP, SDL_GetError(), "Error", MB_OK | MB_ICONEXCLAMATION);
-	return false;
-
-}*/
 void Delay(__int64 Us)
 {
     LARGE_INTEGER CurrTicks, TicksCount; 
@@ -1914,7 +1895,22 @@ void DrawSky(float ne=0.0)
 }
 void showloading(void)
 {
+	glEnable(GL_BLEND);
+	needloadfile=needloadfile+1;
+
+	switch (needloadfile)
+	{
+	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();
+	case 2:glPrint(16,16,"Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
+	case 3:glPrint(16,16,"Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();Cloud.Init();
+	case 4:glPrint(16,16,"Loading Smoke",0);PSmokes.Init(1);
+	case 5:glPrint(16,16,"Loading Sound",0);initsound();
+	case 6:glPrint(16,16,"Loading Model",0);LoadVBMDModels(IsSupportFBO);
+	case 7:loadover=true;
 	
+	
+	}
+	/*
 	
 	if(needloadfile==1)
 	{
@@ -1949,7 +1945,7 @@ void showloading(void)
 		glPrint(16,16,"Now Loading",0);
 		needloadfile=1;
 	}
-
+*/
 
 
 }
@@ -2335,10 +2331,11 @@ void Draw (void)
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
-	if((gamestage==0)&&(needloadfile==2))
+	if(loadover)
 		stage0();
 
 
+	if(!loadover)
 	showloading();
 
 
@@ -2362,6 +2359,8 @@ void CPol(const Vector3d& pos, const Vector3d& dir, const Vector3d& dir2, double
     Vector3d intersect(-dir(2) / r, 0, dir(0) / r);
     rotation = CDeg(acos_s(dot(dir2, intersect))) * Sign(dir2(1));
 }
+
+
 
 
 
