@@ -110,6 +110,11 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 			
 			if(SmokesList[i].life>0.0f)//存在
 			{
+					SmokesList[i].pos[0]=SmokesList[i].pos[0]+SmokesList[i].posMove[0];
+					SmokesList[i].pos[1]=SmokesList[i].pos[1]+SmokesList[i].posMove[1];
+					SmokesList[i].pos[2]=SmokesList[i].pos[2]+SmokesList[i].posMove[2];
+					SmokesList[i].size=SmokesList[i].size+SmokesList[i].sizeMove;
+					SmokesList[i].life=SmokesList[i].life-1.0f;
 
 				
 				tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
@@ -119,11 +124,7 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 				//SmoleL=LookRenge*LookRenge-(SmokesList[i].pos[0]-ViewPos.RefPos()(0))*(SmokesList[i].pos[0]-ViewPos.RefPos()(0))+(SmokesList[i].pos[1]-ViewPos.RefPos()(1))*(SmokesList[i].pos[1]-ViewPos.RefPos()(1))+(SmokesList[i].pos[2]-ViewPos.RefPos()(2))*(SmokesList[i].pos[2]-ViewPos.RefPos()(2));
 				if(SmoleL<LookRenge*LookRenge)//在视距内
 				{
-					SmokesList[i].pos[0]=SmokesList[i].pos[0]+SmokesList[i].posMove[0];
-					SmokesList[i].pos[1]=SmokesList[i].pos[1]+SmokesList[i].posMove[1];
-					SmokesList[i].pos[2]=SmokesList[i].pos[2]+SmokesList[i].posMove[2];
-					SmokesList[i].size=SmokesList[i].size+SmokesList[i].sizeMove;
-					SmokesList[i].life=SmokesList[i].life-1.0f;
+
 					glGetIntegerv(GL_VIEWPORT,viewport);
 					glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
 					glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
