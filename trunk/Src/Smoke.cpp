@@ -5,16 +5,20 @@ CSmoke::CSmoke(void)
 , SmokeGLlist(0)
 , GraphicLevel(1)
 , SmokeTexsNum(0)
+, CloudTexID(0)
+, base(0)
+, CloudSize(500)
 {
 }
 
 CSmoke::~CSmoke(void)
 {
-	for(int i=0;i<SmokeTexsNum;i++)
-		glDeleteTextures(1,&textureSmoke[i].texID);
+	DeleteCloud();
+	DeleteSmoke();
+
 }
 
-void CSmoke::AddSmoke(float pos[3], float size, float sizeMove, float life ,int type)
+void CSmoke::AddSmoke(float pos[3], float size, float sizeMove, float life ,int type,int CloudListNum)
 {
 	SmokeNodeNumber=SmokeNodeNumber+1;
 	if(SmokeNodeNumber==MAXSMOKESLIST)
@@ -22,14 +26,20 @@ void CSmoke::AddSmoke(float pos[3], float size, float sizeMove, float life ,int 
 		SmokeNodeNumber=0;
 	
 	}
-		
-	SmokesList[SmokeNodeNumber].TexId=textureSmoke[rand()%SmokeTexsNum].texID;
+	if(type!=2)	
+		SmokesList[SmokeNodeNumber].TexId=textureSmoke[rand()%SmokeTexsNum].texID;
+	else
+		SmokesList[SmokeNodeNumber].TexId=CloudListNum;
+
 	SmokesList[SmokeNodeNumber].pos[0]=pos[0];
 	SmokesList[SmokeNodeNumber].pos[1]=pos[1];
 	SmokesList[SmokeNodeNumber].pos[2]=pos[2];
-	SmokesList[SmokeNodeNumber].posMove[0]=(float)(rand()%100-50)/300.0f;
-	SmokesList[SmokeNodeNumber].posMove[1]=(float)(rand()%100-50)/300.0f;
-	SmokesList[SmokeNodeNumber].posMove[2]=(float)(rand()%100-50)/300.0f;
+	if(type!=2)
+	{
+		SmokesList[SmokeNodeNumber].posMove[0]=(float)(rand()%100-50)/300.0f;
+		SmokesList[SmokeNodeNumber].posMove[1]=(float)(rand()%100-50)/300.0f;
+		SmokesList[SmokeNodeNumber].posMove[2]=(float)(rand()%100-50)/300.0f;
+	}
 	SmokesList[SmokeNodeNumber].size=size;
 	SmokesList[SmokeNodeNumber].sizeMove=sizeMove;
 	SmokesList[SmokeNodeNumber].life=life;
@@ -74,6 +84,44 @@ void CSmoke::DelSmoke(SmokeListNode * DelNode)
 	
 }
 */
+bool CSmoke::BuildCloud(void)
+{
+
+	CDDS loadDDS;
+
+	CloudTexID=loadDDS.loadCompressedTexture("Data/sky/Cloud.dds");
+	if(CloudTexID==0)
+		return false;
+	else
+	{
+		float	cx;											// Holds Our X Character Coord
+		float	cy;											// Holds Our Y Character Coord
+
+		base=glGenLists(16);								// Creating 256 Display Lists
+		glBindTexture(GL_TEXTURE_2D, CloudTexID);			// Select Our Font Texture
+		for (int loop=0; loop<16; loop++)						// Loop Through All 256 Lists
+		{
+			cx=float(loop%4)/32.0f;						// X Position Of Current Character
+			cy=float(loop/4)/32.0f;						// Y Position Of Current Character
+
+			glNewList(base+loop,GL_COMPILE);				// Start Building A List	
+				glBegin(GL_QUADS);							// Use A Quad For Each Character
+					glTexCoord2f(cx,1-cy-0.25f);		// Texture Coord (Bottom Left)
+					glVertex2f(0,0);						// Vertex Coord (Bottom Left)
+					glTexCoord2f(cx+0.25f,1-cy-0.25f);	// Texture Coord (Bottom Right)
+					glVertex2f(CloudSize,0);						// Vertex Coord (Bottom Right)
+					glTexCoord2f(cx+0.25f,1-cy);			// Texture Coord (Top Right)
+					glVertex2f(CloudSize,CloudSize);						// Vertex Coord (Top Right)
+					glTexCoord2f(cx,1-cy);					// Texture Coord (Top Left)
+					glVertex2f(0,CloudSize);						// Vertex Coord (Top Left)
+				glEnd();									// Done Building Our Quad (Character)
+				glTranslated(10.0f,0.0f,0.0f);						// Move To The Right Of The Character
+			glEndList();									// Done Building The Display List
+		}	
+	}
+	return true;
+}
+
 void CSmoke::BuildSmoke(unsigned int settexID)
 {
 	SmokeGLlist=glGenLists(1);
@@ -110,11 +158,12 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 			
 			if(SmokesList[i].life>0.0f)//存在
 			{
-					SmokesList[i].pos[0]=SmokesList[i].pos[0]+SmokesList[i].posMove[0];
-					SmokesList[i].pos[1]=SmokesList[i].pos[1]+SmokesList[i].posMove[1];
-					SmokesList[i].pos[2]=SmokesList[i].pos[2]+SmokesList[i].posMove[2];
-					SmokesList[i].size=SmokesList[i].size+SmokesList[i].sizeMove;
-					SmokesList[i].life=SmokesList[i].life-1.0f;
+				SmokesList[i].pos[0]=SmokesList[i].pos[0]+SmokesList[i].posMove[0];
+				SmokesList[i].pos[1]=SmokesList[i].pos[1]+SmokesList[i].posMove[1];
+				SmokesList[i].pos[2]=SmokesList[i].pos[2]+SmokesList[i].posMove[2];
+				SmokesList[i].size=SmokesList[i].size+SmokesList[i].sizeMove;
+				if(SmokesList[i].type!=2)
+				SmokesList[i].life=SmokesList[i].life-1.0f;
 
 				
 				tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
@@ -122,6 +171,12 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 				tmpZ=SmokesList[i].pos[2]-(float)ViewPos(2);
 				SmoleL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				//SmoleL=LookRenge*LookRenge-(SmokesList[i].pos[0]-ViewPos.RefPos()(0))*(SmokesList[i].pos[0]-ViewPos.RefPos()(0))+(SmokesList[i].pos[1]-ViewPos.RefPos()(1))*(SmokesList[i].pos[1]-ViewPos.RefPos()(1))+(SmokesList[i].pos[2]-ViewPos.RefPos()(2))*(SmokesList[i].pos[2]-ViewPos.RefPos()(2));
+				if(SmoleL>LookRenge*LookRenge*2)
+				{
+					if(SmokesList[i].type==2)
+					SmokesList[i].life=0.0f;
+				
+				}
 				if(SmoleL<LookRenge*LookRenge)//在视距内
 				{
 
@@ -165,12 +220,18 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 						}
 						glLoadIdentity();
 
-						glBindTexture(GL_TEXTURE_2D, SmokesList[i].TexId);
+						if(SmokesList[i].type==2)
+							glBindTexture(GL_TEXTURE_2D, CloudTexID);
+						else
+							glBindTexture(GL_TEXTURE_2D, SmokesList[i].TexId);
 						glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
 						glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
 						if(Pos3d(2)<-500.0f)
 						{
-							glCallList(SmokeGLlist);
+							if(SmokesList[i].type==2)
+								glCallList(base+SmokesList[i].TexId);
+							else
+								glCallList(SmokeGLlist);
 						}
 
 
@@ -200,6 +261,7 @@ void CSmoke::Init(int setGraphicLevel)
 		SmokeTexsNum=SmokeTexsNum+1;
 	if(SmokeTexsNum>0)
 		BuildSmoke(textureSmoke[0].texID);
+	BuildCloud();
 }
 
 bool CSmoke::LoadSmoke(int SmokeNum)
@@ -241,4 +303,18 @@ bool CSmoke::LoadSmoke(int SmokeNum)
 
 	return false;
 
+}
+
+
+void CSmoke::DeleteCloud(void)
+{
+	glDeleteLists(base,16);
+	glDeleteTextures(1,&CloudTexID);
+}
+
+void CSmoke::DeleteSmoke(void)
+{
+	glDeleteLists(SmokeGLlist,1);
+	for(int i=0;i<SmokeTexsNum;i++)
+		glDeleteTextures(1,&textureSmoke[i].texID);
 }

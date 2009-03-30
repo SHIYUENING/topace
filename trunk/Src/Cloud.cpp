@@ -9,10 +9,13 @@ CCloud::CCloud(void)
 
 CCloud::~CCloud(void)
 {
+	glDeleteLists(base,16);
+	glDeleteTextures(1,&CloudTexID);
 }
 
 bool CCloud::Init(void)
 {
+
 	for(int i=0;i<MAX_Cloud_NUM;i++)
 	{
 		CloudsPos[i].islife=false;

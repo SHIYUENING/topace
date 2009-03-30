@@ -1,11 +1,8 @@
 //#pragma once
 #ifndef _SMOKE_H
 #define _SMOKE_H
-#include "Mathematics.h"
-#include <windows.h>													// Header File For The Windows Library
-#include <gl/gl.h>														// Header File For The OpenGL32 Library
-#include <gl/glu.h>														// Header File For The GLu32 Library
-#include <gl/glaux.h>
+#include "Mathematics.h"		
+#include "DDS.h"
 #include "texture.h"
 
 #define MAXSMOKESLIST 40000
@@ -35,6 +32,8 @@ public:
 	unsigned int SmokeNodeNumber;//下一个被添加的烟雾的编号
 	unsigned int SmokeGLlist;//烟雾显示列表编号
 
+	GLuint base;
+	GLuint CloudTexID;
 	int SmokeTexsNum;//烟雾纹理总数
 	int GraphicLevel;//画面质量等级
 	float SmokeAlpha;
@@ -42,9 +41,10 @@ public:
 	float tmpX;
 	float tmpY;
 	float tmpZ;
+	float CloudSize;
 
 	
-	void AddSmoke(float pos[3], float size=1.0f, float sizeMove=0.0f, float life=150.0f,int type=0);
+	void AddSmoke(float pos[3], float size=1.0f, float sizeMove=0.0f, float life=150.0f,int type=0,int CloudListNum=0);
 	
 	void BuildSmoke(unsigned int settexID);
 	void DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int winheight,float LookRenge);
@@ -63,5 +63,8 @@ public:
 	SmokeListNode SmokesList[MAXSMOKESLIST];
 	Texture textureSmoke[MAXSMOKETEXS];
 	
+	bool BuildCloud(void);
+	void DeleteCloud(void);
+	void DeleteSmoke(void);
 };
 #endif
