@@ -7,7 +7,7 @@ CSmoke::CSmoke(void)
 , SmokeTexsNum(0)
 , CloudTexID(0)
 , base(0)
-, CloudSize(500)
+, CloudSize(2500)
 {
 	LastPos[0]=0.0f;
 	LastPos[1]=0.0f;
@@ -286,7 +286,7 @@ void CSmoke::Init(int setGraphicLevel)
 	{
 		for(int j=0;j<10;j++)
 		{
-			AddCloud((i-5)*10000,50000,(j-5)*10000);
+			AddCloud((i-5)*20000+rand()%1000,50000,(j-5)*20000+rand()%1000);
 		}
 	}
 }
