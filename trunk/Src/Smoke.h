@@ -44,7 +44,7 @@ public:
 	float CloudSize;
 
 	
-	void AddSmoke(float pos[3], float size=1.0f, float sizeMove=0.0f, float life=150.0f,int type=0,int CloudListNum=0);
+	void AddSmoke(float posx, float posy, float posz, float size=1.0f, float sizeMove=0.0f, float life=150.0f,int type=0,int CloudListNum=0);
 	
 	void BuildSmoke(unsigned int settexID);
 	void DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int winheight,float LookRenge);
@@ -66,5 +66,7 @@ public:
 	bool BuildCloud(void);
 	void DeleteCloud(void);
 	void DeleteSmoke(void);
+	void AddCloud(float posx, float posy, float posz);
+	float LastPos[2];
 };
 #endif

@@ -9,6 +9,8 @@ CSmoke::CSmoke(void)
 , base(0)
 , CloudSize(500)
 {
+	LastPos[0]=0.0f;
+	LastPos[1]=0.0f;
 }
 
 CSmoke::~CSmoke(void)
@@ -18,7 +20,7 @@ CSmoke::~CSmoke(void)
 
 }
 
-void CSmoke::AddSmoke(float pos[3], float size, float sizeMove, float life ,int type,int CloudListNum)
+void CSmoke::AddSmoke(float posx, float posy, float posz, float size, float sizeMove, float life ,int type,int CloudListNum)
 {
 	SmokeNodeNumber=SmokeNodeNumber+1;
 	if(SmokeNodeNumber==MAXSMOKESLIST)
@@ -31,9 +33,9 @@ void CSmoke::AddSmoke(float pos[3], float size, float sizeMove, float life ,int 
 	else
 		SmokesList[SmokeNodeNumber].TexId=CloudListNum;
 
-	SmokesList[SmokeNodeNumber].pos[0]=pos[0];
-	SmokesList[SmokeNodeNumber].pos[1]=pos[1];
-	SmokesList[SmokeNodeNumber].pos[2]=pos[2];
+	SmokesList[SmokeNodeNumber].pos[0]=posx;
+	SmokesList[SmokeNodeNumber].pos[1]=posy;
+	SmokesList[SmokeNodeNumber].pos[2]=posz;
 	if(type!=2)
 	{
 		SmokesList[SmokeNodeNumber].posMove[0]=(float)(rand()%100-50)/300.0f;
@@ -129,13 +131,13 @@ void CSmoke::BuildSmoke(unsigned int settexID)
 	glNewList(SmokeGLlist,GL_COMPILE);
 			glBegin(GL_QUADS);							// Use A Quad For Each Character
 				glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
-				glVertex2i(-50,-50);						// Vertex Coord (Bottom Left)
+				glVertex2i(-70,-70);						// Vertex Coord (Bottom Left)
 				glTexCoord2f(1.0f,0.0f);	// Texture Coord (Bottom Right)
-				glVertex2i(50,-50);						// Vertex Coord (Bottom Right)
+				glVertex2i(70,-70);						// Vertex Coord (Bottom Right)
 				glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
-				glVertex2i(50,50);						// Vertex Coord (Top Right)
+				glVertex2i(70,70);						// Vertex Coord (Top Right)
 				glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
-				glVertex2i(-50,50);						// Vertex Coord (Top Left)
+				glVertex2i(-70,70);						// Vertex Coord (Top Left)
 			glEnd();
 
 	glEndList();
@@ -143,6 +145,18 @@ void CSmoke::BuildSmoke(unsigned int settexID)
 }
 void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int winheight,float LookRenge)
 {
+	//if(((ViewPos(0)*ViewPos(0)+ViewPos(2)*ViewPos(2))+(LastPos[0]*LastPos[0]+LastPos[1]*LastPos[1]))>(10000*10000))
+	/*if(((ViewPos(0)-LastPos[0])*(ViewPos(0)-LastPos[0])+(ViewPos(2)-LastPos[1])*(ViewPos(2)-LastPos[1]))>(10000*10000))
+	{
+		AddCloud((float)ViewPos(0)+LookRenge,60000,(float)ViewPos(2)+LookRenge);
+		AddCloud((float)ViewPos(0)+LookRenge,60000,(float)ViewPos(2)-LookRenge);
+		AddCloud((float)ViewPos(0)-LookRenge,60000,(float)ViewPos(2)+LookRenge);
+		AddCloud((float)ViewPos(0)-LookRenge,60000,(float)ViewPos(2)-LookRenge);
+		LastPos[0]=(float)ViewPos(0);
+		LastPos[1]=(float)ViewPos(2);
+	
+	
+	}*/
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
@@ -171,12 +185,12 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 				tmpZ=SmokesList[i].pos[2]-(float)ViewPos(2);
 				SmoleL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				//SmoleL=LookRenge*LookRenge-(SmokesList[i].pos[0]-ViewPos.RefPos()(0))*(SmokesList[i].pos[0]-ViewPos.RefPos()(0))+(SmokesList[i].pos[1]-ViewPos.RefPos()(1))*(SmokesList[i].pos[1]-ViewPos.RefPos()(1))+(SmokesList[i].pos[2]-ViewPos.RefPos()(2))*(SmokesList[i].pos[2]-ViewPos.RefPos()(2));
-				if(SmoleL>LookRenge*LookRenge*2)
+				/*if(SmoleL>LookRenge*LookRenge*4)
 				{
 					if(SmokesList[i].type==2)
 					SmokesList[i].life=0.0f;
 				
-				}
+				}*/
 				if(SmoleL<LookRenge*LookRenge)//ÔÚÊÓ¾àÄÚ
 				{
 
@@ -221,9 +235,15 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 						glLoadIdentity();
 
 						if(SmokesList[i].type==2)
+						{
+							glDisable(GL_BLEND);
 							glBindTexture(GL_TEXTURE_2D, CloudTexID);
+						}
 						else
+						{
+							glEnable(GL_BLEND);
 							glBindTexture(GL_TEXTURE_2D, SmokesList[i].TexId);
+						}
 						glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
 						glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
 						if(Pos3d(2)<-500.0f)
@@ -262,6 +282,13 @@ void CSmoke::Init(int setGraphicLevel)
 	if(SmokeTexsNum>0)
 		BuildSmoke(textureSmoke[0].texID);
 	BuildCloud();
+	for(int i=0;i<10;i++)
+	{
+		for(int j=0;j<10;j++)
+		{
+			AddCloud((i-5)*10000,50000,(j-5)*10000);
+		}
+	}
 }
 
 bool CSmoke::LoadSmoke(int SmokeNum)
@@ -317,4 +344,29 @@ void CSmoke::DeleteSmoke(void)
 	glDeleteLists(SmokeGLlist,1);
 	for(int i=0;i<SmokeTexsNum;i++)
 		glDeleteTextures(1,&textureSmoke[i].texID);
+}
+
+void CSmoke::AddCloud(float posx, float posy, float posz)
+{
+	AddSmoke(posx+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+		
+	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
+
+	
 }
