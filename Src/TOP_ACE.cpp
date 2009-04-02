@@ -1537,13 +1537,11 @@ void UnitMove(void)
 			MisslePos[0]=(float)PMissleList.Missles[i].UDMplane.RefPos()(0);
 			MisslePos[1]=(float)PMissleList.Missles[i].UDMplane.RefPos()(1);
 			MisslePos[2]=(float)PMissleList.Missles[i].UDMplane.RefPos()(2);
-			testNum=MisslePos[0];
-			testNum2=MisslePos[1];
-			testNum3=MisslePos[2];
 
-			PSmokes.AddSmoke(MisslePos,(float)(rand()%40+80)/100.0f);
+
+			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],(float)(rand()%40+80)/100.0f);
 			if(!GraphicsLOW)
-			PSmokes.AddSmoke(MisslePos,0.4f,0.06f,15.0f,1);
+			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],0.4f,0.06f,15.0f,1);
 			
 			if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>0)
 			{
@@ -1560,7 +1558,7 @@ void UnitMove(void)
 				PMissleList.Missles[i].TurnTo(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos());
 				if(PMissleList.Missles[i].timer>15)
 					PMissleList.Missles[i].UDPstate.NextState();
-				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,50));
+				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,70));
 				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
 					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
@@ -1597,7 +1595,7 @@ void UnitMove(void)
 			}
 			else
 			{
-				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*8));
+				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,70.0));
 			}
 		}
 	
@@ -2184,6 +2182,9 @@ void stage0(void)
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
 
+	testNum=MFighter.RefPos()(0);
+	testNum2=MFighter.RefPos()(1);
+	testNum3=MFighter.RefPos()(2);
 	if(firstmove)
 	{
         MFighter.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
