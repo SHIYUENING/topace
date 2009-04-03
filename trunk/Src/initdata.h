@@ -33,7 +33,7 @@ void initUnitdata(int stage=0 )
 	for(int i=0;i<maxUnits;i++)
 	{
 		UDfighers[i].UDlife=-1;
-		UDfighers[i].UDposflag=0;
+
 		UDfighers[i].weapon[0]=0;
 	}
 	if(stage==0)

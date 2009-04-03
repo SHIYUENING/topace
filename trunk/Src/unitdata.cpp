@@ -7,11 +7,21 @@ Unitdata::Unitdata(void)
 ,UDlockde(false)
 ,waringde(false)
 ,LockListNum(0)
+,smokeTime(0)
+,attackTGTNum(-1)
+,AIact(1)
+,AImode(1)
+,attackedMissleNum(-1)
+,fireTimer(0)
+,RefireTime(600)
+,LockTimer(0)
+,LockOnTime(150)
+,attackRange(10000.0f)
 {
 
 
-	UDposflag=0;
-	smokeTime=0;
+
+
 	for(int i=0;i<MAXweapon;i++)
 		weapon[MAXweapon]=-1;
 
@@ -311,4 +321,37 @@ bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight
 }
 void Unitdata::m_LaunchMissle(int m_TGT_Num)
 {
+}
+void Unitdata::AttackTo(const Vector3d& Position)
+{
+	TurnTo(Position);
+	float tmpx=float(UDMplane.RefPos()(0)-Position(0));
+	float tmpy=float(UDMplane.RefPos()(1)-Position(1));
+	float tmpz=float(UDMplane.RefPos()(2)-Position(2));
+	if((tmpx*tmpx+tmpy*tmpy+tmpz*tmpz)>attackRange)
+	{
+		LockTimer=0;
+		
+		return;
+	}
+
+	Vector3d target;
+    target = Position - UDMplane.RefPos();
+    if (norm2(target)<0.001){ return; }
+    target = normalize(target);
+
+	Vector3d current;
+    current = UDMplane.Matrix() * Vector3d(0, 0, 1);
+    if (norm2(current)<0.001){ return; }
+    current = normalize(current);
+
+	double cos_angle = dot(target, current);
+	if(cos_angle>0.6)
+		LockTimer=LockTimer+1;
+	else
+	{
+		LockTimer=0;
+		
+	}
+
 }
