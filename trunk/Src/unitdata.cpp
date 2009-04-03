@@ -328,7 +328,7 @@ void Unitdata::AttackTo(const Vector3d& Position)
 	float tmpx=float(UDMplane.RefPos()(0)-Position(0));
 	float tmpy=float(UDMplane.RefPos()(1)-Position(1));
 	float tmpz=float(UDMplane.RefPos()(2)-Position(2));
-	if((tmpx*tmpx+tmpy*tmpy+tmpz*tmpz)>attackRange)
+	if((tmpx*tmpx+tmpy*tmpy+tmpz*tmpz)>attackRange*attackRange)
 	{
 		LockTimer=0;
 		

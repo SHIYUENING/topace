@@ -38,6 +38,7 @@ void initUnitdata(int stage=0 )
 	}
 	if(stage==0)
 	{
+		/*
 		UDfighers[0].UDlife=100;
 		UDfighers[0].UDflag=2;
 
@@ -61,6 +62,7 @@ void initUnitdata(int stage=0 )
 		sprintf(UDfighers[3].UDname,"Neo1");
 		UDfighers[3].UDlockselect=false;
 		UDfighers[3].UDMplane.Translate(Vector3d(300.0f, 50100.0f, -2000.0f));
+		*/
 		for(int i=4;i<maxUnits;i++)
 		{
 			UDfighers[i].UDfighterType=2;
