@@ -8,9 +8,11 @@
 //#include "ACMD.h"
 #define AImode_Counterattack 1//受攻击时反击
 #define AImode_Travel 2//受攻击时继续之前的行动
+#define AImode_Avoid 3//受攻击时回避
 #define AIact_MoveOrStandby 1//向某点移动或者在某处附近盘旋
 #define AIact_Attact 2//向某目标攻击
 #define AIact_Avoid 3//闪避
+#define AIact_assemble 4//向队长集中
 
 #define MAXweapon 4
 #define MAXUNITSMOKE 150
@@ -27,6 +29,8 @@ public:
 	bool UDlockselect;//是否被选择
 	bool UDlockde;//是否被锁定
 	bool waringde;//是否被警告
+	//bool isLeader;//是否是队长
+	//int leadrNum;//队长编号
 	int UDlife;//生命值，-1表示不存在，0表示已经被灭
 	float UDwinl;//相对玩家的距离，UDwinz（屏幕坐标深度）为负数的时候此值无效
 	float UDwinx;//屏幕坐标x
@@ -45,15 +49,23 @@ public:
 	float UDposzMove[MAXUNITSMOKE];//尾烟粒子坐标z
 	int smokeNum[MAXUNITSMOKE];//尾烟纹理编号
 	*/
-	int UDposflag;//标示目前被变更的坐标
+
 	int weapon[MAXweapon];//武器编号<0时表示没有武器
 	int smokeTime;//被消灭后烟雾残留时间
-	int TGTnum; //攻击目标编号
+	
 	int attackedMissleNum;//被攻击的导弹编号
 	int attackedTGTNum;//被攻击的敌人编号
 	int AImode;//行动模式1 被攻击时反击 ；2被攻击时继续之前的行为
 	int AIact;//当前行为1 向指定点移动或在指定点周围盘旋 ；2攻击 ；3闪避
 	int LockListNum;//锁定编号
+	int attackTGTNum;//攻击目标
+	int fireTimer;//攻击间隔计时器
+	int RefireTime;//攻击间隔时间
+	int LockTimer;//锁定计时器
+	int LockOnTime;//锁定目标所需时间
+	float attackRange;
+	Vector3d MoveToPos;
+
 
 
 	
@@ -68,6 +80,7 @@ public:
 	//void m_DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
 	bool m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
 	void m_LaunchMissle(int m_TGT_Num);
+	void AttackTo(const Vector3d& Position);
 };
 
 
