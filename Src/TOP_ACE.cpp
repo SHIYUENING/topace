@@ -1467,6 +1467,7 @@ void UnitMove(void)
 				//testNum=(float)UDfighers[i].WaringTo(missle[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
 				if(UDfighers[i].attackedMissleNum>-1)
 				UDfighers[i].WaringTo(PMissleList.Missles[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
+				UDfighers[i].UDPstate.NextState();
 				
 			}
 			//else
