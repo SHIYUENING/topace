@@ -12,6 +12,8 @@
 FMOD_SYSTEM* sys;
 FMOD_SOUND* sound1;
 FMOD_SOUND* sound2;
+FMOD_SOUND* soundLock;
+FMOD_SOUND* soundLockOn;
 FMOD_SOUND* voice1;
 FMOD_SOUND* voice2;
 FMOD_SOUND* voice3;
@@ -25,6 +27,8 @@ FMOD_SOUND* missvoice[4];
 FMOD_SOUND* BGMsound;
 FMOD_CHANNEL* channel1;
 FMOD_CHANNEL* channel2;
+FMOD_CHANNEL* channelLock;
+FMOD_CHANNEL* channelLockOn;
 FMOD_CHANNEL* channelvoice1;
 FMOD_CHANNEL* channelvoice2;
 FMOD_CHANNEL* channelvoice3;
@@ -80,6 +84,8 @@ void initsound()
 	
 	FMOD_System_CreateSound(sys, "Data/sound/TOWERWEA.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &sound1);
 	FMOD_System_CreateSound(sys, "Data/sound/ZAP9.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &sound2);
+	FMOD_System_CreateSound(sys, "Data/sound/lock.wav", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_HARDWARE, 0, &soundLock);
+	FMOD_System_CreateSound(sys, "Data/sound/Lockon.wav", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_HARDWARE, 0, &soundLockOn);
 	FMOD_System_CreateSound(sys, "Data/voice/hit.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice1);
 	FMOD_System_CreateSound(sys, "Data/voice/fox.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice2);
 	FMOD_System_CreateSound(sys, "Data/voice/miss.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice3);
