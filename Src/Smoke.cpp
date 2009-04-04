@@ -7,7 +7,7 @@ CSmoke::CSmoke(void)
 , SmokeTexsNum(0)
 , CloudTexID(0)
 , base(0)
-, CloudSize(2500)
+, CloudSize(10000)
 {
 	LastPos[0]=0.0f;
 	LastPos[1]=0.0f;
@@ -103,8 +103,8 @@ bool CSmoke::BuildCloud(void)
 		glBindTexture(GL_TEXTURE_2D, CloudTexID);			// Select Our Font Texture
 		for (int loop=0; loop<16; loop++)						// Loop Through All 256 Lists
 		{
-			cx=float(loop%4)/32.0f;						// X Position Of Current Character
-			cy=float(loop/4)/32.0f;						// Y Position Of Current Character
+			cx=float(loop%4)/4.0f;						// X Position Of Current Character
+			cy=float(loop/4)/4.0f;						// Y Position Of Current Character
 
 			glNewList(base+loop,GL_COMPILE);				// Start Building A List	
 				glBegin(GL_QUADS);							// Use A Quad For Each Character
@@ -191,7 +191,7 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 					SmokesList[i].life=0.0f;
 				
 				}*/
-				if(SmoleL<LookRenge*LookRenge)//在视距内
+				if(SmoleL<LookRenge*LookRenge*4)//在视距内
 				{
 
 					glGetIntegerv(GL_VIEWPORT,viewport);
@@ -200,68 +200,88 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 					gluProject(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2],mvmatrix,projmatrix,viewport,&WinPos[0],&WinPos[1],&WinPos[2]);
 					if(WinPos[2]>0.0)
 					if(WinPos[2]<1.0)
-					if(WinPos[0]>-0.1f*(float)winwidth)
-					if(WinPos[0]<1.1f*(float)winwidth)
-					if(WinPos[1]>-0.1*(float)winheight)
-					if(WinPos[1]<1.1*(float)winheight)//在视锥体内
 					{
-						glPushMatrix();	
-						Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
-
-						SmokeAlpha=1.0f;
-
-
-						
-						if(SmokesList[i].life<30.0f)
-							SmokeAlpha=SmokeAlpha*SmokesList[i].life/30.0f;
-						if((SmokesList[i].lifeMAX-SmokesList[i].life)<10.0f)
-						{
-							SmokeAlpha=SmokeAlpha*(SmokesList[i].lifeMAX-SmokesList[i].life)/10.0f;
-						}
-
-						if(Pos3d(2)<-(LookRenge*(5.0f/6.0f)))
-							SmokeAlpha=SmokeAlpha*(LookRenge+(float)Pos3d(2))/(LookRenge/6.0f);
-						if(Pos3d(2)>-1000.0f)
-							SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-300.0f)/700.0f;
-
-						glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
-						glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-						
-						if(SmokesList[i].type==1)
-						{
-							glColor4f(1.0f,0.5f,0.0f,SmokeAlpha);
-							glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-						}
-						glLoadIdentity();
-
 						if(SmokesList[i].type==2)
 						{
-							glDisable(GL_BLEND);
+							glPushMatrix();	
+							Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
+
+							SmokeAlpha=1.0f;
+
+							if(Pos3d(2)<-(LookRenge))
+								SmokeAlpha=0.0f;
+							else
+							//SmokeAlpha=1.0f+(float)Pos3d(2)/(LookRenge*0.7);
+							{
+							if(Pos3d(2)<-((LookRenge)*(4.0f/6.0f)))
+								SmokeAlpha=SmokeAlpha*((LookRenge)+(float)Pos3d(2))/((LookRenge)/3.0f);
+							}
+
+							if(Pos3d(2)>-3000.0f)
+								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-900.0f)/2100.0f;
+
+							glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
+							glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+							glLoadIdentity();
 							glBindTexture(GL_TEXTURE_2D, CloudTexID);
+							glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
+							glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
+							if(Pos3d(2)<-500.0f)
+								glCallList(base+SmokesList[i].TexId);
+
+							glColor4f(1.0f,1.0f,1.0f,1.0f);
+							glPopMatrix();							
+						
+						
 						}
-						else
+
+						if(WinPos[0]>-0.2f*(float)winwidth)
+						if(WinPos[0]<1.2f*(float)winwidth)
+						if(WinPos[1]>-0.2*(float)winheight)
+						if(WinPos[1]<1.2*(float)winheight)//在视锥体内
 						{
+							glPushMatrix();	
+							Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
+
+							SmokeAlpha=1.0f;
+
+							if(SmokesList[i].life<30.0f)
+								SmokeAlpha=SmokeAlpha*SmokesList[i].life/30.0f;
+							if((SmokesList[i].lifeMAX-SmokesList[i].life)<10.0f)
+							{
+								SmokeAlpha=SmokeAlpha*(SmokesList[i].lifeMAX-SmokesList[i].life)/10.0f;
+							}
+
+							if(Pos3d(2)<-(LookRenge*(5.0f/6.0f)))
+								SmokeAlpha=SmokeAlpha*(LookRenge+(float)Pos3d(2))/(LookRenge/6.0f);
+							if(Pos3d(2)>-1000.0f)
+								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-300.0f)/700.0f;
+
+							glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
+							glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+							
+							if(SmokesList[i].type==1)
+							{
+								glColor4f(1.0f,0.5f,0.0f,SmokeAlpha);
+								glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+							}
+							glLoadIdentity();
+
 							glEnable(GL_BLEND);
 							glBindTexture(GL_TEXTURE_2D, SmokesList[i].TexId);
-						}
-						glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
-						glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
-						if(Pos3d(2)<-500.0f)
-						{
-							if(SmokesList[i].type==2)
-								glCallList(base+SmokesList[i].TexId);
-							else
+
+							glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
+							glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
+							if(Pos3d(2)<-500.0f)
 								glCallList(SmokeGLlist);
+
+							glColor4f(1.0f,1.0f,1.0f,1.0f);
+							glPopMatrix();	
+							
+						
 						}
 
-
-						glColor4f(1.0f,1.0f,1.0f,1.0f);
-						glPopMatrix();	
-						
-					
 					}
-
-
 
 				}
 			}
@@ -286,7 +306,7 @@ void CSmoke::Init(int setGraphicLevel)
 	{
 		for(int j=0;j<10;j++)
 		{
-			AddCloud((i-5)*20000+rand()%1000,50000,(j-5)*20000+rand()%1000);
+			AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
 		}
 	}
 }
@@ -358,15 +378,15 @@ void CSmoke::AddCloud(float posx, float posy, float posz)
 	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
 	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
 
-	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
 
-	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
-	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
-	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
-	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize/5.0f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%4+12);
+	AddSmoke(posx+CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz+CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx+CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz-CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx-CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz-CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx-CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz+CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
 
-	
+
 }
