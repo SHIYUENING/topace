@@ -3,7 +3,8 @@
 #include "testNum.h"
 int locknum=1;//同时最大锁定数
 int lockflagnum=0;//锁定优先级
-
+bool locksound=false;
+bool lockonsound=false;
 
 Vector2d GetNextLockCellPosition(const Vector2d& target, const Vector2d& current, double maxSpeed){
     Vector2d d;
@@ -136,6 +137,17 @@ void locksmove()
 			{
 				if((LMl>winwidth*0.5)&&(!lockUnits[i].lockON))
 				{
+					if(!locksound)
+					{
+						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLock, 0, &channelLock);
+						locksound=true;
+					}
+					if(lockonsound)
+					{
+						FMOD_Channel_Stop(channelLockOn);
+						lockonsound=false;
+					}
+
 
 					Vector2d vtarget( targetx , targety );
 					Vector2d vcurrent( currentx , currenty );
@@ -148,6 +160,18 @@ void locksmove()
 				}
 				else
 				{
+					if(!lockonsound)
+					{
+						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLockOn, 0, &channelLockOn);
+						lockonsound=true;
+					}
+
+					if(locksound)
+					{
+						FMOD_Channel_Stop(channelLock);
+						locksound=false;
+					}
+
 					lockUnits[i].lockON=true;
 					UDfighers[ lockUnits[i].locksTGT ].UDlockde=true;
 					lockUnits[i].locksX=(float)targetx;
@@ -168,6 +192,19 @@ void locksmove()
 			}
 			else
 			{
+				if(locksound)
+				{
+					FMOD_Channel_Stop(channelLock);
+					locksound=false;
+				}
+
+				if(lockonsound)
+				{
+					FMOD_Channel_Stop(channelLockOn);
+					lockonsound=false;
+				}
+
+
 				lockUnits[i].locksX=winwidth*0.5f;
 				lockUnits[i].locksY=winheight*0.5f;
 				lockUnits[i].lockON=false;
