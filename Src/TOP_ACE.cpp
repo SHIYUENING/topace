@@ -478,11 +478,12 @@ void DrawDataLine1 (void)
 
 	glColor3f(1.0f,1.0f,1.0f);
 }
-void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char DFDname[64]=" ", int DFDflag = 1, bool DFDlockselect=false)//飞机屏幕坐标XYZ,与玩家的距离,飞机名字,飞机标示:0为一般敌人/1为红色目标/2为友军/3为第三方势力,是否被锁定
+void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char DFDname[64]=" ", int DFDflag = 1, bool DFDlockselect=false,float mSpeed=0.0f)//飞机屏幕坐标XYZ,与玩家的距离,飞机名字,飞机标示:0为一般敌人/1为红色目标/2为友军/3为第三方势力,是否被锁定
 {
 
 	char DFDDistance[32]={0};
 	char flag[16]={0};
+	char strSpeed[64]={0};
 	if(DFDZ < 1.0f )
 	{
 		if(DFDflag==0)
@@ -536,9 +537,11 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 	}
 		
 
+	sprintf(strSpeed,"%2.4f",mSpeed);
 	sprintf(DFDDistance,"%d",(int)(sqrt(DFDL)*0.10f-10.0f));
 	if( DFDZ < 1.0f )		
 	{
+		glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  strSpeed   , 0 ,true);
 		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  DFDDistance   , 0 ,true);
 		if(DFDlockselect)
 			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 ,true);
@@ -1349,7 +1352,7 @@ void DrawUnit(void)
 	{
 		if(UDfighers[i].m_DrawSelf(MFighter.RefPos(),winwidth,winheight,tmpLookRenge)&&UDfighers[i].UDwinl<(tmpredarRenge*tmpredarRenge))
 		{
-			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect);
+			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].AIact);
 			if(!(UDfighers[i].UDflag==2))
 			{
 				locklists[locklists_index].TGTnum=i;
@@ -1423,9 +1426,14 @@ void Drawlocksign(void)
 			//m_VBMD->ShowVBMD(8);
 			glColor3f(0.0f,1.0f,0.0f);
 			glBegin(GL_TRIANGLES);
-			   glVertex3f(1.0f, 0.0f, 1.0f);
-			   glVertex3f(0.0f, 0.0f, 10.0f);
-			   glVertex3f(-1.0f, 0.0f, 1.0f);
+			   glVertex3f(1.0f, 0.0f, 30.0f);
+			   glVertex3f(0.0f, 0.0f, 40.0f);
+			   glVertex3f(-1.0f, 0.0f, 30.0f);
+			glEnd();
+			glBegin(GL_TRIANGLES);
+			   glVertex3f(0.0f, 1.0f, 30.0f);
+			   glVertex3f(0.0f, 0.0f, 40.0f);
+			   glVertex3f(0.0f, -1.0f, 30.0f);
 			glEnd();
 			//testNum=LockSign[i].UDMplane.RefPos()(0);
 			//testNum2=MFighter.RefPos()(0);
@@ -1458,6 +1466,7 @@ void UnitMove(void)
 	{
 		if(UDfighers[i].UDlife>0)
 		{
+			UDfighers[i].MoveSpeed();
 			if(UDfighers[i].fireTimer>0)
 				UDfighers[i].fireTimer--;
 			if(UDfighers[i].waringde)
@@ -1470,13 +1479,15 @@ void UnitMove(void)
 				UDfighers[i].UDPstate.NextState();
 				
 			}
+			else
+				UDfighers[i].AIact=1;
 			//else
 			//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 
 			if(UDfighers[i].AIact==1)
 			{
-				//UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
-				UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
+				UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
+				//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 				UDfighers[i].UDPstate.NextState();
 			}
 			if((UDfighers[i].AIact==2)&&(UDfighers[i].attackTGTNum>-1)&&(UDfighers[UDfighers[i].attackTGTNum].UDlife>0))
@@ -1496,7 +1507,7 @@ void UnitMove(void)
 			}
 
 
-			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,30));
+			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,UDfighers[i].mSpeed));
 		}
 		
 		
@@ -1554,7 +1565,7 @@ void UnitMove(void)
 		{
 			PMissleList.Missles[i].UDlife=PMissleList.Missles[i].UDlife-1;
 			PMissleList.Missles[i].timer=PMissleList.Missles[i].timer+1;
-			if(PMissleList.Missles[i].UDlife==0)
+			if(PMissleList.Missles[i].UDlife<1)
 			{
 				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missvoice[rand()%4], 0, &missvoicechannel);
 				PMissleList.Missles[i].smokeTime=100;
@@ -1570,7 +1581,7 @@ void UnitMove(void)
 			if(!GraphicsLOW)
 			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],0.4f,0.06f,15.0f,1);
 			
-			if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>0)
+			if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>=1)
 			{
 				float tmpX=(float)(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos()(0)-PMissleList.Missles[i].UDMplane.RefPos()(0));
 				float tmpY=(float)(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos()(1)-PMissleList.Missles[i].UDMplane.RefPos()(1));

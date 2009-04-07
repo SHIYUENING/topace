@@ -91,8 +91,8 @@ void initsound()
 	FMOD_System_CreateSound(sys, "Data/voice/miss.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice3);
 	FMOD_System_CreateSound(sys, "Data/voice/destroy.wav", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice4);
 	FMOD_System_CreateSound(sys, "Data/voice/midi.mp3", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE|FMOD_CREATESAMPLE, 0, &voice5);
-	FMOD_System_CreateSound(sys, "Data/BGM.mp3", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_CREATECOMPRESSEDSAMPLE, 0, &BGMsound);
-	FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, BGMsound, 0, &BGMchannel);
+	//FMOD_System_CreateSound(sys, "Data/BGM.mp3", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_CREATECOMPRESSEDSAMPLE, 0, &BGMsound);
+	//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, BGMsound, 0, &BGMchannel);
 
 
 }
