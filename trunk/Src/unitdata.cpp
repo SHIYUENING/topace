@@ -6,6 +6,7 @@ Unitdata::Unitdata(void)
 ,UDlockselect(false)
 ,UDlockde(false)
 ,waringde(false)
+,isRSpeed(false)
 ,LockListNum(0)
 ,smokeTime(0)
 ,attackTGTNum(-1)
@@ -17,6 +18,7 @@ Unitdata::Unitdata(void)
 ,LockTimer(0)
 ,LockOnTime(150)
 ,attackRange(10000.0f)
+,mSpeed(30)
 {
 
 
@@ -152,6 +154,9 @@ void Unitdata::setpos(int smokeN)
 }
 */
 void Unitdata::TurnTo(const Vector3d& Position){
+
+	
+
     UDPstate.Acceleration = UDMplane.Matrix() * Vector3d(0, 0, 1) * 1.0;
     UDPstate.AngleAcceleration = 0, 0, 0;
     
@@ -191,6 +196,9 @@ void Unitdata::TurnTo(const Vector3d& Position){
         rotateAxis = normalize(rotateAxis);
         double rotateAngle = theta;
 
+		if(isRSpeed)
+			rotateAngle=0.0;
+		mSpeed=mSpeed-0.01f*float(rotateAngle*rotateAngle);
         UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
     }
     else{
@@ -213,7 +221,11 @@ void Unitdata::TurnTo(const Vector3d& Position){
 
         double rotateAngle = acos_s(dot(current, target));
 
-        UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
+		if(isRSpeed)
+			rotateAngle=0.0;
+
+		mSpeed=mSpeed-0.002f*float(rotateAngle*rotateAngle);
+		UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
     }
 }
 double Unitdata::WaringTo(const Vector3d& Position)
@@ -353,5 +365,19 @@ void Unitdata::AttackTo(const Vector3d& Position)
 		LockTimer=0;
 		
 	}
+
+}
+void Unitdata::MoveSpeed(void)
+{
+
+	if((mSpeed<20.0f)&&(!isRSpeed))
+		isRSpeed=true;
+	if(isRSpeed)
+		mSpeed=mSpeed+0.05f;
+
+	if(mSpeed>30.0f)
+		isRSpeed=false;
+
+
 
 }

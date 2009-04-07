@@ -64,6 +64,8 @@ public:
 	int LockTimer;//锁定计时器
 	int LockOnTime;//锁定目标所需时间
 	float attackRange;
+	float mSpeed;
+	bool isRSpeed;
 	Vector3d MoveToPos;
 
 
@@ -81,6 +83,7 @@ public:
 	bool m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
 	void m_LaunchMissle(int m_TGT_Num);
 	void AttackTo(const Vector3d& Position);
+	void MoveSpeed(void);//失速相关
 };
 
 
