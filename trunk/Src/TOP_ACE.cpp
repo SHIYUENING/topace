@@ -478,7 +478,7 @@ void DrawDataLine1 (void)
 
 	glColor3f(1.0f,1.0f,1.0f);
 }
-void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char DFDname[64]=" ", int DFDflag = 1, bool DFDlockselect=false,float mSpeed=0.0f)//飞机屏幕坐标XYZ,与玩家的距离,飞机名字,飞机标示:0为一般敌人/1为红色目标/2为友军/3为第三方势力,是否被锁定
+void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char DFDname[64]=" ", int DFDflag = 1, bool DFDlockselect=false,int mLife=0)//飞机屏幕坐标XYZ,与玩家的距离,飞机名字,飞机标示:0为一般敌人/1为红色目标/2为友军/3为第三方势力,是否被锁定
 {
 
 	char DFDDistance[32]={0};
@@ -537,11 +537,11 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 	}
 		
 
-	sprintf(strSpeed,"%2.4f",mSpeed);
+	sprintf(strSpeed,"%d%%",mLife);
 	sprintf(DFDDistance,"%d",(int)(sqrt(DFDL)*0.10f-10.0f));
 	if( DFDZ < 1.0f )		
 	{
-		glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  strSpeed   , 0 ,true);
+		glPrint( (int)(DFDX  - 40.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  strSpeed   , 0 ,true);
 		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  DFDDistance   , 0 ,true);
 		if(DFDlockselect)
 			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 ,true);
@@ -573,7 +573,7 @@ void ShowUNITSFlag(double SUFposX,double SUFposY,double SUFposZ,int SUFnum)
 
 		glEnable(GL_BLEND);
 		if((SUFwinZ<1.0)&&(SUFDistance<(tmpredarRenge*tmpredarRenge)))
-			DrawFightersData((float)SUFwinX,(float)SUFwinY,(float)SUFwinZ,SUFDistance,UDfighers[SUFnum].UDname,UDfighers[SUFnum].UDflag,UDfighers[SUFnum].UDlockselect);
+			DrawFightersData((float)SUFwinX,(float)SUFwinY,(float)SUFwinZ,SUFDistance,UDfighers[SUFnum].UDname,UDfighers[SUFnum].UDflag,false,UDfighers[SUFnum].UDlife);
 		
 		//if(UDfighers[SUFnum].UDlockselect)
 			//lockmove(SUFwinX,SUFwinY,SUFwinZ);
@@ -1352,7 +1352,7 @@ void DrawUnit(void)
 	{
 		if(UDfighers[i].m_DrawSelf(MFighter.RefPos(),winwidth,winheight,tmpLookRenge)&&UDfighers[i].UDwinl<(tmpredarRenge*tmpredarRenge))
 		{
-			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].AIact);
+			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].UDlife);
 			if(!(UDfighers[i].UDflag==2))
 			{
 				locklists[locklists_index].TGTnum=i;

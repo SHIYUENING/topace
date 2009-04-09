@@ -370,7 +370,7 @@ void Unitdata::AttackTo(const Vector3d& Position)
 void Unitdata::MoveSpeed(void)
 {
 
-	if((mSpeed<20.0f)&&(!isRSpeed))
+	if((mSpeed<25.0f)&&(!isRSpeed))
 		isRSpeed=true;
 	if(isRSpeed)
 		mSpeed=mSpeed+0.05f;
