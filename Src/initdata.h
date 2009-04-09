@@ -66,7 +66,7 @@ void initUnitdata(int stage=0 )
 		for(int i=4;i<maxUnits;i++)
 		{
 			UDfighers[i].UDfighterType=2;
-			UDfighers[i].UDlife=100;
+			UDfighers[i].UDlife=99;
 			UDfighers[i].UDflag=(i/5)%4;
 			sprintf(UDfighers[i].UDname,"Neo1");
 			UDfighers[i].UDlockselect=false;
