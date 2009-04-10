@@ -33,8 +33,8 @@ void LoadVBMDModels(bool IsSupportFBO)
 	ModelID[3].Normal	=	m_VBMD ->Init("Data/models/aim7_t/Normal");
 	PlayerMainModel		=	ModelID[2].Main;
 	ModelID_SHAN		=	m_VBMD ->Init("Data/SHAN");
-	ModelID_hud			=	m_VBMD ->Init("Data/hud");
-	ModelID_redarUI		=	m_VBMD ->Init("Data/redarUI");
+	ModelID_hud			=	m_VBMD ->Init("Data/hud",false);
+	ModelID_redarUI		=	m_VBMD ->Init("Data/redarUI",false);
 	ModelID_smoke		=	m_VBMD ->Init("Data/smoke",false);
 
 
