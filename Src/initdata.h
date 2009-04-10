@@ -23,13 +23,7 @@ void initUnitdata(int stage=0 )
 
 
 	
-/*
-	for(int i=0;i<MAXBom;i++)
-	{
-		Boms[i].Frame=-1;
-	
-	}
-*/
+
 	for(int i=0;i<maxUnits;i++)
 	{
 		UDfighers[i].UDlife=-1;
@@ -63,7 +57,7 @@ void initUnitdata(int stage=0 )
 		UDfighers[3].UDlockselect=false;
 		UDfighers[3].UDMplane.Translate(Vector3d(300.0f, 50100.0f, -2000.0f));
 		*/
-		for(int i=4;i<maxUnits;i++)
+		for(int i=5;i<maxUnits;i++)
 		{
 			UDfighers[i].UDfighterType=2;
 			UDfighers[i].UDlife=99;
@@ -74,8 +68,7 @@ void initUnitdata(int stage=0 )
 			UDfighers[i].MoveToPos=Vector3d(500.0f*(i-maxUnits/2), 35000.0f+5000.0f*(i%4), 2000.0f*(i%20-10));
 			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * (i%8+2));
 		}
-		//UDfighers[2].UDPstate.AngleVelocity = 0, 0, 0;
-        //UDfighers[2].UDPstate.MaxAngleSpeed = CRad(10);
+
 	}
 
 }

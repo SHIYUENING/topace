@@ -550,6 +550,7 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 
 	
 }
+/*
 void ShowUNITSFlag(double SUFposX,double SUFposY,double SUFposZ,int SUFnum)
 {
 		GLint viewport[4];
@@ -601,6 +602,7 @@ void ShowUNITSFlag(double SUFposX,double SUFposY,double SUFposZ,int SUFnum)
 		
 
 }
+*/
 void DrawDataLine2 (double high,double news,double latitude)
 {
 	char szshowSpeed[16]={0};
@@ -882,6 +884,7 @@ void LockFPS (void)
 	Delay(__int64((oneframetimelimit-oneframetime)*1000000));
 	QueryPerformanceCounter(&t1);//测前跳动次数
 }
+/*
 void testFPS (void)
 {
 	QueryPerformanceFrequency(&feq);//每秒跳动次数
@@ -890,6 +893,7 @@ void testFPS (void)
 	//Delay((oneframetimelimit-oneframetime)*1000000);
 	//QueryPerformanceCounter(&t1);//测前跳动次数
 }
+*/
 
 void DrawBom(void)
 {
@@ -1352,7 +1356,7 @@ void DrawUnit(void)
 	{
 		if(UDfighers[i].m_DrawSelf(MFighter.RefPos(),winwidth,winheight,tmpLookRenge)&&UDfighers[i].UDwinl<(tmpredarRenge*tmpredarRenge))
 		{
-			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].UDlife);
+			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].AIact);
 			if(!(UDfighers[i].UDflag==2))
 			{
 				locklists[locklists_index].TGTnum=i;
@@ -1427,12 +1431,12 @@ void Drawlocksign(void)
 			glColor3f(0.0f,1.0f,0.0f);
 			glBegin(GL_TRIANGLES);
 			   glVertex3f(1.0f, 0.0f, 30.0f);
-			   glVertex3f(0.0f, 0.0f, 40.0f);
+			   glVertex3f(0.0f, 0.0f, 35.0f);
 			   glVertex3f(-1.0f, 0.0f, 30.0f);
 			glEnd();
 			glBegin(GL_TRIANGLES);
 			   glVertex3f(0.0f, 1.0f, 30.0f);
-			   glVertex3f(0.0f, 0.0f, 40.0f);
+			   glVertex3f(0.0f, 0.0f, 35.0f);
 			   glVertex3f(0.0f, -1.0f, 30.0f);
 			glEnd();
 			//testNum=LockSign[i].UDMplane.RefPos()(0);
@@ -1581,7 +1585,7 @@ void UnitMove(void)
 			if(!GraphicsLOW)
 			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],0.4f,0.06f,15.0f,1);
 			
-			if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>=1)
+			if((UDfighers[PMissleList.Missles[i].TGTnum].UDlife>=1)&&(PMissleList.Missles[i].UDlife>0))
 			{
 				float tmpX=(float)(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos()(0)-PMissleList.Missles[i].UDMplane.RefPos()(0));
 				float tmpY=(float)(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos()(1)-PMissleList.Missles[i].UDMplane.RefPos()(1));
@@ -1756,7 +1760,7 @@ void DrawPlayer(void)
 					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);
 					//glRotatef(40.0f*testNum2+40.0f,0.0f,1.0f,0.0f);
 					//glRotatef(90.0f,1.0f,0.0f,0.0f);	
-					glScaled(1.0, 1.0, 1.0);
+					//glScaled(1.0, 1.0, 1.0);
 					shaderT();
 					
 					m_VBMD->ShowVBMD(PlayerMainModel);
@@ -2288,24 +2292,19 @@ void stage0(void)
 		glPushMatrix();
 			glEnable(GL_FOG);
 			glScaled(500.0,500.0,500.0);
-			//if(Bgens)
-			//glEnable(GL_TEXTURE_GEN_S);	
-			//if(Bgent)
-			//glEnable(GL_TEXTURE_GEN_T);	
 			glDisable(GL_BLEND);
 			m_VBMD->ShowVBMD(ModelID_SHAN);
-			//glDisable(GL_TEXTURE_GEN_S);			
-			//glDisable(GL_TEXTURE_GEN_T);
 			glDisable(GL_FOG);
 		glPopMatrix();
 		glDisable(GL_CULL_FACE);
 		//glBindTexture(GL_TEXTURE_2D,BlurTexture);
 		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
-		DrawBom();		
+			
 		DrawPlayer();
 		if(ShaderBloom)
 			glPrintHighLight();
 		DrawUnit();
+		DrawBom();	
 		DrawMissle();
 		PSmokes.DrawSmoke(UDfighers[0].UDMplane.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
