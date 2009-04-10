@@ -383,11 +383,11 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	}
 	FMOD_Sound_Release(sound1);
 	FMOD_Sound_Release(sound2);
-	FMOD_Sound_Release(voice1);
-	FMOD_Sound_Release(voice2);
-	FMOD_Sound_Release(voice3);
-	FMOD_Sound_Release(voice4);
-	FMOD_Sound_Release(voice5);
+	//FMOD_Sound_Release(voice1);
+	//FMOD_Sound_Release(voice2);
+	//FMOD_Sound_Release(voice3);
+	//FMOD_Sound_Release(voice4);
+	//FMOD_Sound_Release(voice5);
 	FMOD_Sound_Release(BGMsound);
 	FMOD_System_Release(sys);
 	//delete m_nj;
@@ -1937,10 +1937,11 @@ void showloading(void)
 {
 	glEnable(GL_BLEND);
 	needloadfile=needloadfile+1;
+	CDDS loadDDS;
 
 	switch (needloadfile)
 	{
-	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();
+	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
 	case 2:glPrint(16,16,"Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
 	case 3:glPrint(16,16,"Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();//Cloud.Init();
 	case 4:glPrint(16,16,"Loading Smoke",0);PSmokes.Init(1);

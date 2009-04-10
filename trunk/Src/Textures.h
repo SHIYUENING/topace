@@ -603,7 +603,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 		free(TextureImage[3]);								// Free The Image Structure
 	}
-		
+/*		
 	if (TextureImage[4]=LoadBMP("Data/map.BMP"))
 	{
 		Status=TRUE;									// Set The Status To TRUE
@@ -634,7 +634,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 		free(TextureImage[4]);								// Free The Image Structure
 	}
-
+*/
 	if (TextureImage[5]=LoadBMP("Data/PlayerSign.BMP"))
 	{
 		Status=TRUE;									// Set The Status To TRUE
