@@ -251,8 +251,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 {
 	g_window	= window;
 	g_keys		= keys;
-	BuildFont();
+	
 	glewInit();
+	BuildFont();
 
 	KeyInput.initJoyStick();
 
@@ -284,9 +285,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 
 	moveSpeed=GetPrivateProfileInt("FlySet","moveSpeed",100,".\\set.ini")*0.0001f;
-	MAXSpeed=GetPrivateProfileInt("FlySet","MAXSpeed",500,".\\set.ini")*0.0001f;
+	MAXSpeed=GetPrivateProfileInt("FlySet","MAXSpeed",300,".\\set.ini")*0.0001f;
 	MINSpeed=GetPrivateProfileInt("FlySet","MINSpeed",1,".\\set.ini")*0.0001f;
-	Acceleration=GetPrivateProfileInt("FlySet","Acceleration",1,".\\set.ini")*0.0001f;
+	Acceleration=GetPrivateProfileInt("FlySet","Acceleration",1,".\\set.ini")*0.00005f;
 	SpeedShowPercentage=(float)GetPrivateProfileInt("FlySet","SpeedShowPercentage",30000,".\\set.ini");
 	TurnRateX=GetPrivateProfileInt("FlySet","TurnRateX",50,".\\set.ini")*0.0001f;
 	TurnRateY=GetPrivateProfileInt("FlySet","TurnRateY",500,".\\set.ini")*0.0001f;
@@ -345,6 +346,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	EffectImpact.winW=winwidth;
 	EffectImpact.winH=winheight;
 	EffectImpact.IsSupportFBO=IsSupportFBO;
+	if(UseEffectImpact)
 	EffectImpact.Init();
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	

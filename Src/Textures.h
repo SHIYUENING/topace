@@ -1,8 +1,6 @@
 //Textures.h
 #pragma once
-#include <gl\gl.h>												// Header File For The OpenGL32 Library
-#include <gl\glu.h>												// Header File For The GLu32 Library
-#include <gl\glaux.h>											// Header File For The GLaux Library
+#include "DDS.h"										
 #include "texture.h"
 #include "testNum.h"
 //#include "VBMD.h"
@@ -541,6 +539,9 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		free(TextureImage[1]);								// Free The Image Structure
 	}
 */
+	CDDS loadDDS;
+	textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
+	/*
 	if (TextureImage[2]=LoadBMP("Data/redar.bmp"))
 	{
 		Status=TRUE;									// Set The Status To TRUE
@@ -571,7 +572,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 		free(TextureImage[2]);								// Free The Image Structure
 	}
-
+*/
 
 	if (TextureImage[3]=LoadBMP("Data/UI1.bmp"))
 	{

@@ -1,13 +1,16 @@
 //Prints.h
 #pragma once
 #include "Textures.h"
+
 GLuint	base;//字符显示相关编号
 GLuint	smokelist;
+GLuint	AsciiFontTexId=0;
 float tmplockRenge=10000.0f;//临时导弹锁定范围
 
 bool KeySPACE=false;
 GLvoid BuildFont(GLvoid)								// Build Our Font Display List
 {
+	/*
 	if (LoadTGA(&textureAlphaFont[0], "Data/font.tga"))
 	{											
 
@@ -33,12 +36,15 @@ GLvoid BuildFont(GLvoid)								// Build Our Font Display List
 			}
 
 	}
+*/
+	CDDS loadDDS;
+	AsciiFontTexId=loadDDS.loadCompressedTexture("Data/Font.dds");
 
 	float	cx;											// Holds Our X Character Coord
 	float	cy;											// Holds Our Y Character Coord
 
 	base=glGenLists(256);								// Creating 256 Display Lists
-	glBindTexture(GL_TEXTURE_2D, textureAlphaFont[0].texID);			// Select Our Font Texture
+	glBindTexture(GL_TEXTURE_2D, AsciiFontTexId);			// Select Our Font Texture
 	for (int loop=0; loop<256; loop++)						// Loop Through All 256 Lists
 	{
 		cx=float(loop%16)/16.0f;						// X Position Of Current Character
@@ -93,7 +99,7 @@ GLvoid glPrint(GLint x, GLint y, char *string, int set,bool isover800_600=false)
 	{
 		set=1;
 	}
-	glBindTexture(GL_TEXTURE_2D, textureAlphaFont[0].texID);			// Select Our Font Texture
+	glBindTexture(GL_TEXTURE_2D, AsciiFontTexId);			// Select Our Font Texture
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPushMatrix();										// Store The Projection Matrix
