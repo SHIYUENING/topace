@@ -1359,10 +1359,11 @@ void DrawUnit(void)
 		if(UDfighers[i].m_DrawSelf(MFighter.RefPos(),winwidth,winheight,tmpLookRenge)&&UDfighers[i].UDwinl<(tmpredarRenge*tmpredarRenge))
 		{
 			int tmpflag;
-			tmpflag=UDfighers[i].AIact*100;
-			if(UDfighers[i].attackTGTNum>-1)
-				tmpflag=tmpflag+UDfighers[UDfighers[i].attackTGTNum].UDlife*1000+UDfighers[i].attackTGTNum;
-			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].AIactTimer1);
+			tmpflag=UDfighers[i].AIactTimer1*10+UDfighers[i].AIact;
+			//tmpflag=UDfighers[i].AIact*100;
+			//if(UDfighers[i].attackTGTNum>-1)
+			//	tmpflag=tmpflag+UDfighers[UDfighers[i].attackTGTNum].UDlife*1000+UDfighers[i].attackTGTNum;
+			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,tmpflag);
 			if(!(UDfighers[i].UDflag==2))
 			{
 				locklists[locklists_index].TGTnum=i;
@@ -1482,7 +1483,7 @@ void UnitMove(void)
 			if(UDfighers[i].waringde)
 			{
 				
-				UDfighers[i].AIact=3;
+				//UDfighers[i].AIact=3;
 				//testNum=(float)UDfighers[i].WaringTo(missle[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
 				if(UDfighers[i].attackedMissleNum>-1)
 				UDfighers[i].WaringTo(PMissleList.Missles[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
@@ -1490,71 +1491,74 @@ void UnitMove(void)
 				
 			}
 			else
-				UDfighers[i].AIact=1;
+			{
+				//UDfighers[i].AIactTimer1=100;
 			//else
 			//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 
-			if(UDfighers[i].AIact==1)
-			{
-				UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
-				//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
-				UDfighers[i].UDPstate.NextState();
-				UDfighers[i].AIactTimer1=UDfighers[i].AIactTimer1+1;
-			}
-			else
-				UDfighers[i].AIactTimer1=0;
+				if(UDfighers[i].AIact==1)
 
-			if((UDfighers[i].AIactTimer1>100)&&(UDfighers[i].AIact==1))
-			{
-				int j=rand()%maxUnits;//rand()%maxUnits
-				while(((UDfighers[i].UDflag==UDfighers[j].UDflag)||(UDfighers[j].UDlife<1))&&(j<maxUnits))
 				{
-					j=j+1;
-				}
-				if((j<maxUnits)&&(j>0))
-				{
-					UDfighers[i].attackTGTNum=j;
-					UDfighers[i].AIact=2;
-				}
-				else
-				{
-					//UDfighers[i].attackTGTNum=-1;
-					UDfighers[i].AIact=1;
-				}
-			
-			
-			}
-
-
-			if(UDfighers[i].AIact==2)
-			if(UDfighers[i].attackTGTNum>-1)
-			{
-				UDfighers[i].AIactTimer1=0;
-				if(UDfighers[UDfighers[i].attackTGTNum].UDlife>0)
-				{
-
-					UDfighers[i].TurnTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
-					UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
-					
-
+					UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
+					//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 					UDfighers[i].UDPstate.NextState();
-					if((UDfighers[i].LockTimer>UDfighers[i].LockOnTime)&&(UDfighers[i].fireTimer<1))
-					{
-						UDfighers[i].LockTimer=0;
-						UDfighers[i].fireTimer=UDfighers[i].RefireTime;
-						UDfighers[UDfighers[i].attackTGTNum].attackedMissleNum=PMissleList.AddMissle(UDfighers[i].UDMplane,UDfighers[i].attackTGTNum,i);
+					UDfighers[i].AIactTimer1=UDfighers[i].AIactTimer1+1;
+				}
 
+
+				if(UDfighers[i].AIactTimer1>300)
+				{
+					UDfighers[i].AIactTimer1=0;
+					int j=rand()%maxUnits;//
+					while(((UDfighers[i].UDflag==UDfighers[j].UDflag)||(UDfighers[j].UDlife<1))&&(j<maxUnits))
+					{
+						j=j+1;
+					}
+					if((j<maxUnits)&&(j>0))
+					{
+						UDfighers[i].attackTGTNum=j;
+						UDfighers[i].AIact=2;
+					}
+					else
+					{
+						UDfighers[i].attackTGTNum=-1;
+						UDfighers[i].AIact=1;
 					}
 				
 				
 				}
-				else
+
+
+				if(UDfighers[i].AIact==2)
+				if(UDfighers[i].attackTGTNum>-1)
 				{
-					UDfighers[i].AIact=1;
-					UDfighers[i].attackTGTNum=-1;
+					UDfighers[i].AIactTimer1=0;
+
+					if(UDfighers[UDfighers[i].attackTGTNum].UDlife>0)
+					{
+
+						UDfighers[i].TurnTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
+						UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
+						
+
+						UDfighers[i].UDPstate.NextState();
+						if((UDfighers[i].LockTimer>UDfighers[i].LockOnTime)&&(UDfighers[i].fireTimer<1))
+						{
+							UDfighers[i].LockTimer=0;
+							UDfighers[i].fireTimer=UDfighers[i].RefireTime;
+							UDfighers[UDfighers[i].attackTGTNum].attackedMissleNum=PMissleList.AddMissle(UDfighers[i].UDMplane,UDfighers[i].attackTGTNum,i);
+
+						}
+					
+					
+					}
+					else
+					{
+						UDfighers[i].AIact=1;
+						UDfighers[i].attackTGTNum=-1;
+					}
 				}
 			}
-
 
 			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,UDfighers[i].mSpeed));
 		}

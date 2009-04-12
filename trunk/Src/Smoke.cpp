@@ -22,12 +22,27 @@ CSmoke::~CSmoke(void)
 
 void CSmoke::AddSmoke(float posx, float posy, float posz, float size, float sizeMove, float life ,int type,int CloudListNum)
 {
+	int tmp=0;
 	SmokeNodeNumber=SmokeNodeNumber+1;
-	if(SmokeNodeNumber==MAXSMOKESLIST)
+	if(SmokeNodeNumber>=MAXSMOKESLIST)
 	{
 		SmokeNodeNumber=0;
-	
+		
 	}
+	while(SmokesList[SmokeNodeNumber].type==2)
+	{
+		tmp=tmp+1;
+		if(tmp>=MAXSMOKESLIST)
+			return;
+
+		SmokeNodeNumber=SmokeNodeNumber+1;
+		if(SmokeNodeNumber>=MAXSMOKESLIST)
+		{
+			SmokeNodeNumber=0;
+		
+		}
+	}
+	
 	if(type!=2)	
 		SmokesList[SmokeNodeNumber].TexId=textureSmoke[rand()%SmokeTexsNum].texID;
 	else
