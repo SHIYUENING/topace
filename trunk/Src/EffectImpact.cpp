@@ -12,6 +12,8 @@ CEffectImpact::CEffectImpact(void)
 
 CEffectImpact::~CEffectImpact(void)
 {
+	if(TextureID!=0)
+		glDeleteLists(TextureID,1);
 }
 
 unsigned int CEffectImpact::EmptyTexture(int wh)
@@ -47,6 +49,8 @@ unsigned int CEffectImpact::EmptyTexture(int wh)
 
 void CEffectImpact::EffectImpactDraw(bool DrawEffectImpact)
 {
+	if(TextureID==0)
+		return;
 	if(DrawEffectImpact)
 		EffectTime=EffectTime+2;
 	else

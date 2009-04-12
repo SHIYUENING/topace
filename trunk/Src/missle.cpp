@@ -1,6 +1,6 @@
 #include "missle.h"
 Missledata::Missledata(void)
-: UDPstate(UDMplane, 6, CRad(2), 0.1, 0.4)
+: UDPstate(UDMplane, 6, CRad(2.5), 0.1, 0.4)
 ,onwer(-1)
 ,UDlife(-1)
 ,UDposflag(0)
