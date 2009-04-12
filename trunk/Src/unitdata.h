@@ -57,6 +57,7 @@ public:
 	int attackedTGTNum;//被攻击的敌人编号
 	int AImode;//行动模式1 被攻击时反击 ；2被攻击时继续之前的行为
 	int AIact;//当前行为1 向指定点移动或在指定点周围盘旋 ；2攻击 ；3闪避
+	int AIactTimer1;
 	int LockListNum;//锁定编号
 	int attackTGTNum;//攻击目标
 	int fireTimer;//攻击间隔计时器
@@ -67,6 +68,7 @@ public:
 	float mSpeed;
 	bool isRSpeed;
 	Vector3d MoveToPos;
+	Vector3d selfPos;
 
 
 

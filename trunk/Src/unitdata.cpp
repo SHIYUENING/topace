@@ -16,9 +16,10 @@ Unitdata::Unitdata(void)
 ,fireTimer(0)
 ,RefireTime(600)
 ,LockTimer(0)
-,LockOnTime(150)
+,LockOnTime(10)
 ,attackRange(10000.0f)
 ,mSpeed(30)
+,AIactTimer1(0)
 {
 
 
@@ -336,7 +337,7 @@ void Unitdata::m_LaunchMissle(int m_TGT_Num)
 }
 void Unitdata::AttackTo(const Vector3d& Position)
 {
-	TurnTo(Position);
+	
 	float tmpx=float(UDMplane.RefPos()(0)-Position(0));
 	float tmpy=float(UDMplane.RefPos()(1)-Position(1));
 	float tmpz=float(UDMplane.RefPos()(2)-Position(2));
@@ -358,7 +359,7 @@ void Unitdata::AttackTo(const Vector3d& Position)
     current = normalize(current);
 
 	double cos_angle = dot(target, current);
-	if(cos_angle>0.6)
+	if(cos_angle>0.4)
 		LockTimer=LockTimer+1;
 	else
 	{
