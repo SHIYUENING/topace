@@ -1,7 +1,7 @@
 #include "Unitdata.h"
 
 Unitdata::Unitdata(void)
-: UDPstate(UDMplane, 5, CRad(2.0), 0.1, 0.4)
+: UDPstate(UDMplane, 5, CRad(1.8), 0.1, 0.4)
 ,UDlife(-1)
 ,UDlockselect(false)
 ,UDlockde(false)
@@ -16,7 +16,7 @@ Unitdata::Unitdata(void)
 ,fireTimer(0)
 ,RefireTime(600)
 ,LockTimer(0)
-,LockOnTime(10)
+,LockOnTime(450)
 ,attackRange(10000.0f)
 ,mSpeed(30)
 ,AIactTimer1(0)
@@ -359,7 +359,7 @@ void Unitdata::AttackTo(const Vector3d& Position)
     current = normalize(current);
 
 	double cos_angle = dot(target, current);
-	if(cos_angle>0.4)
+	if(cos_angle>0.99)
 		LockTimer=LockTimer+1;
 	else
 	{
