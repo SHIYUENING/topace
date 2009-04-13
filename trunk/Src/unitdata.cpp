@@ -1,7 +1,7 @@
 #include "Unitdata.h"
 
 Unitdata::Unitdata(void)
-: UDPstate(UDMplane, 5, CRad(1.8), 0.1, 0.4)
+: UDPstate(UDMplane, 5, CRad(2.0), 0.1, 0.4)
 ,UDlife(-1)
 ,UDlockselect(false)
 ,UDlockde(false)
@@ -14,12 +14,13 @@ Unitdata::Unitdata(void)
 ,AImode(1)
 ,attackedMissleNum(-1)
 ,fireTimer(0)
-,RefireTime(600)
+,RefireTime(900)
 ,LockTimer(0)
-,LockOnTime(450)
+,LockOnTime(150)
 ,attackRange(10000.0f)
 ,mSpeed(30)
 ,AIactTimer1(0)
+,AIactTimer2(0)
 {
 
 
