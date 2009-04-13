@@ -321,7 +321,7 @@ void CSmoke::Init(int setGraphicLevel)
 	{
 		for(int j=0;j<10;j++)
 		{
-			AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
+			//AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
 		}
 	}
 }

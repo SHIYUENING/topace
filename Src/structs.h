@@ -7,7 +7,7 @@ int lockflash=0;//决定锁定框是否闪烁
 #define MAXRedarlocks 100
 #define maxMissles 20
 #define maxMisslesSmoke 20000
-#define maxUnits 100
+#define maxUnits 25
 #define maxUnitsSmoke 20000
 #define MAXweaponNUM 30
 #define MAXsmoke 200

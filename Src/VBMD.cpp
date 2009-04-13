@@ -74,24 +74,24 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 
 int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 {
-	ModelId=0;
+	ModelId=1;
 
 	while(VBMD[ModelId].Islife)
 	{
 		if(ModelId>=MAX_VBMD)
-			return -1;
+			return 0;
 		else
 			ModelId=ModelId+1;
 	}
 	int	MID=ModelId;
 	if(MID>=MAX_VBMD)
-		return -1;	// 超出最大个数
+		return 0;	// 超出最大个数
 
 	CleanUpVBMD(MID);
 
 	if ((m_FilePointer=fopen(filename,"rb"))==NULL)
 	{
-		return -1;	// 打开文件失败
+		return 0;	// 打开文件失败
 	}
 
 	// 计算文件大小
@@ -108,13 +108,13 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 	fread(&Header, sizeof(tVBMDHeader), 1, m_FilePointer);
 
 	if(Header.MAGIC[0]!='V' || Header.MAGIC[1]!='B' || Header.MAGIC[2]!='M')
-		return -1;	// 文件类型错误
+		return 0;	// 文件类型错误
 	
 	if(filesize!=Header.Size)
-		return -1;	// 文件大小错误
+		return 0;	// 文件大小错误
 
 	if(filesize!=16+Header.VertexCount*(4*3*2+4*2))
-		return -1;	// 文件大小错误
+		return 0;	// 文件大小错误
 
 	VBMD[MID].VertexCount = Header.VertexCount;
 	VBMD[MID].pTexCoords = new float[VBMD[MID].VertexCount*2];
@@ -176,6 +176,8 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 
 void CLoadVBMD::BuildVBO(unsigned int MID)
 {
+	if((MID<1)||(MID>=MAX_VBMD))
+		return;
 	if(VBOSupported)
 	if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 	{
@@ -205,6 +207,8 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 }
 bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 {
+	if((MID<1)||(MID>=MAX_VBMD))
+		return false;
 	if(VBMD[MID].Islife)
 	{
 		if(VBMD[MID].VertexCount && MID<MAX_VBMD)

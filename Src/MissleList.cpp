@@ -27,11 +27,11 @@ int MissleList::AddMissle(Transform & Fighter,int TGT,int onwer)
 	while(Missles[MissleNum].UDlife>0)
 	{
 		totalMissleNum=totalMissleNum+1;
-		if(totalMissleNum==MAXMISSLE)
+		if(totalMissleNum>=MAXMISSLE)
 			return -1;
 
 		MissleNum=MissleNum+1;
-		if(MissleNum==MAXMISSLE)
+		if(MissleNum>=MAXMISSLE)
 		{
 			MissleNum=0;
 		}
@@ -39,9 +39,12 @@ int MissleList::AddMissle(Transform & Fighter,int TGT,int onwer)
 	}
 	Missles[MissleNum].UDMplane=Fighter;
 	Missles[MissleNum].TGTnum=TGT;
-	Missles[MissleNum].UDlife=480;
-	Missles[MissleNum].UDMplane.TranslateInternal(Vector3d(0.0f, -75.0f, -290.0f));
-	Missles[MissleNum].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(180.0));
+	Missles[MissleNum].UDlife=240;
+	if(onwer==0)
+	{
+		Missles[MissleNum].UDMplane.TranslateInternal(Vector3d(0.0f, -75.0f, -290.0f));
+		Missles[MissleNum].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(180.0));
+	}
 	
 	return MissleNum;
 	

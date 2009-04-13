@@ -1363,7 +1363,7 @@ void DrawUnit(void)
 			//tmpflag=UDfighers[i].AIact*100;
 			//if(UDfighers[i].attackTGTNum>-1)
 			//	tmpflag=tmpflag+UDfighers[UDfighers[i].attackTGTNum].UDlife*1000+UDfighers[i].attackTGTNum;
-			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,tmpflag);
+			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].UDlife);
 			if(!(UDfighers[i].UDflag==2))
 			{
 				locklists[locklists_index].TGTnum=i;
@@ -1456,6 +1456,119 @@ void Drawlocksign(void)
 	glEnable(GL_TEXTURE_2D);
 	
 }
+bool UnitAIBefore(int i)
+{
+			//if(UDfighers[i].UDMplane.RefPos()(2)>150000)
+		//{
+		
+		//}	
+	if((UDfighers[i].UDMplane.RefPos()(1)>100000)||(UDfighers[i].UDMplane.RefPos()(1)<30000))
+	{
+		UDfighers[i].AIactTimer2=0;
+		UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),50000,UDfighers[i].UDMplane.RefPos()(2)));
+		UDfighers[i].UDPstate.NextState();
+		return false;
+	}
+
+
+	if(UDfighers[i].waringde)
+	{
+		if(UDfighers[i].attackedMissleNum>-1)
+		{
+			UDfighers[i].AIactTimer2=0;
+			UDfighers[i].WaringTo(PMissleList.Missles[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
+			UDfighers[i].UDPstate.NextState();
+			UDfighers[i].attackTGTNum=PMissleList.Missles[UDfighers[i].attackedMissleNum].onwer;
+			return false;
+		}		
+	}
+
+
+	float TmpX=UDfighers[i].UDMplane.RefPos()(0) - UDfighers[i].MoveToPos(0);
+	float TmpY=UDfighers[i].UDMplane.RefPos()(1) - UDfighers[i].MoveToPos(1);
+	float TmpZ=UDfighers[i].UDMplane.RefPos()(2) - UDfighers[i].MoveToPos(2);
+	float TmpL=TmpX*TmpX+TmpY*TmpY+TmpZ*TmpZ;
+	if(TmpL>tmpLookRenge*tmpLookRenge)
+	{
+		UDfighers[i].AIact=1;
+		return true;
+	
+	}
+			
+
+
+	return true;
+}
+void UnitAI(int i)
+{
+	if(UDfighers[i].AIact==1)
+	{
+		UDfighers[i].AIactTimer2=0;
+		UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
+		//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
+		UDfighers[i].UDPstate.NextState();
+		UDfighers[i].AIactTimer1=UDfighers[i].AIactTimer1+1;
+	}
+
+
+	if((UDfighers[i].AIactTimer1>300)||(UDfighers[i].AIactTimer2>2000))
+	{
+		UDfighers[i].AIactTimer1=0;
+		UDfighers[i].AIactTimer2=0;
+		int j=rand()%maxUnits;//
+		while(((UDfighers[i].UDflag==UDfighers[j].UDflag)||(UDfighers[j].UDlife<1))&&(j<maxUnits))
+		{
+			j=j+1;
+		}
+		if((j<maxUnits)&&(j>0))
+		{
+			UDfighers[i].attackTGTNum=j;
+			UDfighers[i].AIact=2;
+		}
+		else
+		{
+								//UDfighers[i].attackTGTNum=-1;
+			UDfighers[i].AIact=1;
+		}
+					
+					
+	}
+
+
+	if(UDfighers[i].AIact==2)
+	{
+		UDfighers[i].AIactTimer2=UDfighers[i].AIactTimer2+1;
+		if(UDfighers[i].attackTGTNum>-1)
+		{
+			UDfighers[i].AIactTimer1=0;
+
+			if(UDfighers[UDfighers[i].attackTGTNum].UDlife>0)
+			{
+
+				UDfighers[i].TurnTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
+				UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
+						
+
+				UDfighers[i].UDPstate.NextState();
+				if((UDfighers[i].LockTimer>UDfighers[i].LockOnTime)&&(UDfighers[i].fireTimer<1))
+				{
+					UDfighers[i].LockTimer=0;
+					UDfighers[i].fireTimer=UDfighers[i].RefireTime;
+					UDfighers[UDfighers[i].attackTGTNum].attackedMissleNum=PMissleList.AddMissle(UDfighers[i].UDMplane,UDfighers[i].attackTGTNum,i);
+
+				}
+					
+					
+			}
+			else
+			{
+				UDfighers[i].AIact=1;
+				UDfighers[i].attackTGTNum=-1;
+			}
+		}
+	}
+
+}
 void UnitMove(void)
 {
    
@@ -1475,90 +1588,16 @@ void UnitMove(void)
     
 	for(int i=4;i<maxUnits;i++)
 	{
+
 		if(UDfighers[i].UDlife>0)
 		{
 			UDfighers[i].MoveSpeed();
 			if(UDfighers[i].fireTimer>0)
 				UDfighers[i].fireTimer--;
-			if(UDfighers[i].waringde)
-			{
-				
-				//UDfighers[i].AIact=3;
-				//testNum=(float)UDfighers[i].WaringTo(missle[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
-				if(UDfighers[i].attackedMissleNum>-1)
-				UDfighers[i].WaringTo(PMissleList.Missles[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
-				UDfighers[i].UDPstate.NextState();
-				
-			}
-			else
-			{
-				//UDfighers[i].AIactTimer1=100;
-			//else
-			//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 
-				if(UDfighers[i].AIact==1)
+			if(UnitAIBefore(i))
+				UnitAI(i);
 
-				{
-					UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
-					//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
-					UDfighers[i].UDPstate.NextState();
-					UDfighers[i].AIactTimer1=UDfighers[i].AIactTimer1+1;
-				}
-
-
-				if(UDfighers[i].AIactTimer1>300)
-				{
-					UDfighers[i].AIactTimer1=0;
-					int j=rand()%maxUnits;//
-					while(((UDfighers[i].UDflag==UDfighers[j].UDflag)||(UDfighers[j].UDlife<1))&&(j<maxUnits))
-					{
-						j=j+1;
-					}
-					if((j<maxUnits)&&(j>0))
-					{
-						UDfighers[i].attackTGTNum=j;
-						UDfighers[i].AIact=2;
-					}
-					else
-					{
-						UDfighers[i].attackTGTNum=-1;
-						UDfighers[i].AIact=1;
-					}
-				
-				
-				}
-
-
-				if(UDfighers[i].AIact==2)
-				if(UDfighers[i].attackTGTNum>-1)
-				{
-					UDfighers[i].AIactTimer1=0;
-
-					if(UDfighers[UDfighers[i].attackTGTNum].UDlife>0)
-					{
-
-						UDfighers[i].TurnTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
-						UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
-						
-
-						UDfighers[i].UDPstate.NextState();
-						if((UDfighers[i].LockTimer>UDfighers[i].LockOnTime)&&(UDfighers[i].fireTimer<1))
-						{
-							UDfighers[i].LockTimer=0;
-							UDfighers[i].fireTimer=UDfighers[i].RefireTime;
-							UDfighers[UDfighers[i].attackTGTNum].attackedMissleNum=PMissleList.AddMissle(UDfighers[i].UDMplane,UDfighers[i].attackTGTNum,i);
-
-						}
-					
-					
-					}
-					else
-					{
-						UDfighers[i].AIact=1;
-						UDfighers[i].attackTGTNum=-1;
-					}
-				}
-			}
 
 			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,UDfighers[i].mSpeed));
 		}
@@ -1566,12 +1605,7 @@ void UnitMove(void)
 		
 	}
 
-	if(UDfighers[6].attackTGTNum>-1)
-	{
-		testNum=UDfighers[UDfighers[6].attackTGTNum].selfPos(0);
-		testNum2=UDfighers[UDfighers[6].attackTGTNum].selfPos(1);
-		testNum3=UDfighers[UDfighers[6].attackTGTNum].selfPos(2);
-	}
+
 /*
 	for(int num=1;num<maxUnits;num++)
 	{
