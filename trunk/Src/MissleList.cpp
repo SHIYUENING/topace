@@ -40,6 +40,7 @@ int MissleList::AddMissle(Transform & Fighter,int TGT,int onwer)
 	Missles[MissleNum].UDMplane=Fighter;
 	Missles[MissleNum].TGTnum=TGT;
 	Missles[MissleNum].UDlife=240;
+	Missles[MissleNum].onwer=onwer;
 	if(onwer==0)
 	{
 		Missles[MissleNum].UDMplane.TranslateInternal(Vector3d(0.0f, -75.0f, -290.0f));

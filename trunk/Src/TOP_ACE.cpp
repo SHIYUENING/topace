@@ -67,6 +67,7 @@ GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
 bool firstmove=true;//是否是第一祯，用于判断是否执行场景初始化
 
 
+
 char szVERSION[512]={0};//opengl版本
 
 char szResolution[128]={0};//屏幕高宽
@@ -614,8 +615,11 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char szshowflag1[4]={0};
 	char szshowflag2[4]={0};
 	char test[128]={0};
+	char PlayerHP[128]={0};
 	
 
+	
+	sprintf(PlayerHP,"%d%%",UDfighers[0].UDlife);
 	sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
 
 	sprintf(szshowflag1,"|");
@@ -701,7 +705,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glColor3f(0.0f,1.0f,0.0f);
 	glPrint((GLint)(winwidth*0.65f),winheight/2-16,szshowSpeed,0,true);
 	glPrint((GLint)(winwidth*0.29f),winheight/2-16,szshowHigh,0,true);
-	
+	glPrint((GLint)(winwidth*0.85f),winheight/5-16,PlayerHP,0,true);
 	glPrint(0,winheight-16,szTitle,0);
 	glPrint(0,winheight-32,szVERSION,0);
 	glPrint(0,winheight-48,cpubrand,0);
@@ -1422,7 +1426,7 @@ void Drawlocksign(void)
 			//::MessageBox(HWND_DESKTOP,"123","123",MB_OK | MB_ICONEXCLAMATION);
 			//testNum=lockUnits[i].locksTGT;
 			glPushMatrix();
-			LockSign[i].UDMplane=UDfighers[0].UDMplane;
+			LockSign[i].UDMplane=MFighter;
 			LockSign[i].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
 			LockSign[i].UDPstate.MaxSpeed=0.0;
 			LockSign[i].UDPstate.MaxAngleSpeed=50.0;
@@ -1484,15 +1488,32 @@ bool UnitAIBefore(int i)
 	}
 
 
-	float TmpX=UDfighers[i].UDMplane.RefPos()(0) - UDfighers[i].MoveToPos(0);
-	float TmpY=UDfighers[i].UDMplane.RefPos()(1) - UDfighers[i].MoveToPos(1);
-	float TmpZ=UDfighers[i].UDMplane.RefPos()(2) - UDfighers[i].MoveToPos(2);
+	float TmpX=float(UDfighers[i].UDMplane.RefPos()(0) - UDfighers[i].MoveToPos(0));
+	float TmpY=float(UDfighers[i].UDMplane.RefPos()(1) - UDfighers[i].MoveToPos(1));
+	float TmpZ=float(UDfighers[i].UDMplane.RefPos()(2) - UDfighers[i].MoveToPos(2));
 	float TmpL=TmpX*TmpX+TmpY*TmpY+TmpZ*TmpZ;
-	if(TmpL>tmpLookRenge*tmpLookRenge)
+	if(TmpL>tmpredarRenge*tmpredarRenge)
 	{
 		UDfighers[i].AIact=1;
 		return true;
 	
+	}
+
+	if(TmpL<100*100)
+	{
+		Transform tmp=UDfighers[i].UDMplane;
+		tmp.TranslateInternal(Vector3d(0, 1000, 10));
+		UDfighers[i].TurnTo(Vector3d(tmp.RefPos()(0),tmp.RefPos()(1),tmp.RefPos()(2)));
+		UDfighers[i].UDPstate.NextState();
+		return false;
+	}
+
+	if((UDfighers[i].AIactTimer2>900)&&(UDfighers[i].AIactTimer2<1200))
+	{
+		if(UDfighers[i].attackedMissleNum>-1)
+			UDfighers[i].WaringTo(PMissleList.Missles[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
+		UDfighers[i].UDPstate.NextState();
+		return false;
 	}
 			
 
@@ -1508,6 +1529,7 @@ void UnitAI(int i)
 		//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
 		UDfighers[i].UDPstate.NextState();
 		UDfighers[i].AIactTimer1=UDfighers[i].AIactTimer1+1;
+
 	}
 
 
@@ -1520,7 +1542,7 @@ void UnitAI(int i)
 		{
 			j=j+1;
 		}
-		if((j<maxUnits)&&(j>0))
+		if((j<maxUnits)&&(j>-1))
 		{
 			UDfighers[i].attackTGTNum=j;
 			UDfighers[i].AIact=2;
@@ -1538,18 +1560,19 @@ void UnitAI(int i)
 	if(UDfighers[i].AIact==2)
 	{
 		UDfighers[i].AIactTimer2=UDfighers[i].AIactTimer2+1;
-		if(UDfighers[i].attackTGTNum>-1)
+		if((UDfighers[i].attackTGTNum>-1)&&(UDfighers[i].attackTGTNum<maxUnits))
 		{
 			UDfighers[i].AIactTimer1=0;
 
 			if(UDfighers[UDfighers[i].attackTGTNum].UDlife>0)
 			{
 
-				UDfighers[i].TurnTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
-				UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].selfPos);
+				UDfighers[i].TurnTo(UDfighers[UDfighers[i].attackTGTNum].UDMplane.RefPos());
+				UDfighers[i].UDPstate.NextState();
+				UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].UDMplane.RefPos());
 						
 
-				UDfighers[i].UDPstate.NextState();
+				
 				if((UDfighers[i].LockTimer>UDfighers[i].LockOnTime)&&(UDfighers[i].fireTimer<1))
 				{
 					UDfighers[i].LockTimer=0;
@@ -1586,7 +1609,7 @@ void UnitMove(void)
 	}
 */
     
-	for(int i=4;i<maxUnits;i++)
+	for(int i=2;i<maxUnits;i++)
 	{
 
 		if(UDfighers[i].UDlife>0)
@@ -1605,7 +1628,7 @@ void UnitMove(void)
 		
 	}
 
-
+	PlayerLocked=false;
 /*
 	for(int num=1;num<maxUnits;num++)
 	{
@@ -1657,10 +1680,15 @@ void UnitMove(void)
 	{
 		if(PMissleList.Missles[i].UDlife>0)
 		{
+			
+			if(PMissleList.Missles[i].TGTnum==0)
+				PlayerLocked=true;
+
 			PMissleList.Missles[i].UDlife=PMissleList.Missles[i].UDlife-1;
 			PMissleList.Missles[i].timer=PMissleList.Missles[i].timer+1;
 			if(PMissleList.Missles[i].UDlife<1)
 			{
+				if(PMissleList.Missles[i].onwer==0)
 				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missvoice[rand()%4], 0, &missvoicechannel);
 				PMissleList.Missles[i].smokeTime=100;
 				UDfighers[PMissleList.Missles[i].TGTnum].waringde=false;
@@ -1683,8 +1711,9 @@ void UnitMove(void)
 				float tmpD=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				if((tmpD<8000000)&&(!UDfighers[PMissleList.Missles[i].TGTnum].waringde))
 				{
+					//if(PMissleList.Missles[i].onwer==0)
 						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missleWarning[rand()%10], 0, &missleWarningchannel);
-						UDfighers[PMissleList.Missles[i].TGTnum].waringde=true;
+					UDfighers[PMissleList.Missles[i].TGTnum].waringde=true;
 				}
 
 				PMissleList.Missles[i].TurnTo(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos());
@@ -1694,10 +1723,21 @@ void UnitMove(void)
 				if(tmpD<10000)//临时爆炸范围
 				{
 					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
-					UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-55;
+					if(PMissleList.Missles[i].onwer==0)
+					{
+						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-50;
+					}
+					else
+					{
+						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-5;
+					}
+
 					if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>0)
+					{
 					
+						if(PMissleList.Missles[i].onwer==0)
 						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, hitvoice[rand()%4], 0, &hitvoicechannel);
+					}
 					else
 					{
 						UDfighers[PMissleList.Missles[i].TGTnum].smokeTime=100;
@@ -1708,6 +1748,8 @@ void UnitMove(void)
 					//Boms[Bom_index].Frame=0;
 					
 	
+					if(PMissleList.Missles[i].TGTnum==0)
+					hited=30;
 					UDfighers[PMissleList.Missles[i].TGTnum].waringde=false;
 	
 					Bomings[Bomings_index].NewBom((float)PMissleList.Missles[i].UDMplane.RefPos()(0),(float)PMissleList.Missles[i].UDMplane.RefPos()(1),(float)PMissleList.Missles[i].UDMplane.RefPos()(2),&PlaneBom[0]);
@@ -1842,6 +1884,8 @@ void DrawPlayer(void)
 				glPushMatrix();										// Store The Modelview Matrix
 					glLoadIdentity();	
 					
+					if(hited>0)
+						glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
 					glTranslatef(0, -Ppos1, -Ppos2);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 0.0, 1.0);
@@ -1871,7 +1915,8 @@ void DrawPlayer(void)
 	{
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT1);
-
+		if(hited>0)
+			glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
 		glTranslatef(0, -Ppos1, -Ppos2);
 		glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 		glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
@@ -2104,7 +2149,7 @@ void DrawShadowMap(void)
 							//glRotatef(-135.0f,0.0f,1.0f,0.0f);
 							//glTranslatef(-100.0f,-10,100.0f);
 							
-							LightSun.UDMplane=UDfighers[0].UDMplane;
+							LightSun.UDMplane=MFighter;
 							LightSun.UDPstate.MaxSpeed=0.0;
 							LightSun.UDPstate.MaxAngleSpeed=50.0;
 							LightSun.UDPstate.VelocityResistance=0.0;
@@ -2294,12 +2339,7 @@ void glPrintHighLight(void)
 
 void stage0(void)
 {
-	for(int i=0;i<maxUnits;i++)
-	{
-		UDfighers[i].selfPos=UDfighers[i].UDMplane.RefPos();
-	
-	}
-	
+
 	Vector3d pos;
     pos = MFighter.RefPos();
     Vector3d dir;
@@ -2341,8 +2381,13 @@ void stage0(void)
 	if(moveSpeed>(MAXSpeed/3.0f))
 		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
 
-    MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
+	if(hited>0)
+	{
+		hited=hited-1;	
+	}
+	MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
 	UDfighers[0].UDMplane=MFighter;
+	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
 	
 //	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
@@ -2402,7 +2447,7 @@ void stage0(void)
 		DrawUnit();
 		DrawBom();	
 		DrawMissle();
-		PSmokes.DrawSmoke(UDfighers[0].UDMplane.RefPos(),MView,winwidth,winheight,tmpLookRenge);
+		PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
 		locksmove();
 		Drawlocksign();

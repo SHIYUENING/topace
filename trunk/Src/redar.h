@@ -122,6 +122,8 @@ void DrawRedar(float ne=0.0)
 			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
 			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
 			glScaled(-0.0199*DRY, 0.0199*DRY, 0.0199*DRY);
+			if(hited>0)
+		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 			m_VBMD->ShowVBMD(ModelID_redarUI,false);
 			glColor4f(1.0f,1.0f,1.0f,1.0f);
 		//glEnable(GL_BLEND);
@@ -132,6 +134,8 @@ void DrawRedar(float ne=0.0)
 	glPushMatrix();	
 		glBindTexture(GL_TEXTURE_2D, textureRedar);	
 		glTranslated(-DRY,DRY,0);
+		if(hited>0)
+		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 				glBegin(GL_QUADS);							// Use A Quad For Each Character
 					glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
 					glVertex2i(0,0);						// Vertex Coord (Bottom Left)

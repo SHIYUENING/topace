@@ -70,13 +70,18 @@ void DrawUI1(double rotation)
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
-	glColor4f(0.0f,1.0f,0.0f,1.0f);
+	if(PlayerLocked)
+		glColor4f(1.0f,0.0f,0.0f,1.0f);
+	else
+		glColor4f(0.0f,1.0f,0.0f,1.0f);
 	UIalpha[0]=0.0f;
 	UIalpha[1]=1.0f;
 	UIalpha[2]=0.0f;
 	glEnable(GL_BLEND);
 	glScaled(0.7, 0.7, 1.0);
 	glRotated(-rotation,0.0f,0.0f,1.0f);
+	if(hited>0)
+		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 	glBindTexture(GL_TEXTURE_2D, UItexture1);	
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
 			glTexCoord2f(0.0,0.0);glVertex2i(-(DRY*2/5),-(DRY*2/5));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
@@ -107,7 +112,10 @@ void DrawUI2()
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
-	glColor3f(0.0f,1.0f,0.0f);
+	if(PlayerLocked)
+		glColor3f(1.0f,0.0f,0.0f);
+	else
+		glColor3f(0.0f,1.0f,0.0f);
 	UIalpha[0]=0.0f;
 	UIalpha[1]=1.0f;
 	UIalpha[2]=0.0f;
@@ -127,7 +135,9 @@ void DrawUI2()
 	glScaled(1.4, 1.4, 1.4);
 	glRotated(30.0,0.0f,1.0f,0.0f);
 	//glRotated(-90,1.0f,0.0f,0.0f);
-		m_VBMD->ShowVBMD(ModelID_hud,false);
+	if(hited>0)
+		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
+	m_VBMD->ShowVBMD(ModelID_hud,false);
 	glColor3f(1.0f,1.0f,1.0f);
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
@@ -151,7 +161,10 @@ void DrawUI3()
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
-	glColor3f(0.0f,1.0f,0.0f);
+	if(PlayerLocked)
+		glColor3f(1.0f,0.0f,0.0f);
+	else
+		glColor3f(0.0f,1.0f,0.0f);
 	UIalpha[0]=0.0f;
 	UIalpha[1]=1.0f;
 	UIalpha[2]=0.0f;
@@ -170,6 +183,8 @@ void DrawUI3()
 	glScaled(1.4, 1.4, 1.4);
 	glRotated(-30,0.0f,1.0f,0.0f);
 	//glRotated(-90,1.0f,0.0f,0.0f);
+	if(hited>0)
+		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 	m_VBMD->ShowVBMD(ModelID_hud,false);
 
 
@@ -194,9 +209,16 @@ void DrawUI4(float turnX=0.0f,float turnY=0.0f,float turnZ=0.0f)
 	glLoadIdentity();									// Reset The Modelview Matrix
 	
 
-	glColor4f(0.0f,1.0f,0.0f,1.0f);
+	if(PlayerLocked)
+		glColor4f(1.0f,0.0f,0.0f,1.0f);
+	else
+		glColor4f(0.0f,1.0f,0.0f,1.0f);
 	glEnable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, UItexture4);	
+
+	if(hited>0)
+		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
+
 
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
 			glTexCoord2f(0.0,0.5);glVertex2i(-(DRY*2/5),-(DRY*2/5));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)

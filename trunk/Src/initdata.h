@@ -32,6 +32,8 @@ void initUnitdata(int stage=0 )
 	}
 	if(stage==0)
 	{
+		UDfighers[0].UDlife=100;
+		UDfighers[0].UDflag=2;
 		/*
 		UDfighers[0].UDlife=100;
 		UDfighers[0].UDflag=2;
