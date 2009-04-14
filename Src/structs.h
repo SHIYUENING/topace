@@ -98,7 +98,8 @@ Unitdata UDfighers[maxUnits];
 Missledata LightSun;
 float LightSunPos[3];
 //Bom Boms[MAXBom];
-
+bool PlayerLocked=false;
+int hited=0;
 int timer[100];
 MissleList	PMissleList;
 Transform MView(Vector3d(0, 0, -40));//¹Û²ì¾ØÕó

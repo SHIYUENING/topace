@@ -69,7 +69,7 @@ public:
 	float mSpeed;
 	bool isRSpeed;
 	Vector3d MoveToPos;
-	Vector3d selfPos;
+	
 
 
 
