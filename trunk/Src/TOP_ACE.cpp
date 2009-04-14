@@ -54,7 +54,7 @@ CSkyBox SkyBox;
 
 int needloadfile=0;
 bool loadover=false;
-
+bool lockedsound=false;
 float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
 //GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
 //下面三个是惯性计算相关变量
@@ -616,10 +616,12 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char szshowflag2[4]={0};
 	char test[128]={0};
 	char PlayerHP[128]={0};
+	char StrWarning[128]={0};
 	
 
 	
 	sprintf(PlayerHP,"%d%%",UDfighers[0].UDlife);
+	sprintf(StrWarning,"WARNING");
 	sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
 
 	sprintf(szshowflag1,"|");
@@ -690,7 +692,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	
 
 
-	glColor3f(0.0f,0.0f,0.0f);
+	
 	
 	//sprintf(szshownews,"-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-",szshownews-5.0,,szshownews-4.0,szshownews-3.0,szshownews-2.0,szshownews-1.0,szshownews,szshownews+1.0,szshownews+2.0,szshownews+3.0,szshownews+4.0,szshownews+5.0);
 	//glDisable(GL_BLEND);
@@ -710,6 +712,12 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint(0,winheight-32,szVERSION,0);
 	glPrint(0,winheight-48,cpubrand,0);
 	glPrint(winwidth/4,0,test,0);
+	glColor3f(1.0f,1.0f,1.0f);
+
+	glColor3f(1.0f,0.0f,0.0f);
+	if(PlayerLocking)
+	glPrint((GLint)(winwidth*0.47f),winheight*3/5-16,StrWarning,0,true);
+
 	glColor3f(1.0f,1.0f,1.0f);
 }
 
@@ -884,7 +892,8 @@ void LockFPS (void)
 {
 	QueryPerformanceFrequency(&feq);//每秒跳动次数
 	QueryPerformanceCounter(&t2);//测后跳动次数
-    if (t2.QuadPart >= t1.QuadPart){
+    if (t2.QuadPart >= t1.QuadPart)
+	{
 	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
     }
 	Delay(__int64((oneframetimelimit-oneframetime)*1000000));
@@ -1462,12 +1471,16 @@ void Drawlocksign(void)
 }
 bool UnitAIBefore(int i)
 {
-			//if(UDfighers[i].UDMplane.RefPos()(2)>150000)
-		//{
-		
-		//}	
+
+	if((UDfighers[i].attackTGTNum==0)&&(UDfighers[i].LockTimer>30))
+	{
+		PlayerLocking=true;
+	
+	
+	}
 	if((UDfighers[i].UDMplane.RefPos()(1)>100000)||(UDfighers[i].UDMplane.RefPos()(1)<30000))
 	{
+		UDfighers[i].LockTimer=0;
 		UDfighers[i].AIactTimer2=0;
 		UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),50000,UDfighers[i].UDMplane.RefPos()(2)));
 		UDfighers[i].UDPstate.NextState();
@@ -1477,6 +1490,7 @@ bool UnitAIBefore(int i)
 
 	if(UDfighers[i].waringde)
 	{
+		UDfighers[i].LockTimer=0;
 		if(UDfighers[i].attackedMissleNum>-1)
 		{
 			UDfighers[i].AIactTimer2=0;
@@ -1494,6 +1508,7 @@ bool UnitAIBefore(int i)
 	float TmpL=TmpX*TmpX+TmpY*TmpY+TmpZ*TmpZ;
 	if(TmpL>tmpredarRenge*tmpredarRenge)
 	{
+		UDfighers[i].LockTimer=0;
 		UDfighers[i].AIact=1;
 		return true;
 	
@@ -1524,6 +1539,7 @@ void UnitAI(int i)
 {
 	if(UDfighers[i].AIact==1)
 	{
+		UDfighers[i].LockTimer=0;
 		UDfighers[i].AIactTimer2=0;
 		UDfighers[i].TurnTo(UDfighers[i].MoveToPos);
 		//UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0, 1.0, 0.0) * 0.002*(4));
@@ -1535,6 +1551,7 @@ void UnitAI(int i)
 
 	if((UDfighers[i].AIactTimer1>300)||(UDfighers[i].AIactTimer2>2000))
 	{
+		UDfighers[i].LockTimer=0;
 		UDfighers[i].AIactTimer1=0;
 		UDfighers[i].AIactTimer2=0;
 		int j=rand()%maxUnits;//
@@ -1608,7 +1625,7 @@ void UnitMove(void)
 		}
 	}
 */
-    
+    PlayerLocking=false;
 	for(int i=2;i<maxUnits;i++)
 	{
 
@@ -2480,7 +2497,24 @@ void stage0(void)
 	DrawUI1(rotation);
 	
 	UnitMove();
+	if(PlayerLocked)
+	{
+		if(!lockedsound)
+		{
+			lockedsound=true;
+			FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLocked, 0, &channelLocked);
+		}
 	
+	}
+	else
+	{
+		if(lockedsound)
+		{
+			lockedsound=false;
+			FMOD_Channel_Stop(channelLocked);
+		}
+	
+	}
 	//testFPS();
 	lockflash=lockflash+1;
 	if(lockflash==30)
