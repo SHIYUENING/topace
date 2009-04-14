@@ -7,7 +7,7 @@ CSmoke::CSmoke(void)
 , SmokeTexsNum(0)
 , CloudTexID(0)
 , base(0)
-, CloudSize(10000)
+, CloudSize(7500)
 {
 	LastPos[0]=0.0f;
 	LastPos[1]=0.0f;
@@ -232,8 +232,8 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 								SmokeAlpha=SmokeAlpha*((LookRenge)+(float)Pos3d(2))/((LookRenge)/3.0f);
 							}
 
-							if(Pos3d(2)>-3000.0f)
-								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-900.0f)/2100.0f;
+							if(Pos3d(2)>-8000.0f)
+								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-2000.0f)/6000.0f;
 
 							glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
 							glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -321,7 +321,7 @@ void CSmoke::Init(int setGraphicLevel)
 	{
 		for(int j=0;j<10;j++)
 		{
-			//AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
+			AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
 		}
 	}
 }
