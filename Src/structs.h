@@ -99,6 +99,7 @@ Missledata LightSun;
 float LightSunPos[3];
 //Bom Boms[MAXBom];
 bool PlayerLocked=false;
+bool PlayerLocking=false;
 int hited=0;
 int timer[100];
 MissleList	PMissleList;
