@@ -15,7 +15,7 @@ bool MissleList::Init(void)
 	return false;
 }
 
-int MissleList::AddMissle(Transform & Fighter,int TGT,int onwer)
+int MissleList::AddMissle(Transform & Fighter,int TGT,int onwer,float FighterSpeed)
 {
 	//MissleNum
 	

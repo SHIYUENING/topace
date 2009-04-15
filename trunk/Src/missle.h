@@ -16,6 +16,9 @@ public:
 	int UDMissleType;//导弹种类
 	int TGTnum;//目标单位编号
 	int onwer;//发射者编号
+	float Speed;
+	float MaxSpeed;
+	float onwerSpeed;
 	/*
 	float UDposx[MAXMISSLESMOKE];//尾烟粒子坐标x
 	float UDposy[MAXMISSLESMOKE];//尾烟粒子坐标y
@@ -59,5 +62,7 @@ public:
 */
 	
 
+	void Move(void);
+	
 };
 #endif

@@ -360,7 +360,7 @@ void Unitdata::AttackTo(const Vector3d& Position)
     current = normalize(current);
 
 	double cos_angle = dot(target, current);
-	if(cos_angle>0.9)
+	if(cos_angle>0.5)
 		LockTimer=LockTimer+1;
 	else
 	{
