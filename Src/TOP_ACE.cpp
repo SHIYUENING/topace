@@ -1472,7 +1472,7 @@ void Drawlocksign(void)
 bool UnitAIBefore(int i)
 {
 
-	if((UDfighers[i].attackTGTNum==0)&&(UDfighers[i].LockTimer>30))
+	if((UDfighers[i].attackTGTNum==0)&&(UDfighers[i].LockTimer>30)&&(UDfighers[i].AIact==2))
 	{
 		PlayerLocking=true;
 	
@@ -1514,8 +1514,9 @@ bool UnitAIBefore(int i)
 	
 	}
 
-	if(TmpL<100*100)
+	if(TmpL<300*300)
 	{
+		UDfighers[i].LockTimer=0;
 		Transform tmp=UDfighers[i].UDMplane;
 		tmp.TranslateInternal(Vector3d(0, 1000, 10));
 		UDfighers[i].TurnTo(Vector3d(tmp.RefPos()(0),tmp.RefPos()(1),tmp.RefPos()(2)));
@@ -1525,6 +1526,7 @@ bool UnitAIBefore(int i)
 
 	if((UDfighers[i].AIactTimer2>900)&&(UDfighers[i].AIactTimer2<1200))
 	{
+		UDfighers[i].LockTimer=0;
 		if(UDfighers[i].attackedMissleNum>-1)
 			UDfighers[i].WaringTo(PMissleList.Missles[UDfighers[i].attackedMissleNum].UDMplane.RefPos());
 		UDfighers[i].UDPstate.NextState();
@@ -1594,7 +1596,7 @@ void UnitAI(int i)
 				{
 					UDfighers[i].LockTimer=0;
 					UDfighers[i].fireTimer=UDfighers[i].RefireTime;
-					UDfighers[UDfighers[i].attackTGTNum].attackedMissleNum=PMissleList.AddMissle(UDfighers[i].UDMplane,UDfighers[i].attackTGTNum,i);
+					UDfighers[UDfighers[i].attackTGTNum].attackedMissleNum=PMissleList.AddMissle(UDfighers[i].UDMplane,UDfighers[i].attackTGTNum,i,UDfighers[i].mSpeed);
 
 				}
 					
@@ -1602,6 +1604,7 @@ void UnitAI(int i)
 			}
 			else
 			{
+				UDfighers[i].LockTimer=0;
 				UDfighers[i].AIact=1;
 				UDfighers[i].attackTGTNum=-1;
 			}
@@ -1734,19 +1737,18 @@ void UnitMove(void)
 				}
 
 				PMissleList.Missles[i].TurnTo(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos());
-				if(PMissleList.Missles[i].timer>15)
-					PMissleList.Missles[i].UDPstate.NextState();
-				PMissleList.Missles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,70));
-				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
+				PMissleList.Missles[i].Move();
+
+				if(tmpD<20000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
 					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
 					if(PMissleList.Missles[i].onwer==0)
 					{
-						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-50;
+						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-50-rand()%5;
 					}
 					else
 					{
-						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-5;
+						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-15-rand()%5;
 					}
 
 					if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>0)

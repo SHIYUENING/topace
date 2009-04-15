@@ -6,6 +6,9 @@ Missledata::Missledata(void)
 ,UDposflag(0)
 ,smokeTime(0)
 ,timer(0)
+,Speed(70)
+,MaxSpeed(70)
+,onwerSpeed(0)
 {
 }
 
@@ -196,3 +199,17 @@ void Missledata::m_DrawSmoke(
 	//}
 }
 */
+
+void Missledata::Move(void)
+{
+	if(this->timer>15)
+		this->UDPstate.NextState();
+	if(this->timer<100)
+	{
+		this->Speed=this->onwerSpeed+(this->MaxSpeed-this->onwerSpeed)*float(this->timer+50.0f)/150.0f;
+	}
+	else
+		this->Speed=this->MaxSpeed;
+
+	this->UDMplane.TranslateInternal(Vector3d(0.0,0.0,this->Speed));
+}
