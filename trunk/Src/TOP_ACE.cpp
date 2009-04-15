@@ -1739,7 +1739,7 @@ void UnitMove(void)
 				PMissleList.Missles[i].TurnTo(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos());
 				PMissleList.Missles[i].Move();
 
-				if(tmpD<20000)//ÁÙÊ±±¬Õ¨·¶Î§
+				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
 					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
 					if(PMissleList.Missles[i].onwer==0)
