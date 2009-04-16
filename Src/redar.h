@@ -116,21 +116,8 @@ void DrawRedar(float ne=0.0)
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
 
-	glPushMatrix();
-		//glDisable(GL_BLEND);
-	//glColor4f(1.0f,1.0f,1.0f,0.5f);
-			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
-			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
-			glScaled(-0.0199*DRY, 0.0199*DRY, 0.0199*DRY);
-			if(hited>0)
-		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
-			m_VBMD->ShowVBMD(ModelID_redarUI,false);
-			glColor4f(1.0f,1.0f,1.0f,1.0f);
-		//glEnable(GL_BLEND);
-	glPopMatrix();
-	//glDisable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_COLOR   );
-	glColor4f(0.0f,1.0f,0.0f,1.0f);
+
+	glColor4f(0.5f,1.0f,0.5f,1.0f);
 	glPushMatrix();	
 		glBindTexture(GL_TEXTURE_2D, textureRedar);	
 		glTranslated(-DRY,DRY,0);
@@ -147,12 +134,18 @@ void DrawRedar(float ne=0.0)
 					glVertex2i(0,-DRY*2);						// Vertex Coord (Top Left)
 				glEnd();
 	glPopMatrix();	
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glPushMatrix();
+			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
+			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
+			glScaled(-0.0199*DRY, 0.0199*DRY, 0.0199*DRY);
+			m_VBMD->ShowVBMD(ModelID_redarUI,false);
+			glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glPopMatrix();
+
+
 
 	
-
-
-
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
 
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix

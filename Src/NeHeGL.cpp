@@ -25,7 +25,7 @@ int windowswidth=800;
 int windowsheight=600;
 int windowsbits=16;
 bool BisFullScreen=FALSE;
-int ACver=29;
+int ACver=30;
 
 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
