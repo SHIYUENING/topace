@@ -20,6 +20,7 @@ GLuint depthBuffer;			// Our handle to the depth render buffer
 GLuint img,fboBloomImg,dtex;					// Our handle to a texture
 //GLuint blurtexture2;
 GLuint PlayerSign;
+GLuint ShowHPTexID;
 bool IsSupportFBO=false;
 //int SmokeNumber=0;//读取的尾烟图片总数
 //int BomsNumber=0;//读取的爆炸相关设定总数
@@ -541,6 +542,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 */
 	CDDS loadDDS;
 	textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
+	ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
 	/*
 	if (TextureImage[2]=LoadBMP("Data/redar.bmp"))
 	{

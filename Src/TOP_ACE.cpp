@@ -2539,6 +2539,7 @@ void stage0(void)
 	DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
 	DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
 	DrawUI1(rotation);
+	DrawHP(UDfighers[0].UDlife);
 	
 /*
 	glClear (GL_DEPTH_BUFFER_BIT);
