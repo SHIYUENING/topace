@@ -78,6 +78,7 @@ struct locks
 };
 locks lockUnits[8];//Ëø¶¨¿ò
 Missledata LockSign[8];
+Missledata MissleSign;
 
 struct Bom
 {

@@ -118,7 +118,7 @@ void DrawRedar(float ne=0.0)
 
 	glPushMatrix();
 		//glDisable(GL_BLEND);
-	glColor4f(1.0f,1.0f,1.0f,0.5f);
+	//glColor4f(1.0f,1.0f,1.0f,0.5f);
 			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
 			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
 			glScaled(-0.0199*DRY, 0.0199*DRY, 0.0199*DRY);
