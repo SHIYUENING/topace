@@ -1438,7 +1438,24 @@ void DrawMisslesign(const Vector3d& MisslePosition)
 		MissleSign.UDPstate.NextState();
 		glLoadMatrixd(MView.Matrix4());
 		glMultMatrixd(MissleSign.UDMplane.Matrix4());
+		
+		float TmpX=float(MFighter.RefPos()(0) - MisslePosition(0));
+		float TmpY=float(MFighter.RefPos()(1) - MisslePosition(1));
+		float TmpZ=float(MFighter.RefPos()(2) - MisslePosition(2));
+		float TmpL=TmpX*TmpX+TmpY*TmpY+TmpZ*TmpZ;
+		char missleLL[32]={0};
+		sprintf(missleLL,"%d",(int)(sqrt(TmpL)*0.10f-10.0f));
+		GLint viewport[4];
+		GLdouble mvmatrix[16],projmatrix[16];
+		GLdouble SUFwinX,SUFwinY,SUFwinZ;
+		glGetIntegerv(GL_VIEWPORT,viewport);
+		glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
+		glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
+		gluProject(0.0,0.0,35.0,mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
+		
+
 		glColor3f(1.0f,0.0f,0.0f);
+
 		glBegin(GL_TRIANGLES);
 			glVertex3f(1.0f, 0.0f, 30.0f);
 			glVertex3f(0.0f, 0.0f, 35.0f);
@@ -1449,9 +1466,14 @@ void DrawMisslesign(const Vector3d& MisslePosition)
 			glVertex3f(0.0f, 0.0f, 35.0f);
 			glVertex3f(0.0f, -1.0f, 30.0f);
 		glEnd();
-		glColor3f(1.0f,1.0f,1.0f);
+		
+		
 	glPopMatrix();
 	glEnable(GL_TEXTURE_2D);
+
+	glPrint((int)SUFwinX,(int)SUFwinY,missleLL,0,true);
+
+	glColor3f(1.0f,1.0f,1.0f);
 
 }
 void Drawlocksign(void)
