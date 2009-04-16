@@ -1423,6 +1423,37 @@ void DrawUnit(void)
 	glDisable(GL_CULL_FACE);
 }
 
+void DrawMisslesign(const Vector3d& MisslePosition)
+{
+	glDisable(GL_TEXTURE_2D);
+	glPushMatrix();
+	glLoadIdentity();
+		MissleSign.UDMplane=MFighter;
+		MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
+		MissleSign.UDPstate.MaxSpeed=0.0;
+		MissleSign.UDPstate.MaxAngleSpeed=50.0;
+		MissleSign.UDPstate.VelocityResistance=0.0;
+		MissleSign.UDPstate.AngleVelocityResistance=0.1;
+		MissleSign.TurnTo(MisslePosition);
+		MissleSign.UDPstate.NextState();
+		glLoadMatrixd(MView.Matrix4());
+		glMultMatrixd(MissleSign.UDMplane.Matrix4());
+		glColor3f(1.0f,0.0f,0.0f);
+		glBegin(GL_TRIANGLES);
+			glVertex3f(1.0f, 0.0f, 30.0f);
+			glVertex3f(0.0f, 0.0f, 35.0f);
+			glVertex3f(-1.0f, 0.0f, 30.0f);
+		glEnd();
+		glBegin(GL_TRIANGLES);
+			glVertex3f(0.0f, 1.0f, 30.0f);
+			glVertex3f(0.0f, 0.0f, 35.0f);
+			glVertex3f(0.0f, -1.0f, 30.0f);
+		glEnd();
+		glColor3f(1.0f,1.0f,1.0f);
+	glPopMatrix();
+	glEnable(GL_TEXTURE_2D);
+
+}
 void Drawlocksign(void)
 {
 	glDisable(GL_TEXTURE_2D);
@@ -1462,6 +1493,7 @@ void Drawlocksign(void)
 			//testNum=LockSign[i].UDMplane.RefPos()(0);
 			//testNum2=MFighter.RefPos()(0);
 
+			glColor3f(1.0f,1.0f,1.0f);
 			glPopMatrix();
 		}
 	}
@@ -1702,7 +1734,10 @@ void UnitMove(void)
 		{
 			
 			if(PMissleList.Missles[i].TGTnum==0)
+			{
 				PlayerLocked=true;
+				DrawMisslesign(PMissleList.Missles[i].UDMplane.RefPos());
+			}
 
 			PMissleList.Missles[i].UDlife=PMissleList.Missles[i].UDlife-1;
 			PMissleList.Missles[i].timer=PMissleList.Missles[i].timer+1;
@@ -2421,7 +2456,7 @@ void stage0(void)
     MView = (MWorld * MFighter).Invert();
 
 	Vector3d Pos3d;
-		Pos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
+	Pos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 	paraLightDirection[0] = (float)Pos3d(0);
     paraLightDirection[1] = (float)Pos3d(1);
     paraLightDirection[2] = (float)Pos3d(2);
