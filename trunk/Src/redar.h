@@ -135,6 +135,7 @@ void DrawRedar(float ne=0.0)
 				glEnd();
 	glPopMatrix();	
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glBlendFunc(GL_SRC_COLOR,GL_ONE_MINUS_SRC_COLOR   );
 	glPushMatrix();
 			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
 			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
