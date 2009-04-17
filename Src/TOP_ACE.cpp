@@ -20,6 +20,7 @@
 #include "texture.h"
 #include "EffectImpact.h"
 #include "SkyBox.h"
+#include "Shell.h"
 //#include "Cloud.h"
 
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
@@ -51,7 +52,7 @@ CSmoke		PSmokes;
 CKeyInput KeyInput;
 CSkyBox SkyBox;
 //CCloud Cloud;
-
+CShell Shell;
 int needloadfile=0;
 bool loadover=false;
 bool lockedsound=false;
@@ -827,6 +828,12 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(!g_keys->keyDown [VK_SPACE])
 		KeySPACE=false;
 
+	if(g_keys->keyDown[KeyInput.m_keyboardGun]||KeyInput.m_IskeyGun)
+	{
+		//Shell.AddNewShell(,,,,,,0,0);
+		testNum=testNum+1;
+	
+	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardMap]||KeyInput.m_IskeyMap) && !KeyT )
 	{
 		KeyT=true;
@@ -2522,6 +2529,7 @@ void stage0(void)
 			glPrintHighLight();
 		DrawUnit();
 		DrawBom();	
+		Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		DrawMissle();
 		PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
