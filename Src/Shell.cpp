@@ -30,9 +30,9 @@ void CShell::AddNewShell(float posx, float posy, float posz, float movex, float 
 	ShellList[ShellNodeNumber].life=life;
 	ShellList[ShellNodeNumber].type=type;
 	ShellList[ShellNodeNumber].TGTNum=TGT;
-	ShellList[ShellNodeNumber].FrontPos[0]=posx+movex*5;
-	ShellList[ShellNodeNumber].FrontPos[1]=posy+movey*5;
-	ShellList[ShellNodeNumber].FrontPos[2]=posz+movez*5;
+	ShellList[ShellNodeNumber].FrontPos[0]=posx+movex*1.5f;
+	ShellList[ShellNodeNumber].FrontPos[1]=posy+movey*1.5f;
+	ShellList[ShellNodeNumber].FrontPos[2]=posz+movez*1.5f;
 	ShellList[ShellNodeNumber].BackPos[0]=posx;
 	ShellList[ShellNodeNumber].BackPos[1]=posy;
 	ShellList[ShellNodeNumber].BackPos[2]=posz;
@@ -70,6 +70,7 @@ void CShell::DrawShell(const Vector3d& ViewPos,Transform& would,int winwidth,int
 				Pos3dFront=would.Matrix() * Vector3d(ShellList[i].FrontPos[0],ShellList[i].FrontPos[1],ShellList[i].FrontPos[2]) + would.RefPos();
 				Pos3dBack=would.Matrix() * Vector3d(ShellList[i].BackPos[0],ShellList[i].BackPos[1],ShellList[i].BackPos[2]) + would.RefPos();
 				glPushMatrix();
+				glColor4f(1.0f,1.0f,0.9f,1.0f);
 				glBegin(GL_TRIANGLE_STRIP);
 				glVertex3f(float(Pos3dFront(0)+2.0f),float(Pos3dFront(1)-2.0f),float(Pos3dFront(2)));
 				glVertex3f(float(Pos3dBack(0)+2.0f),float(Pos3dBack(1)-2.0f),float(Pos3dBack(2)));
@@ -80,6 +81,7 @@ void CShell::DrawShell(const Vector3d& ViewPos,Transform& would,int winwidth,int
 				glVertex3f(float(Pos3dFront(0)-2.0f),float(Pos3dFront(1)-2.0f),float(Pos3dFront(2)));
 				glVertex3f(float(Pos3dBack(0)-2.0f),float(Pos3dBack(1)-2.0f),float(Pos3dBack(2)));
 				glEnd();
+				glColor4f(1.0f,1.0f,1.0f,1.0f);
 				glPopMatrix();	
 			
 			}
