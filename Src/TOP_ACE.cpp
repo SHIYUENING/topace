@@ -723,6 +723,17 @@ void DrawDataLine2 (double high,double news,double latitude)
 }
 
 
+void fireShell()
+{
+	
+	Transform tmp2=MFighter;
+	tmp2.TranslateInternal(Vector3d(0.0f, -75.0f, -290.0f));
+	Transform tmp=tmp2;
+	tmp.TranslateInternal(Vector3d(0.0f, 0.0f, 100.0f));
+	
+	Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2)-290.0f,tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),0,0);
+
+}
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
 
@@ -831,7 +842,7 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(g_keys->keyDown[KeyInput.m_keyboardGun]||KeyInput.m_IskeyGun)
 	{
 		//Shell.AddNewShell(,,,,,,0,0);
-		testNum=testNum+1;
+		fireShell();
 	
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardMap]||KeyInput.m_IskeyMap) && !KeyT )
