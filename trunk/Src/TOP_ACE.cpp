@@ -56,6 +56,7 @@ CShell Shell;
 int needloadfile=0;
 bool loadover=false;
 bool lockedsound=false;
+bool GunFiresound=false;
 float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
 //GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
 //下面三个是惯性计算相关变量
@@ -727,11 +728,22 @@ void fireShell()
 {
 	
 	Transform tmp2=MFighter;
-	tmp2.TranslateInternal(Vector3d(0.0f, -75.0f, -290.0f));
+	tmp2.TranslateInternal(Vector3d(5.0f, -100.0f, -300.0f));
 	Transform tmp=tmp2;
-	tmp.TranslateInternal(Vector3d(0.0f, 0.0f, 100.0f));
-	
-	Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2)-290.0f,tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),0,0);
+	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, 100.0f));
+	if(lockflash%5==0)
+	{
+		for(int i=0;i<locklists_index;i++)
+			Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),locklists[i].TGTnum,0);
+
+		if(!GunFiresound)
+		{
+			GunFiresound=true;
+			FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, soundGunFire, 0, &channelGunFire);
+		
+		}
+		
+	}
 
 }
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
@@ -843,6 +855,12 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	{
 		//Shell.AddNewShell(,,,,,,0,0);
 		fireShell();
+	
+	}
+	else
+	{
+		GunFiresound=false;
+		FMOD_Channel_Stop(channelGunFire);
 	
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardMap]||KeyInput.m_IskeyMap) && !KeyT )
