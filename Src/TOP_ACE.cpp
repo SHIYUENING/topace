@@ -730,9 +730,10 @@ void fireShell()
 	Transform tmp2=MFighter;
 	tmp2.TranslateInternal(Vector3d(5.0f, -100.0f, -300.0f));
 	Transform tmp=tmp2;
-	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, 100.0f));
+	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f-3.0f, 100.0f+moveSpeed * 2000));
 	if(lockflash%5==0)
 	{
+		Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),0,0);
 		for(int i=0;i<locklists_index;i++)
 			Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),locklists[i].TGTnum,0);
 
@@ -1681,6 +1682,15 @@ void UnitAI(int i)
 				UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].UDMplane.RefPos());
 						
 
+				if(UDfighers[i].inGunRange&&(lockflash%10==0))
+				{
+					Transform tmp2=UDfighers[i].UDMplane;
+					tmp2.TranslateInternal(Vector3d(5.0f, -10.0f, -30.0f));
+					Transform tmp=tmp2;
+					tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, -100.0f));
+					Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),UDfighers[i].attackTGTNum,i);
+				
+				}
 				
 				if((UDfighers[i].LockTimer>UDfighers[i].LockOnTime)&&(UDfighers[i].fireTimer<1))
 				{

@@ -21,6 +21,7 @@ Unitdata::Unitdata(void)
 ,mSpeed(30)
 ,AIactTimer1(0)
 ,AIactTimer2(0)
+,inGunRange(false)
 {
 
 
@@ -360,6 +361,10 @@ void Unitdata::AttackTo(const Vector3d& Position)
     current = normalize(current);
 
 	double cos_angle = dot(target, current);
+	if(cos_angle>0.99)
+		inGunRange=true;
+	else
+		inGunRange=false;
 	if(cos_angle>0.5)
 		LockTimer=LockTimer+1;
 	else

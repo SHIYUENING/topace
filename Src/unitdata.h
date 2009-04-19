@@ -68,6 +68,7 @@ public:
 	float attackRange;
 	float mSpeed;
 	bool isRSpeed;
+	bool inGunRange;
 	Vector3d MoveToPos;
 	
 
