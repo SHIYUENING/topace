@@ -361,7 +361,8 @@ void Unitdata::AttackTo(const Vector3d& Position)
     current = normalize(current);
 
 	double cos_angle = dot(target, current);
-	if(cos_angle>0.99)
+
+	if(((tmpx*tmpx+tmpy*tmpy+tmpz*tmpz)<(attackRange*attackRange/4))&&(cos_angle>0.99))
 		inGunRange=true;
 	else
 		inGunRange=false;

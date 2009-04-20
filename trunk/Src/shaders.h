@@ -5,6 +5,7 @@
 //GLuint BlurTexture;
 bool ShaderLight=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
+bool UseHighShadow=true;
 CGprofile   g_CGprofile_vertex;
 CGprofile   g_CGprofile_pixel;
 CGcontext   g_CGcontext;
@@ -14,6 +15,7 @@ CGprogram   g_CGHighLight_pixel;
 CGprogram   g_CGvertex_t;
 CGprogram   g_CGpixel_t;
 CGprogram   g_CGpixel_NOBloom;
+CGprogram   g_CGpixel_NOBloom_HighShadow;
 CGprogram   g_CGRenderShadowMap_vertex;
 CGprogram   g_CGRenderShadowMap_pixel;
 CGprogram	g_BloomL1_pixel;
@@ -136,8 +138,16 @@ void InitCG()
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
+	if(UseHighShadow)
+		g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"pixel_NOBloom_HighShadow.cg",
+												g_CGprofile_pixel,
+												NULL,
+												NULL );
 
-	g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
+	else
+		g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"pixel_NOBloom.cg",
 												g_CGprofile_pixel,

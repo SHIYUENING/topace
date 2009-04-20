@@ -311,6 +311,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	InitFogAndLight();
 	InitTile();
+	if(GetPrivateProfileInt("Light","HighShadow",1,".\\set.ini")==0)
+		UseHighShadow=false;
 	if(GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)
 		InitCG();
 	else
@@ -733,7 +735,7 @@ void fireShell()
 	Transform tmp2=MFighter;
 	tmp2.TranslateInternal(Vector3d(5.0f, -100.0f, -300.0f));
 	Transform tmp=tmp2;
-	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f+shellturn, 100.0f+moveSpeed * 2000));
+	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f+shellturn, 200.0f+moveSpeed * 2000));
 	
 	if(lockflash%5==0)
 	{
@@ -1691,7 +1693,7 @@ void UnitAI(int i)
 					Transform tmp2=UDfighers[i].UDMplane;
 					tmp2.TranslateInternal(Vector3d(5.0f, -10.0f, -30.0f));
 					Transform tmp=tmp2;
-					tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, -100.0f-UDfighers[i].mSpeed));
+					tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, -200.0f-UDfighers[i].mSpeed));
 					Shell.AddNewShell(float(tmp2.RefPos()(0)),float(tmp2.RefPos()(1)),float(tmp2.RefPos()(2)),float(tmp2.RefPos()(0) - tmp.RefPos()(0)),float(tmp2.RefPos()(1) - tmp.RefPos()(1)),float(tmp2.RefPos()(2) - tmp.RefPos()(2)),UDfighers[i].attackTGTNum,i);
 				
 				}
