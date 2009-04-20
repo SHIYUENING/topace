@@ -58,6 +58,7 @@ bool loadover=false;
 bool lockedsound=false;
 bool GunFiresound=false;
 float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
+float shellturn;
 //GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
 //下面三个是惯性计算相关变量
 float InertiaX=0.0f;
@@ -451,6 +452,8 @@ void Inertia()              //处理惯性
 	}
 	turnX=InertiaX*TurnRateX;
 
+	shellturn=turnX*150.0f;
+	
 
 }
 
@@ -726,16 +729,17 @@ void DrawDataLine2 (double high,double news,double latitude)
 
 void fireShell()
 {
-	
+
 	Transform tmp2=MFighter;
 	tmp2.TranslateInternal(Vector3d(5.0f, -100.0f, -300.0f));
 	Transform tmp=tmp2;
-	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f-3.0f, 100.0f+moveSpeed * 2000));
+	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f+shellturn, 100.0f+moveSpeed * 2000));
+	
 	if(lockflash%5==0)
 	{
-		Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),0,0);
+		Shell.AddNewShell(float(tmp2.RefPos()(0)),float(tmp2.RefPos()(1)),float(tmp2.RefPos()(2)),float(tmp2.RefPos()(0) - tmp.RefPos()(0)),float(tmp2.RefPos()(1) - tmp.RefPos()(1)),float(tmp2.RefPos()(2) - tmp.RefPos()(2)),0,0);
 		for(int i=0;i<locklists_index;i++)
-			Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),locklists[i].TGTnum,0);
+			Shell.AddNewShell(float(tmp2.RefPos()(0)),float(tmp2.RefPos()(1)),float(tmp2.RefPos()(2)),float(tmp2.RefPos()(0) - tmp.RefPos()(0)),float(tmp2.RefPos()(1) - tmp.RefPos()(1)),float(tmp2.RefPos()(2) - tmp.RefPos()(2)),locklists[i].TGTnum,0);
 
 		if(!GunFiresound)
 		{
@@ -1687,8 +1691,8 @@ void UnitAI(int i)
 					Transform tmp2=UDfighers[i].UDMplane;
 					tmp2.TranslateInternal(Vector3d(5.0f, -10.0f, -30.0f));
 					Transform tmp=tmp2;
-					tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, -100.0f));
-					Shell.AddNewShell(tmp2.RefPos()(0),tmp2.RefPos()(1),tmp2.RefPos()(2),tmp2.RefPos()(0) - tmp.RefPos()(0),tmp2.RefPos()(1) - tmp.RefPos()(1),tmp2.RefPos()(2) - tmp.RefPos()(2),UDfighers[i].attackTGTNum,i);
+					tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f, -100.0f-UDfighers[i].mSpeed));
+					Shell.AddNewShell(float(tmp2.RefPos()(0)),float(tmp2.RefPos()(1)),float(tmp2.RefPos()(2)),float(tmp2.RefPos()(0) - tmp.RefPos()(0)),float(tmp2.RefPos()(1) - tmp.RefPos()(1)),float(tmp2.RefPos()(2) - tmp.RefPos()(2)),UDfighers[i].attackTGTNum,i);
 				
 				}
 				
@@ -1746,6 +1750,44 @@ void UnitMove(void)
 		}
 		
 		
+	}
+	float tmpL;
+	float tmpX;
+	float tmpY;
+	float tmpZ;
+	float shellHitRange=1000.0f;
+	for(int i=0;i<MAXSHELLSLIST;i++)
+	{
+		if(Shell.ShellList[i].life>0)
+		if(Shell.ShellList[i].onwer!=Shell.ShellList[i].TGTNum)
+		if((Shell.ShellList[i].TGTNum>0)&&(Shell.ShellList[i].TGTNum<MAXSHELLSLIST))
+		if(UDfighers[Shell.ShellList[i].TGTNum].UDlife>0)
+		{
+			tmpX=Shell.ShellList[i].FrontPos[0]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(0));
+			tmpY=Shell.ShellList[i].FrontPos[1]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(1));
+			tmpZ=Shell.ShellList[i].FrontPos[2]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(2));
+			tmpL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
+			if(Shell.ShellList[i].onwer==0)
+				shellHitRange=10000.0f;
+			if(tmpL<shellHitRange)
+			{
+				if(Shell.ShellList[i].onwer==0)
+					UDfighers[Shell.ShellList[i].TGTNum].UDlife=UDfighers[Shell.ShellList[i].TGTNum].UDlife-5;
+				else
+					UDfighers[Shell.ShellList[i].TGTNum].UDlife=UDfighers[Shell.ShellList[i].TGTNum].UDlife-1;
+
+				if(UDfighers[Shell.ShellList[i].TGTNum].UDlife==UDfighers[Shell.ShellList[i].TGTNum].UDlife<1)
+				{
+					UDfighers[Shell.ShellList[i].TGTNum].smokeTime=100;
+					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
+				}
+				if(Shell.ShellList[i].TGTNum==0)
+					hited=5;
+
+				Shell.ShellList[i].life=0;
+
+			}
+		}
 	}
 
 	PlayerLocked=false;
