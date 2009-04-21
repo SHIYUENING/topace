@@ -1762,7 +1762,7 @@ void UnitMove(void)
 	{
 		if(Shell.ShellList[i].life>0)
 		if(Shell.ShellList[i].onwer!=Shell.ShellList[i].TGTNum)
-		if((Shell.ShellList[i].TGTNum>0)&&(Shell.ShellList[i].TGTNum<MAXSHELLSLIST))
+		if((Shell.ShellList[i].TGTNum>=0)&&(Shell.ShellList[i].TGTNum<MAXSHELLSLIST))
 		if(UDfighers[Shell.ShellList[i].TGTNum].UDlife>0)
 		{
 			tmpX=Shell.ShellList[i].FrontPos[0]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(0));
@@ -1784,7 +1784,10 @@ void UnitMove(void)
 					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
 				}
 				if(Shell.ShellList[i].TGTNum==0)
+				{
 					hited=5;
+					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundGunHited, 0, &channelGunHited);
+				}
 
 				Shell.ShellList[i].life=0;
 
