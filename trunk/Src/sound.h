@@ -16,6 +16,7 @@ FMOD_SOUND* soundLock;
 FMOD_SOUND* soundLockOn;
 FMOD_SOUND* soundLocked;
 FMOD_SOUND* soundGunFire;
+FMOD_SOUND* soundGunHited;
 //FMOD_SOUND* voice1;
 //FMOD_SOUND* voice2;
 //FMOD_SOUND* voice3;
@@ -33,6 +34,7 @@ FMOD_CHANNEL* channelLock;
 FMOD_CHANNEL* channelLockOn;
 FMOD_CHANNEL* channelLocked;
 FMOD_CHANNEL* channelGunFire;
+FMOD_CHANNEL* channelGunHited;
 
 FMOD_CHANNEL* missleWarningchannel;
 FMOD_CHANNEL* fox2voicechannel;
@@ -89,6 +91,7 @@ void initsound()
 	FMOD_System_CreateSound(sys, "Data/sound/Lockon.wav", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_HARDWARE, 0, &soundLockOn);
 	FMOD_System_CreateSound(sys, "Data/sound/locked.wav", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_HARDWARE, 0, &soundLocked);
 	FMOD_System_CreateSound(sys, "Data/sound/GunFire.wav", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_HARDWARE, 0, &soundGunFire);
+	FMOD_System_CreateSound(sys, "Data/sound/GunHited.wav", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &soundGunHited);
 	//FMOD_System_CreateSound(sys, "Data/voice/hit.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice1);
 	//FMOD_System_CreateSound(sys, "Data/voice/fox.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice2);
 	//FMOD_System_CreateSound(sys, "Data/voice/miss.WAV", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE, 0, &voice3);
