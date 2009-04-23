@@ -2569,10 +2569,10 @@ void stage0(void)
 
 	//	MissleSign.UDMplane=MFighter;
 	//	MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
-	ViewPoint.UDPstate.MaxSpeed=0.0;
-	ViewPoint.UDPstate.MaxAngleSpeed=50.0;
-	ViewPoint.UDPstate.VelocityResistance=0.0;
-	ViewPoint.UDPstate.AngleVelocityResistance=0.1;
+	//ViewPoint.UDPstate.MaxSpeed=0.0;
+	//ViewPoint.UDPstate.MaxAngleSpeed=50.0;
+	//ViewPoint.UDPstate.VelocityResistance=0.0;
+	//ViewPoint.UDPstate.AngleVelocityResistance=0.1;
 	//	MissleSign.TurnTo(MisslePosition);
 	//	MissleSign.UDPstate.NextState();
 
