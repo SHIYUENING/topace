@@ -56,7 +56,7 @@ void fireMissle()
 					::MessageBox(HWND_DESKTOP,WaringString,"Error",MB_OK | MB_ICONEXCLAMATION);
 					return;
 				}
-				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=PMissleList.AddMissle(MFighter,lockUnits[i].locksTGT,0,70.0f);
+				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=PMissleList.AddMissle(UDfighers[0].UDMplane,lockUnits[i].locksTGT,0,70.0f);
 			}
 			
 		}

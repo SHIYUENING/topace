@@ -21,9 +21,9 @@ void DrawRedarToTexture()
 			float vx,vy,vz;
 			//Vredar=MView.Matrix() * UDfighers[i].UDMplane.RefPos() + MView.RefPos();
 			//Vredar=UDfighers[i].UDMplane.RefPos()-MFighter.RefPos();
-			vx=(float)(UDfighers[i].UDMplane.RefPos()(0)-MFighter.RefPos()(0));
-			vy=(float)(UDfighers[i].UDMplane.RefPos()(1)-MFighter.RefPos()(1));
-			vz=(float)(UDfighers[i].UDMplane.RefPos()(2)-MFighter.RefPos()(2));
+			vx=(float)(UDfighers[i].UDMplane.RefPos()(0)-UDfighers[0].UDMplane.RefPos()(0));
+			vy=(float)(UDfighers[i].UDMplane.RefPos()(1)-UDfighers[0].UDMplane.RefPos()(1));
+			vz=(float)(UDfighers[i].UDMplane.RefPos()(2)-UDfighers[0].UDMplane.RefPos()(2));
 
 			if(UDfighers[i].UDlockselect)
 				{
@@ -96,7 +96,7 @@ void DrawAREARedarToTexture(float turn=0.0f)
 		}
 	
 	}
-	glPrintAREARedar((float)MFighter.RefPos()(0),-(float)MFighter.RefPos()(2),4,tmpAREAredarRenge,180.0f-turn);
+	glPrintAREARedar((float)UDfighers[0].UDMplane.RefPos()(0),-(float)UDfighers[0].UDMplane.RefPos()(2),4,tmpAREAredarRenge,180.0f-turn);
 
 }
 
