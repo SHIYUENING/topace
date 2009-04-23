@@ -732,7 +732,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 void fireShell()
 {
 
-	Transform tmp2=MFighter;
+	Transform tmp2=UDfighers[0].UDMplane;
 	tmp2.TranslateInternal(Vector3d(5.0f, -100.0f, -300.0f));
 	Transform tmp=tmp2;
 	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f+shellturn, 200.0f+moveSpeed * 2000));
@@ -2014,6 +2014,7 @@ void DrawPlayer(void)
 	glEnable(GL_CULL_FACE);
 	glPushMatrix();
     glLoadIdentity();
+	
 
     //paraLightDirection = MView * d
     //d = {200.0f, 0.0f, 0.0f}
@@ -2044,18 +2045,22 @@ void DrawPlayer(void)
 	if(ShaderLight)
 	{
 		glPushMatrix();										
-			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-			glPushMatrix();	
-				glLoadIdentity();									// Reset The Modelview Matrix
-				gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-							10.0f,265.0f);	
-				glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-				glPushMatrix();										// Store The Modelview Matrix
+		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+		//	glPushMatrix();	
+		//		glLoadIdentity();									// Reset The Modelview Matrix
+		//		gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
+		//					10.0f,265.0f);	
+		//		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+		//		glPushMatrix();										// Store The Modelview Matrix
 					glLoadIdentity();	
+
+					glLoadMatrixd(MView.Matrix4());
+					glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
+
 					
 					if(hited>0)
 						glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
-					glTranslatef(0, -Ppos1, -Ppos2);
+					//glTranslatef(0, -Ppos1, -Ppos2);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 0.0, 1.0);
 					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
@@ -2073,10 +2078,10 @@ void DrawPlayer(void)
 					cgGLDisableProfile( g_CGprofile_pixel );
 					cgGLDisableProfile( g_CGprofile_vertex );
 					cgGLDisableTextureParameter( g_CGparam_checkerTexture );
-				glPopMatrix();
-			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-			glPopMatrix();										// Restore The Old Projection Matrix
-		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+		//		glPopMatrix();
+		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+		//	glPopMatrix();										// Restore The Old Projection Matrix
+		//glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 		glPopMatrix();										
 
 	}
@@ -2534,7 +2539,7 @@ void stage0(void)
 //	testNum3=MFighter.RefPos()(2);
 	if(firstmove)
 	{
-        MFighter.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
+        UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
 //		MFighter2.Translate(Vector3d(0.0f, 31000.0f, -10000.0f));
 //		MFighter3.Translate(Vector3d(0.0f, 31000.0f, -10100.0f));
 		//MFighter2.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-100.0));
@@ -2542,9 +2547,9 @@ void stage0(void)
 	}
     if (turnX != 0 || turnY != 0 || turnZ != 0){
 		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
-        MFighter.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
-        MFighter.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-        MFighter.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
     }
 //Acceleration
 	if(moveSpeed>(MAXSpeed/3.0f))
@@ -2554,9 +2559,25 @@ void stage0(void)
 	{
 		hited=hited-1;	
 	}
-	MFighter.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
-	UDfighers[0].UDMplane=MFighter;
-	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
+	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
+
+	
+
+	//	MissleSign.UDMplane=MFighter;
+	//	MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
+	ViewPoint.UDPstate.MaxSpeed=0.0;
+	ViewPoint.UDPstate.MaxAngleSpeed=50.0;
+	ViewPoint.UDPstate.VelocityResistance=0.0;
+	ViewPoint.UDPstate.AngleVelocityResistance=0.1;
+	//	MissleSign.TurnTo(MisslePosition);
+	//	MissleSign.UDPstate.NextState();
+
+	ViewPoint.UDMplane=UDfighers[0].UDMplane;
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));
+	MFighter=ViewPoint.UDMplane;
+	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
 	
 //	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
