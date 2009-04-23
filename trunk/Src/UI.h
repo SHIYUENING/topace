@@ -259,7 +259,21 @@ void DrawHP(int HPset=0)
 	glBindTexture(GL_TEXTURE_2D, ShowHPTexID);	
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-	glColor4f(1.0f-float(HPset)/100.0f,float(HPset)/100.0f,0.0f,0.7f);
+	float colorR,colorG;
+	if(HPset>50)
+	{
+		colorR=float(100-HPset)*0.02f;
+		colorG=1.0f;
+	
+	}
+	else
+	{
+		colorG=float(HPset)*0.02f;
+		colorR=1.0f;
+	
+	}
+
+	glColor4f(colorR,colorG,0.0f,0.7f);
 	glBegin(GL_QUADS);							// Use A Quad For Each Character
 		glTexCoord2f(0.0,0.0);glVertex2i(300-64,-200-64);	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
 		glTexCoord2f(1.0,0.0);glVertex2i(300+64,-200-64);	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)

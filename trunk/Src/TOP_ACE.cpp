@@ -365,7 +365,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
-		glDeleteFramebuffersEXT(1, &fbo);
+	glDeleteFramebuffersEXT(1, &fbo);
 	glDeleteRenderbuffersEXT(1, &depthBuffer);
 	glDeleteTextures(1,&img);
 
@@ -1611,7 +1611,7 @@ bool UnitAIBefore(int i)
 	
 	}
 
-	if(TmpL<300*300)
+	if((TmpL<300*300)&&(UDfighers[i].AIact==2))
 	{
 		UDfighers[i].LockTimer=0;
 		Transform tmp=UDfighers[i].UDMplane;
