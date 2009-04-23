@@ -2310,32 +2310,33 @@ void DrawShadowMap(void)
 		glPushAttrib(GL_VIEWPORT_BIT);
 		glViewport(0,0,1024, 1024);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				glPushMatrix();										
-					glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-					glPushMatrix();	
-						glLoadIdentity();									// Reset The Modelview Matrix
-						gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-							60.0f,215.0f);	
+				//glPushMatrix();										
+					//glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+					//glPushMatrix();	
+					//	glLoadIdentity();									// Reset The Modelview Matrix
+					//	gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
+					//		60.0f,315.0f);	
 						//glOrtho(-50.0,50.0,-50.0,50.0,10,1000);	
-						glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+					//	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 						glPushMatrix();										// Store The Modelview Matrix
-							glLoadIdentity();									// Reset The Modelview Matrix
+																// Reset The Modelview Matrix
 							//glRotatef(-135.0f,0.0f,1.0f,0.0f);
 							//glTranslatef(-100.0f,-10,100.0f);
 							
-							LightSun.UDMplane=MFighter;
+							LightSun.UDMplane=UDfighers[0].UDMplane;
 							LightSun.UDPstate.MaxSpeed=0.0;
 							LightSun.UDPstate.MaxAngleSpeed=50.0;
 							LightSun.UDPstate.VelocityResistance=0.0;
 							LightSun.UDPstate.AngleVelocityResistance=0.1;
 							LightSun.TurnTo(Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
 							LightSun.UDPstate.NextState();
-							LightSun.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -150.5f));
-							LightSun.TurnTo(MFighter.RefPos());
+							LightSun.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -187.5f));
+							LightSun.TurnTo(UDfighers[0].UDMplane.RefPos());
 							LightSun.UDPstate.NextState();
 							Transform LMView;
-							LMView = (MWorld * LightSun.UDMplane).Invert();
-							glLoadMatrixd(MView.Matrix4());
+							LMView = (MWorld * UDfighers[0].UDMplane).Invert();
+							glLoadIdentity();
+							glLoadMatrixd(LMView.Matrix4());
 							glMultMatrixd(LightSun.UDMplane.Matrix4());
 							glRotated(180.0,0.0,0.0,1.0);
 		
@@ -2356,11 +2357,11 @@ void DrawShadowMap(void)
 							cgGLDisableProfile( g_CGprofile_pixel );
 							cgGLDisableProfile( g_CGprofile_vertex );					// Select The Projection Matrix
 						glPopMatrix();
-						glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-					glPopMatrix();										// Restore The Old Projection Matrix
-					glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+			//			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+			//		glPopMatrix();										// Restore The Old Projection Matrix
+			//		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 
-				glPopMatrix();										
+			//	glPopMatrix();										
 
 		glEnable(GL_BLEND);
 		if(ShaderBloom)
@@ -2371,7 +2372,10 @@ void DrawShadowMap(void)
 				glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 				glLoadIdentity();	
-				glTranslatef(0, -Ppos1, -Ppos2);
+				glLoadMatrixd(MView.Matrix4());
+				glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
+
+				//glTranslatef(0, -Ppos1, -Ppos2);
 				glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 				glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 				//BasicLight();
