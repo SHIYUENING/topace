@@ -48,7 +48,7 @@ public:
 	
 	void BuildSmoke(unsigned int settexID);
 	void DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int winheight,float LookRenge);
-	void Init(int setGraphicLevel=1);
+	void Init(int setGraphicLevel=1,int useCloud=1);
 	bool LoadSmoke(int SmokeNum);
 	//void DelSmoke(SmokeListNode * DelNode);
 	Vector3d Pos3d;

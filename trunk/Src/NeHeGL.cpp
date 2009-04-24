@@ -527,7 +527,8 @@ bool inifile ()
 		WritePrivateProfileString("Light","HighShadow","1",".\\set.ini");
 		//WritePrivateProfileString("Joke","GL_TEXTURE_GEN_S","0",".\\set.ini");
 		//WritePrivateProfileString("Joke","GL_TEXTURE_GEN_T","0",".\\set.ini");
-		WritePrivateProfileString("Effect","MoveBlur","0",".\\set.ini");
+		WritePrivateProfileString("Effect","MoveBlur","1",".\\set.ini");
+		WritePrivateProfileString("Effect","Cloud","1",".\\set.ini");
 		WritePrivateProfileString("Graphics","LOW","0",".\\set.ini");
 											// Close The Handle
 		//fclose(File);

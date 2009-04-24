@@ -12,8 +12,6 @@ struct fragment
     float4 objectPos	:	TEXCOORD2;
     float2 texcoord3	:	TEXCOORD3;
 	float4 objectPos2	:	TEXCOORD4;
-	//float4 objectPos3	:	TEXCOORD5;
-	//float dep	:	DEPTH;
 };
 
 struct pixel
@@ -41,90 +39,23 @@ pixel main(
     float3 P = IN.position.xyz;
     float3 N = normalize(IN.normal);
 
-    // Compute the emissive term，辐射光（自身发光）
-    //float3 emissive = Ke;
-
-    //Compute the ambient term，环境光
-    //float3 ambient = Ka * globalAmbient;
-
-
-    //Compute the diffuse term，漫反射光
     float3 L = normalize(paraLightDirection-P);
     float diffuseLight = max(dot(N, L), 0);
     float3 diffuse = paraLightColor * diffuseLight;
 
-    // Compute the specular term，镜面反射光
     float3 V = normalize(eyePosition - P);
     float3 H = normalize(L + V);
     float specularLight = pow(max(dot(N, H), 0), shininess);
 
     if(diffuseLight<=0) specularLight=0;
-    //float3 specular =  paraLightColor * specularLight;
     float4 Ocolor;
-   // Ocolor.xyz = emissive + ambient + diffuse + specular*2;
     Ocolor.xyz = globalAmbient + diffuse+specularLight;
-	//Ocolor.xyz = globalAmbient + diffuse;
-    Ocolor.w = 2.0;
-
-
-/*
-    //Compute the diffuse term
-    float3 L = normalize(lightPosition - P);
-    float diffuseLight = max(dot(N, L), 0);
-    float3 diffuse = Kd * lightColor * diffuseLight;
-
-    // Compute the specular term
-    float3 V = normalize(eyePosition - P);
-    float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(N, H), 0), shininess);
-
-    if(diffuseLight<=0) specularLight=0;
-    float3 specular = Ks * lightColor * specularLight;
-    float4 Ocolor;
-    Ocolor.xyz = emissive + ambient + diffuse + specular;
-    Ocolor.w = 1;
-
-    float4 Ocolor2;
-    Ocolor2.r=0.0;
-    Ocolor2.g=max(IN.position.x*0.7,0);
-    Ocolor2.b=0.0;
-    Ocolor2.a=0.0;*/
+    Ocolor.w = 1.0;
     pixel OUT;
-
-
-/*
-	float Ocolor3;
-
-	Ocolor3=IN.objectPos.z*0.2-(float)(int)(IN.objectPos.z*0.2)+Ke.b;
-	if(Ocolor3>=1.0) Ocolor3=Ocolor3-1.0;
-	if(Ocolor3<=0.0) Ocolor3=Ocolor3+1.0;
-	if(Ocolor3>=0.5) Ocolor3=1.0;
-	if(Ocolor3<=0.5) Ocolor3=0.0;
-	
-
-
-	Ocolor2.r=Ocolor3*2+0.5;
-	Ocolor2.g=0.5;
-	Ocolor2.b=0.5;
-	
-	Ocolor2.a=1.0;
-	
-	*/
-    //OUT.color = tex2D( testTexture, IN.texcoord0 )+Ocolor*Ocolor*0.8-0.5;testnum
-    //OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
-    
-	
-	//float posz=tex2D( checkerTexture, IN.texcoord3 ).r*255+tex2D( checkerTexture, IN.texcoord3 ).g;
-	//float posz=tex2D( checkerTexture, IN.texcoord3 ).b*256;
 	float4 colorposZ=tex2D( checkerTexture, IN.texcoord3 );
-	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*4.5);
+	float posz=colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0+0.70;
 	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient;
-	//if(colorposZ.r>0) Ocolor.xyz=globalAmbient;
-
-
 	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*1.1;
-   // OUT.color = (tex2D( testTexture, IN.texcoord0 )+tex2D( checkerTexture, texcoord2 )*0.1)*Ocolor*tmp44;
-    //OUT.color = tex2D( checkerTexture, texcoord2 )*Ocolor;
 
     return OUT;
 }

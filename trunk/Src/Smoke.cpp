@@ -309,7 +309,7 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 	glDisable(GL_CULL_FACE);
 }
 
-void CSmoke::Init(int setGraphicLevel)
+void CSmoke::Init(int setGraphicLevel,int useCloud)
 {
 	GraphicLevel=setGraphicLevel;
 	while(LoadSmoke(SmokeTexsNum))
@@ -317,13 +317,15 @@ void CSmoke::Init(int setGraphicLevel)
 	if(SmokeTexsNum>0)
 		BuildSmoke(textureSmoke[0].texID);
 	BuildCloud();
-	for(int i=0;i<10;i++)
-	{
-		for(int j=0;j<10;j++)
+	if(useCloud>0)
+		for(int i=0;i<10;i++)
 		{
-			AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
+			for(int j=0;j<10;j++)
+			{
+				
+				AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
+			}
 		}
-	}
 }
 
 bool CSmoke::LoadSmoke(int SmokeNum)
