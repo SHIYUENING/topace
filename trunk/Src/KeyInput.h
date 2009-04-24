@@ -22,6 +22,10 @@ public:
 	int m_keySpeedDown;
 	int m_keyL;
 	int m_keyR;
+	int m_keyViewUp;
+	int m_keyViewDown;
+	int m_keyViewLeft;
+	int m_keyViewRight;
 
 	//int m_keyboardtmp;
 	int m_keyboardUp;
@@ -36,6 +40,11 @@ public:
 	int m_keyboardSpeedDown;
 	int m_keyboardL;
 	int m_keyboardR;
+	int m_keyboardViewUp;
+	int m_keyboardViewDown;
+	int m_keyboardViewLeft;
+	int m_keyboardViewRight;
+
 
 	bool m_IskeyUp;
 	bool m_IskeyDown;
@@ -49,6 +58,10 @@ public:
 	bool m_IskeySpeedDown;
 	bool m_IskeyL;
 	bool m_IskeyR;
+	bool m_IskeyViewUp;
+	bool m_IskeyViewDown;
+	bool m_IskeyViewLeft;
+	bool m_IskeyViewRight;
 
 	float m_Up;
 	float m_Down;
@@ -62,6 +75,11 @@ public:
 	float m_SpeedDown;
 	float m_L;
 	float m_R;
+	float m_ViewUp;
+	float m_ViewDown;
+	float m_ViewLeft;
+	float m_ViewRight;
+
 	int UpData(void);
 	int de(void);
 	void initKeyboard(void);
