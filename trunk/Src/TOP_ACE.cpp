@@ -2663,11 +2663,21 @@ void stage0(void)
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
 
+	Transform LMView;
+	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 	Vector3d Pos3d;
-	Pos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
+	Pos3d=LMView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + LMView.RefPos();
 	paraLightDirection[0] = (float)Pos3d(0);
     paraLightDirection[1] = (float)Pos3d(1);
     paraLightDirection[2] = (float)Pos3d(2);
+
+	Transform EyeMView;
+	EyeMView = (MWorld * UDfighers[0].UDMplane).Invert();
+	Vector3d EyePos3d;
+	EyePos3d=EyeMView.Matrix() * MFighter.RefPos() + EyeMView.RefPos();
+	eyePosition[0] = (float)EyePos3d(0);
+    eyePosition[1] = (float)EyePos3d(1);
+    eyePosition[2] = (float)EyePos3d(2);
 
 
 	if(ShaderBloom)
