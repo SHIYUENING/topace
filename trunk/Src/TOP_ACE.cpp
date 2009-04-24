@@ -734,7 +734,7 @@ void fireShell()
 
 	Transform tmp2=UDfighers[0].UDMplane;
 	//tmp2.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-	tmp2.TranslateInternal(Vector3d(5.0f, -5.8f+turnX*143.2f, 175.0f));
+	tmp2.TranslateInternal(Vector3d(5.0f, -5.8f+turnX*143.2f*testNum2, 175.0f));
 	
 	//testNum2=turnX;
 	Transform tmp=tmp2;
@@ -2064,9 +2064,9 @@ void DrawPlayer(void)
 					if(hited>0)
 						glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
 					//glTranslatef(0, -Ppos1, -Ppos2);
-					//glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
+					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 0.0, 1.0);
-					//glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
+					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 					//glScaled(0.02, 0.02, 0.02);
 					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);
 					//glRotatef(40.0f*testNum2+40.0f,0.0f,1.0f,0.0f);
@@ -2379,8 +2379,8 @@ void DrawShadowMap(void)
 				glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
 
 				//glTranslatef(0, -Ppos1, -Ppos2);
-				//glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-				//glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
+				glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
+				glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 				//BasicLight();
 				glBindTexture(GL_TEXTURE_2D, img);	
 				HighLight();
@@ -2580,12 +2580,9 @@ void stage0(void)
 	//	MissleSign.UDPstate.NextState();
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
-	
-	
-	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
-
-	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(turnX * 16), CRad(testNum * 360), CRad(turnZ * 32+turnY*0.1)));
-	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 150.0f));
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));
 	MFighter=ViewPoint.UDMplane;
 	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
