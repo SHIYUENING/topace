@@ -66,6 +66,9 @@ float InertiaY=0.0f;
 float InertiaZ=0.0f;
 float InertiaSpeed=0.0f;
 
+float ViewTurnX=0.0f;
+float ViewTurnY=0.0f;
+
 GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
 bool firstmove=true;//是否是第一祯，用于判断是否执行场景初始化
 
@@ -902,6 +905,67 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	}
 	if(!(g_keys->keyDown [KeyInput.m_keyboardLock]||KeyInput.m_IskeyLock))
 		KeyQ=false;
+
+	
+	
+	
+	
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewUp] == TRUE)||KeyInput.m_IskeyViewUp)	
+	{
+		if(KeyInput.m_IskeyViewUp)
+			ViewTurnY=KeyInput.m_ViewUp;
+		else
+			ViewTurnY=ViewTurnY+0.01f;
+		if(ViewTurnY>1.0f)
+			ViewTurnY=1.0f;
+	}
+	else
+	{
+		if(ViewTurnY>0.001f)
+			ViewTurnY=ViewTurnY-0.02f;
+	}
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewDown] == TRUE)||KeyInput.m_IskeyViewDown)	
+	{
+		if(KeyInput.m_IskeyViewDown)
+			ViewTurnY=-KeyInput.m_ViewDown;
+		else
+			ViewTurnY=ViewTurnY-0.01f;
+		if(ViewTurnY<-1.0f)
+			ViewTurnY=-1.0f;
+	}
+	else
+	{
+		if(ViewTurnY<-0.001f)
+			ViewTurnY=ViewTurnY+0.02f;
+	}
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewLeft] == TRUE)||KeyInput.m_IskeyViewLeft)	
+	{
+		if(KeyInput.m_IskeyViewLeft)
+			ViewTurnX=KeyInput.m_ViewLeft;
+		else
+			ViewTurnX=ViewTurnX+0.01f;
+		if(ViewTurnX>1.0f)
+			ViewTurnX=1.0f;
+	}
+	else
+	{
+		if(ViewTurnX>0.001f)
+			ViewTurnX=ViewTurnX-0.02f;
+	}
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewRight] == TRUE)||KeyInput.m_IskeyViewRight)	
+	{
+		if(KeyInput.m_IskeyViewRight)
+			ViewTurnX=-KeyInput.m_ViewRight;
+		else
+			ViewTurnX=ViewTurnX-0.01f;
+		if(ViewTurnX<-1.0f)
+			ViewTurnX=-1.0f;
+	}
+	else
+	{
+		if(ViewTurnX<-0.001f)
+			ViewTurnX=ViewTurnX+0.02f;
+	}
 /*
 	if (g_keys->keyDown ['R'] && !KeyR )	
 	{
@@ -2581,7 +2645,8 @@ void stage0(void)
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
-	ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
+	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), CRad(ViewTurnX* 180.0f), 0.0f));
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));
 	MFighter=ViewPoint.UDMplane;
 	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));

@@ -14,6 +14,10 @@ CKeyInput::CKeyInput(void)
 , m_IskeySpeedDown(false)
 , m_IskeyL(false)
 , m_IskeyR(false)
+, m_IskeyViewUp(false)
+, m_IskeyViewDown(false)
+, m_IskeyViewLeft(false)
+, m_IskeyViewRight(false)
 , m_keyUp(0)
 {
 }
@@ -43,6 +47,10 @@ bool CKeyInput::initJoyStick(void)
 			m_keySpeedDown	= GetPrivateProfileInt( "JoyStick" , "SpeedDown"	 , 0 , ".\\set.ini" );
 			m_keyL			= GetPrivateProfileInt( "JoyStick" , "L"	 , 0 , ".\\set.ini" );
 			m_keyR			= GetPrivateProfileInt( "JoyStick" , "R"	 , 0 , ".\\set.ini" );
+			m_keyViewUp			= GetPrivateProfileInt( "JoyStick" , "ViewUP"	 , 0 , ".\\set.ini" );
+			m_keyViewDown		= GetPrivateProfileInt( "JoyStick" , "ViewDown"	 , 0 , ".\\set.ini" );
+			m_keyViewLeft		= GetPrivateProfileInt( "JoyStick" , "ViewLeft"	 , 0 , ".\\set.ini" );
+			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 0 , ".\\set.ini" );
 			m_IsUseJoyStick	= true;
 		}
 		return true;
@@ -68,6 +76,10 @@ int CKeyInput::UpData(void)
 		 m_IskeySpeedDown=false;
 		 m_IskeyL=false;
 		 m_IskeyR=false;
+		 m_IskeyViewUp=false;
+		 m_IskeyViewDown=false;
+		 m_IskeyViewLeft=false;
+		 m_IskeyViewRight=false;
 		SDL_JoystickUpdate();
 		if(m_keyUp>999)
 		{
@@ -324,6 +336,94 @@ int CKeyInput::UpData(void)
 		if(m_R>0.1f)
 			m_IskeyR=true;
 
+
+		if(m_keyViewUp>999)
+		{
+			m_ViewUp=SDL_JoystickGetHat(joystick,m_keyViewUp-1000);
+		}
+		else
+		{
+			if(m_keyViewUp>99)
+			{
+				if((m_keyViewUp-100)%2==0)
+					m_ViewUp=(float)SDL_JoystickGetAxis(joystick,(m_keyViewUp-100)/2)/32500.0f;
+				else
+					m_ViewUp=-(float)SDL_JoystickGetAxis(joystick,(m_keyViewUp-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_ViewUp=SDL_JoystickGetButton(joystick,m_keyViewUp);
+			}
+		}
+		if(m_ViewUp>0.1f)
+			m_IskeyViewUp=true;
+
+		if(m_keyViewDown>999)
+		{
+			m_ViewDown=SDL_JoystickGetHat(joystick,m_keyViewDown-1000);
+		}
+		else
+		{
+			if(m_keyViewDown>99)
+			{
+				if((m_keyViewDown-100)%2==0)
+					m_ViewDown=(float)SDL_JoystickGetAxis(joystick,(m_keyViewDown-100)/2)/32500.0f;
+				else
+					m_ViewDown=-(float)SDL_JoystickGetAxis(joystick,(m_keyViewDown-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_ViewDown=SDL_JoystickGetButton(joystick,m_keyViewDown);
+			}
+		}
+		if(m_ViewDown>0.1f)
+			m_IskeyViewDown=true;
+
+		
+		if(m_keyViewLeft>999)
+		{
+			m_ViewLeft=SDL_JoystickGetHat(joystick,m_keyViewLeft-1000);
+		}
+		else
+		{
+			if(m_keyViewLeft>99)
+			{
+				if((m_keyViewLeft-100)%2==0)
+					m_ViewLeft=(float)SDL_JoystickGetAxis(joystick,(m_keyViewLeft-100)/2)/32500.0f;
+				else
+					m_ViewLeft=-(float)SDL_JoystickGetAxis(joystick,(m_keyViewLeft-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_ViewLeft=SDL_JoystickGetButton(joystick,m_keyViewLeft);
+			}
+		}
+		if(m_ViewLeft>0.1f)
+			m_IskeyViewLeft=true;
+
+		
+		if(m_keyViewRight>999)
+		{
+			m_ViewRight=SDL_JoystickGetHat(joystick,m_keyViewRight-1000);
+		}
+		else
+		{
+			if(m_keyViewRight>99)
+			{
+				if((m_keyViewRight-100)%2==0)
+					m_ViewRight=(float)SDL_JoystickGetAxis(joystick,(m_keyViewRight-100)/2)/32500.0f;
+				else
+					m_ViewRight=-(float)SDL_JoystickGetAxis(joystick,(m_keyViewRight-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_ViewRight=SDL_JoystickGetButton(joystick,m_keyViewRight);
+			}
+		}
+		if(m_ViewRight>0.1f)
+			m_IskeyViewRight=true;
+		
+
 	}
 
 	return 0;
@@ -350,4 +450,8 @@ void CKeyInput::initKeyboard(void)
 			m_keyboardSpeedDown	= GetPrivateProfileInt( "keyboard" , "SpeedDown"	 , 10040 , ".\\set.ini" )-10000;
 			m_keyboardL			= GetPrivateProfileInt( "keyboard" , "L"	 , 10037 , ".\\set.ini" )-10000;
 			m_keyboardR			= GetPrivateProfileInt( "keyboard" , "R"	 , 10039 , ".\\set.ini" )-10000;
+			m_keyboardViewUp		= GetPrivateProfileInt( "keyboard" , "ViewUP"	 , 10087 , ".\\set.ini" )-10000;
+			m_keyboardViewDown		= GetPrivateProfileInt( "keyboard" , "ViewDown"	 , 10083 , ".\\set.ini" )-10000;
+			m_keyboardViewLeft		= GetPrivateProfileInt( "keyboard" , "ViewLeft"	 , 10065 , ".\\set.ini" )-10000;
+			m_keyboardViewRight		= GetPrivateProfileInt( "keyboard" , "ViewRight" , 10068 , ".\\set.ini" )-10000;
 }
