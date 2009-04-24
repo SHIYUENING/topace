@@ -383,8 +383,6 @@ void BasicLight()
 		cgGLBindProgram( g_BloomL3_pixel );
 	cgGLEnableProfile( g_CGprofile_pixel );
 	
-
-	
 	//cgGLDisableProfile( g_CGprofile_vertex );
 }
 

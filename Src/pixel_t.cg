@@ -115,7 +115,7 @@ pixel main(
 	//float posz=tex2D( checkerTexture, IN.texcoord3 ).r*255+tex2D( checkerTexture, IN.texcoord3 ).g;
 	//float posz=tex2D( checkerTexture, IN.texcoord3 ).b*256;
 	float4 colorposZ=tex2D( checkerTexture, IN.texcoord3 );
-	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*4.5);
+	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*2.0);
 	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient;
 	//if(colorposZ.r>0) Ocolor.xyz=globalAmbient;
 

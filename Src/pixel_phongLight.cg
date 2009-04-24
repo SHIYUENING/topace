@@ -41,7 +41,7 @@ void main(
 
 	float3 tmp;
 	float4 colorposZ=tex2D( testTexture, texcoord3 );
-	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*4.5);
+	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*2.0);
 	
 	color.x=0;
 	color.y=0;

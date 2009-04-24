@@ -15,30 +15,14 @@ struct pixel
 float4 color : COLOR;
 };
 
-//pixel main( fragment IN, uniform sampler2D testTexture,uniform float3 UIalpha )
 pixel main( fragment IN )
 {
 pixel OUT;
-/*
-float3 color1=tex2D( testTexture, IN.texcoord0 );
-OUT.color.x = color1.x*UIalpha.x;
-OUT.color.y = color1.y*UIalpha.y;
-OUT.color.z = color1.z*UIalpha.z;
-OUT.color.w =OUT.color.y;
-*/
-//OUT.color=IN.color0;
-//float posz=IN.color0.b/255
-/*
-OUT.color.r=floor(IN.color0.b)/255.0;
-OUT.color.g=IN.color0.b-floor(IN.color0.b);
-OUT.color.b=IN.color0.b/256.0;
-*/
+
 
 OUT.color.r=floor(IN.color0.b)/255.0;
 OUT.color.g=frac(IN.color0.b);
 OUT.color.b=frac(IN.color0.b*255.0);
 OUT.color.a=1.0;
-if(IN.color0.b>255) OUT.color.a=0.5;
-//half4 tmp=unpack_4ubyte(IN.color0.b);
 return OUT;
 }
