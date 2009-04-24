@@ -111,5 +111,6 @@ Transform MLight(Vector3d(0, 0, 40));//光源位置
 Transform MFighter;//玩家
 Transform MViewPoint;
 Transform Msky;//天空位置
+Transform MFireShellPos;
 
 
