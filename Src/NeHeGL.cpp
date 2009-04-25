@@ -359,7 +359,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	DWORD				tickCount;										// Used For The Tick Counter
 
 	char szWINtile[128];
-	sprintf(szWINtile,"TOP ACE testV%d by babywolf & oz01 & hellgate",ACver);
+	sprintf(szWINtile,"TOP ACE testV%d by babywolf & oz01 & hellgate & neo the one",ACver);
 	// Fill Out Application Data
 	application.className = "OpenGL";									// Application Class Name
 	application.hInstance = hInstance;									// Application Instance

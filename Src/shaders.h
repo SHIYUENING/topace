@@ -39,7 +39,6 @@ CGparameter cg_shininess;
 CGparameter cg_UIalpha;
 CGparameter cg_ShadowMapmvmatrix;
 CGparameter cg_ShadowMapprojmatrix;
-
 float Ke[]={0.0f, 0.0f, 0.0f};
 bool Keb[]={true, true, true};
 float Ka[]={1.0f, 1.0f, 1.0f};
@@ -214,7 +213,7 @@ void InitCG()
 // π”√shader
 void RenderShadowMap()
 {
-	cgSetParameter3fv(cgGetNamedParameter( g_CGRenderShadowMap_pixel, "UIalpha" ), UIalpha);
+	//cgSetParameter3fv(cgGetNamedParameter( g_CGRenderShadowMap_pixel, "UIalpha" ), UIalpha);
 
 	//cgSetMatrixParameterfc(cgGetNamedParameter( g_CGRenderShadowMap_vertex, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 	//cgSetMatrixParameterfc(cgGetNamedParameter( g_CGRenderShadowMap_vertex, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
@@ -260,9 +259,10 @@ void shaderT(bool UseBloom=false)
 	if(UseBloom)
 	{
 
-		cgGLSetTextureParameter( g_CGparam_checkerTexture, img );
+		
 
 		g_CGparam_checkerTexture = cgGetNamedParameter(g_CGpixel_t, "checkerTexture");
+		cgGLSetTextureParameter( g_CGparam_checkerTexture, img );
 		//g_CGparam_checkerTexture = cgGetNamedParameter(g_CGvertex_t, "checkerTexture");
 
 		cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
@@ -272,12 +272,12 @@ void shaderT(bool UseBloom=false)
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "paraLightColor" ), paraLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "paraLightDirection" ), paraLightDirection);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "eyePosition"), eyePosition);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ke" ), Ke);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ka" ), Ka);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Kd" ), Kd);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ks" ), Ks);
-		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_t, "testnum" ), testNum2);
-		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_t, "shininess" ), shininess);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ke" ), Ke);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ka" ), Ka);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Kd" ), Kd);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ks" ), Ks);
+//		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_t, "testnum" ), testNum2);
+//		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_t, "shininess" ), shininess);
 
 		cgGLBindProgram( g_CGvertex_t );
 		cgGLEnableProfile( g_CGprofile_vertex );
@@ -287,10 +287,11 @@ void shaderT(bool UseBloom=false)
 	}
 	else
 	{
-		cgGLSetTextureParameter( g_CGparam_checkerTexture, img );
+		
 
 
 		g_CGparam_checkerTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "checkerTexture");
+		cgGLSetTextureParameter( g_CGparam_checkerTexture, img );
 
 		//g_CGparam_checkerTexture = cgGetNamedParameter(g_CGvertex_t, "checkerTexture");
 
@@ -301,12 +302,12 @@ void shaderT(bool UseBloom=false)
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightColor" ), paraLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightDirection" ), paraLightDirection);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "eyePosition"), eyePosition);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ke" ), Ke);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ka" ), Ka);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Kd" ), Kd);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ks" ), Ks);
-		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_NOBloom, "testnum" ), testNum2);
-		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_NOBloom, "shininess" ), shininess);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ke" ), Ke);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ka" ), Ka);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Kd" ), Kd);
+//		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ks" ), Ks);
+//		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_NOBloom, "testnum" ), testNum2);
+//		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_NOBloom, "shininess" ), shininess);
 
 		cgGLBindProgram( g_CGvertex_t );
 		cgGLEnableProfile( g_CGprofile_vertex );
@@ -333,11 +334,11 @@ void HighLight()
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "paraLightColor" ), paraLightColor);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "paraLightDirection" ), paraLightDirection);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "eyePosition"), eyePosition);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ke" ), Ke);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ka" ), Ka);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Kd" ), Kd);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ks" ), Ks);
-	cgSetParameter1f(cgGetNamedParameter( g_CGHighLight_pixel, "shininess" ), shininess);
+//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ke" ), Ke);
+//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ka" ), Ka);
+//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Kd" ), Kd);
+//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ks" ), Ks);
+//	cgSetParameter1f(cgGetNamedParameter( g_CGHighLight_pixel, "shininess" ), shininess);
 
 	//bind the cg program
 	cgGLBindProgram( g_CGHighLight_vertex );
@@ -346,7 +347,6 @@ void HighLight()
 	cgGLEnableProfile( g_CGprofile_pixel );
 
 	
-
 	
 	//cgGLDisableProfile( g_CGprofile_vertex );
 	//cgGLDisableProfile( g_CGprofile_pixel );

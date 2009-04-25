@@ -27,13 +27,13 @@ pixel main(
     uniform float3	paraLightColor,
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
-    uniform float3	Ke,
-    uniform float3	Ka,
-    uniform float3	Kd,
-    uniform float3	Ks,
+    //uniform float3	Ke,
+    //uniform float3	Ka,
+    //uniform float3	Kd,
+    //uniform float3	Ks,
 
-	uniform float	testnum,
-    uniform float	shininess,
+	//uniform float	testnum,
+    //uniform float	shininess,
     uniform sampler2D	testTexture,
     uniform sampler2D	checkerTexture
 )
@@ -56,7 +56,7 @@ pixel main(
     // Compute the specular term£¨æµ√Ê∑¥…‰π‚
     float3 V = normalize(eyePosition - P);
     float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(N, H), 0), shininess);
+    float specularLight = pow(max(dot(N, H), 0), 100.0);
 
     if(diffuseLight<=0) specularLight=0;
     //float3 specular =  paraLightColor * specularLight;

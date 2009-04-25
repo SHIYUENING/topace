@@ -912,59 +912,71 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewUp] == TRUE)||KeyInput.m_IskeyViewUp)	
 	{
-		if(KeyInput.m_IskeyViewUp)
-			ViewTurnY=KeyInput.m_ViewUp;
-		else
-			ViewTurnY=ViewTurnY+0.01f;
+		ViewTurnY=ViewTurnY+0.01f;
 		if(ViewTurnY>1.0f)
 			ViewTurnY=1.0f;
+		if(KeyInput.m_IskeyViewUp)
+			if(ViewTurnY>KeyInput.m_ViewUp)
+				ViewTurnY=ViewTurnY-0.01f;
 	}
 	else
 	{
-		if(ViewTurnY>0.001f)
+		if(ViewTurnY>=0.02f)
 			ViewTurnY=ViewTurnY-0.02f;
+		if((ViewTurnY<0.02f)&&(ViewTurnY>0.0f))
+			ViewTurnY=0.0f;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewDown] == TRUE)||KeyInput.m_IskeyViewDown)	
 	{
-		if(KeyInput.m_IskeyViewDown)
-			ViewTurnY=-KeyInput.m_ViewDown;
-		else
-			ViewTurnY=ViewTurnY-0.01f;
+		ViewTurnY=ViewTurnY-0.01f;
 		if(ViewTurnY<-1.0f)
 			ViewTurnY=-1.0f;
+		if(KeyInput.m_IskeyViewDown)
+			if(ViewTurnY<-KeyInput.m_ViewDown)
+				ViewTurnY=ViewTurnY+0.01f;
 	}
 	else
 	{
-		if(ViewTurnY<-0.001f)
+		if(ViewTurnY<=-0.02f)
 			ViewTurnY=ViewTurnY+0.02f;
+		if((ViewTurnY>-0.02f)&&(ViewTurnY<0.0f))
+			ViewTurnY=0.0f;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewLeft] == TRUE)||KeyInput.m_IskeyViewLeft)	
 	{
-		if(KeyInput.m_IskeyViewLeft)
-			ViewTurnX=KeyInput.m_ViewLeft;
-		else
+		
 			ViewTurnX=ViewTurnX+0.01f;
 		if(ViewTurnX>1.0f)
 			ViewTurnX=1.0f;
+		if(KeyInput.m_IskeyViewLeft)
+			if(ViewTurnX>KeyInput.m_ViewLeft)
+				ViewTurnX=ViewTurnX-0.01f;
 	}
 	else
 	{
-		if(ViewTurnX>0.001f)
+		if(ViewTurnX>=0.02f)
 			ViewTurnX=ViewTurnX-0.02f;
+		if((ViewTurnX<0.02f)&&(ViewTurnX>0.0f))
+			ViewTurnX=0.0f;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewRight] == TRUE)||KeyInput.m_IskeyViewRight)	
 	{
-		if(KeyInput.m_IskeyViewRight)
-			ViewTurnX=-KeyInput.m_ViewRight;
-		else
+	
+
+
 			ViewTurnX=ViewTurnX-0.01f;
 		if(ViewTurnX<-1.0f)
 			ViewTurnX=-1.0f;
+		if(KeyInput.m_IskeyViewRight)
+			if(ViewTurnX<-KeyInput.m_ViewRight)
+				ViewTurnX=ViewTurnX+0.01f;
 	}
 	else
 	{
-		if(ViewTurnX<-0.001f)
+		if(ViewTurnX<=-0.02f)
 			ViewTurnX=ViewTurnX+0.02f;
+		if((ViewTurnX>-0.02f)&&(ViewTurnX<0.0f))
+			ViewTurnX=0.0f;
 	}
 /*
 	if (g_keys->keyDown ['R'] && !KeyR )	
@@ -2679,9 +2691,12 @@ void stage0(void)
     eyePosition[1] = (float)EyePos3d(1);
     eyePosition[2] = (float)EyePos3d(2);
 
+	Vector3d SunPos3d;
+	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 
-	if(ShaderBloom)
-		DrawHighLight();
+
+	//if(ShaderBloom)
+	//	DrawHighLight();
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawUI1totexture(latitude);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -2700,7 +2715,8 @@ void stage0(void)
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
 		DrawSky((float)longitude);
-		SkyBox.DrawSun(paraLightDirection[0],paraLightDirection[1],paraLightDirection[2],winwidth,winheight);
+
+		SkyBox.DrawSun(SunPos3d(0),SunPos3d(1),SunPos3d(2),winwidth,winheight);
 		glEnable(GL_CULL_FACE);
 		glPushMatrix();
 			glEnable(GL_FOG);
