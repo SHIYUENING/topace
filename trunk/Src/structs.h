@@ -99,6 +99,7 @@ int Bom_index=0;
 Unitdata UDfighers[maxUnits];
 Missledata LightSun;
 float LightSunPos[3];
+float LightSunPosR[3];
 //Bom Boms[MAXBom];
 bool PlayerLocked=false;
 bool PlayerLocking=false;
