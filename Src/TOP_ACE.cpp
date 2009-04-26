@@ -172,6 +172,9 @@ void InitFogAndLight(void)
 	LightDiffuseB=(float)GetPrivateProfileInt("Light","LightDiffuseB",106,".\\set.ini")/255.0f;
 	LightDiffuseA=(float)GetPrivateProfileInt("Light","LightDiffuseA",255,".\\set.ini")/255.0f;
 
+	LightSunPosR[0]=150000.0f;
+	LightSunPosR[1]=150000.0f;
+	LightSunPosR[2]=10.0f;
 	LightSunPos[0]=150000.0f;
 	LightSunPos[1]=150000.0f;
 	LightSunPos[2]=10.0f;
@@ -2331,7 +2334,7 @@ void showloading(void)
 
 	switch (needloadfile)
 	{
-	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
+	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
 	case 2:glPrint(16,16,"Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
 	case 3:glPrint(16,16,"Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();//Cloud.Init();
 	case 4:glPrint(16,16,"Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
@@ -2596,6 +2599,66 @@ void glPrintHighLight(void)
 	glBindTexture(GL_TEXTURE_2D,0);
 }
 
+void DrawGround(void)
+{
+
+	eyePositionSea[0]=MFighter.RefPos()(0);
+	eyePositionSea[1]=MFighter.RefPos()(1);
+	eyePositionSea[2]=MFighter.RefPos()(2);
+
+
+	if(ShaderLight)
+	{
+		DrawSea();
+		glPushMatrix();
+			
+			glScaled(1000.0,500.0,1000.0);
+			glDisable(GL_BLEND);
+			//m_VBMD->ShowVBMD(ModelID_SHAN);
+			int mapx,mapz;
+			mapx=int(MFighter.RefPos()(0))/40000;
+			mapz=int(MFighter.RefPos()(2))/40000;
+			glBindTexture(GL_TEXTURE_2D,Maptexture);
+			for(int i=-3;i<4;i++)
+				for(int j=-3;j<4;j++)
+				{
+					glBegin(GL_QUADS);
+						glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+					glEnd();
+				}
+			
+		glPopMatrix();
+		cgGLDisableProfile( g_CGprofile_pixel );
+		cgGLDisableProfile( g_CGprofile_vertex );
+	}
+	else
+	{
+		glPushMatrix();
+			glEnable(GL_FOG);
+			glScaled(1000.0,500.0,1000.0);
+			glDisable(GL_BLEND);
+			//m_VBMD->ShowVBMD(ModelID_SHAN);
+			int mapx,mapz;
+			mapx=int(MFighter.RefPos()(0))/40000;
+			mapz=int(MFighter.RefPos()(2))/40000;
+			glBindTexture(GL_TEXTURE_2D,Maptexture);
+			for(int i=-3;i<4;i++)
+				for(int j=-3;j<4;j++)
+				{
+					glBegin(GL_QUADS);
+						glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+					glEnd();
+				}
+			glDisable(GL_FOG);
+		glPopMatrix();	
+	}
+}
 void stage0(void)
 {
 
@@ -2677,6 +2740,9 @@ void stage0(void)
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
 
+	LightSunPos[0]=LightSunPosR[0]+MFighter.RefPos()(0);
+	LightSunPos[1]=LightSunPosR[1]+MFighter.RefPos()(1);
+	LightSunPos[2]=LightSunPosR[2]+MFighter.RefPos()(2);
 	Transform LMView;
 	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 	Vector3d Pos3d;
@@ -2718,15 +2784,10 @@ void stage0(void)
 		glLoadMatrixd(MView.Matrix4());
 		DrawSky((float)longitude);
 
-		SkyBox.DrawSun(SunPos3d(0),SunPos3d(1),SunPos3d(2),winwidth,winheight);
-		glEnable(GL_CULL_FACE);
-		glPushMatrix();
-			glEnable(GL_FOG);
-			glScaled(500.0,500.0,500.0);
-			glDisable(GL_BLEND);
-			m_VBMD->ShowVBMD(ModelID_SHAN);
-			glDisable(GL_FOG);
-		glPopMatrix();
+		SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight);
+		//glEnable(GL_CULL_FACE);
+
+		DrawGround();
 		//glBindTexture(GL_TEXTURE_2D,AmbientReflectiveTexture);
 		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
 		glDisable(GL_CULL_FACE);

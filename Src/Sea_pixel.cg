@@ -1,0 +1,49 @@
+//Fragment Shader
+
+// Note how the fragment struct was simply copied from our vertex shader code.
+// This is necessary if we want to use a vertex and pixel shader together.
+
+struct fragment
+{
+    float4 position	:	POSITION;
+    float4 color0	:	COLOR0;
+    float2 texcoord0	:	TEXCOORD0;
+    float3 normal	:	TEXCOORD1;
+    float4 objectPos	:	TEXCOORD2;
+};
+
+struct pixel
+{
+    float4 color : COLOR;
+};
+
+pixel main( 
+    fragment IN, 
+    uniform float3	globalAmbient,
+    uniform float3	paraLightColor,
+    uniform float3	paraLightDirection,
+    uniform float3	eyePosition,
+    uniform sampler2D	testTexture
+)
+{
+    float3 P = IN.position.xyz;
+    float3 N =tex2D( testTexture, IN.texcoord0 );
+
+    float3 L = normalize(paraLightDirection-P);
+    float diffuseLight = max(dot(N, L), 0);
+    float3 diffuse = paraLightColor * diffuseLight;
+
+    float3 V = normalize(eyePosition - P);
+    float3 H = normalize(L + V);
+    float specularLight = pow(max(dot(N, H), 0), 100.0);
+
+    if(diffuseLight<=0) specularLight=0;
+    float4 Ocolor;
+    Ocolor.xyz = globalAmbient + diffuse+specularLight;
+    Ocolor.w = 0.5;
+    pixel OUT;
+
+	OUT.color = Ocolor*0.5;
+
+    return OUT;
+}

@@ -21,6 +21,7 @@ GLuint img,fboBloomImg,dtex;					// Our handle to a texture
 //GLuint blurtexture2;
 GLuint PlayerSign;
 GLuint ShowHPTexID;
+GLuint SeaTexID;
 bool IsSupportFBO=false;
 //int SmokeNumber=0;//读取的尾烟图片总数
 //int BomsNumber=0;//读取的爆炸相关设定总数

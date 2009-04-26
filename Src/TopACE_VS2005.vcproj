@@ -240,6 +240,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sea_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\Sea_vertex.cg"
+				>
+			</File>
+			<File
 				RelativePath=".\UIalpha_pixel.cg"
 				>
 			</File>

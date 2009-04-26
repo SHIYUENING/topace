@@ -21,6 +21,8 @@ CGprogram   g_CGRenderShadowMap_pixel;
 CGprogram	g_BloomL1_pixel;
 CGprogram	g_BloomL2_pixel;
 CGprogram	g_BloomL3_pixel;
+CGprogram	g_Sea_vertex;
+CGprogram	g_Sea_pixel;
 
 CGparameter   g_CGparam_ShadowMapTexture;
 CGparameter   g_CGparam_AmbientReflective;
@@ -51,7 +53,9 @@ float paraLightColor[4];
 float paraLightDirection[3];
 float lightColor[4];
 float eyePosition[3]={0.0f, 150.0f, 30.0f};
+float eyePositionSea[3]={0.0f, 150.0f, 30.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
+float lightPositionSea[]= { 0.0f, 0.0f, 2.0f };
 float UIalpha[]={1.0f, 1.0f, 1.0f};
 int BloomLevel=0;
 float Ppos1=30.0f;
@@ -189,6 +193,18 @@ void InitCG()
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
+	g_Sea_vertex = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"Sea_vertex.cg",
+												g_CGprofile_vertex,
+												NULL,
+												NULL );
+	g_Sea_pixel = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"Sea_pixel.cg",
+												g_CGprofile_pixel,
+												NULL,
+												NULL );
 
 	
 	//
@@ -206,6 +222,9 @@ void InitCG()
 	cgGLLoadProgram( g_CGpixel_NOBloom  );
 	cgGLLoadProgram( g_CGRenderShadowMap_vertex  );
 	cgGLLoadProgram( g_CGRenderShadowMap_pixel  );
+	cgGLLoadProgram(g_Sea_vertex);
+	cgGLLoadProgram(g_Sea_pixel);
+
 
 	//
 	// Bind some parameters by name so we can set them later...
@@ -393,3 +412,14 @@ void BasicLight()
 	//cgGLDisableProfile( g_CGprofile_vertex );
 }
 
+void DrawSea()
+{
+		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "globalAmbient" ), globalAmbient);
+		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightColor" ), paraLightColor);
+		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightDirection" ), LightSunPos);
+		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "eyePosition"), eyePositionSea);
+		cgGLBindProgram( g_Sea_vertex );
+		cgGLEnableProfile( g_CGprofile_vertex );
+		cgGLBindProgram( g_Sea_pixel );
+		cgGLEnableProfile( g_CGprofile_pixel );
+}
