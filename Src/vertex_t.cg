@@ -25,7 +25,7 @@ float4 objectPos2	:	TEXCOORD4;
 uniform float4x4 modelViewProj : state.matrix.mvp;
 
 fragment main( 
-			uniform float	testnum,
+			//uniform float	testnum,
 			  vertex IN,
 			  uniform float4x4 ShadowMapmvmatrix,
 			  uniform float4x4 ShadowMapprojmatrix 

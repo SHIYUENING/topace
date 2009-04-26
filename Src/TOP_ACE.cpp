@@ -340,6 +340,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	lockY=winheight/2;
 
 
+	//AmbientReflectiveTexture=EmptyTexture(512);
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
@@ -2156,7 +2157,8 @@ void DrawPlayer(void)
 
 					cgGLDisableProfile( g_CGprofile_pixel );
 					cgGLDisableProfile( g_CGprofile_vertex );
-					cgGLDisableTextureParameter( g_CGparam_checkerTexture );
+					cgGLDisableTextureParameter( g_CGparam_ShadowMapTexture );
+					//cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2725,6 +2727,8 @@ void stage0(void)
 			m_VBMD->ShowVBMD(ModelID_SHAN);
 			glDisable(GL_FOG);
 		glPopMatrix();
+		//glBindTexture(GL_TEXTURE_2D,AmbientReflectiveTexture);
+		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
 		glDisable(GL_CULL_FACE);
 		//glBindTexture(GL_TEXTURE_2D,BlurTexture);
 		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);

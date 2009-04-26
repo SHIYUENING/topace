@@ -2,7 +2,7 @@
 #include <Cg/Cg.h>
 #include <Cg/cgGL.h>
 #include "Textures.h"
-//GLuint BlurTexture;
+//GLuint AmbientReflectiveTexture;
 bool ShaderLight=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
 bool UseHighShadow=true;
@@ -13,16 +13,17 @@ CGprogram   g_CGbasicLight_vertex;
 CGprogram   g_CGHighLight_vertex;
 CGprogram   g_CGHighLight_pixel;
 CGprogram   g_CGvertex_t;
-CGprogram   g_CGpixel_t;
+//CGprogram   g_CGpixel_t;
 CGprogram   g_CGpixel_NOBloom;
-CGprogram   g_CGpixel_NOBloom_HighShadow;
+//CGprogram   g_CGpixel_NOBloom_HighShadow;
 CGprogram   g_CGRenderShadowMap_vertex;
 CGprogram   g_CGRenderShadowMap_pixel;
 CGprogram	g_BloomL1_pixel;
 CGprogram	g_BloomL2_pixel;
 CGprogram	g_BloomL3_pixel;
 
-CGparameter   g_CGparam_checkerTexture;
+CGparameter   g_CGparam_ShadowMapTexture;
+CGparameter   g_CGparam_AmbientReflective;
 
 
 //CGparameter g_CGparam_testTexture;
@@ -131,12 +132,14 @@ void InitCG()
 												g_CGprofile_vertex,
 												NULL,
 												NULL );
+	/*
 	g_CGpixel_t = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"pixel_t.cg",
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
+	*/
 	if(UseHighShadow)
 		g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
@@ -199,7 +202,7 @@ void InitCG()
 	cgGLLoadProgram( g_CGHighLight_vertex );
 	cgGLLoadProgram( g_CGHighLight_pixel  );
 	cgGLLoadProgram( g_CGvertex_t );
-	cgGLLoadProgram( g_CGpixel_t  );
+	//cgGLLoadProgram( g_CGpixel_t  );
 	cgGLLoadProgram( g_CGpixel_NOBloom  );
 	cgGLLoadProgram( g_CGRenderShadowMap_vertex  );
 	cgGLLoadProgram( g_CGRenderShadowMap_pixel  );
@@ -226,7 +229,7 @@ void RenderShadowMap()
 	cgGLEnableProfile( g_CGprofile_pixel );
 
 }
-void shaderT(bool UseBloom=false)
+void shaderT()//bool UseBloom=false
 {/*
 	if(Keb[0])
 	Ke[0]=Ke[0]+0.02f;
@@ -255,15 +258,15 @@ void shaderT(bool UseBloom=false)
 		Ke[2]=1.0;
 
 */
-	
+	/*
 	if(UseBloom)
 	{
 
 		
 
-		g_CGparam_checkerTexture = cgGetNamedParameter(g_CGpixel_t, "checkerTexture");
-		cgGLSetTextureParameter( g_CGparam_checkerTexture, img );
-		//g_CGparam_checkerTexture = cgGetNamedParameter(g_CGvertex_t, "checkerTexture");
+		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_t, "ShadowMapTexture");
+		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
+		//g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGvertex_t, "ShadowMapTexture");
 
 		cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
@@ -283,19 +286,21 @@ void shaderT(bool UseBloom=false)
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_CGpixel_t );
 		cgGLEnableProfile( g_CGprofile_pixel );
-		cgGLEnableTextureParameter( g_CGparam_checkerTexture );
+		cgGLEnableTextureParameter( g_CGparam_ShadowMapTexture );
 	}
 	else
 	{
 		
+*/
 
+		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "ShadowMapTexture");
+		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
+		//g_CGparam_AmbientReflective = cgGetNamedParameter(g_CGpixel_NOBloom, "AmbientReflectiveTexture");
+		//cgGLSetTextureParameter( g_CGparam_AmbientReflective, AmbientReflectiveTexture );
 
-		g_CGparam_checkerTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "checkerTexture");
-		cgGLSetTextureParameter( g_CGparam_checkerTexture, img );
+		//g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGvertex_t, "ShadowMapTexture");
 
-		//g_CGparam_checkerTexture = cgGetNamedParameter(g_CGvertex_t, "checkerTexture");
-
-		cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
+		//cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "globalAmbient" ), globalAmbient);
@@ -313,9 +318,11 @@ void shaderT(bool UseBloom=false)
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_CGpixel_NOBloom );
 		cgGLEnableProfile( g_CGprofile_pixel );
-		cgGLEnableTextureParameter( g_CGparam_checkerTexture );
+		cgGLEnableTextureParameter( g_CGparam_ShadowMapTexture );
+		//cgGLEnableTextureParameter( g_CGparam_AmbientReflective );
+
 	
-	}
+	//}
 }
 void HighLight()
 {
