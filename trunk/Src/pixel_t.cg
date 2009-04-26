@@ -33,7 +33,7 @@ pixel main(
 //	uniform float	testnum,
 //    uniform float	shininess,
     uniform sampler2D	testTexture,
-    uniform sampler2D	checkerTexture
+    uniform sampler2D	ShadowMapTexture
 )
 {
     float3 P = IN.position.xyz;
@@ -112,17 +112,17 @@ pixel main(
     //OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
     
 	
-	//float posz=tex2D( checkerTexture, IN.texcoord3 ).r*255+tex2D( checkerTexture, IN.texcoord3 ).g;
-	//float posz=tex2D( checkerTexture, IN.texcoord3 ).b*256;
-	float4 colorposZ=tex2D( checkerTexture, IN.texcoord3 );
+	//float posz=tex2D( ShadowMapTexture, IN.texcoord3 ).r*255+tex2D( ShadowMapTexture, IN.texcoord3 ).g;
+	//float posz=tex2D( ShadowMapTexture, IN.texcoord3 ).b*256;
+	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
 	float posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*2.0);
 	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient;
 	//if(colorposZ.r>0) Ocolor.xyz=globalAmbient;
 
 
 	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
-   // OUT.color = (tex2D( testTexture, IN.texcoord0 )+tex2D( checkerTexture, texcoord2 )*0.1)*Ocolor*tmp44;
-    //OUT.color = tex2D( checkerTexture, texcoord2 )*Ocolor;
+   // OUT.color = (tex2D( testTexture, IN.texcoord0 )+tex2D( ShadowMapTexture, texcoord2 )*0.1)*Ocolor*tmp44;
+    //OUT.color = tex2D( ShadowMapTexture, texcoord2 )*Ocolor;
 
     return OUT;
 }

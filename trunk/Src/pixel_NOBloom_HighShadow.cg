@@ -35,7 +35,8 @@ pixel main(
 	//uniform float	testnum,
     //uniform float	shininess,
     uniform sampler2D	testTexture,
-    uniform sampler2D	checkerTexture
+    uniform sampler2D	ShadowMapTexture
+	//uniform sampler2D	AmbientReflectiveTexture
 )
 {
     float3 P = IN.position.xyz;
@@ -114,116 +115,116 @@ pixel main(
     //OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
     
 	
-	//float posz=tex2D( checkerTexture, IN.texcoord3 ).r*255+tex2D( checkerTexture, IN.texcoord3 ).g;
-	//float posz=tex2D( checkerTexture, IN.texcoord3 ).b*256;
+	//float posz=tex2D( ShadowMapTexture, IN.texcoord3 ).r*255+tex2D( ShadowMapTexture, IN.texcoord3 ).g;
+	//float posz=tex2D( ShadowMapTexture, IN.texcoord3 ).b*256;
 	float tmp0,tmp1;
 	float4 colorposZ;
 	float posz;
 
 	float v=0.001;
 	tmp1=0.995+0.005*2.0;
-	//colorposZ=tex2D( checkerTexture, IN.texcoord3 );
+	//colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
 	//posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*(0.995+0.005*4.5);
 	//if(IN.objectPos2.z>posz) v=0.001*(IN.objectPos2.z-posz);
 	float2 MX=float2 (v,0);
 	float2 MU=float2 (0,v);
-	colorposZ=tex2D( checkerTexture, IN.texcoord3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MU );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MU );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MU );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MU );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX+MU );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX+MU );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX+MU );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX+MU );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX-MU );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX-MU );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX-MU );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX-MU );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MU*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MU*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MU*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MU*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX*2+MU*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX*2+MU*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX*2+MU*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX*2+MU*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX*2-MU*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX*2-MU*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX*2-MU*2 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX*2-MU*2 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MU*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MU*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX*3+MU*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX*3+MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX*3+MU*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX*3+MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3+MX*3-MU*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3+MX*3-MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	colorposZ=tex2D( checkerTexture, IN.texcoord3-MX*3-MU*3 );
+	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MX*3-MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 	Ocolor.xyz=globalAmbient+(diffuse+specularLight)*(25-tmp0)/25;
@@ -234,8 +235,8 @@ pixel main(
 
 
 	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*1.1;
-   // OUT.color = (tex2D( testTexture, IN.texcoord0 )+tex2D( checkerTexture, texcoord2 )*0.1)*Ocolor*tmp44;
-    //OUT.color = tex2D( checkerTexture, texcoord2 )*Ocolor;
+   // OUT.color = (tex2D( testTexture, IN.texcoord0 )+tex2D( ShadowMapTexture, texcoord2 )*0.1)*Ocolor*tmp44;
+    //OUT.color = tex2D( ShadowMapTexture, texcoord2 )*Ocolor;
 
     return OUT;
 }
