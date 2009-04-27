@@ -26,6 +26,6 @@ fragment main(vertex IN)
 	OUT.oNormal = IN.normal;
 	OUT.color0 = IN.color0;
 	OUT.texcoord0 = IN.texcoord0;
-	OUT.objectPos = IN.position.xyz;
+	OUT.objectPos = OUT.position;
 	return OUT;
 }

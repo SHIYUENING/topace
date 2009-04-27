@@ -2618,7 +2618,7 @@ void DrawGround(void)
 			int mapx,mapz;
 			mapx=int(MFighter.RefPos()(0))/40000;
 			mapz=int(MFighter.RefPos()(2))/40000;
-			glBindTexture(GL_TEXTURE_2D,Maptexture);
+			glBindTexture(GL_TEXTURE_2D,SeaTexID);
 			for(int i=-3;i<4;i++)
 				for(int j=-3;j<4;j++)
 				{
@@ -2740,9 +2740,9 @@ void stage0(void)
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
 
-	LightSunPos[0]=LightSunPosR[0]+MFighter.RefPos()(0);
-	LightSunPos[1]=LightSunPosR[1]+MFighter.RefPos()(1);
-	LightSunPos[2]=LightSunPosR[2]+MFighter.RefPos()(2);
+	LightSunPos[0]=100000*testNum+MFighter.RefPos()(0);
+	LightSunPos[1]=100000+MFighter.RefPos()(1);
+	LightSunPos[2]=100000*testNum2+MFighter.RefPos()(2);
 	Transform LMView;
 	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 	Vector3d Pos3d;
