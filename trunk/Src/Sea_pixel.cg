@@ -9,7 +9,7 @@ struct fragment
     float4 color0	:	COLOR0;
     float2 texcoord0	:	TEXCOORD0;
     float3 normal	:	TEXCOORD1;
-    float4 objectPos	:	TEXCOORD2;
+    float3 objectPos	:	TEXCOORD2;
 };
 
 struct pixel
@@ -23,11 +23,17 @@ pixel main(
     uniform float3	paraLightColor,
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
+	uniform float3	FogColor,
     uniform sampler2D	testTexture
 )
 {
     float3 P = IN.position.xyz;
-    float3 N =tex2D( testTexture, IN.texcoord0 );
+    float3 NN =tex2D( testTexture, IN.texcoord0*3 );
+
+	float3 N;
+	N.x=(NN.x-0.5)*2.0;
+	N.y=(NN.z-0.5)*2.0;
+	N.z=(NN.y-0.5)*2.0;
 
     float3 L = normalize(paraLightDirection-P);
     float diffuseLight = max(dot(N, L), 0);
@@ -37,13 +43,27 @@ pixel main(
     float3 H = normalize(L + V);
     float specularLight = pow(max(dot(N, H), 0), 100.0);
 
+
+	float fogb=min((100000-IN.objectPos.z)/40000,1.0);
+	
+
+
     if(diffuseLight<=0) specularLight=0;
     float4 Ocolor;
-    Ocolor.xyz = globalAmbient + diffuse+specularLight;
-    Ocolor.w = 0.5;
+	diffuse.z=1.0;
+	paraLightColor.z=1.0;
+    Ocolor.xyz = diffuse+specularLight*paraLightColor;
+
+    Ocolor.w = 1.0;
+
     pixel OUT;
 
-	OUT.color = Ocolor*0.5;
+	float4 Ocolor2;
+	Ocolor2.xyz=(1-fogb)*FogColor;
+	Ocolor2.w=(1-fogb);
 
+
+	OUT.color = Ocolor*fogb+Ocolor2;
+	//if((IN.objectPos.x*IN.objectPos.x+IN.objectPos.y*IN.objectPos.y+IN.objectPos.z*IN.objectPos.z)>10000*10000) OUT.color.xyz=FogColor;
     return OUT;
 }

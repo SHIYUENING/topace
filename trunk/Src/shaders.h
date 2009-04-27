@@ -60,6 +60,7 @@ float UIalpha[]={1.0f, 1.0f, 1.0f};
 int BloomLevel=0;
 float Ppos1=30.0f;
 float Ppos2=150.0f;
+float pixelfogColor[3];
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
 //≥ı ºªØshader
 void InitCG()
@@ -225,7 +226,9 @@ void InitCG()
 	cgGLLoadProgram(g_Sea_vertex);
 	cgGLLoadProgram(g_Sea_pixel);
 
-
+	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
+	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
+	pixelfogColor[2]=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255.0f;
 	//
 	// Bind some parameters by name so we can set them later...
 	//
@@ -414,10 +417,13 @@ void BasicLight()
 
 void DrawSea()
 {
+	
+
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "globalAmbient" ), globalAmbient);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightColor" ), paraLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightDirection" ), LightSunPos);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "eyePosition"), eyePositionSea);
+		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "FogColor"), pixelfogColor);
 		cgGLBindProgram( g_Sea_vertex );
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_Sea_pixel );
