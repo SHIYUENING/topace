@@ -28,7 +28,7 @@ pixel main(
 )
 {
     float3 P = IN.position.xyz;
-    float3 NN =tex2D( testTexture, IN.texcoord0*3 );
+    float3 NN =tex2D( testTexture, IN.texcoord0*10 );
 
 	float3 N;
 	N.x=(NN.x-0.5)*2.0;
@@ -39,20 +39,26 @@ pixel main(
     float diffuseLight = max(dot(N, L), 0);
     float3 diffuse = paraLightColor * diffuseLight;
 
+
     float3 V = normalize(eyePosition - P);
     float3 H = normalize(L + V);
     float specularLight = pow(max(dot(N, H), 0), 100.0);
+
+	if(diffuseLight<=0) specularLight=0;
 
 
 	float fogb=min((100000-IN.objectPos.z)/40000,1.0);
 	
 
+   float3 global=globalAmbient;
+   global.r=0;
+   global.g=0;
 
-    if(diffuseLight<=0) specularLight=0;
+   
     float4 Ocolor;
-	diffuse.z=1.0;
-	paraLightColor.z=1.0;
-    Ocolor.xyz = diffuse+specularLight*paraLightColor;
+	
+	
+    Ocolor.xyz = global+diffuse*0.5+specularLight*paraLightColor;
 
     Ocolor.w = 1.0;
 
