@@ -24,25 +24,27 @@ pixel main(
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
 	uniform float3	FogColor,
+	//uniform float	time,
     uniform sampler2D	testTexture
 )
 {
     float3 P = IN.position.xyz;
-    float3 NN =tex2D( testTexture, IN.texcoord0*10 );
+    float3 NN =tex2D( testTexture, IN.texcoord0*10);
 
 	float3 N;
 	N.x=(NN.x-0.5)*2.0;
-	N.y=(NN.z-0.5)*2.0;
+	N.y=(NN.z-0.5)*1.0;
 	N.z=(NN.y-0.5)*2.0;
 
     float3 L = normalize(paraLightDirection-P);
     float diffuseLight = max(dot(N, L), 0);
     float3 diffuse = paraLightColor * diffuseLight;
+	diffuse.b=1.0;
 
 
     float3 V = normalize(eyePosition - P);
     float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(N, H), 0), 100.0);
+    float specularLight = pow(max(dot(normalize(N), H), 0), 100.0);
 
 	if(diffuseLight<=0) specularLight=0;
 
@@ -58,7 +60,7 @@ pixel main(
     float4 Ocolor;
 	
 	
-    Ocolor.xyz = global+diffuse*0.5+specularLight*paraLightColor;
+    Ocolor.xyz = global+diffuse+specularLight*paraLightColor;
 
     Ocolor.w = 1.0;
 
