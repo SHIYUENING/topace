@@ -52,7 +52,6 @@ public:
 	int TotalMid;
 	int ModelId;
 	float VerticesInToTBN[3][3];
-	float NormalsInToTBN[3][3];
 	float TexCoordsInToTBN[3][2];
 	float TBNout[3];
 
