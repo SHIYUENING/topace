@@ -2662,6 +2662,9 @@ void DrawGround(void)
 void stage0(void)
 {
 
+	seatime=seatime+0.001f;
+	if(seatime>1.0f)
+		seatime=seatime-1.0f;
 	Vector3d pos;
     pos = MFighter.RefPos();
     Vector3d dir;

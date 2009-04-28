@@ -253,3 +253,7 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 
 
 
+
+void CLoadVBMD::TBN(void)
+{
+}

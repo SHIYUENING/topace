@@ -61,6 +61,7 @@ int BloomLevel=0;
 float Ppos1=30.0f;
 float Ppos2=150.0f;
 float pixelfogColor[3];
+float seatime=0.0f;
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
 //≥ı ºªØshader
 void InitCG()
@@ -424,6 +425,7 @@ void DrawSea()
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightDirection" ), LightSunPos);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "eyePosition"), eyePositionSea);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "FogColor"), pixelfogColor);
+		//cgSetParameter1f(cgGetNamedParameter( g_Sea_pixel, "time"), seatime);
 		cgGLBindProgram( g_Sea_vertex );
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_Sea_pixel );
