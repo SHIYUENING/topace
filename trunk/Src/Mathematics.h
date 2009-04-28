@@ -97,6 +97,8 @@ T det(const Matrix<T, Sz, Sz>& rhs){
 #undef m
 }
 
+Matrix44d inverse(const Matrix44d& m);
+
 Vector2d cross(const Vector2d& rhs);
 
 Vector3d cross(const Vector3d& rhs);

@@ -1,3 +1,4 @@
+#include "Mathematics.h"
 #include "VBMD.h"
 
 
@@ -256,4 +257,30 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 
 void CLoadVBMD::TBN(void)
 {
+    Matrix44d UV;
+    UV = TexCoordsInToTBN[0][0], TexCoordsInToTBN[1][0], TexCoordsInToTBN[2][0], 0,
+         TexCoordsInToTBN[0][1], TexCoordsInToTBN[1][1], TexCoordsInToTBN[2][1], 0,
+                              0,                      0,                      0, 1,
+                              1,                      1,                      1, 0;
+
+    float NormalInToTBN[3] = {0, 0, 0};
+
+    Matrix44d XYZ;
+    XYZ = VerticesInToTBN[0][0],  VerticesInToTBN[1][0],  VerticesInToTBN[2][0], NormalInToTBN[0],
+          VerticesInToTBN[0][1],  VerticesInToTBN[1][1],  VerticesInToTBN[2][1], NormalInToTBN[1],
+          VerticesInToTBN[0][2],  VerticesInToTBN[1][2],  VerticesInToTBN[2][2], NormalInToTBN[2],
+                              1,                      1,                      1,                0;
+
+    Matrix44d M;
+    M = XYZ * inverse(UV);
+    
+    Vector4d TInTex;
+    TInTex = 1, 0, 0, 0;
+
+    Vector4d T;
+    T = M * TInTex;
+
+    TBNout[0] = T(0);
+    TBNout[1] = T(1);
+    TBNout[2] = T(2);
 }
