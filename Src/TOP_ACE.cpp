@@ -2602,9 +2602,9 @@ void glPrintHighLight(void)
 void DrawGround(void)
 {
 
-	eyePositionSea[0]=MFighter.RefPos()(0);
-	eyePositionSea[1]=MFighter.RefPos()(1);
-	eyePositionSea[2]=MFighter.RefPos()(2);
+	eyePositionSea[0]=(float)MFighter.RefPos()(0);
+	eyePositionSea[1]=(float)MFighter.RefPos()(1);
+	eyePositionSea[2]=(float)MFighter.RefPos()(2);
 
 
 	if(ShaderLight)
@@ -2740,9 +2740,9 @@ void stage0(void)
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
 
-	LightSunPos[0]=100000*testNum+MFighter.RefPos()(0);
-	LightSunPos[1]=100000+MFighter.RefPos()(1);
-	LightSunPos[2]=100000*testNum2+MFighter.RefPos()(2);
+	LightSunPos[0]=100000*testNum+(float)MFighter.RefPos()(0);
+	LightSunPos[1]=100000+(float)MFighter.RefPos()(1);
+	LightSunPos[2]=100000*testNum2+(float)MFighter.RefPos()(2);
 	Transform LMView;
 	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 	Vector3d Pos3d;
