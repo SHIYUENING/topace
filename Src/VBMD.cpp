@@ -184,8 +184,41 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 	{
 		float*			pTangent;
 		pTangent = new float[VBMD[MID].VertexCount*3];
-		for(int i=0;i<VBMD[MID].VertexCount;i+3)
+		for(int i=0;i<VBMD[MID].VertexCount;i=i+3)
 		{
+			VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
+			VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
+			VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
+
+			VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
+			VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
+			VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
+
+			VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
+			VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
+			VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
+
+			TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
+			TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
+
+			TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
+			TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
+
+			TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
+			TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
+			TBN();
+			pTangent[i*3+0]=TBNout[0];
+			pTangent[i*3+1]=TBNout[1];
+			pTangent[i*3+2]=TBNout[2];
+
+			pTangent[(i+1)*3+0]=TBNout[0];
+			pTangent[(i+1)*3+1]=TBNout[1];
+			pTangent[(i+1)*3+2]=TBNout[2];
+
+			pTangent[(i+2)*3+0]=TBNout[0];
+			pTangent[(i+2)*3+1]=TBNout[1];
+			pTangent[(i+2)*3+2]=TBNout[2];
+
 		
 		}
 		// 生成并绑定顶点缓存
