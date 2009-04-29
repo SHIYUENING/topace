@@ -34,7 +34,8 @@ pixel main(
 //    uniform float	shininess,
     uniform sampler2D	testTexture,
     uniform sampler2D	ShadowMapTexture,
-	uniform samplerCUBE	AmbientReflectiveTexture
+	uniform samplerCUBE	AmbientReflectiveTexture,
+	uniform sampler2D	NormalMapTexture
 )
 {
     float3 P = IN.position.xyz;
@@ -60,7 +61,7 @@ pixel main(
 	half3 I = IN.objectPos2.xyz - eyePosition;
 	half3 R = reflect(I, N);
 
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*0.1;
+	OUT.color = tex2D( NormalMapTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*0.2;
 
     return OUT;
 }

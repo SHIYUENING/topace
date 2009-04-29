@@ -26,6 +26,7 @@ CGprogram	g_Sea_pixel;
 
 CGparameter   g_CGparam_ShadowMapTexture;
 CGparameter   g_CGparam_AmbientReflective;
+CGparameter   g_CGparam_NormalMapTexture;
 
 
 //CGparameter g_CGparam_testTexture;
@@ -260,15 +261,12 @@ void shaderT()//bool UseBloom=false
 		Ke[0]=Ke[0]-0.02f;
 	if((Ke[0]<0.0)||(Ke[0]>1.0))
 		Keb[0]=!Keb[0];
-
 	if(Keb[1])
 	Ke[1]=Ke[1]+0.02f;
 	else
 		Ke[1]=Ke[1]-0.02f;
 	if((Ke[1]<0.0)||(Ke[1]>1.0))
 		Keb[1]=!Keb[1];
-
-	
 	if(Keb[2])
 	Ke[2]=Ke[2]+0.02;
 	else
@@ -279,18 +277,13 @@ void shaderT()//bool UseBloom=false
 	Ke[2]=Ke[2]-0.04f;
 	if(Ke[2]<0.0)
 		Ke[2]=1.0;
-
 */
 	/*
 	if(UseBloom)
 	{
-
-		
-
 		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_t, "ShadowMapTexture");
 		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
 		//g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGvertex_t, "ShadowMapTexture");
-
 		cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
@@ -304,7 +297,6 @@ void shaderT()//bool UseBloom=false
 //		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_t, "Ks" ), Ks);
 //		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_t, "testnum" ), testNum2);
 //		cgSetParameter1f(cgGetNamedParameter( g_CGpixel_t, "shininess" ), shininess);
-
 		cgGLBindProgram( g_CGvertex_t );
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_CGpixel_t );
@@ -320,6 +312,9 @@ void shaderT()//bool UseBloom=false
 		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
 		g_CGparam_AmbientReflective = cgGetNamedParameter(g_CGpixel_NOBloom, "AmbientReflectiveTexture");
 		cgGLSetTextureParameter( g_CGparam_AmbientReflective, AmbientReflectiveTexture );
+		g_CGparam_NormalMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "NormalMapTexture");
+		cgGLSetTextureParameter( g_CGparam_NormalMapTexture, SeaTexID );
+
 
 		//g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGvertex_t, "ShadowMapTexture");
 
@@ -343,6 +338,7 @@ void shaderT()//bool UseBloom=false
 		cgGLEnableProfile( g_CGprofile_pixel );
 		cgGLEnableTextureParameter( g_CGparam_ShadowMapTexture );
 		cgGLEnableTextureParameter( g_CGparam_AmbientReflective );
+		cgGLEnableTextureParameter( g_CGparam_NormalMapTexture );
 
 	
 	//}

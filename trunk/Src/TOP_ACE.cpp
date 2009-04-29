@@ -2162,6 +2162,7 @@ void DrawPlayer(void)
 					cgGLDisableProfile( g_CGprofile_vertex );
 					cgGLDisableTextureParameter( g_CGparam_ShadowMapTexture );
 					cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
+					cgGLDisableTextureParameter( g_CGparam_NormalMapTexture );
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
