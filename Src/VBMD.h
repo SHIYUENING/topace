@@ -31,11 +31,13 @@ struct tVBMD
 	float*			pVertices;								// 顶点数组顶点数据
 	float*			pNormals;								// 顶点数组法线数据
 	float*			pTexCoords;								// 顶点数组纹理坐标数据
+	//float*			pTangent;								// 顶点数组切线数据
 
 	// 顶点缓存对象ID
 	unsigned int	VBOVertices;							// 顶点 顶点缓存ID
 	unsigned int	VBONormals;								// 法线 顶点缓存ID
 	unsigned int	VBOTexCoords;							// 纹理坐标 顶点缓存ID
+	unsigned int	VBOTangent;							// 切线 顶点缓存ID
 };
 
 class CLoadVBMD		// CLoadVBMD类处理所有的装入代码

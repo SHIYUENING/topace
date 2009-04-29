@@ -182,6 +182,12 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 	if(VBOSupported)
 	if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 	{
+		float*			pTangent;
+		pTangent = new float[VBMD[MID].VertexCount*3];
+		for(int i=0;i<VBMD[MID].VertexCount;i+3)
+		{
+		
+		}
 		// 生成并绑定顶点缓存
 		glGenBuffersARB( 1, &VBMD[MID].VBOVertices);					// 获取一个有效顶点VBO编号
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOVertices );	// 绑定VBO
