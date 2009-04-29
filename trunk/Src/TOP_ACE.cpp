@@ -2161,7 +2161,7 @@ void DrawPlayer(void)
 					cgGLDisableProfile( g_CGprofile_pixel );
 					cgGLDisableProfile( g_CGprofile_vertex );
 					cgGLDisableTextureParameter( g_CGparam_ShadowMapTexture );
-					//cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
+					cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2336,7 +2336,7 @@ void showloading(void)
 	{
 	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
 	case 2:glPrint(16,16,"Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
-	case 3:glPrint(16,16,"Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();//Cloud.Init();
+	case 3:glPrint(16,16,"Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;//Cloud.Init();
 	case 4:glPrint(16,16,"Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
 	case 5:glPrint(16,16,"Loading Sound",0);initsound();
 	case 6:glPrint(16,16,"Loading Model",0);LoadVBMDModels(IsSupportFBO);

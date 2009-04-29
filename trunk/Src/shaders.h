@@ -2,7 +2,7 @@
 #include <Cg/Cg.h>
 #include <Cg/cgGL.h>
 #include "Textures.h"
-//GLuint AmbientReflectiveTexture;
+GLuint AmbientReflectiveTexture;
 bool ShaderLight=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
 bool UseHighShadow=true;
@@ -318,8 +318,8 @@ void shaderT()//bool UseBloom=false
 
 		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "ShadowMapTexture");
 		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
-		//g_CGparam_AmbientReflective = cgGetNamedParameter(g_CGpixel_NOBloom, "AmbientReflectiveTexture");
-		//cgGLSetTextureParameter( g_CGparam_AmbientReflective, AmbientReflectiveTexture );
+		g_CGparam_AmbientReflective = cgGetNamedParameter(g_CGpixel_NOBloom, "AmbientReflectiveTexture");
+		cgGLSetTextureParameter( g_CGparam_AmbientReflective, AmbientReflectiveTexture );
 
 		//g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGvertex_t, "ShadowMapTexture");
 
@@ -342,7 +342,7 @@ void shaderT()//bool UseBloom=false
 		cgGLBindProgram( g_CGpixel_NOBloom );
 		cgGLEnableProfile( g_CGprofile_pixel );
 		cgGLEnableTextureParameter( g_CGparam_ShadowMapTexture );
-		//cgGLEnableTextureParameter( g_CGparam_AmbientReflective );
+		cgGLEnableTextureParameter( g_CGparam_AmbientReflective );
 
 	
 	//}

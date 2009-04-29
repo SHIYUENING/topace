@@ -15,7 +15,9 @@ public:
 	bool Init(void);
 	GLuint SkyTexID[6];
 	GLuint SunTexID;
+	GLuint SunCubeID;
 	Texture SkyTex[6];
+	Texture SunCubeTex[6];
 	bool IsSupportFBO;
 	void Draw(void);
 	void DrawSun(float x,float y,float z,int winwidth,int winheight);
