@@ -25,7 +25,7 @@ int windowswidth=800;
 int windowsheight=600;
 int windowsbits=16;
 bool BisFullScreen=FALSE;
-int ACver=30;
+int ACver=31;
 
 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
@@ -122,18 +122,35 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 	}
 
 	// Create The OpenGL Window
-	window->hWnd = CreateWindowEx (windowExtendedStyle,					// Extended Style
-								   window->init.application->className,	// Class Name
-								   window->init.title,					// Window Title
-								   windowStyle,							// Window Style
-								   (GetSystemMetrics(SM_CXFULLSCREEN)-(windowRect.right - windowRect.left))/2, 
-								   (GetSystemMetrics(SM_CYFULLSCREEN)-(windowRect.bottom - windowRect.top))/2,								// Window X,Y Position
-								   windowRect.right - windowRect.left,	// Window Width
-								   windowRect.bottom - windowRect.top,	// Window Height
-								   HWND_DESKTOP,						// Desktop Is Window's Parent
-								   0,									// No Menu
-								   window->init.application->hInstance, // Pass The Window Instance
-								   window);
+	if(BisFullScreen)
+	{
+		window->hWnd = CreateWindowEx (windowExtendedStyle,					// Extended Style
+									   window->init.application->className,	// Class Name
+									   window->init.title,					// Window Title
+									   windowStyle,							// Window Style
+									   0, 0,								// Window X,Y Position
+									   windowRect.right - windowRect.left,	// Window Width
+									   windowRect.bottom - windowRect.top,	// Window Height
+									   HWND_DESKTOP,						// Desktop Is Window's Parent
+									   0,									// No Menu
+									   window->init.application->hInstance, // Pass The Window Instance
+									   window);
+	}
+	else
+	{
+		window->hWnd = CreateWindowEx (windowExtendedStyle,					// Extended Style
+									   window->init.application->className,	// Class Name
+									   window->init.title,					// Window Title
+									   windowStyle,							// Window Style
+									   (GetSystemMetrics(SM_CXFULLSCREEN)-(windowRect.right - windowRect.left))/2, 
+									   (GetSystemMetrics(SM_CYFULLSCREEN)-(windowRect.bottom - windowRect.top))/2,								// Window X,Y Position
+									   windowRect.right - windowRect.left,	// Window Width
+									   windowRect.bottom - windowRect.top,	// Window Height
+									   HWND_DESKTOP,						// Desktop Is Window's Parent
+									   0,									// No Menu
+									   window->init.application->hInstance, // Pass The Window Instance
+									   window);
+	}
 
 	if (window->hWnd == 0)												// Was Window Creation A Success?
 	{

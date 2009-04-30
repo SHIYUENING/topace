@@ -1694,11 +1694,11 @@ bool UnitAIBefore(int i)
 	
 	}
 
-	if((TmpL<300*300)&&(UDfighers[i].AIact==2))
+	if((TmpL<1000*1000))
 	{
 		UDfighers[i].LockTimer=0;
 		Transform tmp=UDfighers[i].UDMplane;
-		tmp.TranslateInternal(Vector3d(0, 1000, 10));
+		tmp.TranslateInternal(Vector3d(0, 1000, -10));
 		UDfighers[i].TurnTo(Vector3d(tmp.RefPos()(0),tmp.RefPos()(1),tmp.RefPos()(2)));
 		UDfighers[i].UDPstate.NextState();
 		return false;
@@ -2640,7 +2640,7 @@ void DrawGround(void)
 	{
 		glPushMatrix();
 			glEnable(GL_FOG);
-			glScaled(1000.0,500.0,1000.0);
+			glScaled(1000.0,1000.0,1000.0);
 			glDisable(GL_BLEND);
 			//m_VBMD->ShowVBMD(ModelID_SHAN);
 			int mapx,mapz;
@@ -2651,10 +2651,10 @@ void DrawGround(void)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
 				}
 			glDisable(GL_FOG);
