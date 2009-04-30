@@ -2152,7 +2152,7 @@ void DrawPlayer(void)
 					//glRotatef(40.0f*testNum2+40.0f,0.0f,1.0f,0.0f);
 					//glRotatef(90.0f,1.0f,0.0f,0.0f);	
 					//glScaled(1.0, 1.0, 1.0);
-					shaderT();
+					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					
 					m_VBMD->ShowVBMD(PlayerMainModel);
 				
@@ -2163,6 +2163,7 @@ void DrawPlayer(void)
 					cgGLDisableTextureParameter( g_CGparam_ShadowMapTexture );
 					cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
 					cgGLDisableTextureParameter( g_CGparam_NormalMapTexture );
+					cgGLDisableTextureParameter( g_CGparam_SpecularMapTexture );
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix

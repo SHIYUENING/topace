@@ -15,6 +15,7 @@ CGprogram   g_CGHighLight_pixel;
 CGprogram   g_CGvertex_t;
 //CGprogram   g_CGpixel_t;
 CGprogram   g_CGpixel_NOBloom;
+CGprogram   g_CGpixel_NONormalMap;
 //CGprogram   g_CGpixel_NOBloom_HighShadow;
 CGprogram   g_CGRenderShadowMap_vertex;
 CGprogram   g_CGRenderShadowMap_pixel;
@@ -27,7 +28,7 @@ CGprogram	g_Sea_pixel;
 CGparameter   g_CGparam_ShadowMapTexture;
 CGparameter   g_CGparam_AmbientReflective;
 CGparameter   g_CGparam_NormalMapTexture;
-
+CGparameter   g_CGparam_SpecularMapTexture;
 
 //CGparameter g_CGparam_testTexture;
 CGparameter cg_globalAmbient;
@@ -163,6 +164,13 @@ void InitCG()
 												NULL,
 												NULL );
 
+	g_CGpixel_NONormalMap = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"pixel_NONormalMap.cg",
+												g_CGprofile_pixel,
+												NULL,
+												NULL );
+
 	g_CGRenderShadowMap_vertex = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"RenderShadowMap_vertex.cg",
@@ -223,6 +231,7 @@ void InitCG()
 	cgGLLoadProgram( g_CGvertex_t );
 	//cgGLLoadProgram( g_CGpixel_t  );
 	cgGLLoadProgram( g_CGpixel_NOBloom  );
+	cgGLLoadProgram( g_CGpixel_NONormalMap  );
 	cgGLLoadProgram( g_CGRenderShadowMap_vertex  );
 	cgGLLoadProgram( g_CGRenderShadowMap_pixel  );
 	cgGLLoadProgram(g_Sea_vertex);
@@ -253,7 +262,7 @@ void RenderShadowMap()
 	cgGLEnableProfile( g_CGprofile_pixel );
 
 }
-void shaderT()//bool UseBloom=false
+void shaderT(int NormalTex=0,int SpecularTex=0)//bool UseBloom=false
 {/*
 	if(Keb[0])
 	Ke[0]=Ke[0]+0.02f;
@@ -307,13 +316,17 @@ void shaderT()//bool UseBloom=false
 	{
 		
 */
+	if(NormalTex==0)
+		g_CGpixel_NOBloom=g_CGpixel_NONormalMap;
 
 		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "ShadowMapTexture");
 		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
 		g_CGparam_AmbientReflective = cgGetNamedParameter(g_CGpixel_NOBloom, "AmbientReflectiveTexture");
 		cgGLSetTextureParameter( g_CGparam_AmbientReflective, AmbientReflectiveTexture );
 		g_CGparam_NormalMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "NormalMapTexture");
-		cgGLSetTextureParameter( g_CGparam_NormalMapTexture, SeaTexID );
+		cgGLSetTextureParameter( g_CGparam_NormalMapTexture, NormalTex );
+		g_CGparam_SpecularMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "SpecularMapTexture");
+		cgGLSetTextureParameter( g_CGparam_SpecularMapTexture, SpecularTex );
 
 
 		//g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGvertex_t, "ShadowMapTexture");
@@ -339,6 +352,7 @@ void shaderT()//bool UseBloom=false
 		cgGLEnableTextureParameter( g_CGparam_ShadowMapTexture );
 		cgGLEnableTextureParameter( g_CGparam_AmbientReflective );
 		cgGLEnableTextureParameter( g_CGparam_NormalMapTexture );
+		cgGLEnableTextureParameter( g_CGparam_SpecularMapTexture );
 
 	
 	//}

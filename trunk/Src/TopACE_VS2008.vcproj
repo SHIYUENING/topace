@@ -215,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pixel_NONormalMap.cg"
+				>
+			</File>
+			<File
 				RelativePath=".\pixel_phongLight.cg"
 				>
 			</File>

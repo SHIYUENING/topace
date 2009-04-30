@@ -18,6 +18,19 @@ CLoadVBMD::CLoadVBMD()
 		VBOSupported=false;
 
 	for(unsigned int i=0; i<MAX_VBMD; i++)
+	{
+		VBMD[i].NormalTexID=0;	
+		VBMD[i].SpecularTexID=0;	
+		VBMD[i].TextureID=0;	
+		VBMD[i].UseTangentArray=false;	
+		VBMD[i].VBONormals=0;
+		VBMD[i].VBOTangent=0;
+		VBMD[i].VBOTexCoords=0;
+		VBMD[i].VBOVertices=0;
+		VBMD[i].VertexCount=0;
+	}
+
+	for(unsigned int i=0; i<MAX_VBMD; i++)
 		CleanUpVBMD(i);
 
 	m_FilePointer= new FILE;	
@@ -59,6 +72,18 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 		{
 			glDeleteTextures(1, &VBMD[MID].TextureID);
 			VBMD[MID].TextureID = 0;
+		}
+
+		if( VBMD[MID].NormalTexID )
+		{
+			glDeleteTextures(1, &VBMD[MID].NormalTexID);
+			VBMD[MID].NormalTexID = 0;
+		}
+
+		if( VBMD[MID].SpecularTexID )
+		{
+			glDeleteTextures(1, &VBMD[MID].SpecularTexID);
+			VBMD[MID].SpecularTexID = 0;
 		}
 
 		// 删除顶点数组数据
@@ -138,57 +163,16 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	fclose(m_FilePointer);
 
 	VBMD[MID].UseTangentArray=UseTangent;
-	if(UseTangent)
-	{
-		
-
-		
-		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
-		{
-			VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
-			VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
-			VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
-
-			VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
-			VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
-			VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
-
-			VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
-			VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
-			VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
-
-			TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
-			TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
-
-			TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
-			TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
-
-			TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
-			TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
-			TBN();
-			VBMD[MID].pTangent[i*3+0]=TBNout[0];
-			VBMD[MID].pTangent[i*3+1]=TBNout[1];
-			VBMD[MID].pTangent[i*3+2]=TBNout[2];
-
-			VBMD[MID].pTangent[(i+1)*3+0]=TBNout[0];
-			VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1];
-			VBMD[MID].pTangent[(i+1)*3+2]=TBNout[2];
-
-			VBMD[MID].pTangent[(i+2)*3+0]=TBNout[0];
-			VBMD[MID].pTangent[(i+2)*3+1]=TBNout[1];
-			VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2];
-
-		
-		}
-	}
 
 	// 载入贴图
 	if((UserTexture==0)&&UseTexture)
 	{
+		CDDS ddsload;
 		char TextureDDSFileName[256] = {0};
 		sprintf(&TextureDDSFileName[0], "%s.dds", filename);
-		CDDS ddsload;
 		int ddsTexId=ddsload.loadCompressedTexture(TextureDDSFileName);
+
+
 		if(ddsTexId>0)
 		{
 			VBMD[MID].TextureID=ddsTexId;
@@ -219,9 +203,77 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 
 			delete pTextureImage;
 		}
+		char NormalTexDDSFileName[256] = {0};
+		sprintf(&NormalTexDDSFileName[0], "%s_N.dds", filename);
+		VBMD[MID].NormalTexID=ddsload.loadCompressedTexture(NormalTexDDSFileName);
+		if(VBMD[MID].NormalTexID>0)
+		{
+			VBMD[MID].UseTangentArray=true;
+		
+		}
+		else
+		{
+			VBMD[MID].UseTangentArray=false;
+		}
+
+		char SpecularTexDDSFileName[256] = {0};
+		sprintf(&SpecularTexDDSFileName[0], "%s_S.dds", filename);
+		VBMD[MID].SpecularTexID=ddsload.loadCompressedTexture(SpecularTexDDSFileName);
 	}
 	else
 		VBMD[MID].TextureID=UserTexture;
+
+	if(VBMD[MID].UseTangentArray)
+	{
+		for(unsigned int i=0;i<VBMD[MID].VertexCount;i++)
+		{
+			if((i*2+1)<(VBMD[MID].VertexCount*2))
+			VBMD[MID].pTexCoords[i*2+1]=1.0f-VBMD[MID].pTexCoords[i*2+1];
+		
+		}
+
+		
+		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
+		{
+			if(((i+1)*3+2)<(VBMD[MID].VertexCount*3))
+			{
+				VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
+				VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
+				VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
+
+				VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
+				VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
+				VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
+
+				VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
+				VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
+				VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
+
+				TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
+				TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
+
+				TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
+				TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
+
+				TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
+				TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
+				TBN();
+				VBMD[MID].pTangent[i*3+0]=TBNout[0];
+				VBMD[MID].pTangent[i*3+1]=TBNout[1];
+				VBMD[MID].pTangent[i*3+2]=TBNout[2];
+
+				VBMD[MID].pTangent[(i+1)*3+0]=TBNout[0];
+				VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1];
+				VBMD[MID].pTangent[(i+1)*3+2]=TBNout[2];
+
+				VBMD[MID].pTangent[(i+2)*3+0]=TBNout[0];
+				VBMD[MID].pTangent[(i+2)*3+1]=TBNout[1];
+				VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2];
+			}
+		
+		}
+	}
+
 	TotalMid=TotalMid+1;
 	BuildVBO(MID);
 	VBMD[MID].Islife=true;
@@ -360,4 +412,17 @@ void CLoadVBMD::TBN(void)
     TBNout[0] = (float)T(0);
     TBNout[1] = (float)T(1);
     TBNout[2] = (float)T(2);
+}
+
+unsigned int CLoadVBMD::GetTextureID(int MID)
+{
+	return VBMD[MID].TextureID;
+}
+unsigned int CLoadVBMD::GetNormalTexID(int MID)
+{
+	return VBMD[MID].NormalTexID;
+}
+unsigned int CLoadVBMD::GetSpecularTexID(int MID)
+{
+	return VBMD[MID].SpecularTexID;
 }

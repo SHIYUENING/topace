@@ -28,6 +28,9 @@ struct tVBMD
 	bool UseTangentArray;
 	// 网格数据
 	unsigned int	TextureID;								// 贴图编号
+	unsigned int	NormalTexID;								// 法线贴图编号
+	unsigned int	SpecularTexID;
+
 	unsigned int	VertexCount;							// 顶点数组顶点数
 	float*			pVertices;								// 顶点数组顶点数据
 	float*			pNormals;								// 顶点数组法线数据
@@ -62,5 +65,8 @@ private:
 	FILE	*m_FilePointer;								// 文件指针
 public:
 	void TBN(void);
+	unsigned int GetTextureID(int MID);
+	unsigned int GetNormalTexID(int MID);
+	unsigned int GetSpecularTexID(int MID);
 };
 #endif

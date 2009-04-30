@@ -123,6 +123,7 @@ unsigned int CDDS::loadCompressedTexture( const char *filename )
 {
     // NOTE: Unlike "lena.bmp", "lena.dds" actually contains its own mip-map 
     // levels, which are also compressed.
+	g_compressedTextureID=0;
     DDS_IMAGE_DATA *pDDSImageData = loadDDSTextureFile( filename ); 
 
     if( pDDSImageData != NULL )
