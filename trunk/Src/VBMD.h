@@ -25,13 +25,14 @@ struct tModelID
 struct tVBMD
 {
 	bool Islife;
+	bool UseTangentArray;
 	// 网格数据
 	unsigned int	TextureID;								// 贴图编号
 	unsigned int	VertexCount;							// 顶点数组顶点数
 	float*			pVertices;								// 顶点数组顶点数据
 	float*			pNormals;								// 顶点数组法线数据
 	float*			pTexCoords;								// 顶点数组纹理坐标数据
-	//float*			pTangent;								// 顶点数组切线数据
+	float*			pTangent;								// 顶点数组切线数据
 
 	// 顶点缓存对象ID
 	unsigned int	VBOVertices;							// 顶点 顶点缓存ID
@@ -45,7 +46,7 @@ class CLoadVBMD		// CLoadVBMD类处理所有的装入代码
 public:
 	CLoadVBMD();								// 初始化数据成员
 	virtual ~CLoadVBMD();
-	int Init(char *filename,bool UseTexture=true,GLint UserTexture=0);					
+	int Init(char *filename,bool UseTexture=true,GLint UserTexture=0,bool UseTangent=false);					
 	bool ShowVBMD(unsigned int MID,bool BindSelfTexture=true);
 	void CleanUpVBMD(unsigned int MID);					// 删除模型数据
 	void BuildVBO(unsigned int MID);					// 创建顶点缓存对象

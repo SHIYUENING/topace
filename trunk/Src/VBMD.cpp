@@ -45,7 +45,13 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 		{
 			unsigned int nBuffers[3] = { VBMD[MID].VBOVertices, VBMD[MID].VBONormals, VBMD[MID].VBOTexCoords };
 			glDeleteBuffersARB( 3, nBuffers );						// 释放内存
+			if(VBMD[MID].UseTangentArray)
+			{
+				glDeleteBuffersARB(1,&VBMD[MID].VBOTangent);
+			}
 		}
+		VBMD[MID].VBOTangent=0;
+
 		VBMD[MID].VBOVertices = VBMD[MID].VBONormals = VBMD[MID].VBOTexCoords = 0;
 
 		// 删除贴图
@@ -73,7 +79,7 @@ void CLoadVBMD::CleanUpVBMD(unsigned int MID)
 	
 }
 
-int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
+int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTangent)
 {
 	ModelId=1;
 
@@ -121,12 +127,60 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture)
 	VBMD[MID].pTexCoords = new float[VBMD[MID].VertexCount*2];
 	VBMD[MID].pNormals = new float[VBMD[MID].VertexCount*3];
 	VBMD[MID].pVertices = new float[VBMD[MID].VertexCount*3];
+	VBMD[MID].pTangent = new float[VBMD[MID].VertexCount*3];
 
 	fread(VBMD[MID].pTexCoords, 4*2, VBMD[MID].VertexCount, m_FilePointer);
 	fread(VBMD[MID].pNormals, 4*3, VBMD[MID].VertexCount, m_FilePointer);
 	fread(VBMD[MID].pVertices, 4*3, VBMD[MID].VertexCount, m_FilePointer);
 
+	
+
 	fclose(m_FilePointer);
+
+	VBMD[MID].UseTangentArray=UseTangent;
+	if(UseTangent)
+	{
+		
+
+		
+		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
+		{
+			VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
+			VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
+			VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
+
+			VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
+			VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
+			VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
+
+			VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
+			VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
+			VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
+
+			TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
+			TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
+
+			TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
+			TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
+
+			TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
+			TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
+			TBN();
+			VBMD[MID].pTangent[i*3+0]=TBNout[0];
+			VBMD[MID].pTangent[i*3+1]=TBNout[1];
+			VBMD[MID].pTangent[i*3+2]=TBNout[2];
+
+			VBMD[MID].pTangent[(i+1)*3+0]=TBNout[0];
+			VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1];
+			VBMD[MID].pTangent[(i+1)*3+2]=TBNout[2];
+
+			VBMD[MID].pTangent[(i+2)*3+0]=TBNout[0];
+			VBMD[MID].pTangent[(i+2)*3+1]=TBNout[1];
+			VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2];
+
+		
+		}
+	}
 
 	// 载入贴图
 	if((UserTexture==0)&&UseTexture)
@@ -182,45 +236,6 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 	if(VBOSupported)
 	if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 	{
-		float*			pTangent;
-		pTangent = new float[VBMD[MID].VertexCount*3];
-		for(int i=0;i<VBMD[MID].VertexCount;i=i+3)
-		{
-			VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
-			VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
-			VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
-
-			VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
-			VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
-			VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
-
-			VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
-			VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
-			VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
-
-			TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
-			TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
-
-			TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
-			TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
-
-			TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
-			TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
-			TBN();
-			pTangent[i*3+0]=TBNout[0];
-			pTangent[i*3+1]=TBNout[1];
-			pTangent[i*3+2]=TBNout[2];
-
-			pTangent[(i+1)*3+0]=TBNout[0];
-			pTangent[(i+1)*3+1]=TBNout[1];
-			pTangent[(i+1)*3+2]=TBNout[2];
-
-			pTangent[(i+2)*3+0]=TBNout[0];
-			pTangent[(i+2)*3+1]=TBNout[1];
-			pTangent[(i+2)*3+2]=TBNout[2];
-
-		
-		}
 		// 生成并绑定顶点缓存
 		glGenBuffersARB( 1, &VBMD[MID].VBOVertices);					// 获取一个有效顶点VBO编号
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOVertices );	// 绑定VBO
@@ -239,10 +254,18 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 		// Load The Data
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VertexCount*2*sizeof(float), VBMD[MID].pTexCoords, GL_STATIC_DRAW_ARB );
 
+		if(VBMD[MID].UseTangentArray)
+		{
+			glGenBuffersARB( 1, &VBMD[MID].VBOTangent);					// 获取一个有效顶点VBO编号
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );	// 绑定VBO
+			glBufferDataARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VertexCount*3*sizeof(float), VBMD[MID].pTangent, GL_STATIC_DRAW_ARB );
+		}
+
 		// 已将需要的数据复制到显卡中, 这些数据已经无用
 		delete [] VBMD[MID].pVertices; VBMD[MID].pVertices = NULL;
 		delete [] VBMD[MID].pNormals; VBMD[MID].pNormals = NULL;
 		delete [] VBMD[MID].pTexCoords; VBMD[MID].pTexCoords = NULL;
+		delete [] VBMD[MID].pTangent; VBMD[MID].pTangent = NULL;
 	}
 }
 bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
@@ -268,6 +291,11 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 				glNormalPointer( GL_FLOAT, 0, (char *) NULL );		// Set The Vertex Pointer To The Vertex Buffer
 				glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTexCoords );
 				glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
+				if(VBMD[MID].UseTangentArray)
+				{
+					glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );
+					glColorPointer( 3, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
+				}
 			}
 			else
 			{
@@ -329,7 +357,7 @@ void CLoadVBMD::TBN(void)
     Vector4d T;
     T = M * TInTex;
 
-    TBNout[0] = T(0);
-    TBNout[1] = T(1);
-    TBNout[2] = T(2);
+    TBNout[0] = (float)T(0);
+    TBNout[1] = (float)T(1);
+    TBNout[2] = (float)T(2);
 }

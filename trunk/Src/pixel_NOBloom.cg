@@ -6,7 +6,7 @@
 struct fragment
 {
     float4 position	:	POSITION;
-    float4 color0	:	COLOR0;
+    float3 color0	:	COLOR0;
     float2 texcoord0	:	TEXCOORD0;
     float3 normal	:	TEXCOORD1;
     float4 objectPos	:	TEXCOORD2;
@@ -38,8 +38,20 @@ pixel main(
 	uniform sampler2D	NormalMapTexture
 )
 {
+	float3 T = normalize(IN.color0);
+	float3 Nm = normalize(IN.normal);
+	float3 B = normalize(cross (T,Nm));
+	float3x3 TBN;
+	TBN[0]=T;
+	TBN[1]=B;
+	TBN[2]=Nm;
+	float3 NN = tex2D( NormalMapTexture, IN.texcoord0 ).xyz;
+	float3 NN2;
+	NN2.x=(NN.x-0.5)*2.0;
+	NN2.y=(NN.y-0.5)*2.0;
+	NN2.z=(NN.z-0.5)*2.0;
     float3 P = IN.position.xyz;
-    float3 N = normalize(IN.normal);
+    float3 N = mul(NN2,TBN);
 
     float3 L = normalize(paraLightDirection-P);
     float diffuseLight = max(dot(N, L), 0);
@@ -47,7 +59,7 @@ pixel main(
 
     float3 V = normalize(eyePosition - P);
     float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(N, H), 0), 100.0);
+    float specularLight = pow(max(dot(normalize(N), H), 0), 100.0);
 
     if(diffuseLight<=0) specularLight=0;
     float4 Ocolor;
@@ -61,7 +73,7 @@ pixel main(
 	half3 I = IN.objectPos2.xyz - eyePosition;
 	half3 R = reflect(I, N);
 
-	OUT.color = tex2D( NormalMapTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*0.2;
+	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*0.1;
 
     return OUT;
 }

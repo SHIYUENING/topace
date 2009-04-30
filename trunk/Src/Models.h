@@ -25,7 +25,7 @@ void LoadVBMDModels(bool IsSupportFBO)
 	m_VBMD->m_IsSupportFBO=IsSupportFBO;
 
 	ModelID[1].Normal	=	m_VBMD ->Init("Data/models/Y-15/Normal");
-	ModelID[2].Main		=	m_VBMD ->Init("Data/models/neo1/Main");
+	ModelID[2].Main		=	m_VBMD ->Init("Data/models/neo1/Main",true,0,true);
 	ModelID[2].MainDD1	=	m_VBMD ->Init("Data/models/neo1/MainDD1");
 	ModelID[2].MainDD2	=	m_VBMD ->Init("Data/models/neo1/MainDD2");
 	ModelID[2].Normal	=	m_VBMD ->Init("Data/models/neo1/Normal");
