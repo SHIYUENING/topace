@@ -23,7 +23,7 @@ bool CSkyBox::Init(void)
 	//if(SkyTexID[0]==0)
 	glGenTextures(1, &SunCubeID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT, SunCubeID);
-	if(LoadTGA(&SkyTex[0],"Data/sky/BK.tga"))
+	if(LoadTGA(&SkyTex[0],"Data/sky/FR.tga"))
 	{
 		//glGenTextures(1,&SkyTex[0].texID);
 		//glBindTexture(GL_TEXTURE_2D, SkyTex[0].texID);
@@ -76,7 +76,7 @@ bool CSkyBox::Init(void)
 		return false;
 
 	//if(SkyTexID[2]==0)
-	if(LoadTGA(&SkyTex[2],"Data/sky/FR.tga"))
+	if(LoadTGA(&SkyTex[2],"Data/sky/BK.tga"))
 	{
 		//glGenTextures(1,&SkyTex[2].texID);
 		//glBindTexture(GL_TEXTURE_2D, SkyTex[2].texID);
@@ -102,7 +102,7 @@ bool CSkyBox::Init(void)
 		return false;
 
 	//if(SkyTexID[3]==0)
-	if(LoadTGA(&SkyTex[3],"Data/sky/LF.tga"))
+	if(LoadTGA(&SkyTex[3],"Data/sky/RT.tga"))
 	{
 		//glGenTextures(1,&SkyTex[3].texID);
 		//glBindTexture(GL_TEXTURE_2D, SkyTex[3].texID);
@@ -129,7 +129,7 @@ bool CSkyBox::Init(void)
 		return false;
 
 	//if(SkyTexID[4]==0)
-	if(LoadTGA(&SkyTex[4],"Data/sky/RT.tga"))
+	if(LoadTGA(&SkyTex[4],"Data/sky/LF.tga"))
 	{
 		//glGenTextures(1,&SkyTex[4].texID);
 		//glBindTexture(GL_TEXTURE_2D, SkyTex[4].texID);

@@ -29,6 +29,7 @@ CGparameter   g_CGparam_ShadowMapTexture;
 CGparameter   g_CGparam_AmbientReflective;
 CGparameter   g_CGparam_NormalMapTexture;
 CGparameter   g_CGparam_SpecularMapTexture;
+CGparameter   g_CGparam_AmbientReflectiveSea;
 
 //CGparameter g_CGparam_testTexture;
 CGparameter cg_globalAmbient;
@@ -429,6 +430,8 @@ void BasicLight()
 void DrawSea()
 {
 	
+		g_CGparam_AmbientReflectiveSea = cgGetNamedParameter(g_Sea_pixel, "AmbientReflectiveTexturSea");
+		cgGLSetTextureParameter( g_CGparam_AmbientReflectiveSea, AmbientReflectiveTexture );
 
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "globalAmbient" ), globalAmbient);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightColor" ), paraLightColor);
@@ -440,4 +443,5 @@ void DrawSea()
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_Sea_pixel );
 		cgGLEnableProfile( g_CGprofile_pixel );
+		cgGLEnableTextureParameter( g_CGparam_AmbientReflectiveSea );
 }
