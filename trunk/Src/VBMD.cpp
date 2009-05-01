@@ -145,7 +145,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	if(filesize!=Header.Size)
 		return 0;	// 文件大小错误
 
-	if(filesize!=16+Header.VertexCount*(4*3*2+4*2))
+	if(filesize!=16+Header.VertexCount*(4*3*2+4*2+4*3) && filesize!=16+Header.VertexCount*(4*3*2+4*2))
 		return 0;	// 文件大小错误
 
 	VBMD[MID].VertexCount = Header.VertexCount;
@@ -157,6 +157,13 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	fread(VBMD[MID].pTexCoords, 4*2, VBMD[MID].VertexCount, m_FilePointer);
 	fread(VBMD[MID].pNormals, 4*3, VBMD[MID].VertexCount, m_FilePointer);
 	fread(VBMD[MID].pVertices, 4*3, VBMD[MID].VertexCount, m_FilePointer);
+
+	bool tangent; //模型切线信息	
+	if(filesize==16+Header.VertexCount*(4*3*2+4*2+4*3)) //读取切线信息	
+	{
+	fread(VBMD[MID].pTangent,4*3,VBMD[MID].VertexCount, m_FilePointer);
+	tangent=true;
+	}
 
 	
 
@@ -232,7 +239,9 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 		
 		}
 
-		
+		//*
+		if(tangent==false)	//模型不含切线信息	
+
 		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
 		{
 			if(((i+1)*3+2)<(VBMD[MID].VertexCount*3))
@@ -272,6 +281,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 			}
 		
 		}
+		//*/
 	}
 
 	TotalMid=TotalMid+1;
