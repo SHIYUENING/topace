@@ -25,11 +25,12 @@ pixel main(
     uniform float3	eyePosition,
 	uniform float3	FogColor,
 	//uniform float	time,
-    uniform sampler2D	testTexture
+    uniform sampler2D	testTexture,
+	uniform samplerCUBE	AmbientReflectiveTexturSea
 )
 {
     float3 P = IN.position.xyz;
-    float3 NN =tex2D( testTexture, IN.texcoord0*10);
+    float3 NN =tex2D( testTexture, IN.texcoord0*12)*0.5+tex2D( testTexture, IN.texcoord0*10)*0.5;
 
 	float3 N;
 	N.x=(NN.x-0.5)*2.0;
@@ -44,23 +45,16 @@ pixel main(
 
     float3 V = normalize(eyePosition - P);
     float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(normalize(N), H), 0), 100.0);
 
-	if(diffuseLight<=0) specularLight=0;
 
 
 	float fogb=min((100000-IN.objectPos.z)/40000,1.0);
 	
 
-   float3 global=globalAmbient;
-   global.r=0;
-   global.g=0;
 
    
     float4 Ocolor;
 	
-	
-    Ocolor.xyz = global+diffuse+specularLight*paraLightColor;
 
     Ocolor.w = 1.0;
 
@@ -70,6 +64,16 @@ pixel main(
 	Ocolor2.xyz=(1-fogb)*FogColor;
 	Ocolor2.w=(1-fogb);
 
+	V=-normalize(IN.objectPos-eyePosition);
+
+		float eDotN = dot(V, N);
+		float3 vEyeReflected = 2* eDotN * N - V;
+
+		float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
+		float Fresnel = (1 - eDotN)*reflection.g ;
+
+		//Ocolor = saturate(color + specularL);
+		Ocolor.xyz=Fresnel*reflection.xyz*0.5+(1-Fresnel*0.5)*diffuse;
 
 	OUT.color = Ocolor*fogb+Ocolor2;
 	//if((IN.objectPos.x*IN.objectPos.x+IN.objectPos.y*IN.objectPos.y+IN.objectPos.z*IN.objectPos.z)>10000*10000) OUT.color.xyz=FogColor;

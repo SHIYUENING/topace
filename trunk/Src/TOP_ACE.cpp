@@ -2631,10 +2631,11 @@ void DrawGround(void)
 						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
 				}
-			
+		
 		glPopMatrix();
 		cgGLDisableProfile( g_CGprofile_pixel );
 		cgGLDisableProfile( g_CGprofile_vertex );
+		cgGLDisableTextureParameter( g_CGparam_AmbientReflectiveSea );
 	}
 	else
 	{
