@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include"
+				AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include;.\Sound\Include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -70,9 +70,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="OpenALEEStandAlone_VC9_Debug_Ansi_Static.lib"
 				OutputFile="$(OutDir)\TOP_ACE.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib"
+				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library"
 				ManifestFile="$(IntDir)\$(TargetFileName).intermediate.manifest"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(TargetDir)\$(TargetName).pdb"
@@ -134,7 +135,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include"
+				AdditionalIncludeDirectories=".;.\Mathematics;.\Physics;&quot;.\Mathematics\tvmet-1.7.2\include&quot;;.\Graphics\include;.\Sound\inc;.\Controls\include;.\Sound\Include"
 				PreprocessorDefinitions="WIN32;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -154,9 +155,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static.lib"
 				OutputFile="$(OutDir)\TOP_ACE.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib"
+				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"

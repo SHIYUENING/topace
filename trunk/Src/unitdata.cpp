@@ -389,3 +389,25 @@ void Unitdata::MoveSpeed(void)
 
 
 }
+void Unitdata::ResetData(void)
+{
+	UDlockselect=false;
+	UDlockde=false;
+	waringde=false;
+	isRSpeed=false;
+	LockListNum=0;
+	smokeTime=0;
+	attackTGTNum=-1;
+	AIact=1;
+	AImode=1;
+	attackedMissleNum=-1;
+	fireTimer=0;
+	RefireTime=900;
+	LockTimer=0;
+	LockOnTime=150;
+	attackRange=10000.0f;
+	mSpeed=30;
+	AIactTimer1=0;
+	AIactTimer2=0;
+	inGunRange=false;
+}

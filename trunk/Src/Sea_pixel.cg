@@ -31,51 +31,27 @@ pixel main(
 {
     float3 P = IN.position.xyz;
     float3 NN =tex2D( testTexture, IN.texcoord0*12)*0.5+tex2D( testTexture, IN.texcoord0*10)*0.5;
-
 	float3 N;
 	N.x=(NN.x-0.5)*2.0;
 	N.y=(NN.z-0.5)*1.0;
 	N.z=(NN.y-0.5)*2.0;
-
-    float3 L = normalize(paraLightDirection-P);
-    float diffuseLight = max(dot(N, L), 0);
-    float3 diffuse = paraLightColor * diffuseLight;
+    float3 diffuse;
+	diffuse.r=0.0;
+	diffuse.g=0.0;
 	diffuse.b=1.0;
-
-
-    float3 V = normalize(eyePosition - P);
-    float3 H = normalize(L + V);
-
-
-
-	float fogb=min((100000-IN.objectPos.z)/40000,1.0);
-	
-
-
-   
+	float fogb=min((100000-IN.objectPos.z)/70000,1.0);
     float4 Ocolor;
-	
-
     Ocolor.w = 1.0;
-
     pixel OUT;
-
 	float4 Ocolor2;
 	Ocolor2.xyz=(1-fogb)*FogColor;
 	Ocolor2.w=(1-fogb);
-
-	V=-normalize(IN.objectPos-eyePosition);
-
-		float eDotN = dot(V, N);
-		float3 vEyeReflected = 2* eDotN * N - V;
-
-		float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
-		float Fresnel = (1 - eDotN)*reflection.g ;
-
-		//Ocolor = saturate(color + specularL);
-		Ocolor.xyz=Fresnel*reflection.xyz*0.5+(1-Fresnel*0.5)*diffuse;
-
+	float3 V=-normalize(IN.objectPos-eyePosition);
+	float eDotN = dot(V, N);
+	float3 vEyeReflected = 2* eDotN * N - V;
+	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
+	float Fresnel = (1 - eDotN)*reflection.g ;
+	Ocolor.xyz=Fresnel*reflection.xyz*0.5+(1-Fresnel*0.5)*diffuse*globalAmbient;
 	OUT.color = Ocolor*fogb+Ocolor2;
-	//if((IN.objectPos.x*IN.objectPos.x+IN.objectPos.y*IN.objectPos.y+IN.objectPos.z*IN.objectPos.z)>10000*10000) OUT.color.xyz=FogColor;
     return OUT;
 }

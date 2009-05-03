@@ -88,6 +88,7 @@ public:
 	void m_LaunchMissle(int m_TGT_Num);
 	void AttackTo(const Vector3d& Position);
 	void MoveSpeed(void);//สงหูฯเนุ
+	void ResetData(void);
 };
 
 

@@ -20,7 +20,7 @@
 #include "texture.h"
 #include "EffectImpact.h"
 #include "SkyBox.h"
-#include "Shell.h"
+
 //#include "Cloud.h"
 
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
@@ -32,7 +32,7 @@
 #pragma comment( lib, "glew32d.lib" )
 #pragma comment( lib, "SDL.lib" )
 #pragma comment( lib, "SDLmain.lib" )
-
+#pragma comment( lib, "SDLmain.lib" )
 
 int winwidth,winheight;//全局变量，用于记录窗口实时大小，gui部分大多会使用到
 
@@ -52,7 +52,7 @@ CSmoke		PSmokes;
 CKeyInput KeyInput;
 CSkyBox SkyBox;
 //CCloud Cloud;
-CShell Shell;
+
 int needloadfile=0;
 bool loadover=false;
 bool lockedsound=false;
@@ -69,8 +69,7 @@ float InertiaSpeed=0.0f;
 float ViewTurnX=0.0f;
 float ViewTurnY=0.0f;
 
-GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
-bool firstmove=true;//是否是第一祯，用于判断是否执行场景初始化
+
 
 
 
@@ -403,8 +402,9 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	//FMOD_Sound_Release(voice3);
 	//FMOD_Sound_Release(voice4);
 	//FMOD_Sound_Release(voice5);
-	FMOD_Sound_Release(BGMsound);
+	//FMOD_Sound_Release(BGMsound);
 	FMOD_System_Release(sys);
+	openal::CloseOpenALEE();
 	//delete m_nj;
 	delete m_VBMD;
 	//delete m_VBMD;
@@ -2688,17 +2688,7 @@ void stage0(void)
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
 
-//	testNum=MFighter.RefPos()(0);
-//	testNum2=MFighter.RefPos()(1);
-//	testNum3=MFighter.RefPos()(2);
-	if(firstmove)
-	{
-        UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
-//		MFighter2.Translate(Vector3d(0.0f, 31000.0f, -10000.0f));
-//		MFighter3.Translate(Vector3d(0.0f, 31000.0f, -10100.0f));
-		//MFighter2.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-100.0));
-		firstmove=false;
-	}
+
     if (turnX != 0 || turnY != 0 || turnZ != 0){
 		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
         UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
@@ -2877,7 +2867,8 @@ void stage0(void)
 void Draw (void)
 {
 
-	
+	if(UDfighers[0].UDlife<0)
+		initUnitdata();
 	RECT	rect;										// 保存长方形坐标
 
 
@@ -2903,19 +2894,7 @@ void Draw (void)
 
 	
 }
-void CPol(const Vector3d& pos, const Vector3d& dir, const Vector3d& dir2, double& latitude, double& longitude, double& rotation){
-    // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
-    double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
-    if (r > 1){ r = 1.0f; }
-    latitude = CDeg(acos_s(r)) * Sign(dir(1));
 
-    // longitude is the rotation angle against y-axis. longitude = ArcCos[dir[2] / Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[0]]
-    longitude = CDeg(acos_s(dir(2) / r)) * Sign(dir(0));
-
-    // rotation is the rotation angle against the fighter velocity. rotation = ArcCos[dir2 * xOz.FindIntersect[dir].Normalize] * Sign[dir2[1]]
-    Vector3d intersect(-dir(2) / r, 0, dir(0) / r);
-    rotation = CDeg(acos_s(dot(dir2, intersect))) * Sign(dir2(1));
-}
 
 
 
