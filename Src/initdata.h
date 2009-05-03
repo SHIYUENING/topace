@@ -21,7 +21,12 @@ void initUnitdata(int stage=0 )
 	weapon[0].SPEED=50;
 	weapon[0].type=2;
 
-
+	for(int i=0;i<MAXMISSLE;i++)
+	{
+		PMissleList.Missles[i].UDlife=0;
+	}
+	for(int i=0;i<MAXSHELLSLIST;i++)
+		Shell.ShellList[i].life=0;
 	
 
 	for(int i=0;i<maxUnits;i++)
@@ -32,6 +37,9 @@ void initUnitdata(int stage=0 )
 	}
 	if(stage==0)
 	{
+		moveSpeed=0.01f;
+		UDfighers[0].UDMplane.Reset();
+		UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
 		UDfighers[0].UDlife=100;
 		UDfighers[0].UDflag=2;
 		/*
@@ -61,6 +69,8 @@ void initUnitdata(int stage=0 )
 		*/
 		for(int i=5;i<maxUnits;i++)
 		{
+			UDfighers[i].ResetData();
+			UDfighers[i].UDMplane.Reset();
 			UDfighers[i].UDfighterType=2;
 			UDfighers[i].UDlife=99;
 			UDfighers[i].UDflag=(i/5)%4;

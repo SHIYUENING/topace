@@ -3,6 +3,7 @@
 #include "MissleList.h"
 #include "Models.h"
 #include "sound.h"
+#include "Shell.h"
 int lockflash=0;//决定锁定框是否闪烁
 #define MAXRedarlocks 100
 #define maxMissles 20
@@ -100,12 +101,14 @@ Unitdata UDfighers[maxUnits];
 Missledata LightSun;
 float LightSunPos[3];
 float LightSunPosR[3];
+GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
 //Bom Boms[MAXBom];
 bool PlayerLocked=false;
 bool PlayerLocking=false;
 int hited=0;
 int timer[100];
 MissleList	PMissleList;
+CShell Shell;
 Transform MView(Vector3d(0, 0, -40));//观察矩阵
 Transform MWorld;//世界矩阵
 Transform MLight(Vector3d(0, 0, 40));//光源位置
