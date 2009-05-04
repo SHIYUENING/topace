@@ -32,9 +32,9 @@ void fireMissle()
 		{
 			if((lockUnits[i].locksTGT>-1)&&(lockUnits[i].locksTGT<maxUnits))
 			{
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound2, 0, &channel2);
-				if(rand()%10<5)
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, fox2voice[rand()%3], 0, &fox2voicechannel);
+				//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound2, 0, &channel2);
+				Playfox2voice(rand()%3);
+				//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, fox2voice[rand()%3], 0, &fox2voicechannel);
 /*
 				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=missle_index;
 				missle[missle_index].TGTnum=lockUnits[i].locksTGT;
@@ -139,12 +139,12 @@ void locksmove()
 				{
 					if(!locksound)
 					{
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLock, 0, &channelLock);
+						//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLock, 0, &channelLock);
 						locksound=true;
 					}
 					if(lockonsound)
 					{
-						FMOD_Channel_Stop(channelLockOn);
+//						FMOD_Channel_Stop(channelLockOn);
 						lockonsound=false;
 					}
 
@@ -162,13 +162,13 @@ void locksmove()
 				{
 					if(!lockonsound)
 					{
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLockOn, 0, &channelLockOn);
+						//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLockOn, 0, &channelLockOn);
 						lockonsound=true;
 					}
 
 					if(locksound)
 					{
-						FMOD_Channel_Stop(channelLock);
+						//FMOD_Channel_Stop(channelLock);
 						locksound=false;
 					}
 
@@ -194,13 +194,13 @@ void locksmove()
 			{
 				if(locksound)
 				{
-					FMOD_Channel_Stop(channelLock);
+//					FMOD_Channel_Stop(channelLock);
 					locksound=false;
 				}
 
 				if(lockonsound)
 				{
-					FMOD_Channel_Stop(channelLockOn);
+//					FMOD_Channel_Stop(channelLockOn);
 					lockonsound=false;
 				}
 
