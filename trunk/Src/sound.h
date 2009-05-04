@@ -1,15 +1,15 @@
 #pragma once
 #include<hgl/OpenALEE.H>
 #include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input / Output
-#include <stdarg.h>
-#include   <time.h>
-#include <conio.h>
-#include "fmod.hpp"
-#include "fmod_errors.h"
+//#include <stdio.h>												// Header File For Standard Input / Output
+//#include <stdarg.h>
+//#include   <time.h>
+//#include <conio.h>
+//#include "fmod.hpp"
+//#include "fmod_errors.h"
 
-#pragma comment( lib, "fmodex_vc.lib" )	
-
+//#pragma comment( lib, "fmodex_vc.lib" )	
+/*
 FMOD_SYSTEM* sys;
 FMOD_SOUND* sound1;
 FMOD_SOUND* sound2;
@@ -45,11 +45,76 @@ FMOD_CHANNEL* killvoicechannel;
 FMOD_CHANNEL* missvoicechannel;
 FMOD_CHANNEL* BGMchannel;
 FMOD_VECTOR pos;
+*/
+#define MAX_missleWarning 10
+#define MAX_fox2voice 3
+#define MAX_hitvoice 4
+#define MAX_killvoice 10
+#define MAX_missvoice 4
+#define MAX_sounds 7
+#define MAX_soundSource 20
 using namespace hgl;
-AudioBuffer buffer;                             //建立一个音频数据缓冲区
-AudioSource source;                             //建立一个音频播放源
+AudioBuffer * missleWarning[MAX_missleWarning];
+AudioBuffer * fox2voice[MAX_fox2voice];
+AudioBuffer * hitvoice[MAX_hitvoice];
+AudioBuffer * killvoice[MAX_killvoice];
+AudioBuffer * missvoice[MAX_missvoice];
+AudioBuffer * sounds[MAX_sounds];
+AudioSource * voiceSource;
+AudioSource * soundSource[MAX_soundSource];
+AudioPlayer * BGMplayer;
 void initsound()
 {
+	openal::InitOpenALEE();
+	BGMplayer= new AudioPlayer;
+	BGMplayer->Load(L"Data/bgm.ogg");
+
+	//source.Link(&buffer);
+	BGMplayer->Play(true);
+	
+	missleWarning[0] = new AudioBuffer;missleWarning[0]->Load(L"Data/voice/missleWarning0.ogg");
+	missleWarning[1] = new AudioBuffer;missleWarning[1]->Load(L"Data/voice/missleWarning1.ogg");
+	missleWarning[2] = new AudioBuffer;missleWarning[2]->Load(L"Data/voice/missleWarning2.ogg");
+	missleWarning[3] = new AudioBuffer;missleWarning[3]->Load(L"Data/voice/missleWarning3.ogg");
+	missleWarning[4] = new AudioBuffer;missleWarning[4]->Load(L"Data/voice/missleWarning4.ogg");
+	missleWarning[5] = new AudioBuffer;missleWarning[5]->Load(L"Data/voice/missleWarning5.ogg");
+	missleWarning[6] = new AudioBuffer;missleWarning[6]->Load(L"Data/voice/missleWarning6.ogg");
+	missleWarning[7] = new AudioBuffer;missleWarning[7]->Load(L"Data/voice/missleWarning7.ogg");
+	missleWarning[8] = new AudioBuffer;missleWarning[8]->Load(L"Data/voice/missleWarning8.ogg");
+	missleWarning[9] = new AudioBuffer;missleWarning[9]->Load(L"Data/voice/missleWarning9.ogg");
+	fox2voice[0] = new AudioBuffer;fox2voice[0]->Load(L"Data/voice/fox20.ogg");
+	fox2voice[1] = new AudioBuffer;fox2voice[1]->Load(L"Data/voice/fox21.ogg");
+	fox2voice[2] = new AudioBuffer;fox2voice[2]->Load(L"Data/voice/fox22.ogg");
+	hitvoice[0] = new AudioBuffer;hitvoice[0]->Load(L"Data/voice/hit0.ogg");
+	hitvoice[1] = new AudioBuffer;hitvoice[1]->Load(L"Data/voice/hit1.ogg");
+	hitvoice[2] = new AudioBuffer;hitvoice[2]->Load(L"Data/voice/hit2.ogg");
+	hitvoice[3] = new AudioBuffer;hitvoice[3]->Load(L"Data/voice/hit3.ogg");
+	killvoice[0] = new AudioBuffer;killvoice[0]->Load(L"Data/voice/kill0.ogg");
+	killvoice[1] = new AudioBuffer;killvoice[1]->Load(L"Data/voice/kill1.ogg");
+	killvoice[2] = new AudioBuffer;killvoice[2]->Load(L"Data/voice/kill2.ogg");
+	killvoice[3] = new AudioBuffer;killvoice[3]->Load(L"Data/voice/kill3.ogg");
+	killvoice[4] = new AudioBuffer;killvoice[4]->Load(L"Data/voice/kill4.ogg");
+	killvoice[5] = new AudioBuffer;killvoice[5]->Load(L"Data/voice/kill5.ogg");
+	killvoice[6] = new AudioBuffer;killvoice[6]->Load(L"Data/voice/kill6.ogg");
+	killvoice[7] = new AudioBuffer;killvoice[7]->Load(L"Data/voice/kill7.ogg");
+	killvoice[8] = new AudioBuffer;killvoice[8]->Load(L"Data/voice/kill8.ogg");
+	killvoice[9] = new AudioBuffer;killvoice[9]->Load(L"Data/voice/kill9.ogg");
+	missvoice[0] = new AudioBuffer;missvoice[0]->Load(L"Data/voice/miss0.ogg");
+	missvoice[1] = new AudioBuffer;missvoice[1]->Load(L"Data/voice/miss1.ogg");
+	missvoice[2] = new AudioBuffer;missvoice[2]->Load(L"Data/voice/miss2.ogg");
+	missvoice[3] = new AudioBuffer;missvoice[3]->Load(L"Data/voice/miss3.ogg");
+	voiceSource=new AudioSource;
+
+	/*
+	for(int i=0;i<MAX_missleWarning;i++)
+	{
+		char voicename[64]={};
+		sprintf(voicename,"Data/voice/missleWarning%d.ogg",i);
+		missleWarning[i]->Load(L voicename);
+	
+	}
+	*/
+	/*
 	FMOD_RESULT r = FMOD_System_Create(&sys);
 	FMOD_System_Init(sys, 32, FMOD_INIT_NORMAL, 0);
 
@@ -105,12 +170,85 @@ void initsound()
 	//FMOD_System_CreateSound(sys, "Data/voice/midi.mp3", FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE|FMOD_CREATESAMPLE, 0, &voice5);
 	//FMOD_System_CreateSound(sys, "Data/BGM.mp3", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_CREATECOMPRESSEDSAMPLE, 0, &BGMsound);
 	//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, BGMsound, 0, &BGMchannel);
-
-/*
-	openal::InitOpenALEE();
-	buffer.Load(L"Data/bgm.ogg");
-
-	source.Link(&buffer);
-	source.Play(); 
 */
+
+
+
+
+}
+void PlaymissleWarning(int Num)
+{
+
+	if((Num<0)||(Num>=MAX_missleWarning))
+		return;
+	if(missleWarning[Num]->Time<0.001)
+		return;
+	if(voiceSource->State==AL_PLAYING)
+		return;
+	voiceSource->Unlink();
+	voiceSource->Link(missleWarning[Num]);
+	voiceSource->Play();
+
+
+}
+
+void Playfox2voice(int Num)
+{
+
+	if((Num<0)||(Num>=MAX_fox2voice))
+		return;
+	if(fox2voice[Num]->Time<0.001)
+		return;
+	if(voiceSource->State==AL_PLAYING)
+		return;
+	voiceSource->Unlink();
+	voiceSource->Link(fox2voice[Num]);
+	voiceSource->Play();
+
+
+}
+void Playhitvoice(int Num)
+{
+
+	if((Num<0)||(Num>=MAX_hitvoice))
+		return;
+	if(hitvoice[Num]->Time<0.001)
+		return;
+	if(voiceSource->State==AL_PLAYING)
+		return;
+	voiceSource->Unlink();
+	voiceSource->Link(hitvoice[Num]);
+	voiceSource->Play();
+
+
+}
+void Playkillvoice(int Num)
+{
+
+	if((Num<0)||(Num>=MAX_killvoice))
+		return;
+	if(killvoice[Num]->Time<0.001)
+		return;
+	if(voiceSource->State==AL_PLAYING)
+		return;
+	voiceSource->Unlink();
+	voiceSource->Link(killvoice[Num]);
+	voiceSource->Play();
+
+
+}
+void Playmissvoice(int Num)
+{
+
+	if((Num<0)||(Num>=MAX_missvoice))
+		return;
+	if(missvoice[Num]->Time<0.001)
+		return;
+	if(voiceSource->State==AL_PLAYING)
+		return;
+	voiceSource->Unlink();
+	voiceSource->Link(missvoice[Num]);
+	voiceSource->Play();
+
+
 }

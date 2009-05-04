@@ -374,7 +374,7 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	glDeleteFramebuffersEXT(1, &fbo);
 	glDeleteRenderbuffersEXT(1, &depthBuffer);
 	glDeleteTextures(1,&img);
-
+/*
 	for(int i=1;i<11;i++)
 	{
 		FMOD_Sound_Release(missleWarning[i-1]);
@@ -404,6 +404,8 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	//FMOD_Sound_Release(voice5);
 	//FMOD_Sound_Release(BGMsound);
 	FMOD_System_Release(sys);
+	*/
+	BGMplayer->Clear();
 	openal::CloseOpenALEE();
 	//delete m_nj;
 	delete m_VBMD;
@@ -756,7 +758,7 @@ void fireShell()
 		if(!GunFiresound)
 		{
 			GunFiresound=true;
-			FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, soundGunFire, 0, &channelGunFire);
+//			FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, soundGunFire, 0, &channelGunFire);
 		
 		}
 		
@@ -766,7 +768,7 @@ void fireShell()
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
 
-	FMOD_System_Update(sys);
+//	FMOD_System_Update(sys);
 	Inertia();
 
 	KeyInput.UpData();
@@ -877,7 +879,7 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	else
 	{
 		GunFiresound=false;
-		FMOD_Channel_Stop(channelGunFire);
+//		FMOD_Channel_Stop(channelGunFire);
 	
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardMap]||KeyInput.m_IskeyMap) && !KeyT )
@@ -1864,12 +1866,13 @@ void UnitMove(void)
 				if(UDfighers[Shell.ShellList[i].TGTNum].UDlife==UDfighers[Shell.ShellList[i].TGTNum].UDlife<1)
 				{
 					UDfighers[Shell.ShellList[i].TGTNum].smokeTime=100;
-					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
+					Playkillvoice(rand()%10);
+//					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
 				}
 				if(Shell.ShellList[i].TGTNum==0)
 				{
 					hited=5;
-					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundGunHited, 0, &channelGunHited);
+			//		FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundGunHited, 0, &channelGunHited);
 				}
 
 				Shell.ShellList[i].life=0;
@@ -1942,7 +1945,8 @@ void UnitMove(void)
 			if(PMissleList.Missles[i].UDlife<1)
 			{
 				if(PMissleList.Missles[i].onwer==0)
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missvoice[rand()%4], 0, &missvoicechannel);
+					Playmissvoice(rand()%4);
+//				FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missvoice[rand()%4], 0, &missvoicechannel);
 				PMissleList.Missles[i].smokeTime=100;
 				UDfighers[PMissleList.Missles[i].TGTnum].waringde=false;
 			}
@@ -1964,8 +1968,9 @@ void UnitMove(void)
 				float tmpD=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				if((tmpD<8000000)&&(!UDfighers[PMissleList.Missles[i].TGTnum].waringde))
 				{
+					PlaymissleWarning(rand()%MAX_missleWarning);
 					//if(PMissleList.Missles[i].onwer==0)
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missleWarning[rand()%10], 0, &missleWarningchannel);
+//						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missleWarning[rand()%10], 0, &missleWarningchannel);
 					UDfighers[PMissleList.Missles[i].TGTnum].waringde=true;
 				}
 
@@ -1974,7 +1979,7 @@ void UnitMove(void)
 
 				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
-					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
+//					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
 					if(PMissleList.Missles[i].onwer==0)
 					{
 						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-50-rand()%5;
@@ -1988,12 +1993,14 @@ void UnitMove(void)
 					{
 					
 						if(PMissleList.Missles[i].onwer==0)
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, hitvoice[rand()%4], 0, &hitvoicechannel);
+							Playhitvoice(rand()%4);
+						//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, hitvoice[rand()%4], 0, &hitvoicechannel);
 					}
 					else
 					{
 						UDfighers[PMissleList.Missles[i].TGTnum].smokeTime=100;
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);
+						Playkillvoice(rand()%10);
+//						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);
 					}
 					PMissleList.Missles[i].UDlife=-1;
 					PMissleList.Missles[i].smokeTime=100;
@@ -2836,7 +2843,7 @@ void stage0(void)
 		if(!lockedsound)
 		{
 			lockedsound=true;
-			FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLocked, 0, &channelLocked);
+//			FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLocked, 0, &channelLocked);
 		}
 	
 	}
@@ -2845,7 +2852,7 @@ void stage0(void)
 		if(lockedsound)
 		{
 			lockedsound=false;
-			FMOD_Channel_Stop(channelLocked);
+//			FMOD_Channel_Stop(channelLocked);
 		}
 	
 	}
