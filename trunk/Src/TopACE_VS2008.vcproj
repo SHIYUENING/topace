@@ -270,14 +270,6 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\ACMD.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\ACMD.h"
-			>
-		</File>
-		<File
 			RelativePath=".\BomsSet.cpp"
 			>
 		</File>

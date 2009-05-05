@@ -68,8 +68,7 @@ void initsound()
 	openal::InitOpenALEE();
 	BGMplayer= new AudioPlayer;
 	BGMplayer->Load(L"Data/bgm.ogg");
-
-	//source.Link(&buffer);
+	BGMplayer->Gain=0.5f;
 	BGMplayer->Play(true);
 	
 	missleWarning[0] = new AudioBuffer;missleWarning[0]->Load(L"Data/voice/missleWarning0.ogg");

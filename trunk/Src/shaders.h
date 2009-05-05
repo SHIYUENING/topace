@@ -4,6 +4,7 @@
 #include "Textures.h"
 GLuint AmbientReflectiveTexture;
 bool ShaderLight=true;//是否使用shader
+bool ShaderWater=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
 bool UseHighShadow=true;
 CGprofile   g_CGprofile_vertex;
@@ -83,6 +84,7 @@ void InitCG()
         g_CGprofile_vertex = CG_PROFILE_VP40;
     else
     {
+		ShaderWater=false;
         ShaderLight=false;
 		ShaderBloom=false;
         return;
@@ -104,6 +106,7 @@ void InitCG()
         g_CGprofile_pixel = CG_PROFILE_FP20;
     else
     {
+		ShaderWater=false;
         ShaderLight=false;
 		ShaderBloom=false;
 		return;
