@@ -2635,10 +2635,10 @@ void DrawGround(void)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
 				}
 		
