@@ -322,11 +322,14 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		InitCG();
 	else
 	{
+		ShaderWater=false;
 		ShaderLight=false;
 		glEnable(GL_COLOR_MATERIAL);
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
 	}
+	if(GetPrivateProfileInt("Light","ShaderWater",0,".\\set.ini")==0)
+		ShaderWater=false;
 
 	if(GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)
 		ShaderBloom=false;
@@ -2616,7 +2619,7 @@ void DrawGround(void)
 	eyePositionSea[2]=(float)MFighter.RefPos()(2);
 
 
-	if(ShaderLight)
+	if(ShaderWater)
 	{
 		DrawSea();
 		glPushMatrix();
@@ -2654,17 +2657,19 @@ void DrawGround(void)
 			int mapx,mapz;
 			mapx=int(MFighter.RefPos()(0))/40000;
 			mapz=int(MFighter.RefPos()(2))/40000;
-			glBindTexture(GL_TEXTURE_2D,Maptexture);
+			glBindTexture(GL_TEXTURE_2D,SeaTexID);
+			glColor4f(0.0f,0.5f,1.0f,1.0f);
 			for(int i=-3;i<4;i++)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
 						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f,10.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
 				}
+			glColor4f(1.0f,1.0f,1.0f,1.0f);
 			glDisable(GL_FOG);
 		glPopMatrix();	
 	}
