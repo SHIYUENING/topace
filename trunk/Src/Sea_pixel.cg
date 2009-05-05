@@ -46,12 +46,17 @@ pixel main(
 	float4 Ocolor2;
 	Ocolor2.xyz=(1-fogb)*FogColor;
 	Ocolor2.w=(1-fogb);
-	float3 V=-normalize(IN.objectPos-eyePosition);
+	float3 V=normalize(eyePosition-IN.objectPos);
+	float3 Ne;
+	Ne.x=0.0;
+	Ne.y=1.0;
+	Ne.z=0.0;
+	float edn = dot(V, Ne);
 	float eDotN = dot(V, N);
 	float3 vEyeReflected = 2* eDotN * N - V;
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
 	float Fresnel = (1 - eDotN)*reflection.g ;
-	Ocolor.xyz=Fresnel*reflection.xyz*0.5+(1-Fresnel*0.5)*diffuse*globalAmbient;
+	Ocolor.xyz=Fresnel*reflection.xyz*0.5*edn+(1-edn)*(1-Fresnel*0.5)*diffuse*globalAmbient;
 	OUT.color = Ocolor*fogb+Ocolor2;
     return OUT;
 }

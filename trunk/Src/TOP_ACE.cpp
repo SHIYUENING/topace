@@ -2658,7 +2658,7 @@ void DrawGround(void)
 			mapx=int(MFighter.RefPos()(0))/40000;
 			mapz=int(MFighter.RefPos()(2))/40000;
 			glBindTexture(GL_TEXTURE_2D,SeaTexID);
-			glColor4f(0.0f,0.5f,1.0f,1.0f);
+			glColor4f(0.0f,0.2f,0.6f,1.0f);
 			for(int i=-3;i<4;i++)
 				for(int j=-3;j<4;j++)
 				{
