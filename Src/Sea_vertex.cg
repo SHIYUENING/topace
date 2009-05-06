@@ -14,6 +14,7 @@ float3 oNormal	:	TEXCOORD1;
 float4 color0	:	COLOR0;
 float2 texcoord0	:	TEXCOORD0;
 float3 objectPos	:	TEXCOORD2;
+float4 objectPos2	:	TEXCOORD3;
 };
 
 // This binding semantic requires CG_PROFILE_ARBVP1 or higher.
@@ -27,5 +28,6 @@ fragment main(vertex IN)
 	OUT.color0 = IN.color0;
 	OUT.texcoord0 = IN.texcoord0;
 	OUT.objectPos = OUT.position;
+	OUT.objectPos2 = IN.position;
 	return OUT;
 }
