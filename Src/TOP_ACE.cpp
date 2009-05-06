@@ -1975,7 +1975,7 @@ void UnitMove(void)
 
 			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],(float)(rand()%40+80)/100.0f);
 			if(!GraphicsLOW)
-			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],0.4f,0.06f,15.0f,1);
+			PSmokes.AddSmoke(MisslePos[0],MisslePos[1],MisslePos[2],0.4f,0.1f,15.0f,1);
 			
 			if((UDfighers[PMissleList.Missles[i].TGTnum].UDlife>=1)&&(PMissleList.Missles[i].UDlife>0))
 			{
