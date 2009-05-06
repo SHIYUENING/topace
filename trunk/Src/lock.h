@@ -32,6 +32,7 @@ void fireMissle()
 		{
 			if((lockUnits[i].locksTGT>-1)&&(lockUnits[i].locksTGT<maxUnits))
 			{
+				AddSound(0,UDfighers[0].UDMplane.RefPos());
 				//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound2, 0, &channel2);
 				Playfox2voice(rand()%3);
 				//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, fox2voice[rand()%3], 0, &fox2voicechannel);
@@ -139,11 +140,13 @@ void locksmove()
 				{
 					if(!locksound)
 					{
+						voiceSourceLock->Play(true);
 						//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLock, 0, &channelLock);
 						locksound=true;
 					}
 					if(lockonsound)
 					{
+						voiceSourceLockOn->Stop();
 //						FMOD_Channel_Stop(channelLockOn);
 						lockonsound=false;
 					}
@@ -162,12 +165,14 @@ void locksmove()
 				{
 					if(!lockonsound)
 					{
+						voiceSourceLockOn->Play(true);
 						//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLockOn, 0, &channelLockOn);
 						lockonsound=true;
 					}
 
 					if(locksound)
 					{
+						voiceSourceLock->Stop();
 						//FMOD_Channel_Stop(channelLock);
 						locksound=false;
 					}
@@ -194,12 +199,14 @@ void locksmove()
 			{
 				if(locksound)
 				{
+					voiceSourceLock->Stop();
 //					FMOD_Channel_Stop(channelLock);
 					locksound=false;
 				}
 
 				if(lockonsound)
 				{
+					voiceSourceLockOn->Stop();
 //					FMOD_Channel_Stop(channelLockOn);
 					lockonsound=false;
 				}

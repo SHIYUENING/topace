@@ -775,6 +775,7 @@ void fireShell()
 		if(!GunFiresound)
 		{
 			GunFiresound=true;
+			voiceSourceGunFire->Play(true);
 //			FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, soundGunFire, 0, &channelGunFire);
 		
 		}
@@ -896,6 +897,8 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	else
 	{
 		GunFiresound=false;
+		if(isinitsound)
+			voiceSourceGunFire->Stop();
 //		FMOD_Channel_Stop(channelGunFire);
 	
 	}
@@ -1889,6 +1892,7 @@ void UnitMove(void)
 				if(Shell.ShellList[i].TGTNum==0)
 				{
 					hited=5;
+					AddSound(3,UDfighers[0].UDMplane.RefPos());
 			//		FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundGunHited, 0, &channelGunHited);
 				}
 
@@ -1996,6 +2000,7 @@ void UnitMove(void)
 
 				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
+					AddSound(1,PMissleList.Missles[i].UDMplane.RefPos());
 //					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
 					if(PMissleList.Missles[i].onwer==0)
 					{
@@ -2802,6 +2807,7 @@ void stage0(void)
 	DrawShadowMap();
 	
 
+	MoveSound(MView,tmpLookRenge);
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
 		DrawSky((float)longitude);
@@ -2862,6 +2868,7 @@ void stage0(void)
 		if(!lockedsound)
 		{
 			lockedsound=true;
+			voiceSourceLocked->Play(true);
 //			FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundLocked, 0, &channelLocked);
 		}
 	
@@ -2870,6 +2877,7 @@ void stage0(void)
 	{
 		if(lockedsound)
 		{
+			voiceSourceLocked->Stop();
 			lockedsound=false;
 //			FMOD_Channel_Stop(channelLocked);
 		}

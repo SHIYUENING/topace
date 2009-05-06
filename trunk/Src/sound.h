@@ -56,6 +56,7 @@ FMOD_VECTOR pos;
 #define MAX_sounds 7
 #define MAX_soundSource 20
 using namespace hgl;
+bool isinitsound=false;
 AudioBuffer * missleWarning[MAX_missleWarning];
 AudioBuffer * fox2voice[MAX_fox2voice];
 AudioBuffer * hitvoice[MAX_hitvoice];
@@ -63,6 +64,10 @@ AudioBuffer * killvoice[MAX_killvoice];
 AudioBuffer * missvoice[MAX_missvoice];
 AudioBuffer * sounds[MAX_sounds];
 AudioSource * voiceSource;
+AudioSource * voiceSourceLock;
+AudioSource * voiceSourceLockOn;
+AudioSource * voiceSourceLocked;
+AudioSource * voiceSourceGunFire;
 AudioSource * voiceSourceAWACS;
 AudioSource * soundSource[MAX_soundSource];
 Vector3d soundSourcePos[MAX_soundSource];
@@ -114,7 +119,13 @@ void initsound()
 	sounds[5] = new AudioBuffer;sounds[5]->Load(L"Data/sound/locked.ogg");
 	sounds[6] = new AudioBuffer;sounds[6]->Load(L"Data/sound/Lockon.ogg");
 	voiceSource=new AudioSource;
+	voiceSourceLock=new AudioSource;voiceSourceLock->Link(sounds[4]);
+	voiceSourceLockOn=new AudioSource;voiceSourceLockOn->Link(sounds[6]);
+	voiceSourceLocked=new AudioSource;voiceSourceLocked->Link(sounds[5]);
+	voiceSourceGunFire=new AudioSource;voiceSourceGunFire->Link(sounds[2]);
 	voiceSourceAWACS=new AudioSource;
+	for(int i=0;i<MAX_soundSource;i++)
+		soundSource[i]=new AudioSource;
 
 	/*
 	for(int i=0;i<MAX_missleWarning;i++)
@@ -185,6 +196,7 @@ void initsound()
 
 
 
+	isinitsound=true;
 
 }
 bool AddSound(int Num,const Vector3d& pos)
@@ -200,17 +212,22 @@ bool AddSound(int Num,const Vector3d& pos)
 	}
 	soundSourcePos[i]=pos;
 	soundSource[i]->Unlink();
-	soundSource->Link(sounds[Num]);
-	soundSource->Play();
+	soundSource[i]->Link(sounds[Num]);
+	soundSource[i]->Play();
 	return true;
 
 
 }
-void PlaySound(const Vector3d& ViewPos,Transform& would,float LookRenge)
+void MoveSound(Transform& would,float LookRenge)
 {
 	for(int i=0;i<MAX_soundSource;i++)
 	{
-	
+		if(soundSource[i]->State==AL_PLAYING)
+		{
+			Vector3d Pos3d;
+			Pos3d=would.Matrix() * soundSourcePos[i] + would.RefPos();
+			soundSource[i]->SetPosition(Vertex3f((float)Pos3d(0)/LookRenge,(float)Pos3d(1)/LookRenge,(float)Pos3d(2)/LookRenge));
+		}
 	}
 
 }
@@ -226,6 +243,7 @@ void PlaymissleWarning(int Num)
 	voiceSource->Unlink();
 	voiceSource->Link(missleWarning[Num]);
 	voiceSource->Play();
+
 
 
 }
