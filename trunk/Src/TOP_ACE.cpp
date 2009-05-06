@@ -488,11 +488,25 @@ void DrawDataLine1 (void)
 	strcat( szTitle, ", VBO" );
 
 	if(ShaderLight)
-		strcat( szTitle, ", ShaderLight" );
+		strcat( szTitle, ", Light:Shader" );
 	else
-		strcat( szTitle, ", glLight(maybe nolight)" );
+		strcat( szTitle, ", Light:glLight" );
 	if(IsSupportFBO)
-		strcat( szTitle, ", Shadow" );
+	{
+		if(UseHighShadow)
+			strcat( szTitle, ", Shadow:High" );
+		else
+			strcat( szTitle, ", Shadow:Low" );
+	}
+	else
+		strcat( szTitle, ", Shadow:No" );
+
+	if(ShaderWater)
+	{
+		strcat( szTitle, ", Water:High" );
+	}
+	else
+		strcat( szTitle, ", Water:Low" );
 	char tmpDDL1[32]={0};
 	sprintf(tmpDDL1,"Bloom LV%d",BloomLevel);
 	if(ShaderBloom)
