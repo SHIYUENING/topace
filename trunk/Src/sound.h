@@ -1,6 +1,8 @@
 #pragma once
 #include<hgl/OpenALEE.H>
 #include <windows.h>											// Header File For Windows
+#include "Mathematics.h"
+#include "Physics.h"
 //#include <stdio.h>												// Header File For Standard Input / Output
 //#include <stdarg.h>
 //#include   <time.h>
@@ -61,7 +63,9 @@ AudioBuffer * killvoice[MAX_killvoice];
 AudioBuffer * missvoice[MAX_missvoice];
 AudioBuffer * sounds[MAX_sounds];
 AudioSource * voiceSource;
+AudioSource * voiceSourceAWACS;
 AudioSource * soundSource[MAX_soundSource];
+Vector3d soundSourcePos[MAX_soundSource];
 AudioPlayer * BGMplayer;
 void initsound()
 {
@@ -102,7 +106,15 @@ void initsound()
 	missvoice[1] = new AudioBuffer;missvoice[1]->Load(L"Data/voice/miss1.ogg");
 	missvoice[2] = new AudioBuffer;missvoice[2]->Load(L"Data/voice/miss2.ogg");
 	missvoice[3] = new AudioBuffer;missvoice[3]->Load(L"Data/voice/miss3.ogg");
+	sounds[0] = new AudioBuffer;sounds[0]->Load(L"Data/sound/Boom0.ogg");
+	sounds[1] = new AudioBuffer;sounds[1]->Load(L"Data/sound/FireMissle.ogg");
+	sounds[2] = new AudioBuffer;sounds[2]->Load(L"Data/sound/GunFire.ogg");
+	sounds[3] = new AudioBuffer;sounds[3]->Load(L"Data/sound/GunHited.ogg");
+	sounds[4] = new AudioBuffer;sounds[4]->Load(L"Data/sound/lock.ogg");
+	sounds[5] = new AudioBuffer;sounds[5]->Load(L"Data/sound/locked.ogg");
+	sounds[6] = new AudioBuffer;sounds[6]->Load(L"Data/sound/Lockon.ogg");
 	voiceSource=new AudioSource;
+	voiceSourceAWACS=new AudioSource;
 
 	/*
 	for(int i=0;i<MAX_missleWarning;i++)
@@ -175,6 +187,33 @@ void initsound()
 
 
 }
+bool AddSound(int Num,const Vector3d& pos)
+{
+	if((Num<0)||(Num>=MAX_soundSource))
+		return false;
+	int i=0;
+	while(soundSource[i]->State==AL_PLAYING)
+	{
+		i=i+1;
+		if(i>=MAX_soundSource)
+			return false;
+	}
+	soundSourcePos[i]=pos;
+	soundSource[i]->Unlink();
+	soundSource->Link(sounds[Num]);
+	soundSource->Play();
+	return true;
+
+
+}
+void PlaySound(const Vector3d& ViewPos,Transform& would,float LookRenge)
+{
+	for(int i=0;i<MAX_soundSource;i++)
+	{
+	
+	}
+
+}
 void PlaymissleWarning(int Num)
 {
 
@@ -190,7 +229,6 @@ void PlaymissleWarning(int Num)
 
 
 }
-
 void Playfox2voice(int Num)
 {
 
@@ -198,11 +236,11 @@ void Playfox2voice(int Num)
 		return;
 	if(fox2voice[Num]->Time<0.001)
 		return;
-	if(voiceSource->State==AL_PLAYING)
+	if(voiceSourceAWACS->State==AL_PLAYING)
 		return;
-	voiceSource->Unlink();
-	voiceSource->Link(fox2voice[Num]);
-	voiceSource->Play();
+	voiceSourceAWACS->Unlink();
+	voiceSourceAWACS->Link(fox2voice[Num]);
+	voiceSourceAWACS->Play();
 
 
 }
@@ -213,11 +251,11 @@ void Playhitvoice(int Num)
 		return;
 	if(hitvoice[Num]->Time<0.001)
 		return;
-	if(voiceSource->State==AL_PLAYING)
+	if(voiceSourceAWACS->State==AL_PLAYING)
 		return;
-	voiceSource->Unlink();
-	voiceSource->Link(hitvoice[Num]);
-	voiceSource->Play();
+	voiceSourceAWACS->Unlink();
+	voiceSourceAWACS->Link(hitvoice[Num]);
+	voiceSourceAWACS->Play();
 
 
 }
@@ -228,11 +266,11 @@ void Playkillvoice(int Num)
 		return;
 	if(killvoice[Num]->Time<0.001)
 		return;
-	if(voiceSource->State==AL_PLAYING)
+	if(voiceSourceAWACS->State==AL_PLAYING)
 		return;
-	voiceSource->Unlink();
-	voiceSource->Link(killvoice[Num]);
-	voiceSource->Play();
+	voiceSourceAWACS->Unlink();
+	voiceSourceAWACS->Link(killvoice[Num]);
+	voiceSourceAWACS->Play();
 
 
 }
@@ -243,11 +281,11 @@ void Playmissvoice(int Num)
 		return;
 	if(missvoice[Num]->Time<0.001)
 		return;
-	if(voiceSource->State==AL_PLAYING)
+	if(voiceSourceAWACS->State==AL_PLAYING)
 		return;
-	voiceSource->Unlink();
-	voiceSource->Link(missvoice[Num]);
-	voiceSource->Play();
+	voiceSourceAWACS->Unlink();
+	voiceSourceAWACS->Link(missvoice[Num]);
+	voiceSourceAWACS->Play();
 
 
 }

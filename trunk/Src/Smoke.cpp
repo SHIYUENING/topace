@@ -260,8 +260,8 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 
 							SmokeAlpha=1.0f;
 
-							if(SmokesList[i].life<30.0f)
-								SmokeAlpha=SmokeAlpha*SmokesList[i].life/30.0f;
+							if(SmokesList[i].life<90.0f)
+								SmokeAlpha=SmokeAlpha*SmokesList[i].life/90.0f;
 							if((SmokesList[i].lifeMAX-SmokesList[i].life)<10.0f)
 							{
 								SmokeAlpha=SmokeAlpha*(SmokesList[i].lifeMAX-SmokesList[i].life)/10.0f;
