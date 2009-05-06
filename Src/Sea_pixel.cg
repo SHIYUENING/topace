@@ -59,7 +59,7 @@ pixel main(
 	float3 vEyeReflected = reflect(V, N);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
 	float Fresnel = (1 - eDotN);
-	Ocolor.xyz=Fresnel*reflection.xyz*0.3*Fresnel2+(1-fogb*0.9)*(1-Fresnel*0.7)*diffuse*globalAmbient;
+	Ocolor.xyz=Fresnel*reflection.xyz*0.3*Fresnel2+(1-fogb*0.9)*(1-Fresnel*0.7)*diffuse*globalAmbient+(1-fogb)*diffuse;
 	OUT.color = Ocolor*fogb+Ocolor2;
     return OUT;
 }
