@@ -16,6 +16,7 @@ CGprogram   g_CGHighLight_pixel;
 CGprogram   g_CGvertex_t;
 //CGprogram   g_CGpixel_t;
 CGprogram   g_CGpixel_NOBloom;
+CGprogram   g_CGpixel_NOBloom_Low_shadow;
 CGprogram   g_CGpixel_NONormalMap;
 //CGprogram   g_CGpixel_NOBloom_HighShadow;
 CGprogram   g_CGRenderShadowMap_vertex;
@@ -152,16 +153,16 @@ void InitCG()
 												NULL,
 												NULL );
 	*/
-	if(UseHighShadow)
-		g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
+
+	g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"pixel_NOBloom_HighShadow.cg",
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
 
-	else
-		g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
+
+	g_CGpixel_NOBloom_Low_shadow = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"pixel_NOBloom.cg",
 												g_CGprofile_pixel,
@@ -234,7 +235,17 @@ void InitCG()
 	cgGLLoadProgram( g_CGHighLight_pixel  );
 	cgGLLoadProgram( g_CGvertex_t );
 	//cgGLLoadProgram( g_CGpixel_t  );
+	if(!UseHighShadow)
+		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	cgGLLoadProgram( g_CGpixel_NOBloom  );
+	CGerror GetCGerror=cgGetError();
+	if(GetCGerror==CG_PROGRAM_LOAD_ERROR)
+	{
+		UseHighShadow=false;
+		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
+		cgGLLoadProgram( g_CGpixel_NOBloom  );
+	}
+
 	cgGLLoadProgram( g_CGpixel_NONormalMap  );
 	cgGLLoadProgram( g_CGRenderShadowMap_vertex  );
 	cgGLLoadProgram( g_CGRenderShadowMap_pixel  );
