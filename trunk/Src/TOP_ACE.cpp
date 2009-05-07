@@ -2779,15 +2779,28 @@ void stage0(void)
     paraLightDirection[1] = (float)Pos3d(1);
     paraLightDirection[2] = (float)Pos3d(2);
 
+
+
+	Transform EyeMView;
+	EyeMView = (MWorld * UDfighers[0].UDMplane).Invert();
+	Vector3d EyePos3d;
+	EyePos3d=EyeMView.Matrix() * MFighter.RefPos() + EyeMView.RefPos();
+	eyePosition[0] = (float)EyePos3d(0);
+    eyePosition[1] = (float)EyePos3d(1);
+    eyePosition[2] = (float)EyePos3d(2);
+
+	Vector3d SunPos3d;
+	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
+
 	if((MissleFireLightNum>=0)&&(MissleFireLightNum<MAXMISSLE))
 	{
 		Vector3d MisslePos;
 		MisslePos=PMissleList.Missles[MissleFireLightNum].UDMplane.RefPos();
 		double MissleLightL=sqrt(GetLength_2d(MisslePos,MFighter.RefPos()));
-		if((MissleLightL<2000.0)&&(MissleLightL>185.0))
+		if(MissleLightL<2000.0)
 		{
 			Vector3d MissleLightPos;
-			MissleLightPos=LMView.Matrix() * MisslePos + LMView.RefPos();
+			MissleLightPos=EyeMView.Matrix() * MisslePos + EyeMView.RefPos();
 			MissleLightDirection[0]=(float)MissleLightPos(0);
 			MissleLightDirection[1]=(float)MissleLightPos(1);
 			MissleLightDirection[2]=(float)MissleLightPos(2);
@@ -2810,19 +2823,6 @@ void stage0(void)
 		}
 	
 	}
-
-	Transform EyeMView;
-	EyeMView = (MWorld * UDfighers[0].UDMplane).Invert();
-	Vector3d EyePos3d;
-	EyePos3d=EyeMView.Matrix() * MFighter.RefPos() + EyeMView.RefPos();
-	eyePosition[0] = (float)EyePos3d(0);
-    eyePosition[1] = (float)EyePos3d(1);
-    eyePosition[2] = (float)EyePos3d(2);
-
-	Vector3d SunPos3d;
-	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
-
-
 	//if(ShaderBloom)
 	//	DrawHighLight();
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
