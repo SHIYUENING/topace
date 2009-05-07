@@ -41,6 +41,7 @@ int MissleList::AddMissle(Transform & Fighter,int TGT,int onwer,float FighterSpe
 	Missles[MissleNum].TGTnum=TGT;
 	Missles[MissleNum].UDlife=240;
 	Missles[MissleNum].onwer=onwer;
+	Missles[MissleNum].onwerSpeed=FighterSpeed;
 	if(onwer==0)
 	{
 		Missles[MissleNum].UDMplane.TranslateInternal(Vector3d(0.0f, -20.0f, -50.0f));

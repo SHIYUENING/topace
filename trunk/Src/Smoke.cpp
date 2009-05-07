@@ -260,8 +260,8 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 
 							SmokeAlpha=1.0f;
 
-							if(SmokesList[i].life<90.0f)
-								SmokeAlpha=SmokeAlpha*SmokesList[i].life/90.0f;
+							if(SmokesList[i].life<30.0f)
+								SmokeAlpha=SmokeAlpha*SmokesList[i].life/30.0f;
 							if((SmokesList[i].lifeMAX-SmokesList[i].life)<10.0f)
 							{
 								SmokeAlpha=SmokeAlpha*(SmokesList[i].lifeMAX-SmokesList[i].life)/10.0f;
@@ -269,7 +269,7 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 
 							if(Pos3d(2)<-(LookRenge*(5.0f/6.0f)))
 								SmokeAlpha=SmokeAlpha*(LookRenge+(float)Pos3d(2))/(LookRenge/6.0f);
-							if(Pos3d(2)>-1000.0f)
+							if((Pos3d(2)>-1000.0f)&&(SmokesList[i].type!=1))
 								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-300.0f)/700.0f;
 
 							glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
@@ -289,6 +289,9 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 							glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
 							if(Pos3d(2)<-500.0f)
 								glCallList(SmokeGLlist);
+							else
+								if((SmokesList[i].type==1)&&(Pos3d(2)<-300.0f))
+									glCallList(SmokeGLlist);
 
 							glColor4f(1.0f,1.0f,1.0f,1.0f);
 							glPopMatrix();	

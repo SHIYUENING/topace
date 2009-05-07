@@ -116,5 +116,6 @@ Transform MFighter;//Íæ¼Ò
 Transform MViewPoint;
 Transform Msky;//Ìì¿ÕÎ»ÖÃ
 Transform MFireShellPos;
+int MissleFireLightNum=-1;
 
 

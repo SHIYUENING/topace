@@ -91,3 +91,18 @@ double acos_s(double d){
     else if (d <= -1.){ return pi; }
     return acos(d);
 }
+
+double GetLength_2d(const Vector3d& Pos1,const Vector3d& Pos2){
+	double PosX=Pos1(0)-Pos2(0);
+	double PosY=Pos1(1)-Pos2(1);
+	double PosZ=Pos1(2)-Pos2(2);
+	return PosX*PosX+PosY*PosY+PosZ*PosZ;
+
+}
+float GetLength_2f(const Vector3d& Pos1,const Vector3d& Pos2){
+	float PosX=float(Pos1(0)-Pos2(0));
+	float PosY=float(Pos1(1)-Pos2(1));
+	float PosZ=float(Pos1(2)-Pos2(2));
+	return PosX*PosX+PosY*PosY+PosZ*PosZ;
+
+}

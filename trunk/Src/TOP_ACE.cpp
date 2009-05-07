@@ -2000,6 +2000,7 @@ void UnitMove(void)
 
 				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
+					if(GetLength_2f(PMissleList.Missles[i].UDMplane.RefPos(),MFighter.RefPos())<tmpLookRenge*tmpLookRenge*2)
 					AddSound(1,PMissleList.Missles[i].UDMplane.RefPos());
 //					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound1, 0, &channel1);
 					if(PMissleList.Missles[i].onwer==0)
@@ -2767,9 +2768,9 @@ void stage0(void)
     // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
 
-	LightSunPos[0]=100000*testNum+(float)MFighter.RefPos()(0);
+	LightSunPos[0]=100000+(float)MFighter.RefPos()(0);
 	LightSunPos[1]=100000+(float)MFighter.RefPos()(1);
-	LightSunPos[2]=100000*testNum2+(float)MFighter.RefPos()(2);
+	LightSunPos[2]=100000+(float)MFighter.RefPos()(2);
 	Transform LMView;
 	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 	Vector3d Pos3d;
@@ -2777,6 +2778,38 @@ void stage0(void)
 	paraLightDirection[0] = (float)Pos3d(0);
     paraLightDirection[1] = (float)Pos3d(1);
     paraLightDirection[2] = (float)Pos3d(2);
+
+	if((MissleFireLightNum>=0)&&(MissleFireLightNum<MAXMISSLE))
+	{
+		Vector3d MisslePos;
+		MisslePos=PMissleList.Missles[MissleFireLightNum].UDMplane.RefPos();
+		double MissleLightL=sqrt(GetLength_2d(MisslePos,MFighter.RefPos()));
+		if((MissleLightL<2000.0)&&(MissleLightL>185.0))
+		{
+			Vector3d MissleLightPos;
+			MissleLightPos=LMView.Matrix() * MisslePos + LMView.RefPos();
+			MissleLightDirection[0]=(float)MissleLightPos(0);
+			MissleLightDirection[1]=(float)MissleLightPos(1);
+			MissleLightDirection[2]=(float)MissleLightPos(2);
+			MissleLightDirection[3]=MissleLightL;
+			MissleLightColor[0]=float(1.0-MissleLightL/2000.0);
+			MissleLightColor[1]=float(1.0-MissleLightL/2000.0)*0.5;
+			MissleLightColor[2]=0.0f;
+		
+		}
+		else
+		{
+			MissleLightColor[0]=0.0f;
+			MissleLightColor[1]=0.0f;
+			MissleLightColor[2]=0.0f;
+			MissleFireLightNum=-1;
+			MissleLightDirection[0]=0.0f;
+			MissleLightDirection[1]=0.0f;
+			MissleLightDirection[2]=0.0f;
+			MissleLightDirection[3]=1000000.0f;
+		}
+	
+	}
 
 	Transform EyeMView;
 	EyeMView = (MWorld * UDfighers[0].UDMplane).Invert();

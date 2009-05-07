@@ -56,6 +56,12 @@ FMOD_VECTOR pos;
 #define MAX_sounds 7
 #define MAX_soundSource 20
 using namespace hgl;
+struct tSoundSourceDate
+{
+	int soundType;//0导弹 1飞机 2警告 3其他
+	int Num;
+ 
+};
 bool isinitsound=false;
 AudioBuffer * missleWarning[MAX_missleWarning];
 AudioBuffer * fox2voice[MAX_fox2voice];
@@ -72,6 +78,7 @@ AudioSource * voiceSourceAWACS;
 AudioSource * soundSource[MAX_soundSource];
 Vector3d soundSourcePos[MAX_soundSource];
 AudioPlayer * BGMplayer;
+tSoundSourceDate SoundSourceDate[MAX_soundSource];
 void initsound()
 {
 	openal::InitOpenALEE();

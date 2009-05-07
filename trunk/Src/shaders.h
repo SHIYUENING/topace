@@ -56,6 +56,8 @@ float shininess=100.0f;
 float globalAmbient[4];
 float paraLightColor[4];
 float paraLightDirection[3];
+float MissleLightDirection[4];
+float MissleLightColor[3];
 float lightColor[4];
 float eyePosition[3]={0.0f, 150.0f, 30.0f};
 float eyePositionSea[3]={0.0f, 150.0f, 30.0f};
@@ -349,6 +351,8 @@ void shaderT(int NormalTex=0,int SpecularTex=0)//bool UseBloom=false
 		//cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
+		cgSetParameter4fv(cgGetNamedParameter( g_CGvertex_t, "MissleLightDirection" ),MissleLightDirection);
+		cgSetParameter3fv(cgGetNamedParameter( g_CGvertex_t, "paraLightColor" ),MissleLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "globalAmbient" ), globalAmbient);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightColor" ), paraLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightDirection" ), paraLightDirection);
