@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pixel_NOBloom_HighShadow.cg"
+				>
+			</File>
+			<File
 				RelativePath=".\pixel_NONormalMap.cg"
 				>
 			</File>

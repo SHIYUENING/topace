@@ -17,7 +17,7 @@ float2 texcoord0	:	TEXCOORD0;
 float3 objectPos	:	TEXCOORD2;
 float2 texcoord3	:	TEXCOORD3;
 float4 objectPos2	:	TEXCOORD4;
-//float4 objectPos3	:	TEXCOORD5;
+float3 Light2color	:	TEXCOORD5;
 //float depout	:	DEPTH;
 };
 
@@ -28,14 +28,14 @@ fragment main(
 			//uniform float	testnum,
 			  vertex IN,
 			  uniform float4x4 ShadowMapmvmatrix,
-			  uniform float4x4 ShadowMapprojmatrix 
+			  uniform float4x4 ShadowMapprojmatrix,
+			  uniform float4 MissleLightDirection,
+			  uniform float3 paraLightColor
 			  )
 {
 	fragment OUT;
 	float4x4 modelViewProj2=mul(ShadowMapprojmatrix,ShadowMapmvmatrix);
 	float4 objectPosShadowMap=mul( modelViewProj2, IN.position );
-	//OUT.texcoord3.x=objectPosShadowMap.x*(0.39+testnum*0.1)/(objectPosShadowMap.z*2)+0.5;
-	//OUT.texcoord3.y=objectPosShadowMap.y*(0.39+testnum*0.1)/(objectPosShadowMap.z*2)+0.5;
 	OUT.texcoord3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2)+0.5;
 	OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
 	OUT.objectPos2 = objectPosShadowMap;
@@ -47,13 +47,14 @@ fragment main(
 	OUT.oNormal = IN.normal;
 	OUT.objectPos = IN.position.xyz;
 	
-	/*
-	OUT.objectPos3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2)+0.5;
-	OUT.objectPos3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
-	OUT.objectPos3.z=objectPosShadowMap.z/(objectPosShadowMap.w*2)+0.5;
-	OUT.objectPos3.w=1.0;
-	*/
-//	OUT.depout=IN.depin;
+
+    float3 P = IN.position.xyz;
+    float3 N = normalize(IN.normal);
+	float3 L = normalize(MissleLightDirection.xyz-P);
+    float diffuseLight = max(dot(N, L), 0);
+    float3 diffuse = paraLightColor * diffuseLight*10;
+
+	OUT.Light2color = diffuse;
 
 
 	return OUT;

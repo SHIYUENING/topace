@@ -111,5 +111,8 @@ double Sign(double d);
 
 double acos_s(double d);
 
+double GetLength_2d(const Vector3d& Pos1,const Vector3d& Pos2);//注意得到的值是带平方的
+
+float GetLength_2f(const Vector3d& Pos1,const Vector3d& Pos2);//注意得到的值是带平方的
 #include "Transform.h"
 #endif

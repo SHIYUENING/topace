@@ -66,12 +66,12 @@ pixel main(
 
     if(diffuseLight<=0) specularLight=0;
     float4 Ocolor;
-    Ocolor.xyz = globalAmbient + diffuse+specularLight*8*SpecularMapcolor.xyz;
+    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8*SpecularMapcolor.xyz;
     Ocolor.w = 1.0;
     pixel OUT;
 	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
 	float posz=colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0+0.70;
-	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient;
+	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient +IN.Light2color;
 
 	half3 I = IN.objectPos2.xyz - eyePosition;
 	half3 R = reflect(I, N);

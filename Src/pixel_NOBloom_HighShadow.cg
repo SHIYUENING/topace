@@ -12,6 +12,7 @@ struct fragment
     float4 objectPos	:	TEXCOORD2;
     float2 texcoord3	:	TEXCOORD3;
 	float4 objectPos2	:	TEXCOORD4;
+	float3 Light2color	:	TEXCOORD5;
 };
 
 struct pixel
@@ -160,7 +161,7 @@ pixel main(
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
 
-	Ocolor.xyz=globalAmbient+(diffuse+specularLight*8*SpecularMapcolor.xyz)*(21-tmp0)/21;
+	Ocolor.xyz=globalAmbient +IN.Light2color+(diffuse+specularLight*8*SpecularMapcolor.xyz)*(21-tmp0)/21;
 
 
 	half3 I = IN.objectPos2.xyz - eyePosition;
