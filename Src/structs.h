@@ -5,6 +5,7 @@
 #include "sound.h"
 #include "Shell.h"
 int lockflash=0;//决定锁定框是否闪烁
+unsigned int FrameSkip=0;
 #define MAXRedarlocks 100
 #define maxMissles 20
 #define maxMisslesSmoke 20000
@@ -13,6 +14,7 @@ int lockflash=0;//决定锁定框是否闪烁
 #define MAXweaponNUM 30
 #define MAXsmoke 200
 #define MAXBom 200
+bool IsSkip=false;
 float tmpredarRenge=15000.0f;//临时雷达追踪范围
 float tmpAREAredarRenge=100000.0f;//关卡范围
 float tmpLookRenge=30000.0f;//临时视距

@@ -8,6 +8,7 @@ CSmoke::CSmoke(void)
 , CloudTexID(0)
 , base(0)
 , CloudSize(7500)
+,m_IsSkip(false)
 {
 	LastPos[0]=0.0f;
 	LastPos[1]=0.0f;
@@ -194,116 +195,115 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 				if(SmokesList[i].type!=2)
 				SmokesList[i].life=SmokesList[i].life-1.0f;
 
-				
-				tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
-				tmpY=SmokesList[i].pos[1]-(float)ViewPos(1);
-				tmpZ=SmokesList[i].pos[2]-(float)ViewPos(2);
-				SmoleL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-				//SmoleL=LookRenge*LookRenge-(SmokesList[i].pos[0]-ViewPos.RefPos()(0))*(SmokesList[i].pos[0]-ViewPos.RefPos()(0))+(SmokesList[i].pos[1]-ViewPos.RefPos()(1))*(SmokesList[i].pos[1]-ViewPos.RefPos()(1))+(SmokesList[i].pos[2]-ViewPos.RefPos()(2))*(SmokesList[i].pos[2]-ViewPos.RefPos()(2));
-				/*if(SmoleL>LookRenge*LookRenge*4)
+				if(!m_IsSkip)
 				{
-					if(SmokesList[i].type==2)
-					SmokesList[i].life=0.0f;
-				
-				}*/
-				if(SmoleL<LookRenge*LookRenge*4)//在视距内
-				{
-
-					glGetIntegerv(GL_VIEWPORT,viewport);
-					glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
-					glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
-					gluProject(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2],mvmatrix,projmatrix,viewport,&WinPos[0],&WinPos[1],&WinPos[2]);
-					if(WinPos[2]>0.0)
-					if(WinPos[2]<1.0)
+					tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
+					tmpY=SmokesList[i].pos[1]-(float)ViewPos(1);
+					tmpZ=SmokesList[i].pos[2]-(float)ViewPos(2);
+					SmoleL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
+					//SmoleL=LookRenge*LookRenge-(SmokesList[i].pos[0]-ViewPos.RefPos()(0))*(SmokesList[i].pos[0]-ViewPos.RefPos()(0))+(SmokesList[i].pos[1]-ViewPos.RefPos()(1))*(SmokesList[i].pos[1]-ViewPos.RefPos()(1))+(SmokesList[i].pos[2]-ViewPos.RefPos()(2))*(SmokesList[i].pos[2]-ViewPos.RefPos()(2));
+					/*if(SmoleL>LookRenge*LookRenge*4)
 					{
 						if(SmokesList[i].type==2)
+						SmokesList[i].life=0.0f;
+					
+					}*/
+					if(SmoleL<LookRenge*LookRenge*4)//在视距内
+					{
+
+						glGetIntegerv(GL_VIEWPORT,viewport);
+						glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
+						glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
+						gluProject(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2],mvmatrix,projmatrix,viewport,&WinPos[0],&WinPos[1],&WinPos[2]);
+						if(WinPos[2]>0.0)
+						if(WinPos[2]<1.0)
 						{
-							glPushMatrix();	
-							Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
-
-							SmokeAlpha=1.0f;
-
-							if(Pos3d(2)<-(LookRenge))
-								SmokeAlpha=0.0f;
-							else
-							//SmokeAlpha=1.0f+(float)Pos3d(2)/(LookRenge*0.7);
+							if(SmokesList[i].type==2)
 							{
-							if(Pos3d(2)<-((LookRenge)*(4.0f/6.0f)))
-								SmokeAlpha=SmokeAlpha*((LookRenge)+(float)Pos3d(2))/((LookRenge)/3.0f);
-							}
+								glPushMatrix();	
+								Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
 
-							if(Pos3d(2)>-8000.0f)
-								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-2000.0f)/6000.0f;
+								SmokeAlpha=1.0f;
 
-							glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
-							glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-							glLoadIdentity();
-							glBindTexture(GL_TEXTURE_2D, CloudTexID);
-							glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
-							glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
-							if(Pos3d(2)<-500.0f)
-								glCallList(base+SmokesList[i].TexId);
+								if(Pos3d(2)<-(LookRenge))
+									SmokeAlpha=0.0f;
+								else
+								//SmokeAlpha=1.0f+(float)Pos3d(2)/(LookRenge*0.7);
+								{
+								if(Pos3d(2)<-((LookRenge)*(4.0f/6.0f)))
+									SmokeAlpha=SmokeAlpha*((LookRenge)+(float)Pos3d(2))/((LookRenge)/3.0f);
+								}
 
-							glColor4f(1.0f,1.0f,1.0f,1.0f);
-							glPopMatrix();							
-						
-						
-						}
+								if(Pos3d(2)>-8000.0f)
+									SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-2000.0f)/6000.0f;
 
-						if(WinPos[0]>-0.2f*(float)winwidth)
-						if(WinPos[0]<1.2f*(float)winwidth)
-						if(WinPos[1]>-0.2*(float)winheight)
-						if(WinPos[1]<1.2*(float)winheight)//在视锥体内
-						{
-							glPushMatrix();	
-							Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
+								glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
+								glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+								glLoadIdentity();
+								glBindTexture(GL_TEXTURE_2D, CloudTexID);
+								glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
+								glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
+								if(Pos3d(2)<-500.0f)
+									glCallList(base+SmokesList[i].TexId);
 
-							SmokeAlpha=1.0f;
-
-							if(SmokesList[i].life<30.0f)
-								SmokeAlpha=SmokeAlpha*SmokesList[i].life/30.0f;
-							if((SmokesList[i].lifeMAX-SmokesList[i].life)<10.0f)
-							{
-								SmokeAlpha=SmokeAlpha*(SmokesList[i].lifeMAX-SmokesList[i].life)/10.0f;
-							}
-
-							if(Pos3d(2)<-(LookRenge*(5.0f/6.0f)))
-								SmokeAlpha=SmokeAlpha*(LookRenge+(float)Pos3d(2))/(LookRenge/6.0f);
-							if((Pos3d(2)>-1000.0f)&&(SmokesList[i].type!=1))
-								SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-300.0f)/700.0f;
-
-							glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
-							glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+								glColor4f(1.0f,1.0f,1.0f,1.0f);
+								glPopMatrix();							
 							
-							if(SmokesList[i].type==1)
-							{
-								glColor4f(1.0f,0.5f,0.0f,SmokeAlpha);
-								glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+							
 							}
-							glLoadIdentity();
 
-							glEnable(GL_BLEND);
-							glBindTexture(GL_TEXTURE_2D, SmokesList[i].TexId);
+							if(WinPos[0]>-0.2f*(float)winwidth)
+							if(WinPos[0]<1.2f*(float)winwidth)
+							if(WinPos[1]>-0.2*(float)winheight)
+							if(WinPos[1]<1.2*(float)winheight)//在视锥体内
+							{
+								glPushMatrix();	
+								Pos3d=would.Matrix() * Vector3d(SmokesList[i].pos[0],SmokesList[i].pos[1],SmokesList[i].pos[2]) + would.RefPos();
 
-							glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
-							glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
-							if(Pos3d(2)<-500.0f)
-								glCallList(SmokeGLlist);
-							else
-								if((SmokesList[i].type==1)&&(Pos3d(2)<-300.0f))
+								SmokeAlpha=1.0f;
+
+								if(SmokesList[i].life<30.0f)
+									SmokeAlpha=SmokeAlpha*SmokesList[i].life/30.0f;
+								if((SmokesList[i].lifeMAX-SmokesList[i].life)<10.0f)
+								{
+									SmokeAlpha=SmokeAlpha*(SmokesList[i].lifeMAX-SmokesList[i].life)/10.0f;
+								}
+
+								if(Pos3d(2)<-(LookRenge*(5.0f/6.0f)))
+									SmokeAlpha=SmokeAlpha*(LookRenge+(float)Pos3d(2))/(LookRenge/6.0f);
+								if((Pos3d(2)>-1000.0f)&&(SmokesList[i].type!=1))
+									SmokeAlpha=SmokeAlpha*(0.0f-(float)Pos3d(2)-300.0f)/700.0f;
+
+								glColor4f(1.0f,1.0f,1.0f,SmokeAlpha);
+								glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+								
+								if(SmokesList[i].type==1)
+								{
+									glColor4f(1.0f,0.5f,0.0f,SmokeAlpha);
+									glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+								}
+								glLoadIdentity();
+
+								glEnable(GL_BLEND);
+								glBindTexture(GL_TEXTURE_2D, SmokesList[i].TexId);
+
+								glTranslated(Pos3d(0) , Pos3d(1) , Pos3d(2));
+								glScaled(SmokesList[i].size,SmokesList[i].size,SmokesList[i].size);
+								if(Pos3d(2)<-500.0f)
 									glCallList(SmokeGLlist);
+								else
+									if((SmokesList[i].type==1)&&(Pos3d(2)<-300.0f))
+										glCallList(SmokeGLlist);
 
-							glColor4f(1.0f,1.0f,1.0f,1.0f);
-							glPopMatrix();	
+								glColor4f(1.0f,1.0f,1.0f,1.0f);
+								glPopMatrix();	
+								
 							
-						
+							}
 						}
-
 					}
-
 				}
 			}
-
 		}
 	//glPopMatrix();	
 	glDisable(GL_BLEND);

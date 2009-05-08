@@ -40,6 +40,7 @@ public:
 	bool LoadBomTeam(int BomTeamNum);
 	BomIni Bomini[MAXBOMACTS];
 	int AllFrame;//总共多少桢
+	bool m_IsSkip;
 
 	int DrawBomTeam(float posX, float posY, float posZ, int frame, unsigned int GLlistNum,float TeamSize);
 };

@@ -74,5 +74,6 @@ void Draw (void);									// Perform All Your Scene Drawing
 bool inifile (void);
 
 extern int winwidth,winheight;
+extern bool IsSkip;
 
 #endif												// GL_FRAMEWORK__INCLUDED

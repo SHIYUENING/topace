@@ -1,8 +1,10 @@
 #include "BomTeams.h"
 bool LoadTGA(Texture *, char *);
 unsigned int BomTEXsNum[MAXBOMTEXS];
+extern bool IsSkip;
 CBomTeams::CBomTeams(void)
 : Num(0)
+,m_IsSkip(false)
 {
 }
 
@@ -131,21 +133,24 @@ int CBomTeams::DrawBomTeam(float posX, float posY, float posZ, int frame, unsign
 						glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 
 					//glPrintBom1((float)bompos(0),(float)bompos(1),(float)bompos(2),tmpsize2,tmpalpha2,Bomini[i].Pnum);
-					glLoadIdentity();
-					glBindTexture(GL_TEXTURE_2D, Bomini[i].TEXNum);
-					glTranslated(posX,posY,posZ);
-					glColor4f(tmpalpha2,tmpalpha2,tmpalpha2,tmpalpha2);
-					glBegin(GL_QUADS);							// Use A Quad For Each Character
-						glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
-						glVertex2f(-tmpsize2,-tmpsize2);						// Vertex Coord (Bottom Left)
-						glTexCoord2f(1.0f,0.0f);	// Texture Coord (Bottom Right)
-						glVertex2f(tmpsize2,-tmpsize2);						// Vertex Coord (Bottom Right)
-						glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
-						glVertex2f(tmpsize2,tmpsize2);						// Vertex Coord (Top Right)
-						glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
-						glVertex2f(-tmpsize2,tmpsize2);						// Vertex Coord (Top Left)
-					glEnd();
-					glColor4f(1.0f,1.0f,1.0f,1.0f);
+					if(!IsSkip)
+					{
+						glLoadIdentity();
+						glBindTexture(GL_TEXTURE_2D, Bomini[i].TEXNum);
+						glTranslated(posX,posY,posZ);
+						glColor4f(tmpalpha2,tmpalpha2,tmpalpha2,tmpalpha2);
+						glBegin(GL_QUADS);							// Use A Quad For Each Character
+							glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
+							glVertex2f(-tmpsize2,-tmpsize2);						// Vertex Coord (Bottom Left)
+							glTexCoord2f(1.0f,0.0f);	// Texture Coord (Bottom Right)
+							glVertex2f(tmpsize2,-tmpsize2);						// Vertex Coord (Bottom Right)
+							glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
+							glVertex2f(tmpsize2,tmpsize2);						// Vertex Coord (Top Right)
+							glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
+							glVertex2f(-tmpsize2,tmpsize2);						// Vertex Coord (Top Left)
+						glEnd();
+						glColor4f(1.0f,1.0f,1.0f,1.0f);
+					}
 				}
 			}
 	return 0;

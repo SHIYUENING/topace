@@ -25,7 +25,7 @@ int windowswidth=800;
 int windowsheight=600;
 int windowsbits=16;
 bool BisFullScreen=FALSE;
-int ACver=31;
+int ACver=32;
 
 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
@@ -456,7 +456,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 							Update (tickCount - window.lastTickCount);	// Update The Counter
 							window.lastTickCount = tickCount;			// Set Last Count To Current Count
 							Draw ();									// Draw Our Scene
-
+							if(!IsSkip)
 							SwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
 						}
 					}
@@ -511,6 +511,7 @@ bool inifile ()
 		WritePrivateProfileString("Resolution","height","600",".\\set.ini");
 		WritePrivateProfileString("Resolution","bits","16",".\\set.ini");
 		WritePrivateProfileString("Resolution","isFullScreen","0",".\\set.ini");
+		WritePrivateProfileString("Resolution","FrameSkip","0",".\\set.ini");
 		WritePrivateProfileString("FlySet","moveSpeed","100",".\\set.ini");
 		WritePrivateProfileString("FlySet","MAXSpeed","500",".\\set.ini");
 		WritePrivateProfileString("FlySet","MINSpeed","1",".\\set.ini");

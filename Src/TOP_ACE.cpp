@@ -295,6 +295,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 			GraphicsLOW=false;
 
 
+	FrameSkip=GetPrivateProfileInt("Resolution","FrameSkip",0,".\\set.ini")+1;
+	oneframetimelimit=(double)FrameSkip/60.0;
 
 	moveSpeed=GetPrivateProfileInt("FlySet","moveSpeed",100,".\\set.ini")*0.0001f;
 	MAXSpeed=GetPrivateProfileInt("FlySet","MAXSpeed",300,".\\set.ini")*0.0001f;
@@ -483,6 +485,7 @@ void DrawDataLine1 (void)
 		g_nFPS = g_nFrames;										// Save The FPS
 		g_nFrames = 0;											// Reset The FPS Counter
 	}
+	if(!IsSkip)
 	g_nFrames++;												// Increment Our FPS Counter
 									// Build The Title String
 	sprintf( szTitle, "%4.8f time,%2.0d FPS",oneframetime,g_nFPS);
@@ -788,6 +791,12 @@ void fireShell()
 }
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
+	playTime=playTime+1;
+	if((playTime%FrameSkip)!=0)
+		IsSkip=true;
+	else
+		IsSkip=false;
+	
 
 //	FMOD_System_Update(sys);
 	Inertia();
@@ -1522,11 +1531,7 @@ void DrawUnit(void)
 	{
 		if(UDfighers[i].m_DrawSelf(MFighter.RefPos(),winwidth,winheight,tmpLookRenge)&&UDfighers[i].UDwinl<(tmpredarRenge*tmpredarRenge))
 		{
-			int tmpflag;
-			tmpflag=UDfighers[i].AIactTimer1*10+UDfighers[i].AIact;
-			//tmpflag=UDfighers[i].AIact*100;
-			//if(UDfighers[i].attackTGTNum>-1)
-			//	tmpflag=tmpflag+UDfighers[UDfighers[i].attackTGTNum].UDlife*1000+UDfighers[i].attackTGTNum;
+
 			DrawFightersData(UDfighers[i].UDwinx,UDfighers[i].UDwiny,UDfighers[i].UDwinz,UDfighers[i].UDwinl,UDfighers[i].UDname,UDfighers[i].UDflag,UDfighers[i].UDlockselect,UDfighers[i].UDlife);
 			if(!(UDfighers[i].UDflag==2))
 			{
@@ -1845,6 +1850,8 @@ void UnitMove(void)
     PlayerLocking=false;
 	for(int i=2;i<maxUnits;i++)
 	{
+		if(UDfighers[i].smokeTime>0)
+		UDfighers[i].smokeTime=UDfighers[i].smokeTime-1;
 
 		if(UDfighers[i].UDlife>0)
 		{
@@ -1869,38 +1876,48 @@ void UnitMove(void)
 	for(int i=0;i<MAXSHELLSLIST;i++)
 	{
 		if(Shell.ShellList[i].life>0)
-		if(Shell.ShellList[i].onwer!=Shell.ShellList[i].TGTNum)
-		if((Shell.ShellList[i].TGTNum>=0)&&(Shell.ShellList[i].TGTNum<MAXSHELLSLIST))
-		if(UDfighers[Shell.ShellList[i].TGTNum].UDlife>0)
 		{
-			tmpX=Shell.ShellList[i].FrontPos[0]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(0));
-			tmpY=Shell.ShellList[i].FrontPos[1]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(1));
-			tmpZ=Shell.ShellList[i].FrontPos[2]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(2));
-			tmpL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-			if(Shell.ShellList[i].onwer==0)
-				shellHitRange=10000.0f;
-			if(tmpL<shellHitRange)
+			Shell.ShellList[i].life=Shell.ShellList[i].life-1;
+
+			Shell.ShellList[i].FrontPos[0]=Shell.ShellList[i].FrontPos[0]+Shell.ShellList[i].posMove[0];
+			Shell.ShellList[i].FrontPos[1]=Shell.ShellList[i].FrontPos[1]+Shell.ShellList[i].posMove[1];
+			Shell.ShellList[i].FrontPos[2]=Shell.ShellList[i].FrontPos[2]+Shell.ShellList[i].posMove[2];
+			Shell.ShellList[i].BackPos[0]=Shell.ShellList[i].BackPos[0]+Shell.ShellList[i].posMove[0];
+			Shell.ShellList[i].BackPos[1]=Shell.ShellList[i].BackPos[1]+Shell.ShellList[i].posMove[1];
+			Shell.ShellList[i].BackPos[2]=Shell.ShellList[i].BackPos[2]+Shell.ShellList[i].posMove[2];
+			if(Shell.ShellList[i].onwer!=Shell.ShellList[i].TGTNum)
+			if((Shell.ShellList[i].TGTNum>=0)&&(Shell.ShellList[i].TGTNum<MAXSHELLSLIST))
+			if(UDfighers[Shell.ShellList[i].TGTNum].UDlife>0)
 			{
+				tmpX=Shell.ShellList[i].FrontPos[0]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(0));
+				tmpY=Shell.ShellList[i].FrontPos[1]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(1));
+				tmpZ=Shell.ShellList[i].FrontPos[2]-float(UDfighers[Shell.ShellList[i].TGTNum].UDMplane.RefPos()(2));
+				tmpL=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				if(Shell.ShellList[i].onwer==0)
-					UDfighers[Shell.ShellList[i].TGTNum].UDlife=UDfighers[Shell.ShellList[i].TGTNum].UDlife-5;
-				else
-					UDfighers[Shell.ShellList[i].TGTNum].UDlife=UDfighers[Shell.ShellList[i].TGTNum].UDlife-1;
-
-				if(UDfighers[Shell.ShellList[i].TGTNum].UDlife==UDfighers[Shell.ShellList[i].TGTNum].UDlife<1)
+					shellHitRange=10000.0f;
+				if(tmpL<shellHitRange)
 				{
-					UDfighers[Shell.ShellList[i].TGTNum].smokeTime=100;
-					Playkillvoice(rand()%10);
-//					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
-				}
-				if(Shell.ShellList[i].TGTNum==0)
-				{
-					hited=5;
-					AddSound(3,UDfighers[0].UDMplane.RefPos());
-			//		FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundGunHited, 0, &channelGunHited);
-				}
+					if(Shell.ShellList[i].onwer==0)
+						UDfighers[Shell.ShellList[i].TGTNum].UDlife=UDfighers[Shell.ShellList[i].TGTNum].UDlife-5;
+					else
+						UDfighers[Shell.ShellList[i].TGTNum].UDlife=UDfighers[Shell.ShellList[i].TGTNum].UDlife-1;
 
-				Shell.ShellList[i].life=0;
+					if(UDfighers[Shell.ShellList[i].TGTNum].UDlife==UDfighers[Shell.ShellList[i].TGTNum].UDlife<1)
+					{
+						UDfighers[Shell.ShellList[i].TGTNum].smokeTime=100;
+						Playkillvoice(rand()%10);
+	//					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
+					}
+					if(Shell.ShellList[i].TGTNum==0)
+					{
+						hited=5;
+						AddSound(3,UDfighers[0].UDMplane.RefPos());
+				//		FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, soundGunHited, 0, &channelGunHited);
+					}
 
+					Shell.ShellList[i].life=0;
+
+				}
 			}
 		}
 	}
@@ -2282,7 +2299,8 @@ void DrawSky(float ne=0.0)
 	
 	glScaled(5000.0,5000.0,5000.0);
 	glDisable(GL_DEPTH_TEST);
-	SkyBox.Draw();
+	if(!IsSkip)
+		SkyBox.Draw();
 	//m_VBMD->ShowVBMD(3);
 	/*
 	glBindTexture(GL_TEXTURE_2D, SkyTex[2].texID);
@@ -2828,60 +2846,71 @@ void stage0(void)
 	}
 	//if(ShaderBloom)
 	//	DrawHighLight();
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawUI1totexture(latitude);
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawUI2totexture(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	DrawUI3totexture(MFighter.RefPos()(1)*0.1);
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if(!KeyT)
-		DrawRedarToTexture();
-	glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
-	glClear (GL_COLOR_BUFFER_BIT );
-	DrawDataLine1();
-	DrawShadowMap();
+	if(!IsSkip)
+	{
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		DrawUI1totexture(latitude);
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		DrawUI2totexture(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		DrawUI3totexture(MFighter.RefPos()(1)*0.1);
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if(!KeyT)
+			DrawRedarToTexture();
+		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
+		glClear (GL_COLOR_BUFFER_BIT );
+		DrawDataLine1();
+		DrawShadowMap();
 	
-
+	}
 	MoveSound(MView,tmpLookRenge);
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
 		DrawSky((float)longitude);
 
-		SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight);
-		//glEnable(GL_CULL_FACE);
+		if(!IsSkip)
+			SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight);
 
-		DrawGround();
+
+		if(!IsSkip)
+			DrawGround();
 		//glBindTexture(GL_TEXTURE_2D,AmbientReflectiveTexture);
 		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
-		glDisable(GL_CULL_FACE);
-		//glBindTexture(GL_TEXTURE_2D,BlurTexture);
-		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
-			
-		DrawPlayer();
+
+		if(!IsSkip)
+			DrawPlayer();
+
+		if(!IsSkip)
 		if(ShaderBloom)
 			glPrintHighLight();
-		DrawUnit();
+
+		if(!IsSkip)
+			DrawUnit();
 		DrawBom();	
+		if(!IsSkip)
 		Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
-		DrawMissle();
+		if(!IsSkip)
+			DrawMissle();
+		PSmokes.m_IsSkip=IsSkip;
 		PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
 		locksmove();
 		Drawlocksign();
 	glPopMatrix();
 	glEnable(GL_BLEND);
-	if(UseEffectImpact)
-	EffectImpact.EffectImpactDraw(DrawEffectImpact);
+	if((UseEffectImpact)&&(!IsSkip))
+		EffectImpact.EffectImpactDraw(DrawEffectImpact);
 	DrawEffectImpact=false;
 	glEnable(GL_BLEND);
 	//Maptexture=EffectImpact.TextureID;
-	DrawUI2();
-	DrawUI3();
-	DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
-	DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
-	DrawUI1(rotation);
-	DrawHP(UDfighers[0].UDlife);
+	if(!IsSkip)
+	{
+		DrawUI2();
+		DrawUI3();
+		DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
+		DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
+		DrawUI1(rotation);
+		DrawHP(UDfighers[0].UDlife);
 	
 /*
 	glClear (GL_DEPTH_BUFFER_BIT);
@@ -2892,12 +2921,12 @@ void stage0(void)
 	Drawland2();
 	glEnable(GL_BLEND);	*/
 
-	if(KeyT)
-		DrawAREARedarToTexture((float)longitude);
-	else
-		DrawRedar((float)longitude);
-	DrawUI1(rotation);
-	
+		if(KeyT)
+			DrawAREARedarToTexture((float)longitude);
+		else
+			DrawRedar((float)longitude);
+		DrawUI1(rotation);
+	}
 	UnitMove();
 	if(PlayerLocked)
 	{
@@ -2924,8 +2953,7 @@ void stage0(void)
 	if(lockflash==30)
 		lockflash=0;
 
-	playTime=playTime+1;
-	
+
 	for(int i=0;i<100;i++)
 	{
 		if(timer[i]>0)
@@ -2959,7 +2987,7 @@ void Draw (void)
 
 
 
-	
+	if(!IsSkip)
 	LockFPS();
 
 	
