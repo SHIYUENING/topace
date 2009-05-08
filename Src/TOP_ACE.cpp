@@ -289,7 +289,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	g_fVBOSupported=true;
 
 	
-	GraphicsLOW=GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0;
+		if(GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0)
+			GraphicsLOW=true;
+		else
+			GraphicsLOW=false;
 
 
 
@@ -318,7 +321,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	InitTile();
 	if(GetPrivateProfileInt("Light","HighShadow",1,".\\set.ini")==0)
 		UseHighShadow=false;
-	if(GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)
+	if((GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)&&(!GraphicsLOW))
 		InitCG();
 	else
 	{
@@ -491,7 +494,7 @@ void DrawDataLine1 (void)
 		strcat( szTitle, ", Light:Shader" );
 	else
 		strcat( szTitle, ", Light:glLight" );
-	if(IsSupportFBO)
+	if((IsSupportFBO)&&(ShaderLight))
 	{
 		if(UseHighShadow)
 			strcat( szTitle, ", Shadow:High" );
