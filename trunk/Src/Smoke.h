@@ -43,6 +43,7 @@ public:
 	float tmpZ;
 	float CloudSize;
 
+	bool m_IsSkip;
 	
 	void AddSmoke(float posx, float posy, float posz, float size=1.0f, float sizeMove=0.0f, float life=150.0f,int type=0,int CloudListNum=0);
 	

@@ -51,14 +51,7 @@ void CShell::DrawShell(const Vector3d& ViewPos,Transform& would,int winwidth,int
 	{
 		if(ShellList[i].life>0)
 		{
-			ShellList[i].life=ShellList[i].life-1;
 
-			ShellList[i].FrontPos[0]=ShellList[i].FrontPos[0]+ShellList[i].posMove[0];
-			ShellList[i].FrontPos[1]=ShellList[i].FrontPos[1]+ShellList[i].posMove[1];
-			ShellList[i].FrontPos[2]=ShellList[i].FrontPos[2]+ShellList[i].posMove[2];
-			ShellList[i].BackPos[0]=ShellList[i].BackPos[0]+ShellList[i].posMove[0];
-			ShellList[i].BackPos[1]=ShellList[i].BackPos[1]+ShellList[i].posMove[1];
-			ShellList[i].BackPos[2]=ShellList[i].BackPos[2]+ShellList[i].posMove[2];
 			
 			tmpX=ShellList[i].FrontPos[0]-(float)ViewPos(0);
 			tmpY=ShellList[i].FrontPos[1]-(float)ViewPos(1);

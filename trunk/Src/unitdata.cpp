@@ -272,8 +272,7 @@ void Unitdata::m_DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheig
 */
 bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge)
 {
-	if(smokeTime>0)
-		smokeTime=smokeTime-1;
+
 	bool m_isDraw=false;
 	if((UDlife>0)||(smokeTime>90))
 	{
