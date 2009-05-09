@@ -766,7 +766,7 @@ void fireShell()
 
 	Transform tmp2=UDfighers[0].UDMplane;
 	//tmp2.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-	tmp2.TranslateInternal(Vector3d(5.0f, -5.8f+turnX*143.2f*testNum2, 175.0f));
+	tmp2.TranslateInternal(Vector3d(5.0f, -5.8f+turnX*143.2f*testNum2, -50.0f));
 	
 	//testNum2=turnX;
 	Transform tmp=tmp2;
@@ -950,71 +950,77 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewUp] == TRUE)||KeyInput.m_IskeyViewUp)	
 	{
-		ViewTurnY=ViewTurnY+0.01f;
+		ViewTurnY=ViewTurnY+0.005f;
 		if(ViewTurnY>1.0f)
 			ViewTurnY=1.0f;
 		if(KeyInput.m_IskeyViewUp)
 			if(ViewTurnY>KeyInput.m_ViewUp)
-				ViewTurnY=ViewTurnY-0.01f;
-	}
+				ViewTurnY=ViewTurnY-0.005f;
+	}/*
 	else
 	{
 		if(ViewTurnY>=0.02f)
 			ViewTurnY=ViewTurnY-0.02f;
 		if((ViewTurnY<0.02f)&&(ViewTurnY>0.0f))
 			ViewTurnY=0.0f;
-	}
+	}*/
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewDown] == TRUE)||KeyInput.m_IskeyViewDown)	
 	{
-		ViewTurnY=ViewTurnY-0.01f;
+		ViewTurnY=ViewTurnY-0.005f;
 		if(ViewTurnY<-1.0f)
 			ViewTurnY=-1.0f;
 		if(KeyInput.m_IskeyViewDown)
 			if(ViewTurnY<-KeyInput.m_ViewDown)
-				ViewTurnY=ViewTurnY+0.01f;
-	}
+				ViewTurnY=ViewTurnY+0.005f;
+	}/*
 	else
 	{
 		if(ViewTurnY<=-0.02f)
 			ViewTurnY=ViewTurnY+0.02f;
 		if((ViewTurnY>-0.02f)&&(ViewTurnY<0.0f))
 			ViewTurnY=0.0f;
-	}
+	}*/
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewLeft] == TRUE)||KeyInput.m_IskeyViewLeft)	
 	{
 		
-			ViewTurnX=ViewTurnX+0.01f;
+			ViewTurnX=ViewTurnX+0.005f;
 		if(ViewTurnX>1.0f)
 			ViewTurnX=1.0f;
 		if(KeyInput.m_IskeyViewLeft)
 			if(ViewTurnX>KeyInput.m_ViewLeft)
-				ViewTurnX=ViewTurnX-0.01f;
-	}
+				ViewTurnX=ViewTurnX-0.005f;
+	}/*
 	else
 	{
 		if(ViewTurnX>=0.02f)
 			ViewTurnX=ViewTurnX-0.02f;
 		if((ViewTurnX<0.02f)&&(ViewTurnX>0.0f))
 			ViewTurnX=0.0f;
-	}
+	}*/
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewRight] == TRUE)||KeyInput.m_IskeyViewRight)	
 	{
 	
 
 
-			ViewTurnX=ViewTurnX-0.01f;
+			ViewTurnX=ViewTurnX-0.005f;
 		if(ViewTurnX<-1.0f)
 			ViewTurnX=-1.0f;
 		if(KeyInput.m_IskeyViewRight)
 			if(ViewTurnX<-KeyInput.m_ViewRight)
-				ViewTurnX=ViewTurnX+0.01f;
-	}
+				ViewTurnX=ViewTurnX+0.005f;
+	}/*
 	else
 	{
 		if(ViewTurnX<=-0.02f)
 			ViewTurnX=ViewTurnX+0.02f;
 		if((ViewTurnX>-0.02f)&&(ViewTurnX<0.0f))
 			ViewTurnX=0.0f;
+	}
+*/
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewReset] == TRUE)||KeyInput.m_IskeyViewReset)	
+	{
+		ViewTurnX=0.0f;
+		ViewTurnY=0.0f;
 	}
 /*
 	if (g_keys->keyDown ['R'] && !KeyR )	
@@ -2676,10 +2682,10 @@ void DrawGround(void)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f,-20.0f+(j+mapz)*40.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,5.0f, 20.0f+(j+mapz)*40.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,5.0f, 25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,5.0f,-25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,5.0f,-25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,5.0f, 25.0f+(j+mapz)*50.0f);
 					glEnd();
 				}
 		
@@ -2773,7 +2779,7 @@ void stage0(void)
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
 	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
 	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), CRad(ViewTurnX* 180.0f), 0.0f));
-	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))
 	MFighter=ViewPoint.UDMplane;
 	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
 //	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
@@ -2973,6 +2979,14 @@ void Draw (void)
 	GetClientRect(g_window->hWnd, &rect);							// 获得窗口大小
 	int window_width=rect.right-rect.left;							
 	int window_height=rect.bottom-rect.top;	
+
+	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
+	glLoadIdentity ();													// Reset The Projection Matrix
+	gluPerspective (60.0f+float(max(EffectImpact.EffectTime-45,0))*0.1, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
+					10.0f, 100000.0f);		
+	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
+	glLoadIdentity ();	
+
 
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
