@@ -388,25 +388,25 @@ void CSmoke::DeleteSmoke(void)
 
 void CSmoke::AddCloud(float posx, float posy, float posz)
 {
-	AddSmoke(posx+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
 		
-	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50),posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/2.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz-CloudSize/2.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/2.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/2.0f+(float)(rand()%100-50),posz+CloudSize/2.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
 
-	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
-	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50),posy+CloudSize*0.8f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize*0.8f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx+CloudSize/4.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize*0.8f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize*0.8f+(float)(rand()%100-50),posz-CloudSize/4.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
+	AddSmoke(posx-CloudSize/4.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize*0.8f+(float)(rand()%100-50),posz+CloudSize/4.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%12);
 
-	AddSmoke(posx+CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz+CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
-	AddSmoke(posx+CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz-CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
-	AddSmoke(posx-CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz-CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
-	AddSmoke(posx-CloudSize/5.0f+(float)(rand()%100-50),posy+CloudSize/3.0f+(float)(rand()%100-50),posz+CloudSize/5.0f+(float)(rand()%100-50),1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx+CloudSize/5.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/3.0f+(float)(rand()%100-50),posz+CloudSize/5.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx+CloudSize/5.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/3.0f+(float)(rand()%100-50),posz-CloudSize/5.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx-CloudSize/5.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/3.0f+(float)(rand()%100-50),posz-CloudSize/5.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%16);
+	AddSmoke(posx-CloudSize/5.0f+(float)(rand()%100-50)*100.0f,posy+CloudSize/3.0f+(float)(rand()%100-50),posz+CloudSize/5.0f+(float)(rand()%100-50)*100.0f,1.0f,0.0f,150.0f,2,rand()%16);
 
 
 }

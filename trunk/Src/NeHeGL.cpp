@@ -541,8 +541,8 @@ bool inifile ()
 		WritePrivateProfileString("Light","LightDiffuseA","255",".\\set.ini");
 		WritePrivateProfileString("Light","Use_openGL_Light","0",".\\set.ini");
 		WritePrivateProfileString("Light","ShaderWater","1",".\\set.ini");
-		WritePrivateProfileString("Light","Use_Bloom","1",".\\set.ini");
-		WritePrivateProfileString("Light","BloomLevel","3",".\\set.ini");
+		WritePrivateProfileString("Light","Use_Bloom","0",".\\set.ini");
+		WritePrivateProfileString("Light","BloomLevel","0",".\\set.ini");
 		WritePrivateProfileString("Light","HighShadow","1",".\\set.ini");
 		//WritePrivateProfileString("Joke","GL_TEXTURE_GEN_S","0",".\\set.ini");
 		//WritePrivateProfileString("Joke","GL_TEXTURE_GEN_T","0",".\\set.ini");

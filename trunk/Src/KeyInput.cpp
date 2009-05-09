@@ -18,6 +18,7 @@ CKeyInput::CKeyInput(void)
 , m_IskeyViewDown(false)
 , m_IskeyViewLeft(false)
 , m_IskeyViewRight(false)
+, m_IskeyViewReset(false)
 , m_keyUp(0)
 {
 }
@@ -35,22 +36,23 @@ bool CKeyInput::initJoyStick(void)
 		if(SDL_NumJoysticks()>0)
 		{
 			joystick = SDL_JoystickOpen(GetPrivateProfileInt( "JoyStick" , "JoyNum"	 , 0 , ".\\set.ini" ));
-			m_keyUp			= GetPrivateProfileInt( "JoyStick" , "UP"	 , 0 , ".\\set.ini" );
-			m_keyDown		= GetPrivateProfileInt( "JoyStick" , "Down"	 , 0 , ".\\set.ini" );
-			m_keyLeft		= GetPrivateProfileInt( "JoyStick" , "Left"	 , 0 , ".\\set.ini" );
-			m_keyRight		= GetPrivateProfileInt( "JoyStick" , "Right" , 0 , ".\\set.ini" );
-			m_keyMissle		= GetPrivateProfileInt( "JoyStick" , "Missle", 0 , ".\\set.ini" );
-			m_keyGun		= GetPrivateProfileInt( "JoyStick" , "Gun"	 , 0 , ".\\set.ini" );
-			m_keyMap		= GetPrivateProfileInt( "JoyStick" , "Map"	 , 0 , ".\\set.ini" );
+			m_keyUp			= GetPrivateProfileInt( "JoyStick" , "UP"	 , 103 , ".\\set.ini" );
+			m_keyDown		= GetPrivateProfileInt( "JoyStick" , "Down"	 , 102 , ".\\set.ini" );
+			m_keyLeft		= GetPrivateProfileInt( "JoyStick" , "Left"	 , 101 , ".\\set.ini" );
+			m_keyRight		= GetPrivateProfileInt( "JoyStick" , "Right" , 100 , ".\\set.ini" );
+			m_keyMissle		= GetPrivateProfileInt( "JoyStick" , "Missle", 1 , ".\\set.ini" );
+			m_keyGun		= GetPrivateProfileInt( "JoyStick" , "Gun"	 , 2 , ".\\set.ini" );
+			m_keyMap		= GetPrivateProfileInt( "JoyStick" , "Map"	 , 3 , ".\\set.ini" );
 			m_keyLock		= GetPrivateProfileInt( "JoyStick" , "Lock"	 , 0 , ".\\set.ini" );
-			m_keySpeedUp	= GetPrivateProfileInt( "JoyStick" , "SpeedUp"	 , 0 , ".\\set.ini" );
-			m_keySpeedDown	= GetPrivateProfileInt( "JoyStick" , "SpeedDown"	 , 0 , ".\\set.ini" );
-			m_keyL			= GetPrivateProfileInt( "JoyStick" , "L"	 , 0 , ".\\set.ini" );
-			m_keyR			= GetPrivateProfileInt( "JoyStick" , "R"	 , 0 , ".\\set.ini" );
-			m_keyViewUp			= GetPrivateProfileInt( "JoyStick" , "ViewUP"	 , 0 , ".\\set.ini" );
-			m_keyViewDown		= GetPrivateProfileInt( "JoyStick" , "ViewDown"	 , 0 , ".\\set.ini" );
-			m_keyViewLeft		= GetPrivateProfileInt( "JoyStick" , "ViewLeft"	 , 0 , ".\\set.ini" );
-			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 0 , ".\\set.ini" );
+			m_keySpeedUp	= GetPrivateProfileInt( "JoyStick" , "SpeedUp"	 , 7 , ".\\set.ini" );
+			m_keySpeedDown	= GetPrivateProfileInt( "JoyStick" , "SpeedDown"	 , 6 , ".\\set.ini" );
+			m_keyL			= GetPrivateProfileInt( "JoyStick" , "L"	 , 4 , ".\\set.ini" );
+			m_keyR			= GetPrivateProfileInt( "JoyStick" , "R"	 , 5 , ".\\set.ini" );
+			m_keyViewUp			= GetPrivateProfileInt( "JoyStick" , "ViewUP"	 , 107 , ".\\set.ini" );
+			m_keyViewDown		= GetPrivateProfileInt( "JoyStick" , "ViewDown"	 , 106 , ".\\set.ini" );
+			m_keyViewLeft		= GetPrivateProfileInt( "JoyStick" , "ViewLeft"	 , 105 , ".\\set.ini" );
+			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 104 , ".\\set.ini" );
+			m_keyViewReset		= GetPrivateProfileInt( "JoyStick" , "ViewReset" , 0 , ".\\set.ini" );
 			m_IsUseJoyStick	= true;
 		}
 		return true;
@@ -80,6 +82,7 @@ int CKeyInput::UpData(void)
 		 m_IskeyViewDown=false;
 		 m_IskeyViewLeft=false;
 		 m_IskeyViewRight=false;
+		 m_IskeyViewReset=false;
 		SDL_JoystickUpdate();
 		if(m_keyUp>999)
 		{
@@ -423,7 +426,26 @@ int CKeyInput::UpData(void)
 		if(m_ViewRight>0.1f)
 			m_IskeyViewRight=true;
 		
-
+		if(m_keyViewReset>999)
+		{
+			m_ViewReset=SDL_JoystickGetHat(joystick,m_keyViewReset-1000);
+		}
+		else
+		{
+			if(m_keyViewReset>99)
+			{
+				if((m_keyViewReset-100)%2==0)
+					m_ViewReset=(float)SDL_JoystickGetAxis(joystick,(m_keyViewReset-100)/2)/32500.0f;
+				else
+					m_ViewReset=-(float)SDL_JoystickGetAxis(joystick,(m_keyViewReset-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_ViewReset=SDL_JoystickGetButton(joystick,m_keyViewReset);
+			}
+		}
+		if(m_ViewReset>0.1f)
+			m_IskeyViewReset=true;
 	}
 
 	return 0;
@@ -450,8 +472,9 @@ void CKeyInput::initKeyboard(void)
 			m_keyboardSpeedDown	= GetPrivateProfileInt( "keyboard" , "SpeedDown"	 , 10040 , ".\\set.ini" )-10000;
 			m_keyboardL			= GetPrivateProfileInt( "keyboard" , "L"	 , 10037 , ".\\set.ini" )-10000;
 			m_keyboardR			= GetPrivateProfileInt( "keyboard" , "R"	 , 10039 , ".\\set.ini" )-10000;
-			m_keyboardViewUp		= GetPrivateProfileInt( "keyboard" , "ViewUP"	 , 10087 , ".\\set.ini" )-10000;
-			m_keyboardViewDown		= GetPrivateProfileInt( "keyboard" , "ViewDown"	 , 10083 , ".\\set.ini" )-10000;
-			m_keyboardViewLeft		= GetPrivateProfileInt( "keyboard" , "ViewLeft"	 , 10065 , ".\\set.ini" )-10000;
-			m_keyboardViewRight		= GetPrivateProfileInt( "keyboard" , "ViewRight" , 10068 , ".\\set.ini" )-10000;
+			m_keyboardViewUp		= GetPrivateProfileInt( "keyboard" , "ViewUP"	 , 10104 , ".\\set.ini" )-10000;
+			m_keyboardViewDown		= GetPrivateProfileInt( "keyboard" , "ViewDown"	 , 10100 , ".\\set.ini" )-10000;
+			m_keyboardViewLeft		= GetPrivateProfileInt( "keyboard" , "ViewLeft"	 , 10102 , ".\\set.ini" )-10000;
+			m_keyboardViewRight		= GetPrivateProfileInt( "keyboard" , "ViewRight" , 10098 , ".\\set.ini" )-10000;
+			m_keyboardViewReset		= GetPrivateProfileInt( "keyboard" , "ViewReset" , 10103 , ".\\set.ini" )-10000;
 }

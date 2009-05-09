@@ -26,6 +26,7 @@ public:
 	int m_keyViewDown;
 	int m_keyViewLeft;
 	int m_keyViewRight;
+	int m_keyViewReset;
 
 	//int m_keyboardtmp;
 	int m_keyboardUp;
@@ -44,6 +45,7 @@ public:
 	int m_keyboardViewDown;
 	int m_keyboardViewLeft;
 	int m_keyboardViewRight;
+	int m_keyboardViewReset;
 
 
 	bool m_IskeyUp;
@@ -62,6 +64,7 @@ public:
 	bool m_IskeyViewDown;
 	bool m_IskeyViewLeft;
 	bool m_IskeyViewRight;
+	bool m_IskeyViewReset;
 
 	float m_Up;
 	float m_Down;
@@ -79,6 +82,7 @@ public:
 	float m_ViewDown;
 	float m_ViewLeft;
 	float m_ViewRight;
+	float m_ViewReset;
 
 	int UpData(void);
 	int de(void);
