@@ -1051,6 +1051,38 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(!g_keys->keyDown ['R'])
 		KeyR=false;
 */
+
+
+	
+    if (turnX != 0 || turnY != 0 || turnZ != 0){
+		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
+    }
+//Acceleration
+	if(moveSpeed>(MAXSpeed/3.0f))
+		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
+
+	if(hited>0)
+	{
+		hited=hited-1;	
+	}
+	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
+
+	
+
+	//	MissleSign.UDMplane=MFighter;
+	//	MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
+	//ViewPoint.UDPstate.MaxSpeed=0.0;
+	//ViewPoint.UDPstate.MaxAngleSpeed=50.0;
+	//ViewPoint.UDPstate.VelocityResistance=0.0;
+	//ViewPoint.UDPstate.AngleVelocityResistance=0.1;
+	//	MissleSign.TurnTo(MisslePosition);
+	//	MissleSign.UDPstate.NextState();
+
+
+	
 }
 
 
@@ -2682,10 +2714,10 @@ void DrawGround(void)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,5.0f, 25.0f+(j+mapz)*50.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,5.0f,-25.0f+(j+mapz)*50.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,5.0f,-25.0f+(j+mapz)*50.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,5.0f, 25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,0.0f,-25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f,-25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
 					glEnd();
 				}
 		
@@ -2710,10 +2742,10 @@ void DrawGround(void)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glTexCoord2f(0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(10.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(10.0f,10.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,15.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f,10.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
 				}
 			glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -2724,9 +2756,7 @@ void DrawGround(void)
 void stage0(void)
 {
 
-	seatime=seatime+0.001f;
-	if(seatime>1.0f)
-		seatime=seatime-1.0f;
+
 	Vector3d pos;
     pos = MFighter.RefPos();
     Vector3d dir;
@@ -2747,33 +2777,6 @@ void stage0(void)
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
 
-
-    if (turnX != 0 || turnY != 0 || turnZ != 0){
-		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
-    }
-//Acceleration
-	if(moveSpeed>(MAXSpeed/3.0f))
-		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
-
-	if(hited>0)
-	{
-		hited=hited-1;	
-	}
-	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
-
-	
-
-	//	MissleSign.UDMplane=MFighter;
-	//	MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
-	//ViewPoint.UDPstate.MaxSpeed=0.0;
-	//ViewPoint.UDPstate.MaxAngleSpeed=50.0;
-	//ViewPoint.UDPstate.VelocityResistance=0.0;
-	//ViewPoint.UDPstate.AngleVelocityResistance=0.1;
-	//	MissleSign.TurnTo(MisslePosition);
-	//	MissleSign.UDPstate.NextState();
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
@@ -2816,7 +2819,7 @@ void stage0(void)
     eyePosition[1] = (float)EyePos3d(1);
     eyePosition[2] = (float)EyePos3d(2);
 
-	Vector3d SunPos3d;
+	
 	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 
 	if((MissleFireLightNum>=0)&&(MissleFireLightNum<MAXMISSLE))
@@ -2850,6 +2853,7 @@ void stage0(void)
 		}
 	
 	}
+
 	//if(ShaderBloom)
 	//	DrawHighLight();
 	if(!IsSkip)
@@ -2869,9 +2873,10 @@ void stage0(void)
 		DrawShadowMap();
 	
 	}
-	MoveSound(MView,tmpLookRenge);
+	
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
+		if(!IsSkip)
 		DrawSky((float)longitude);
 
 		if(!IsSkip)
@@ -2901,6 +2906,7 @@ void stage0(void)
 		PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
 		locksmove();
+		if(!IsSkip)
 		Drawlocksign();
 	glPopMatrix();
 	glEnable(GL_BLEND);
@@ -2933,6 +2939,13 @@ void stage0(void)
 			DrawRedar((float)longitude);
 		DrawUI1(rotation);
 	}
+
+
+
+}
+void AfterDraw (void)
+{
+	MoveSound(MView,tmpLookRenge);
 	UnitMove();
 	if(PlayerLocked)
 	{
@@ -2965,8 +2978,6 @@ void stage0(void)
 		if(timer[i]>0)
 			timer[i]=timer[i]-1;
 	}
-
-
 }
 void Draw (void)
 {
@@ -2992,8 +3003,10 @@ void Draw (void)
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
 	if(loadover)
+	{
 		stage0();
-
+		AfterDraw();
+	}
 
 	if(!loadover)
 	showloading();

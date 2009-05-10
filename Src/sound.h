@@ -227,6 +227,8 @@ bool AddSound(int Num,const Vector3d& pos)
 }
 void MoveSound(Transform& would,float LookRenge)
 {
+	if(!isinitsound)
+		return;
 	for(int i=0;i<MAX_soundSource;i++)
 	{
 		if(soundSource[i]->State==AL_PLAYING)
