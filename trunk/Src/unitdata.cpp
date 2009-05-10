@@ -1,7 +1,7 @@
 #include "Unitdata.h"
 
 Unitdata::Unitdata(void)
-: UDPstate(UDMplane, 5, CRad(2.0), 0.1, 0.4)
+: UDPstate(UDMplane, 5, CRad(2.0), CRad(1), CRad(0.1), 0.1, 0.4)
 ,UDlife(-1)
 ,UDlockselect(false)
 ,UDlockde(false)
@@ -161,27 +161,41 @@ void Unitdata::TurnTo(const Vector3d& Position){
 	
 
     UDPstate.Acceleration = UDMplane.Matrix() * Vector3d(0, 0, 1) * 1.0;
-    UDPstate.AngleAcceleration = 0, 0, 0;
     
     Vector3d current;
     current = UDMplane.Matrix() * Vector3d(0, 0, 1);
-    if (all_elements(current == 0)){ return; }
+    if (all_elements(current == 0)){
+        UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+        return;
+    }
     current = normalize(current);
 
     Vector3d top;
     top = UDMplane.Matrix() * Vector3d(0, 1, 0);
-    if (all_elements(top == 0)){ return; }
+    if (all_elements(top == 0)){
+        UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+        return;
+    }
+
     top = normalize(top);
 
     Vector3d target;
     target = Position - UDMplane.RefPos();
-    if (all_elements(target == 0)){ return; }
+    if (all_elements(target == 0)){
+        UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+        return;
+    }
+
     target = normalize(target);
 
     //首先求top在current、target平面上在垂直current方向上的投影方向newTopDirection
     Vector3d newTopDirection;
     newTopDirection = cross(cross(current, target), current);
-    if (all_elements(newTopDirection == 0)){ return; }
+    if (all_elements(newTopDirection == 0)){
+        UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+        return;
+    }
+
     newTopDirection = normalize(newTopDirection);
 
     //求出newTop和top的夹角
@@ -195,14 +209,17 @@ void Unitdata::TurnTo(const Vector3d& Position){
         //侧向翻滚
         Vector3d rotateAxis;
         rotateAxis = cross(top, newTopDirection);
-        if (all_elements(rotateAxis == 0)){ return; }
+        if (all_elements(rotateAxis == 0)){
+            UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+            return;
+        }
         rotateAxis = normalize(rotateAxis);
         double rotateAngle = theta;
 
 		if(isRSpeed)
 			rotateAngle=0.0;
 		mSpeed=mSpeed-0.01f*float(rotateAngle*rotateAngle);
-        UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
+        UDPstate.set_AngleAcceleration(Vector3d(rotateAxis * rotateAngle - UDPstate.AngleVelocity));
     }
     else{
         //上下
@@ -210,7 +227,11 @@ void Unitdata::TurnTo(const Vector3d& Position){
         //改变target的方向，使其投影到top、current平面上
         Vector3d noTargetDirection;
         noTargetDirection = cross(current, top);
-        if (all_elements(noTargetDirection == 0)){ return; }
+        if (all_elements(noTargetDirection == 0)){
+            UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+            return;
+        }
+
         noTargetDirection = normalize(noTargetDirection);
         target -= dot(target, noTargetDirection) * noTargetDirection;
 
@@ -219,7 +240,11 @@ void Unitdata::TurnTo(const Vector3d& Position){
 
         Vector3d rotateAxis;
         rotateAxis = cross(current, target);
-        if (all_elements(rotateAxis == 0)){ return; }
+        if (all_elements(rotateAxis == 0)){
+            UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
+            return;
+        }
+
         rotateAxis = normalize(rotateAxis);
 
         double rotateAngle = acos_s(dot(current, target));
@@ -228,7 +253,7 @@ void Unitdata::TurnTo(const Vector3d& Position){
 			rotateAngle=0.0;
 
 		mSpeed=mSpeed-0.002f*float(rotateAngle*rotateAngle);
-		UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
+		UDPstate.set_AngleAcceleration(Vector3d(rotateAxis * rotateAngle - UDPstate.AngleVelocity));
     }
 }
 double Unitdata::WaringTo(const Vector3d& Position)
