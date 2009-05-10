@@ -119,5 +119,5 @@ Transform MViewPoint;
 Transform Msky;//ÃÏø’Œª÷√
 Transform MFireShellPos;
 int MissleFireLightNum=-1;
-
+Vector3d SunPos3d;
 
