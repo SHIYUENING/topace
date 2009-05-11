@@ -1,6 +1,6 @@
 #include "missle.h"
 Missledata::Missledata(void)
-: UDPstate(UDMplane, 6, CRad(2.5), CRad(10), CRad(1), 0.1, 0.4)
+: UDPstate(UDMplane, 6, CRad(2.5), 0.1, 0.4)
 ,onwer(-1)
 ,UDlife(-1)
 ,UDposflag(0)
@@ -33,16 +33,13 @@ void Missledata::TurnTo(const Vector3d& Position){
 
     Vector3d rotateAxis;
     rotateAxis = cross(current, target);
-    if (all_elements(rotateAxis == 0)){
-        UDPstate.set_AngleAcceleration(Vector3d(0, 0, 0));
-        return;
+    if (!all_elements(rotateAxis == 0)){
+        rotateAxis = normalize(rotateAxis);
     }
-
-    rotateAxis = normalize(rotateAxis);
 
     double rotateAngle = acos_s(dot(current, target));
 
-    UDPstate.set_AngleAcceleration(Vector3d(rotateAxis * rotateAngle - UDPstate.AngleVelocity));
+    UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
 	//UDPstate.Acceleration = UDMplane.Matrix() * Vector3d(0, 0, 1) * 35;
 	
 }
