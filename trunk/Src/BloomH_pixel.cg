@@ -9,7 +9,7 @@ pixel main(
 		   )
 {
 
-	float d = 1.0/imgH;
+	float d = 2.0/imgH;
 
 	float2 Tpos;
 	Tpos.y=-1.0*d;
@@ -35,9 +35,8 @@ pixel main(
 
 	color.w=1.0;
 	pixel OUT;
-	colorin=tex2D(texSrc,oPosition ).xyz;
-	float tmp=colorin.x*colorin.y*colorin.z;
-	if(tmp<2.7) color=color*0;
+
+
 	OUT.colorout=color;
 
 	return OUT;
