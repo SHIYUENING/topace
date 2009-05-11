@@ -27,7 +27,7 @@ void DrawBloomTex(int winW,int winH)
 		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 		glPushMatrix();										// Store The Modelview Matrix
 		glLoadIdentity();	
-		//DrawBloomW(winW);
+		DrawBloomW(winW);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(-bloomTexSize/2,-bloomTexSize/2);
 				glTexCoord2f(1.0f,0.0f);glVertex2i( bloomTexSize/2,-bloomTexSize/2);

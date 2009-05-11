@@ -9,7 +9,7 @@ pixel main(
 		   )
 {
 
-	float d = 1.0/imgW;
+	float d = 2.0/imgW;
 	float2 Tpos;
 	Tpos.x=-1.0*d;
 	Tpos.y=0.0;
@@ -31,7 +31,7 @@ pixel main(
 
 	color.w=1.0;
 	pixel OUT;
-	OUT.colorout=color*color*color*color*color*color;
+	OUT.colorout=color;
 
 	return OUT;
 }

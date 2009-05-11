@@ -42,7 +42,7 @@ void DrawRedarToTexture()
 void DrawMAP()
 {
 	glEnable(GL_BLEND);
-	glColor4f(1.0f,1.0f,1.0f,0.3f);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
