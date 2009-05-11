@@ -1625,9 +1625,7 @@ void DrawMisslesign(const Vector3d& MisslePosition)
 		MissleSign.UDMplane=MFighter;
 		MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
 		MissleSign.UDPstate.MaxSpeed=0.0;
-		MissleSign.UDPstate.MaxAngleSpeed=10.0;
-		MissleSign.UDPstate.MaxAngleAcceleration=10.0;
-		MissleSign.UDPstate.MaxAngleAccelerationAcceleration=1.0;
+		MissleSign.UDPstate.MaxAngleSpeed=50.0;
 		MissleSign.UDPstate.VelocityResistance=0.0;
 		MissleSign.UDPstate.AngleVelocityResistance=0.1;
 		MissleSign.TurnTo(MisslePosition);
@@ -1684,14 +1682,10 @@ void Drawlocksign(void)
 			//::MessageBox(HWND_DESKTOP,"123","123",MB_OK | MB_ICONEXCLAMATION);
 			//testNum=lockUnits[i].locksTGT;
 			glPushMatrix();
-
-
 			LockSign[i].UDMplane=MFighter;
 			LockSign[i].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
 			LockSign[i].UDPstate.MaxSpeed=0.0;
-			LockSign[i].UDPstate.MaxAngleSpeed=10.0;
-			LockSign[i].UDPstate.MaxAngleAcceleration=10.0;
-			LockSign[i].UDPstate.MaxAngleAccelerationAcceleration=1.0;
+			LockSign[i].UDPstate.MaxAngleSpeed=50.0;
 			LockSign[i].UDPstate.VelocityResistance=0.0;
 			LockSign[i].UDPstate.AngleVelocityResistance=0.1;
 			LockSign[i].TurnTo(UDfighers[lockUnits[i].locksTGT].UDMplane.RefPos());
@@ -1845,7 +1839,7 @@ void UnitAI(int i)
 				UDfighers[i].AttackTo(UDfighers[UDfighers[i].attackTGTNum].UDMplane.RefPos());
 						
 
-				if(UDfighers[i].inGunRange&&(lockflash%5==0))
+				if(UDfighers[i].inGunRange&&(lockflash%10==0))
 				{
 					Transform tmp2=UDfighers[i].UDMplane;
 					tmp2.TranslateInternal(Vector3d(5.0f, -10.0f, -30.0f));
@@ -2506,9 +2500,7 @@ void DrawShadowMap(void)
 							
 							LightSun.UDMplane=UDfighers[0].UDMplane;
 							LightSun.UDPstate.MaxSpeed=0.0;
-							LightSun.UDPstate.MaxAngleSpeed=10.0;
-							LightSun.UDPstate.MaxAngleAcceleration=10.0;
-							LightSun.UDPstate.MaxAngleAccelerationAcceleration=1.0;
+							LightSun.UDPstate.MaxAngleSpeed=50.0;
 							LightSun.UDPstate.VelocityResistance=0.0;
 							LightSun.UDPstate.AngleVelocityResistance=0.1;
 							LightSun.TurnTo(Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));

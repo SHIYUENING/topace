@@ -12,6 +12,7 @@ struct fragment
     float4 objectPos	:	TEXCOORD2;
     float2 texcoord3	:	TEXCOORD3;
 	float4 objectPos2	:	TEXCOORD4;
+	float3 Light2color	:	TEXCOORD5;
 };
 
 struct pixel
