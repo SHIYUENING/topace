@@ -20,6 +20,7 @@
 #include "texture.h"
 #include "EffectImpact.h"
 #include "SkyBox.h"
+#include "Bloom.h"
 
 //#include "Cloud.h"
 
@@ -350,6 +351,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	lockY=winheight/2;
 
 
+	InitBloom(winwidth,winheight);
 	//AmbientReflectiveTexture=EmptyTexture(512);
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
@@ -2914,6 +2916,7 @@ void stage0(void)
 		EffectImpact.EffectImpactDraw(DrawEffectImpact);
 	DrawEffectImpact=false;
 	glEnable(GL_BLEND);
+	DrawBloom(winwidth,winheight);
 	//Maptexture=EffectImpact.TextureID;
 	if(!IsSkip)
 	{
@@ -2940,6 +2943,7 @@ void stage0(void)
 		DrawUI1(rotation);
 	}
 
+	Maptexture=bloomTexId1;
 
 
 }
@@ -3004,6 +3008,7 @@ void Draw (void)
 
 	if(loadover)
 	{
+		DrawBloomTex(winwidth,winheight);
 		stage0();
 		AfterDraw();
 	}

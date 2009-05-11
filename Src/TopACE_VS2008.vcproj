@@ -197,6 +197,14 @@
 			Name="CG"
 			>
 			<File
+				RelativePath=".\BloomH_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\BloomW_pixel.cg"
+				>
+			</File>
+			<File
 				RelativePath=".\g_BloomL1_pixel.cg"
 				>
 			</File>
@@ -273,6 +281,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Bloom.h"
+			>
+		</File>
 		<File
 			RelativePath=".\BomsSet.cpp"
 			>

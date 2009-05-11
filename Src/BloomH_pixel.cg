@@ -1,0 +1,44 @@
+struct pixel
+{
+    float4 colorout : COLOR;
+};
+pixel main(
+			float2 oPosition : TEXCOORD0,
+			uniform float	imgH,
+			uniform sampler2D texSrc 
+		   )
+{
+
+	float d = 1.0/imgH;
+
+	float2 Tpos;
+	Tpos.y=-1.0*d;
+	Tpos.x=0.0;
+	float4 color;
+	float3 colorin;
+	
+
+	
+    color += tex2D(texSrc,oPosition+Tpos*5) * 0.1;
+    color += tex2D(texSrc,oPosition+Tpos*4) * 0.22;
+    color += tex2D(texSrc,oPosition+Tpos*3) * 0.358;
+    color += tex2D(texSrc,oPosition+Tpos*2) * 0.523;
+    color += tex2D(texSrc,oPosition+Tpos) * 0.843;
+    color += tex2D(texSrc,oPosition ) * 1.0;
+	Tpos.y=1.0*d;
+    color += tex2D(texSrc,oPosition+Tpos) * 0.843;
+    color += tex2D(texSrc,oPosition+Tpos*2) * 0.523;
+    color += tex2D(texSrc,oPosition+Tpos*3) * 0.358;
+    color += tex2D(texSrc,oPosition+Tpos*4) * 0.22;
+    color += tex2D(texSrc,oPosition+Tpos*5) * 0.1;
+    color /= 5.0; 
+
+	color.w=1.0;
+	pixel OUT;
+	colorin=tex2D(texSrc,oPosition ).xyz;
+	float tmp=colorin.x*colorin.y*colorin.z;
+	if(tmp<2.7) color=color*0;
+	OUT.colorout=color;
+
+	return OUT;
+}
