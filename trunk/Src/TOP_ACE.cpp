@@ -2943,7 +2943,7 @@ void stage0(void)
 		DrawUI1(rotation);
 	}
 
-	Maptexture=bloomTexId1;
+	//Maptexture=bloomTexId1;
 
 
 }
