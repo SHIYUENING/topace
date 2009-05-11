@@ -2502,15 +2502,18 @@ void DrawShadowMap(void)
 							
                             Transform TLightSun;
                             TLightSun = UDfighers[0].UDMplane;
-                            TLightSun.TurnTo(Vector3d(0, 0, 1), Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
+                            //TLightSun.TurnTo(Vector3d(0, 0, 1), Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
+
                             TLightSun.TranslateInternal(Vector3d(0.0f, 0.0f, -187.5f));
-                            TLightSun.TurnTo(Vector3d(0, 0, 1), UDfighers[0].UDMplane.RefPos());
+                            TLightSun.TurnTo(Vector3d(0, 0, 1), Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
+                            //TLightSun.TurnTo(Vector3d(0, 0, 1), UDfighers[0].UDMplane.RefPos());
 
 							Transform LMView;
-							LMView = TLightSun * (MWorld * UDfighers[0].UDMplane).Invert();
+							LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 							glLoadIdentity();
 							glLoadMatrixd(LMView.Matrix4());
-
+							glMultMatrixd(TLightSun.Matrix4());
+                        
 							glRotated(180.0,0.0,0.0,1.0);
 		
 							//glTranslatef(0.0f,-10.0f*testNum,-100.0f);

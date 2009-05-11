@@ -100,7 +100,7 @@ struct Bom
 int Bom_index=0;
 
 Unitdata UDfighers[maxUnits];
-Missledata LightSun;
+//Missledata LightSun;
 float LightSunPos[3];
 float LightSunPosR[3];
 GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
