@@ -124,7 +124,28 @@ void Transform::RotateInternal(const Vector3d& internalTheta){
     RefreshM4();
 }
 
+///<summary>将内部坐标系的一个方向，转向外部坐标系的一个点，且按最小弧来进行转动</summary>
+void Transform::TurnTo(const Vector3d& internalSourceDirection, const Vector3d& externalTargetPosition){
+    Vector3d current;
+    current = internalSourceDirection;
+    if (all_elements(current == 0)){ return; }
+    current = normalize(current);
 
+    Vector3d target;
+    target = externalTargetPosition - p;
+    if (all_elements(target == 0)){ return; }
+    target = normalize(target);
+
+    double k = dot(current, target);
+
+    Vector3d rotateAxis;
+    rotateAxis = cross(current, target);
+    if (all_elements(rotateAxis == 0)){ return; }
+    rotateAxis = normalize(rotateAxis);
+
+    double rotateAngle = acos_s(dot(current, target));
+    Rotate(rotateAxis * rotateAngle);
+}
 
 ///<summary>按外部向量平移</summary>
 void Transform::Translate(const Vector3d& externalReplacement){

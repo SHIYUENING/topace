@@ -2500,21 +2500,17 @@ void DrawShadowMap(void)
 							//glRotatef(-135.0f,0.0f,1.0f,0.0f);
 							//glTranslatef(-100.0f,-10,100.0f);
 							
-							LightSun.UDMplane=UDfighers[0].UDMplane;
-							LightSun.UDPstate.MaxSpeed=0.0;
-							LightSun.UDPstate.MaxAngleSpeed=50.0;
-							LightSun.UDPstate.VelocityResistance=0.0;
-							LightSun.UDPstate.AngleVelocityResistance=0.1;
-							LightSun.TurnTo(Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
-							LightSun.UDPstate.NextState();
-							LightSun.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -187.5f));
-							LightSun.TurnTo(UDfighers[0].UDMplane.RefPos());
-							LightSun.UDPstate.NextState();
+                            Transform TLightSun;
+                            TLightSun = UDfighers[0].UDMplane;
+                            TLightSun.TurnTo(Vector3d(0, 0, 1), Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]));
+                            TLightSun.TranslateInternal(Vector3d(0.0f, 0.0f, -187.5f));
+                            TLightSun.TurnTo(Vector3d(0, 0, 1), UDfighers[0].UDMplane.RefPos());
+
 							Transform LMView;
-							LMView = (MWorld * UDfighers[0].UDMplane).Invert();
+							LMView = TLightSun * (MWorld * UDfighers[0].UDMplane).Invert();
 							glLoadIdentity();
 							glLoadMatrixd(LMView.Matrix4());
-							glMultMatrixd(LightSun.UDMplane.Matrix4());
+
 							glRotated(180.0,0.0,0.0,1.0);
 		
 							//glTranslatef(0.0f,-10.0f*testNum,-100.0f);

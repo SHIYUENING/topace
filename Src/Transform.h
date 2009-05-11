@@ -79,6 +79,15 @@ public:
         RotateInternal(Vector3d(internalTheta));
     }
 
+    ///<summary>将内部坐标系的一个方向，转向外部坐标系的一个点，且按最小弧来进行转动</summary>
+    void TurnTo(const Vector3d& internalSourceDirection, const Vector3d& externalTargetPosition);
+
+    ///<summary>将内部坐标系的一个方向，转向外部坐标系的一个点，且按最小弧来进行转动</summary>
+    template<class E>
+    void TurnTo(const XprVector<E, 3>& internalSourceDirection, const XprVector<E, 3>& externalTargetPosition){
+        TurnTo(Vector3d(internalSourceDirection), Vector3d(externalTargetPosition));
+    }
+
     ///<summary>按外部向量平移</summary>
     void Translate(const Vector3d& externalReplacement);
 
