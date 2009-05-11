@@ -127,7 +127,7 @@ void Transform::RotateInternal(const Vector3d& internalTheta){
 ///<summary>将内部坐标系的一个方向，转向外部坐标系的一个点，且按最小弧来进行转动</summary>
 void Transform::TurnTo(const Vector3d& internalSourceDirection, const Vector3d& externalTargetPosition){
     Vector3d current;
-    current = internalSourceDirection;
+    current = m * internalSourceDirection;
     if (all_elements(current == 0)){ return; }
     current = normalize(current);
 
