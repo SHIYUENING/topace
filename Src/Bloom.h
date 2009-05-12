@@ -1,7 +1,7 @@
 #pragma once
 #include "shaders.h"
 GLuint bloomTexId1,bloomTexId2;
-int bloomTexSize;
+int bloomTexSize,DrawbloomTexSize;
 
 void InitBloom(int winW,int winH)
 {
@@ -10,7 +10,8 @@ void InitBloom(int winW,int winH)
 	bloomTexSize=2048;
 	if((winW>2048)||(winH>2048))
 	bloomTexSize=4096;
-	bloomTexId1=EmptyTexture(bloomTexSize);
+	DrawbloomTexSize=bloomTexSize/4;
+	bloomTexId1=EmptyTexture(DrawbloomTexSize);
 	bloomTexId2=EmptyTexture(bloomTexSize);
 
 }
@@ -31,39 +32,40 @@ void DrawBloomTex(int winW,int winH)
 
 			DrawBloomMap(winW,winH);
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(-bloomTexSize/2,-bloomTexSize/2);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( bloomTexSize/2,-bloomTexSize/2);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( bloomTexSize/2, bloomTexSize/2);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(-bloomTexSize/2, bloomTexSize/2);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(-DrawbloomTexSize/2,-DrawbloomTexSize/2);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( DrawbloomTexSize/2,-DrawbloomTexSize/2);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( DrawbloomTexSize/2, DrawbloomTexSize/2);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(-DrawbloomTexSize/2, DrawbloomTexSize/2);
 			glEnd();
 			cgGLDisableProfile( g_CGprofile_pixel );
 			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
-			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winW)/2, -(bloomTexSize-winH)/2, bloomTexSize, bloomTexSize, 0);
+			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(DrawbloomTexSize-winW)/2, -(DrawbloomTexSize-winH)/2, DrawbloomTexSize, DrawbloomTexSize, 0);
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			DrawBloomW(winW);
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(-bloomTexSize/2,-bloomTexSize/2);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( bloomTexSize/2,-bloomTexSize/2);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( bloomTexSize/2, bloomTexSize/2);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(-bloomTexSize/2, bloomTexSize/2);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(-DrawbloomTexSize/2,-DrawbloomTexSize/2);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( DrawbloomTexSize/2,-DrawbloomTexSize/2);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( DrawbloomTexSize/2, DrawbloomTexSize/2);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(-DrawbloomTexSize/2, DrawbloomTexSize/2);
 			glEnd();
 			cgGLDisableProfile( g_CGprofile_pixel );
 			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
-			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winW)/2, -(bloomTexSize-winH)/2, bloomTexSize, bloomTexSize, 0);
+			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(DrawbloomTexSize-winW)/2, -(DrawbloomTexSize-winH)/2, DrawbloomTexSize, DrawbloomTexSize, 0);
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			DrawBloomH(winH);
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(-bloomTexSize/2,-bloomTexSize/2);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( bloomTexSize/2,-bloomTexSize/2);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( bloomTexSize/2, bloomTexSize/2);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(-bloomTexSize/2, bloomTexSize/2);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(-DrawbloomTexSize/2,-DrawbloomTexSize/2);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( DrawbloomTexSize/2,-DrawbloomTexSize/2);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( DrawbloomTexSize/2, DrawbloomTexSize/2);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(-DrawbloomTexSize/2, DrawbloomTexSize/2);
 			glEnd();
 			cgGLDisableProfile( g_CGprofile_pixel );
 			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
-			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winW)/2, -(bloomTexSize-winH)/2, bloomTexSize, bloomTexSize, 0);
+			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(DrawbloomTexSize-winW)/2, -(DrawbloomTexSize-winH)/2, DrawbloomTexSize, DrawbloomTexSize, 0);
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 		glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		glPopMatrix();										// Restore The Old Projection Matrix
 		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
