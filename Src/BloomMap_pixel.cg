@@ -25,12 +25,12 @@ pixel main(
 
 	color += tex2D(texColor,oPosition+float2(0.0,dy*3.0));
 	color += tex2D(texColor,oPosition+float2(dx*3.0,dy*3.0));
-	//color = color*0.125;
+	color = color*0.125;
 	//color.w=1.0;
 	//计算该像素在Tone Mapping之后的亮度值，如果依然很大，则该像素将产生光晕
 	float4 cout = float4(0.0,0.0,0.0,0.0);
-	float lum = color.x * 0.0375 + color.y *0.07375 + color.z * 0.01375;
-	float4 p = color*(lum/1.5);
+	float lum = color.x * 0.3 + color.y *0.59 + color.z * 0.11;
+	float4 p = color*(lum/AveLum);
 	//float4 p2=float4(1.0,1.0,1.0,0.0)+p;
 	//p2=p2+p;
 	p.x = p.x/(p.x+1);
