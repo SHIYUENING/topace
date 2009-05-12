@@ -28,6 +28,7 @@ CGprogram	g_Sea_vertex;
 CGprogram	g_Sea_pixel;
 CGprogram	g_BloomW_pixel;
 CGprogram	g_BloomH_pixel;
+CGprogram	g_BloomMap_pixel;
 
 CGparameter   g_CGparam_ShadowMapTexture;
 CGparameter   g_CGparam_AmbientReflective;
@@ -238,6 +239,13 @@ void InitCG()
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
+
+	g_BloomMap_pixel = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"BloomMap_pixel.cg",
+												g_CGprofile_pixel,
+												NULL,
+												NULL );
 	
 	//
 	// Load the programs using Cg's expanded interface...
@@ -269,6 +277,7 @@ void InitCG()
 	cgGLLoadProgram(g_Sea_pixel);
 	cgGLLoadProgram(g_BloomW_pixel);
 	cgGLLoadProgram(g_BloomH_pixel);
+	cgGLLoadProgram(g_BloomMap_pixel);
 
 	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
 	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
@@ -478,6 +487,14 @@ void DrawSea()
 		cgGLBindProgram( g_Sea_pixel );
 		cgGLEnableProfile( g_CGprofile_pixel );
 		cgGLEnableTextureParameter( g_CGparam_AmbientReflectiveSea );
+}
+void DrawBloomMap(int WinW,int WinH)
+{
+	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "AveLum"), 0.5f);
+	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "imgW"), (float)WinW);
+	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "imgH"), (float)WinH);
+	cgGLBindProgram( g_BloomMap_pixel );
+	cgGLEnableProfile( g_CGprofile_pixel );
 }
 void DrawBloomW(int WinW)
 {

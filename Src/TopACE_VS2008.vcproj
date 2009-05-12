@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static_New.lib"
+				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static.lib"
 				OutputFile="$(OutDir)\TOP_ACE.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library"
@@ -198,6 +198,10 @@
 			>
 			<File
 				RelativePath=".\BloomH_pixel.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\BloomMap_pixel.cg"
 				>
 			</File>
 			<File
