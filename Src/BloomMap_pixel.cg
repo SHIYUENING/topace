@@ -1,0 +1,46 @@
+struct pixel
+{
+    float4 colorout : COLOR;
+};
+pixel main(
+			float2 oPosition : TEXCOORD0,
+			uniform float AveLum,
+			uniform float	imgW,
+			uniform float	imgH,
+			uniform sampler2D texColor
+		   )
+{
+
+	float dx = 1.0/imgW;
+	float dy = 1.0/imgH;
+	//对texColor进行采样
+	float4 color = tex2D(texColor,oPosition);
+	color += tex2D(texColor,oPosition+float2(dx*3.0,0.0));
+
+	color += tex2D(texColor,oPosition+float2(0.0,dy));
+	color += tex2D(texColor,oPosition+float2(dx*3.0,dy));
+
+	color += tex2D(texColor,oPosition+float2(0.0,dy*2.0));
+	color += tex2D(texColor,oPosition+float2(dx*3.0,dy*2.0));
+
+	color += tex2D(texColor,oPosition+float2(0.0,dy*3.0));
+	color += tex2D(texColor,oPosition+float2(dx*3.0,dy*3.0));
+	//color = color*0.125;
+	//color.w=1.0;
+	//计算该像素在Tone Mapping之后的亮度值，如果依然很大，则该像素将产生光晕
+	float4 cout = float4(0.0,0.0,0.0,0.0);
+	float lum = color.x * 0.0375 + color.y *0.07375 + color.z * 0.01375;
+	float4 p = color*(lum/1.5);
+	//float4 p2=float4(1.0,1.0,1.0,0.0)+p;
+	//p2=p2+p;
+	p.x = p.x/(p.x+1);
+	p.y = p.y/(p.y+1);
+	p.z = p.z/(p.z+1);
+	float luml = (p.x+p.y+p.z)/3.0;
+	if (luml > 0.8) cout = p;
+	
+	pixel OUT;
+	OUT.colorout=cout;
+
+	return OUT;
+}

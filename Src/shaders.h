@@ -490,7 +490,7 @@ void DrawSea()
 }
 void DrawBloomMap(int WinW,int WinH)
 {
-	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "AveLum"), 0.5f);
+	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "AveLum"), 4.0f);
 	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "imgW"), (float)WinW);
 	cgSetParameter1f(cgGetNamedParameter( g_BloomMap_pixel, "imgH"), (float)WinH);
 	cgGLBindProgram( g_BloomMap_pixel );
