@@ -9,7 +9,7 @@ pixel main(
 		   )
 {
 
-	float d = 2.0/imgW;
+	float d = 1.0/imgW;
 	float2 Tpos;
 	Tpos.x=-1.0*d;
 	Tpos.y=0.0;

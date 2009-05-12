@@ -27,7 +27,21 @@ void DrawBloomTex(int winW,int winH)
 		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 		glPushMatrix();										// Store The Modelview Matrix
 		glLoadIdentity();	
-		DrawBloomW(winW);
+
+
+			DrawBloomMap(winW,winH);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(-bloomTexSize/2,-bloomTexSize/2);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( bloomTexSize/2,-bloomTexSize/2);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( bloomTexSize/2, bloomTexSize/2);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(-bloomTexSize/2, bloomTexSize/2);
+			glEnd();
+			cgGLDisableProfile( g_CGprofile_pixel );
+			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
+			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winW)/2, -(bloomTexSize-winH)/2, bloomTexSize, bloomTexSize, 0);
+			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			DrawBloomW(winW);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(-bloomTexSize/2,-bloomTexSize/2);
 				glTexCoord2f(1.0f,0.0f);glVertex2i( bloomTexSize/2,-bloomTexSize/2);

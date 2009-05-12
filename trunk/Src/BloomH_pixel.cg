@@ -9,16 +9,12 @@ pixel main(
 		   )
 {
 
-	float d = 2.0/imgH;
-
+	float d = 1.0/imgH;
 	float2 Tpos;
 	Tpos.y=-1.0*d;
 	Tpos.x=0.0;
 	float4 color;
-	float3 colorin;
-	
 
-	
     color += tex2D(texSrc,oPosition+Tpos*5) * 0.1;
     color += tex2D(texSrc,oPosition+Tpos*4) * 0.22;
     color += tex2D(texSrc,oPosition+Tpos*3) * 0.358;
@@ -35,8 +31,6 @@ pixel main(
 
 	color.w=1.0;
 	pixel OUT;
-
-
 	OUT.colorout=color;
 
 	return OUT;
