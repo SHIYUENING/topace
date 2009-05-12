@@ -351,7 +351,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	lockY=winheight/2;
 
 
-	InitBloom(winwidth,winheight);
+	if(ShaderBloom)
+		InitBloom(winwidth,winheight);
 	//AmbientReflectiveTexture=EmptyTexture(512);
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
@@ -516,7 +517,7 @@ void DrawDataLine1 (void)
 	else
 		strcat( szTitle, ", Water:Low" );
 	char tmpDDL1[32]={0};
-	sprintf(tmpDDL1,"Bloom LV%d",BloomLevel);
+	sprintf(tmpDDL1,"Bloom");
 	if(ShaderBloom)
 		strcat( szTitle, tmpDDL1 );
 
@@ -2541,6 +2542,7 @@ void DrawShadowMap(void)
 			//	glPopMatrix();										
 
 		glEnable(GL_BLEND);
+		/*
 		if(ShaderBloom)
 		{
 			glDrawBuffer(GL_COLOR_ATTACHMENT1_EXT);
@@ -2575,6 +2577,7 @@ void DrawShadowMap(void)
 				
 			glPopMatrix();
 		}
+		*/
 		glPopAttrib();
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
@@ -2856,10 +2859,14 @@ void stage0(void)
 	
 	}
 
+		
 	//if(ShaderBloom)
 	//	DrawHighLight();
 	if(!IsSkip)
 	{
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if(ShaderBloom)
+			DrawBloomTex(winwidth,winheight);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		DrawUI1totexture(latitude);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -2892,11 +2899,11 @@ void stage0(void)
 
 		if(!IsSkip)
 			DrawPlayer();
-
+/*
 		if(!IsSkip)
 		if(ShaderBloom)
 			glPrintHighLight();
-
+*/
 		if(!IsSkip)
 			DrawUnit();
 		DrawBom();	
@@ -2915,8 +2922,10 @@ void stage0(void)
 	if((UseEffectImpact)&&(!IsSkip))
 		EffectImpact.EffectImpactDraw(DrawEffectImpact);
 	DrawEffectImpact=false;
-	glEnable(GL_BLEND);
-	DrawBloom(winwidth,winheight);
+
+	if(!IsSkip)
+	if(ShaderBloom)
+		DrawBloom(winwidth,winheight);
 	//Maptexture=EffectImpact.TextureID;
 	if(!IsSkip)
 	{
@@ -2943,7 +2952,7 @@ void stage0(void)
 		DrawUI1(rotation);
 	}
 
-	Maptexture=bloomTexId1;
+	//Maptexture=bloomTexId1;
 
 
 }
@@ -3008,7 +3017,7 @@ void Draw (void)
 
 	if(loadover)
 	{
-		DrawBloomTex(winwidth,winheight);
+		
 		stage0();
 		AfterDraw();
 	}
