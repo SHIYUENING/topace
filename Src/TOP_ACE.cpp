@@ -652,7 +652,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 {
 	char szshowSpeed[16]={0};
 	char szshowHigh[16]={0};
-	char szshowPitch[16]={0};
+	//char szshowPitch[16]={0};
 	char szshownews[512]={0};
 	char szshowflag1[4]={0};
 	char szshowflag2[4]={0};
@@ -669,7 +669,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	sprintf(szshowflag1,"|");
 	sprintf(szshowflag2,"|");
 	//sprintf(szshownews,"|");
-	sprintf(szshowPitch,"Pitch:%3.0f",latitude);
+	//sprintf(szshowPitch,"Pitch:%3.0f",latitude);
 	/*
 	for(int i=11;i>0;i--)
 	{
@@ -747,6 +747,8 @@ void DrawDataLine2 (double high,double news,double latitude)
 	//glPrint(402,384,szshowflag2,0);
 
 	glColor3f(0.0f,1.0f,0.0f);
+	if(PlayerLocked)
+		glColor3f(1.0f,0.0f,0.0f);
 	glPrint((GLint)(winwidth*0.65f),winheight/2-16,szshowSpeed,0,true);
 	glPrint((GLint)(winwidth*0.29f),winheight/2-16,szshowHigh,0,true);
 	glPrint((GLint)(winwidth*0.85f),winheight/5-16,PlayerHP,0,true);
@@ -2952,8 +2954,9 @@ void stage0(void)
 			DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
 			DrawUI1(rotation);
 		}
+		DrawHP(UDfighers[0].UDlife,UDfighers[0].UDMplane,MWorld);
 		DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
-		DrawHP(UDfighers[0].UDlife);
+		
 	
 /*
 	glClear (GL_DEPTH_BUFFER_BIT);
@@ -2971,7 +2974,7 @@ void stage0(void)
 		//DrawUI1(rotation);
 	}
 
-	Maptexture=bloomTexId1;
+	//Maptexture=bloomTexId1;
 
 
 }

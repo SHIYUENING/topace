@@ -17,9 +17,10 @@ void InitBloom(int winW,int winH)
 }
 void DrawBloomTex(int winW,int winH)
 {
-		glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR);
+		
 		glBindTexture(GL_TEXTURE_2D, bloomTexId2);
 
+		glDisable(GL_BLEND);	
 		glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
 		glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		glPushMatrix();										// Store The Projection Matrix
@@ -40,7 +41,7 @@ void DrawBloomTex(int winW,int winH)
 			cgGLDisableProfile( g_CGprofile_pixel );
 			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
 			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(DrawbloomTexSize-winW)/2, -(DrawbloomTexSize-winH)/2, DrawbloomTexSize, DrawbloomTexSize, 0);
-			glClear (GL_COLOR_BUFFER_BIT );
+			//glClear (GL_COLOR_BUFFER_BIT );
 
 			DrawBloomW(winW);
 			glBegin(GL_QUADS);
@@ -52,7 +53,7 @@ void DrawBloomTex(int winW,int winH)
 			cgGLDisableProfile( g_CGprofile_pixel );
 			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
 			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(DrawbloomTexSize-winW)/2, -(DrawbloomTexSize-winH)/2, DrawbloomTexSize, DrawbloomTexSize, 0);
-			glClear (GL_COLOR_BUFFER_BIT );
+			//glClear (GL_COLOR_BUFFER_BIT );
 
 			DrawBloomH(winH);
 			glBegin(GL_QUADS);
@@ -64,7 +65,7 @@ void DrawBloomTex(int winW,int winH)
 			cgGLDisableProfile( g_CGprofile_pixel );
 			glBindTexture(GL_TEXTURE_2D, bloomTexId1);
 			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(DrawbloomTexSize-winW)/2, -(DrawbloomTexSize-winH)/2, DrawbloomTexSize, DrawbloomTexSize, 0);
-			glClear (GL_COLOR_BUFFER_BIT );
+			//glClear (GL_COLOR_BUFFER_BIT );
 			
 		glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		glPopMatrix();										// Restore The Old Projection Matrix
@@ -72,6 +73,7 @@ void DrawBloomTex(int winW,int winH)
 		glPopMatrix();										// Restore The Old Projection Matrix
 		glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 
+		glEnable(GL_BLEND);
 	
 }
 void DrawBloom(int winW,int winH)

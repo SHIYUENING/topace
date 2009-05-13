@@ -83,7 +83,7 @@ void DrawRedarToTexture()
 void DrawMAP()
 {
 	glEnable(GL_BLEND);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glColor4f(1.0f,1.0f,1.0f,0.5f);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
@@ -159,6 +159,8 @@ void DrawRedar(float ne=0.0)
 
 
 	glColor4f(0.5f,1.0f,0.5f,1.0f);
+	if(PlayerLocked)
+		glColor4f(1.0f,0.5f,0.5f,1.0f);
 	glPushMatrix();	
 		glBindTexture(GL_TEXTURE_2D, textureRedar);	
 		glTranslated(-DRY,DRY,0);
