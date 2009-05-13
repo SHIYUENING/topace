@@ -69,7 +69,7 @@ float InertiaSpeed=0.0f;
 
 float ViewTurnX=0.0f;
 float ViewTurnY=0.0f;
-
+bool pushkeyHUD=false;
 
 
 
@@ -1055,6 +1055,14 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		KeyR=false;
 */
 
+	if ((g_keys->keyDown [KeyInput.m_keyboardSetHUD]||KeyInput.m_IskeySetHUD) && !pushkeyHUD )
+	{
+		pushkeyHUD=true;
+		IsHUD=!IsHUD;
+
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardSetHUD]||KeyInput.m_IskeySetHUD))
+		pushkeyHUD=false;
 
 	
     if (turnX != 0 || turnY != 0 || turnZ != 0){
@@ -2782,11 +2790,14 @@ void stage0(void)
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
 
+	
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
+	if(!IsHUD)
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
 	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
 	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), CRad(ViewTurnX* 180.0f), 0.0f));
+	if(!IsHUD)
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))
 	MFighter=ViewPoint.UDMplane;
 	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
@@ -2864,21 +2875,25 @@ void stage0(void)
 	//	DrawHighLight();
 	if(!IsSkip)
 	{
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if(ShaderBloom)
 			DrawBloomTex(winwidth,winheight);
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		DrawUI1totexture(latitude);
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		DrawUI2totexture(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		DrawUI3totexture(MFighter.RefPos()(1)*0.1);
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		if(IsHUD)
+		{
+			glClear (GL_COLOR_BUFFER_BIT );
+			DrawUI1totexture(latitude);
+			glClear (GL_COLOR_BUFFER_BIT );
+			DrawUI2totexture(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
+			glClear (GL_COLOR_BUFFER_BIT );
+			DrawUI3totexture(MFighter.RefPos()(1)*0.1);
+			glClear (GL_COLOR_BUFFER_BIT );
+		}
 		if(!KeyT)
 			DrawRedarToTexture();
 		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
-		glClear (GL_COLOR_BUFFER_BIT );
+		//glClear (GL_COLOR_BUFFER_BIT );
 		DrawDataLine1();
+		if(!IsHUD)
 		DrawShadowMap();
 	
 	}
@@ -2898,6 +2913,7 @@ void stage0(void)
 		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
 
 		if(!IsSkip)
+			if(!IsHUD)
 			DrawPlayer();
 /*
 		if(!IsSkip)
@@ -2929,11 +2945,14 @@ void stage0(void)
 	//Maptexture=EffectImpact.TextureID;
 	if(!IsSkip)
 	{
-		DrawUI2();
-		DrawUI3();
-		DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
+		if(IsHUD)
+		{
+			DrawUI2();
+			DrawUI3();
+			DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
+			DrawUI1(rotation);
+		}
 		DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
-		DrawUI1(rotation);
 		DrawHP(UDfighers[0].UDlife);
 	
 /*
@@ -2949,7 +2968,7 @@ void stage0(void)
 			DrawAREARedarToTexture((float)longitude);
 		else
 			DrawRedar((float)longitude);
-		DrawUI1(rotation);
+		//DrawUI1(rotation);
 	}
 
 	Maptexture=bloomTexId1;
@@ -3013,7 +3032,7 @@ void Draw (void)
 
 
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
+	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
 	if(loadover)
 	{

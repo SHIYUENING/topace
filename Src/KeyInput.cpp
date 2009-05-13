@@ -19,6 +19,7 @@ CKeyInput::CKeyInput(void)
 , m_IskeyViewLeft(false)
 , m_IskeyViewRight(false)
 , m_IskeyViewReset(false)
+, m_IskeySetHUD(false)
 , m_keyUp(0)
 {
 }
@@ -53,6 +54,7 @@ bool CKeyInput::initJoyStick(void)
 			m_keyViewLeft		= GetPrivateProfileInt( "JoyStick" , "ViewLeft"	 , 105 , ".\\set.ini" );
 			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 104 , ".\\set.ini" );
 			m_keyViewReset		= GetPrivateProfileInt( "JoyStick" , "ViewReset" , 0 , ".\\set.ini" );
+			m_keySetHUD		= GetPrivateProfileInt( "JoyStick" , "SetHUD" , 9 , ".\\set.ini" );
 			m_IsUseJoyStick	= true;
 		}
 		return true;
@@ -83,6 +85,7 @@ int CKeyInput::UpData(void)
 		 m_IskeyViewLeft=false;
 		 m_IskeyViewRight=false;
 		 m_IskeyViewReset=false;
+		 m_IskeySetHUD=false;
 		SDL_JoystickUpdate();
 		if(m_keyUp>999)
 		{
@@ -446,6 +449,29 @@ int CKeyInput::UpData(void)
 		}
 		if(m_ViewReset>0.1f)
 			m_IskeyViewReset=true;
+
+
+		if(m_keySetHUD>999)
+		{
+			m_SetHUD=SDL_JoystickGetHat(joystick,m_keySetHUD-1000);
+		}
+		else
+		{
+			if(m_keySetHUD>99)
+			{
+				if((m_keySetHUD-100)%2==0)
+					m_SetHUD=(float)SDL_JoystickGetAxis(joystick,(m_keySetHUD-100)/2)/32500.0f;
+				else
+					m_SetHUD=-(float)SDL_JoystickGetAxis(joystick,(m_keySetHUD-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_SetHUD=SDL_JoystickGetButton(joystick,m_keySetHUD);
+			}
+		}
+		if(m_SetHUD>0.1f)
+			m_IskeySetHUD=true;
+
 	}
 
 	return 0;
@@ -477,4 +503,5 @@ void CKeyInput::initKeyboard(void)
 			m_keyboardViewLeft		= GetPrivateProfileInt( "keyboard" , "ViewLeft"	 , 10102 , ".\\set.ini" )-10000;
 			m_keyboardViewRight		= GetPrivateProfileInt( "keyboard" , "ViewRight" , 10098 , ".\\set.ini" )-10000;
 			m_keyboardViewReset		= GetPrivateProfileInt( "keyboard" , "ViewReset" , 10103 , ".\\set.ini" )-10000;
+			m_keyboardSetHUD		= GetPrivateProfileInt( "keyboard" , "SetHUD"	 , 10090 , ".\\set.ini" )-10000;
 }
