@@ -6,6 +6,7 @@
 //#include "VBMD.h"
 #include "shaders.h"
 #include "BomTeams.h"
+#include "Mathematics.h"	
 //#include "BomsSet.h"
 #define MAXSMOKE 30
 //#define MAXBOMS 40

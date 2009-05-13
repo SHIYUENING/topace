@@ -245,7 +245,7 @@ void DrawUI4(float turnX=0.0f,float turnY=0.0f,float turnZ=0.0f)
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);							
 }
-void DrawHP(int HPset=0)
+void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 {
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
@@ -256,7 +256,8 @@ void DrawHP(int HPset=0)
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();
 	glEnable(GL_BLEND);
-	glBindTexture(GL_TEXTURE_2D, ShowHPTexID);	
+	glDisable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, ShowHPTexID);	
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 	float colorR,colorG;
@@ -273,14 +274,35 @@ void DrawHP(int HPset=0)
 	
 	}
 
-	glColor4f(colorR,colorG,0.0f,0.7f);
-	glBegin(GL_QUADS);							// Use A Quad For Each Character
+	glColor4f(colorR*0.5,colorG*0.5,0.0f,0.5f);
+/*	glBegin(GL_QUADS);							// Use A Quad For Each Character
 		glTexCoord2f(0.0,0.0);glVertex2i(300-64,-200-64);	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
 		glTexCoord2f(1.0,0.0);glVertex2i(300+64,-200-64);	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
 		glTexCoord2f(1.0,1.0);glVertex2i(300+64,-200+64);	// Texture Coord (Top Right)// Vertex Coord (Top Right)
 		glTexCoord2f(0.0,1.0);glVertex2i(300-64,-200+64);	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 	glEnd();
+*/
+	Missledata HPmodel;
+	Transform FModel;
+	FModel=FighterModel;
+	HPmodel.UDMplane.Translate(FModel.RefPos());
+	HPmodel.UDPstate.MaxSpeed=0.0;
+	HPmodel.UDPstate.MaxAngleSpeed=50.0;
+	HPmodel.UDPstate.VelocityResistance=0.0;
+	HPmodel.UDPstate.AngleVelocityResistance=0.1;
+	HPmodel.UDMplane.Translate(Vector3d(0.0, 50.0, 0.0));
+	HPmodel.TurnTo(FModel.RefPos());
+	HPmodel.UDPstate.NextState();
+	Transform LMView;
+	LMView = (tfWorld * HPmodel.UDMplane).Invert();
+	FModel.Rotate(Vector3d(1.0f, 0.0f, 0.0f) * CRad(90));
+	FModel.Translate(Vector3d(300.0,-150.0,0.0));
+	glLoadIdentity();
+	glLoadMatrixd(LMView.Matrix4());
+	glMultMatrixd(FModel.Matrix4());
 
+	
+	m_VBMD->ShowVBMD(ModelID[2].Normal);
 
 
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -289,4 +311,5 @@ void DrawHP(int HPset=0)
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
 }
