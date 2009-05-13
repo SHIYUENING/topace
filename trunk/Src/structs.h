@@ -15,6 +15,7 @@ unsigned int FrameSkip=0;
 #define MAXsmoke 200
 #define MAXBom 200
 bool IsSkip=false;
+bool IsHUD=false;
 float tmpredarRenge=15000.0f;//临时雷达追踪范围
 float tmpAREAredarRenge=100000.0f;//关卡范围
 float tmpLookRenge=30000.0f;//临时视距

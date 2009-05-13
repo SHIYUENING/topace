@@ -7,8 +7,49 @@
 
 GLuint		RedarTexture;
 
+void DrawBlackBack(int Size)
+{
+	
+
+	glDisable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,winwidth,0,winheight,-1,1);
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+
+
+	glPushMatrix();	
+		glDisable(GL_TEXTURE_2D);	
+
+				glBegin(GL_QUADS);							// Use A Quad For Each Character
+					glColor4f(0.0f,0.0f,0.0f,1.0f);glVertex2i(0,0);						// Vertex Coord (Bottom Left)
+					glColor4f(0.0f,0.0f,0.0f,1.0f);glVertex2i(Size,0);						// Vertex Coord (Bottom Right)
+					glColor4f(0.0f,0.0f,0.0f,1.0f);glVertex2i(Size,Size);						// Vertex Coord (Top Right)
+					glColor4f(0.0f,0.0f,0.0f,1.0f);glVertex2i(0,Size);						// Vertex Coord (Top Left)
+				glEnd();
+		glEnable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+
+
+	
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+
+	glEnable(GL_BLEND);
+}
 void DrawRedarToTexture()
 {
+	DrawBlackBack(256);
+
 
 	//glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glEnable(GL_BLEND);

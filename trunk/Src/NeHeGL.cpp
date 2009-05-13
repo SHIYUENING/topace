@@ -25,8 +25,9 @@ int windowswidth=800;
 int windowsheight=600;
 int windowsbits=16;
 bool BisFullScreen=FALSE;
-int ACver=32;
-
+int ACver=33;
+int (__stdcall *hglSwapBuffers)(void *);
+HMODULE gl_dll=false;
 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
@@ -408,7 +409,16 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		MessageBox (HWND_DESKTOP, "Error Registering Window Class!", "Error", MB_OK | MB_ICONEXCLAMATION);
 		return -1;														// Terminate Application
 	}
+	if(!gl_dll)
+	{
+		gl_dll=LoadLibrary("OpenGL32.DLL");
 
+		if(!gl_dll)
+			MessageBox (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
+
+	}
+
+	hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
 
 	g_isProgramLooping = TRUE;											// Program Looping Is Set To TRUE
 	g_createFullScreen = window.init.isFullScreen;						// g_createFullScreen Is Set To User Default
@@ -457,7 +467,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 							window.lastTickCount = tickCount;			// Set Last Count To Current Count
 							Draw ();									// Draw Our Scene
 							if(!IsSkip)
-							SwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
+							hglSwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
 						}
 					}
 				}														// Loop While isMessagePumpActive == TRUE
@@ -486,10 +496,13 @@ bool inifile ()
 	FILE *File=NULL;
 
 	File=fopen(".\\set.ini","r");							// Check To See If The File Exists
-
-	if ((File)&&(ACver==GetPrivateProfileInt("ACver","ACver",0,".\\set.ini")))											// Does The File Exist?
+	char szVer[16];
+	sprintf(szVer,"%d",ACver);
+	if (File)											// Does The File Exist?
 	{
 		fclose(File);									// Close The HandleisFullScreenBisFullScreen
+
+		WritePrivateProfileString("ACver","ACver",szVer,".\\set.ini");
 		windowswidth=GetPrivateProfileInt("Resolution","width",800,".\\set.ini");
 		windowsheight=GetPrivateProfileInt("Resolution","height",600,".\\set.ini");
 		windowsbits=GetPrivateProfileInt("Resolution","bits",16,".\\set.ini");
@@ -504,8 +517,7 @@ bool inifile ()
 	}
 	else
 	{
-		char szVer[16];
-		sprintf(szVer,"%d",ACver);
+		
 		WritePrivateProfileString("ACver","ACver",szVer,".\\set.ini");
 		WritePrivateProfileString("Resolution","width","800",".\\set.ini");
 		WritePrivateProfileString("Resolution","height","600",".\\set.ini");
