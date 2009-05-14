@@ -5,6 +5,7 @@
 #include "Mathematics.h"
 #include "Physics.h"
 #include "VBMD.h"
+#include<hgl/OpenALEE.H>
 //#include "ACMD.h"
 #define AImode_Counterattack 1//受攻击时反击
 #define AImode_Travel 2//受攻击时继续之前的行动
@@ -19,6 +20,7 @@
 //extern CLoadACMD *m_nj;//ACMD模型对象
 extern CLoadVBMD *m_VBMD;//VBMD模型对象
 extern tModelID ModelID[100];
+using namespace hgl;
 class Unitdata
 {
 public:
@@ -69,7 +71,11 @@ public:
 	float mSpeed;
 	bool isRSpeed;
 	bool inGunRange;
+	bool inGunSoundRange;
 	Vector3d MoveToPos;
+
+
+	AudioSource * SoundSourceGun;
 	
 
 
@@ -89,6 +95,7 @@ public:
 	void AttackTo(const Vector3d& Position);
 	void MoveSpeed(void);//失速相关
 	void ResetData(void);
+	void m_Sound(Transform& would,float LookRenge);
 };
 
 

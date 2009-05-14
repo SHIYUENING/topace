@@ -22,11 +22,13 @@ Unitdata::Unitdata(void)
 ,AIactTimer1(0)
 ,AIactTimer2(0)
 ,inGunRange(false)
+,inGunSoundRange(false)
 {
 
 
 
 
+	SoundSourceGun=new AudioSource;
 	for(int i=0;i<MAXweapon;i++)
 		weapon[MAXweapon]=-1;
 
@@ -273,6 +275,7 @@ void Unitdata::m_DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheig
 bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge)
 {
 
+	inGunSoundRange=false;
 	bool m_isDraw=false;
 	if((UDlife>0)||(smokeTime>90))
 	{
@@ -284,6 +287,8 @@ bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight
 		UDwinl=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 		if(UDwinl<m_tmpLookRenge*m_tmpLookRenge)
 		{
+			if(UDwinl<m_tmpLookRenge*m_tmpLookRenge*0.01)
+				inGunSoundRange=true;
 			glPushMatrix();
 				glMultMatrixd(UDMplane.Matrix4());
 				GLint viewport[4];
@@ -409,4 +414,8 @@ void Unitdata::ResetData(void)
 	AIactTimer1=0;
 	AIactTimer2=0;
 	inGunRange=false;
+}
+void Unitdata::m_Sound(Transform& would,float LookRenge)
+{
+
 }
