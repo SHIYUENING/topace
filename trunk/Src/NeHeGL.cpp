@@ -317,6 +317,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYUP:													// Update Keyboard Buffers For Keys Released
 			if ((wParam >= 0) && (wParam <= 255))						// Is Key (wParam) In A Valid Range?
 			{
+				isKeyDown=true;
 				window->keys->keyDown [wParam] = FALSE;					// Set The Selected Key (wParam) To False
 				return 0;												// Return
 			}
@@ -468,6 +469,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 							Draw ();									// Draw Our Scene
 							if(!IsSkip)
 							hglSwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
+							isKeyDown=false;
 						}
 					}
 				}														// Loop While isMessagePumpActive == TRUE

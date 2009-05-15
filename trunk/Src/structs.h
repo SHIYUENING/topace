@@ -109,6 +109,7 @@ GLfloat moveSpeed=0.01f;//每桢玩家向前位移量
 bool PlayerLocked=false;
 bool PlayerLocking=false;
 bool isPlayerControl=false;
+bool isKeyDown=false;
 int StartShowTime=-1;
 int hited=0;
 int timer[100];

@@ -88,6 +88,8 @@ public:
 	float m_ViewReset;
 	float m_SetHUD;
 
+	bool isAnyKeyDown;
+
 	int UpData(void);
 	int de(void);
 	void initKeyboard(void);

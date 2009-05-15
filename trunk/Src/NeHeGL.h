@@ -75,5 +75,5 @@ bool inifile (void);
 
 extern int winwidth,winheight;
 extern bool IsSkip;
-
+extern bool isKeyDown;
 #endif												// GL_FRAMEWORK__INCLUDED
