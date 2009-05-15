@@ -532,8 +532,8 @@ bool inifile ()
 		WritePrivateProfileString("FlySet","TurnRateX","50",".\\set.ini");
 		WritePrivateProfileString("FlySet","TurnRateY","500",".\\set.ini");
 		WritePrivateProfileString("FlySet","TurnRateZ","50",".\\set.ini");
-		WritePrivateProfileString("Fog","glClearColorR","184",".\\set.ini");
-		WritePrivateProfileString("Fog","glClearColorG","187",".\\set.ini");
+		WritePrivateProfileString("Fog","glClearColorR","201",".\\set.ini");
+		WritePrivateProfileString("Fog","glClearColorG","207",".\\set.ini");
 		WritePrivateProfileString("Fog","glClearColorB","210",".\\set.ini");
 		WritePrivateProfileString("Fog","glClearColorA","255",".\\set.ini");
 		WritePrivateProfileString("Fog","fogColorR","184",".\\set.ini");

@@ -77,7 +77,7 @@ pixel main(
 	half3 I = IN.objectPos2.xyz - eyePosition;
 	half3 R = reflect(I, N);
 
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor;
+	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor*0.3;
 
     return OUT;
 }
