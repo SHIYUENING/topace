@@ -56,6 +56,7 @@ CSkyBox SkyBox;
 
 int needloadfile=0;
 bool loadover=false;
+bool isDraw=false;
 bool lockedsound=false;
 bool GunFiresound=false;
 float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
@@ -2452,14 +2453,15 @@ void showloading(void)
 	needloadfile=needloadfile+1;
 	CDDS loadDDS;
 
+	glClear (GL_COLOR_BUFFER_BIT );
 	switch (needloadfile)
 	{
-	case 1:glPrint(16,16,"Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
-	case 2:glPrint(16,16,"Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
-	case 3:glPrint(16,16,"Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;//Cloud.Init();
-	case 4:glPrint(16,16,"Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
-	case 5:glPrint(16,16,"Loading Sound",0);initsound();
-	case 6:glPrint(16,16,"Loading Model",0);LoadVBMDModels(IsSupportFBO);
+	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
+	case 2:glPrint(16,16,"3/7 Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
+	case 3:glPrint(16,16,"4/7 Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;//Cloud.Init();
+	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
+	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();
+	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);
 	case 7:loadover=true;StartShowTime=300;
 	
 	
@@ -3030,6 +3032,66 @@ void AfterDraw (void)
 			timer[i]=timer[i]-1;
 	}
 }
+void WaitKeyToStart(void)
+{
+
+		ViewPoint.UDMplane=UDfighers[0].UDMplane;
+	if(!IsHUD)
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
+	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), CRad(ViewTurnX* 180.0f), 0.0f));
+	if(!IsHUD)
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))
+	MFighter=ViewPoint.UDMplane;
+	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
+//	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
+	
+//	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
+
+//	MFighter3.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
+
+//	MFighter3.TranslateInternal(Vector3d(0.0f, 0.0f, 15));
+
+    // Position, Velocity Direction
+    
+    // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
+    MView = (MWorld * MFighter).Invert();
+
+	LightSunPos[0]=100000+(float)MFighter.RefPos()(0);
+	LightSunPos[1]=100000+(float)MFighter.RefPos()(1);
+	LightSunPos[2]=100000+(float)MFighter.RefPos()(2);
+	Transform LMView;
+	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
+	Vector3d Pos3d;
+	Pos3d=LMView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + LMView.RefPos();
+	paraLightDirection[0] = (float)Pos3d(0);
+    paraLightDirection[1] = (float)Pos3d(1);
+    paraLightDirection[2] = (float)Pos3d(2);
+
+
+
+	Transform EyeMView;
+	EyeMView = (MWorld * UDfighers[0].UDMplane).Invert();
+	Vector3d EyePos3d;
+	EyePos3d=EyeMView.Matrix() * MFighter.RefPos() + EyeMView.RefPos();
+	eyePosition[0] = (float)EyePos3d(0);
+    eyePosition[1] = (float)EyePos3d(1);
+    eyePosition[2] = (float)EyePos3d(2);
+
+	
+	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
+	glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
+	//StartShow();
+	DrawShadowMap();
+	DrawPlayer();
+	glPrint(16,16,"Push Any Key To Start ",0);
+	if(isKeyDown||KeyInput.isAnyKeyDown)
+	{
+		isDraw=true;
+	
+	}
+
+}
 void Draw (void)
 {
 
@@ -3053,16 +3115,20 @@ void Draw (void)
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
-	if(loadover)
+	if(isDraw)
 	{
 		
 		stage0();
 		AfterDraw();
 	}
+	else
+	{
+		if(loadover)
+			WaitKeyToStart();
+	}
 
 	if(!loadover)
 	showloading();
-
 
 
 

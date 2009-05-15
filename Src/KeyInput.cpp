@@ -20,6 +20,7 @@ CKeyInput::CKeyInput(void)
 , m_IskeyViewRight(false)
 , m_IskeyViewReset(false)
 , m_IskeySetHUD(false)
+, isAnyKeyDown(false)
 , m_keyUp(0)
 {
 }
@@ -471,6 +472,11 @@ int CKeyInput::UpData(void)
 		}
 		if(m_SetHUD>0.1f)
 			m_IskeySetHUD=true;
+		if(m_IskeyUp||m_IskeyDown||m_IskeyLeft||m_IskeyRight||m_IskeyMissle||m_IskeyGun||m_IskeyMap||m_IskeyLock||m_IskeySpeedUp||m_IskeyViewDown||m_IskeyViewLeft||m_IskeyViewRight||m_IskeyViewReset||m_IskeySetHUD)
+		
+			isAnyKeyDown=true;
+		else
+			isAnyKeyDown=false;
 
 	}
 
