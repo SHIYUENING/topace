@@ -233,9 +233,14 @@ void MoveSound(Transform& would,float LookRenge)
 	{
 		if(soundSource[i]->State==AL_PLAYING)
 		{
+			Vertex3f FirstSoundPoint,lastSoundPoint,SoundVelocity;
 			Vector3d Pos3d;
 			Pos3d=would.Matrix() * soundSourcePos[i] + would.RefPos();
-			soundSource[i]->SetPosition(Vertex3f((float)Pos3d(0)/LookRenge,(float)Pos3d(1)/LookRenge,(float)Pos3d(2)/LookRenge));
+			FirstSoundPoint=Vertex3f((float)Pos3d(0)/LookRenge,(float)Pos3d(1)/LookRenge,(float)Pos3d(2)/LookRenge);
+			lastSoundPoint=soundSource[i]->GetPosition();
+			soundSource[i]->SetVelocity(FirstSoundPoint-lastSoundPoint);
+			
+			soundSource[i]->SetPosition(FirstSoundPoint);
 		}
 	}
 
