@@ -794,17 +794,8 @@ void fireShell()
 	}
 
 }
-void Update (DWORD milliseconds)								// Perform Motion Updates Here
+void PlayerControl()
 {
-	playTime=playTime+1;
-	if((playTime%FrameSkip)!=0)
-		IsSkip=true;
-	else
-		IsSkip=false;
-	
-
-//	FMOD_System_Update(sys);
-	Inertia();
 
 	KeyInput.UpData();
 	g_flYRot +=0.1f;		// Consistantly Rotate The Scenery
@@ -1067,6 +1058,31 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		pushkeyHUD=false;
 
 	
+}
+void StartShow()
+{
+	StartShowTime=StartShowTime-1;
+	if(StartShowTime<=0)
+		isPlayerControl=true;
+	ViewTurnX=(float)StartShowTime/150.0f;
+
+}
+void Update (DWORD milliseconds)								// Perform Motion Updates Here
+{
+	playTime=playTime+1;
+	if((playTime%FrameSkip)!=0)
+		IsSkip=true;
+	else
+		IsSkip=false;
+	
+
+//	FMOD_System_Update(sys);
+	Inertia();
+	if(StartShowTime>0)
+		StartShow();
+
+	if(isPlayerControl)
+		PlayerControl();
     if (turnX != 0 || turnY != 0 || turnZ != 0){
 		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
         UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
@@ -2444,7 +2460,7 @@ void showloading(void)
 	case 4:glPrint(16,16,"Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
 	case 5:glPrint(16,16,"Loading Sound",0);initsound();
 	case 6:glPrint(16,16,"Loading Model",0);LoadVBMDModels(IsSupportFBO);
-	case 7:loadover=true;
+	case 7:loadover=true;StartShowTime=300;
 	
 	
 	}
