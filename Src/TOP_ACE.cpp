@@ -2462,7 +2462,7 @@ void showloading(void)
 	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
 	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();
 	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);
-	case 7:loadover=true;StartShowTime=300;
+	case 7:loadover=true;
 	
 	
 	}
@@ -3034,32 +3034,28 @@ void AfterDraw (void)
 }
 void WaitKeyToStart(void)
 {
+		globalAmbient[0] = 0.05f; 
+		globalAmbient[1] = 0.0f;
+		globalAmbient[2] = 0.0f;
+		globalAmbient[3] = 1.0f;
 
-		ViewPoint.UDMplane=UDfighers[0].UDMplane;
-	if(!IsHUD)
-	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
-	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
-	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), CRad(ViewTurnX* 180.0f), 0.0f));
-	if(!IsHUD)
-	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))
+		paraLightColor[0] = 1.0f; 
+		paraLightColor[1] = 1.0f;
+		paraLightColor[2] = 1.0f;
+		paraLightColor[3] = 1.0f;
+
+	ViewPoint.UDMplane=UDfighers[0].UDMplane;
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 20.0f, 0.0f));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, CRad((ViewTurnX+0.5f)* 180.0f), 0.0f));
+	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 120.0f));
+	//ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(-45.0f), 0.0f, 0.0f));
 	MFighter=ViewPoint.UDMplane;
-	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
-//	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
-	
-//	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
 
-//	MFighter3.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
-
-//	MFighter3.TranslateInternal(Vector3d(0.0f, 0.0f, 15));
-
-    // Position, Velocity Direction
-    
-    // q = MView * MWorld * MFighter * p, where p is a point in the fighter local coordsystem, and q is the point in the screen coordsystem.
     MView = (MWorld * MFighter).Invert();
 
-	LightSunPos[0]=100000+(float)MFighter.RefPos()(0);
-	LightSunPos[1]=100000+(float)MFighter.RefPos()(1);
-	LightSunPos[2]=100000+(float)MFighter.RefPos()(2);
+	LightSunPos[0]=-10000.0+(float)MFighter.RefPos()(0);
+	LightSunPos[1]=10000.0+(float)MFighter.RefPos()(1);
+	LightSunPos[2]=0.0+(float)MFighter.RefPos()(2);
 	Transform LMView;
 	LMView = (MWorld * UDfighers[0].UDMplane).Invert();
 	Vector3d Pos3d;
@@ -3069,6 +3065,7 @@ void WaitKeyToStart(void)
     paraLightDirection[2] = (float)Pos3d(2);
 
 
+	ViewTurnX=(float)playTime*0.00075;
 
 	Transform EyeMView;
 	EyeMView = (MWorld * UDfighers[0].UDMplane).Invert();
@@ -3079,7 +3076,6 @@ void WaitKeyToStart(void)
     eyePosition[2] = (float)EyePos3d(2);
 
 	
-	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 	glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
 	//StartShow();
 	DrawShadowMap();
@@ -3088,6 +3084,19 @@ void WaitKeyToStart(void)
 	if(isKeyDown||KeyInput.isAnyKeyDown)
 	{
 		isDraw=true;
+		StartShowTime=300;
+		BGMplayer->Play(true);
+
+		paraLightColor[0] = LightDiffuseR; 
+		paraLightColor[1] = LightDiffuseG;
+		paraLightColor[2] = LightDiffuseB;
+		paraLightColor[3] = LightDiffuseA;
+
+		globalAmbient[0] = LightAmbientR; 
+		globalAmbient[1] = LightAmbientG;
+		globalAmbient[2] = LightAmbientB;
+		globalAmbient[3] = LightAmbientA;
+		ViewTurnX=0.0f;
 	
 	}
 

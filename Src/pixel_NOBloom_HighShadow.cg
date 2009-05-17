@@ -160,14 +160,14 @@ pixel main(
 	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
-
+	half3 I = IN.objectPos2.xyz - eyePosition;
+	half3 R = reflect(I, N);
 	Ocolor.xyz=globalAmbient +IN.Light2color+(diffuse+specularLight*8*SpecularMapcolor.xyz)*(21-tmp0)/21;
 
 
-	half3 I = IN.objectPos2.xyz - eyePosition;
-	half3 R = reflect(I, N);
 
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor*0.3;
+
+	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*(texCUBE( AmbientReflectiveTexture, R)+1.0);
 
     return OUT;
 }

@@ -85,7 +85,7 @@ void initsound()
 	BGMplayer= new AudioPlayer;
 	BGMplayer->Load(L"Data/bgm.ogg");
 	BGMplayer->Gain=0.5f;
-	BGMplayer->Play(true);
+	
 	
 	missleWarning[0] = new AudioBuffer;missleWarning[0]->Load(L"Data/voice/missleWarning0.ogg");
 	missleWarning[1] = new AudioBuffer;missleWarning[1]->Load(L"Data/voice/missleWarning1.ogg");
