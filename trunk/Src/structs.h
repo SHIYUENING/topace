@@ -122,6 +122,12 @@ Transform MFighter;//Íæ¼Ò
 Transform MViewPoint;
 Transform Msky;//Ìì¿ÕÎ»ÖÃ
 Transform MFireShellPos;
+Transform MavePart_BackL;
+Transform MavePart_BackR;
+Transform MavePart_FL;
+Transform MavePart_FR;
+Transform MavePart_WL;
+Transform MavePart_WR;
 int MissleFireLightNum=-1;
 Vector3d SunPos3d;
 

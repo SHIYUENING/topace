@@ -2270,10 +2270,42 @@ void DrawPlayer(void)
 					//glRotatef(40.0f*testNum2+40.0f,0.0f,1.0f,0.0f);
 					//glRotatef(90.0f,1.0f,0.0f,0.0f);	
 					//glScaled(1.0, 1.0, 1.0);
-					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
+					//shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					
-					m_VBMD->ShowVBMD(PlayerMainModel);
+					//m_VBMD->ShowVBMD(PlayerMainModel);
+					shaderT(m_VBMD->GetNormalTexID(ModelID_MavePart_Main),m_VBMD->GetSpecularTexID(ModelID_MavePart_Main));
+					m_VBMD->ShowVBMD(ModelID_MavePart_Main);
+					glPushMatrix();
+						glMultMatrixd(MavePart_BackL.Matrix4());
+						m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
+					glPopMatrix();
+					glPushMatrix();
+						glMultMatrixd(MavePart_BackR.Matrix4());
+						m_VBMD->ShowVBMD(ModelID_MavePart_BackR,false);
+					glPopMatrix();
+					glPushMatrix();
+						glMultMatrixd(MavePart_FL.Matrix4());
+						m_VBMD->ShowVBMD(ModelID_MavePart_FL,false);
+					glPopMatrix();
+					glPushMatrix();
+						glMultMatrixd(MavePart_FR.Matrix4());
+						m_VBMD->ShowVBMD(ModelID_MavePart_FR,false);
+					glPopMatrix();
+					glPushMatrix();
+						glMultMatrixd(MavePart_WL.Matrix4());
+						m_VBMD->ShowVBMD(ModelID_MavePart_WL,false);
+					glPopMatrix();
+					glPushMatrix();
+						glMultMatrixd(MavePart_WR.Matrix4());
+						m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
+					glPopMatrix();
 				
+	
+					glDepthMask(GL_FALSE);
+					glColor4f(1.0f,1.0f,1.0f,0.5f);
+					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
+					glColor4f(1.0f,1.0f,1.0f,1.0f);
+					glDepthMask(GL_TRUE);
 				
 
 					cgGLDisableProfile( g_CGprofile_pixel );
@@ -2298,7 +2330,7 @@ void DrawPlayer(void)
 		glTranslatef(0, -Ppos1, -Ppos2);
 		glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 		glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-		m_VBMD->ShowVBMD(PlayerMainModel);
+		m_VBMD->ShowVBMD(ModelID_MavePart_Main);
 
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHTING);
@@ -2558,7 +2590,33 @@ void DrawShadowMap(void)
 							
 							glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapmvmatrix);
 							glGetFloatv(GL_PROJECTION_MATRIX,ShadowMapprojmatrix);
-							m_VBMD->ShowVBMD(PlayerMainModel);
+							//m_VBMD->ShowVBMD(PlayerMainModel);
+							m_VBMD->ShowVBMD(ModelID_MavePart_Main);
+							glPushMatrix();
+							glMultMatrixd(MavePart_BackL.Matrix4());
+								m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
+							glPopMatrix();
+							glPushMatrix();
+								glMultMatrixd(MavePart_BackR.Matrix4());
+								m_VBMD->ShowVBMD(ModelID_MavePart_BackR,false);
+							glPopMatrix();
+							glPushMatrix();
+								glMultMatrixd(MavePart_FL.Matrix4());
+								m_VBMD->ShowVBMD(ModelID_MavePart_FL,false);
+							glPopMatrix();
+							glPushMatrix();
+								glMultMatrixd(MavePart_FR.Matrix4());
+								m_VBMD->ShowVBMD(ModelID_MavePart_FR,false);
+							glPopMatrix();
+							glPushMatrix();
+								glMultMatrixd(MavePart_WL.Matrix4());
+								m_VBMD->ShowVBMD(ModelID_MavePart_WL,false);
+							glPopMatrix();
+							glPushMatrix();
+								glMultMatrixd(MavePart_WR.Matrix4());
+								m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
+							glPopMatrix();
+				
 
 							cgGLDisableProfile( g_CGprofile_pixel );
 							cgGLDisableProfile( g_CGprofile_vertex );					// Select The Projection Matrix
@@ -2809,6 +2867,25 @@ void stage0(void)
     double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
+
+	MavePart_BackL.Reset();
+	MavePart_BackR.Reset();
+	MavePart_FL.Reset();
+	MavePart_FR.Reset();
+	MavePart_WL.Reset();
+	MavePart_WR.Reset();
+	MavePart_BackL.TranslateInternal(Vector3d(0.0,-4.0,37.0));
+	MavePart_BackR.TranslateInternal(Vector3d(0.0,-4.0,37.0));
+	MavePart_FL.TranslateInternal(Vector3d(-8.5,3.5,-20.0));
+	MavePart_FR.TranslateInternal(Vector3d( 8.5,3.5,-20.0));
+	MavePart_WL.TranslateInternal(Vector3d(0.0,0.0,55.0));
+	MavePart_WR.TranslateInternal(Vector3d(0.0,0.0,55.0));
+	MavePart_BackL.RotateInternal(Vector3d(InertiaX/256.0f+InertiaZ/256.0f, 0.0f, 0.0f) );
+	MavePart_BackR.RotateInternal(Vector3d(InertiaX/256.0f-InertiaZ/256.0f, 0.0f, 0.0f) );
+	MavePart_FL.RotateInternal(Vector3d(InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
+	MavePart_FR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
+	MavePart_WL.RotateInternal(Vector3d(InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
+	MavePart_WR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
 
 	
 
