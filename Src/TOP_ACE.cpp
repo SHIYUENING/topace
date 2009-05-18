@@ -2331,7 +2331,7 @@ void DrawPlayer(void)
 		glTranslatef(0, -Ppos1, -Ppos2);
 		glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 		glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-		m_VBMD->ShowVBMD(ModelID_MavePart_Main);
+		m_VBMD->ShowVBMD(ModelID_MavePart_Normal);
 
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHTING);
@@ -3158,7 +3158,9 @@ void WaitKeyToStart(void)
 	//StartShow();
 	DrawShadowMap();
 	DrawPlayer();
+	glEnable(GL_BLEND);
 	glPrint(16,16,"Push Any Key To Start ",0);
+	glDisable(GL_BLEND);
 	if(isKeyDown||KeyInput.isAnyKeyDown)
 	{
 		isDraw=true;
