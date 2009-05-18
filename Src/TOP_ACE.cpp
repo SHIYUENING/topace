@@ -2230,7 +2230,7 @@ void DrawPlayer(void)
 	//BasicLight();
 	//cgGLDisableProfile( g_CGprofile_vertex );
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+	glDisable(GL_BLEND);
 	
 	//HighLight();
 /*
@@ -2301,8 +2301,9 @@ void DrawPlayer(void)
 					glPopMatrix();
 				
 	
+					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
-					glColor4f(1.0f,1.0f,1.0f,0.5f);
+					glColor4f(1.0f,1.0f,1.0f,0.0f);
 					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
 					glColor4f(1.0f,1.0f,1.0f,1.0f);
 					glDepthMask(GL_TRUE);

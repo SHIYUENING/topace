@@ -64,6 +64,7 @@ pixel main(
 
 
 	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
+	OUT.color.w=0.5;
 
     return OUT;
 }
