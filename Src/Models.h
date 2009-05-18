@@ -18,7 +18,7 @@ int ModelID_MavePart_FR=0;
 int ModelID_MavePart_WL=0;
 int ModelID_MavePart_WR=0;
 int ModelID_MavePart_Glass=0;
-//int ModelID_MavePart_Normal=0;
+int ModelID_MavePart_Normal=0;
 //int ModelID_MavePart_Low=0;
 void LoadVBMDModels(bool IsSupportFBO)
 {
@@ -51,7 +51,7 @@ void LoadVBMDModels(bool IsSupportFBO)
 	ModelID_MavePart_WL		= m_VBMD ->Init("Data/models/mave/WL",false,0,true);
 	ModelID_MavePart_WR		= m_VBMD ->Init("Data/models/mave/WR",false,0,true);
 	ModelID_MavePart_Glass	= m_VBMD ->Init("Data/models/mave/Glass",false,0,true);
-	//ModelID_MavePart_Normal	= m_VBMD ->Init("Data/models/mave/Normal");
+	ModelID_MavePart_Normal	= m_VBMD ->Init("Data/models/mave/Normal");
 	//ModelID_MavePart_Low	= m_VBMD ->Init("Data/models/mave/Low");
 
 

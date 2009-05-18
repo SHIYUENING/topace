@@ -302,7 +302,7 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 	glMultMatrixd(FModel.Matrix4());
 
 	
-	m_VBMD->ShowVBMD(ModelID[2].Normal);
+	m_VBMD->ShowVBMD(ModelID_MavePart_Normal);
 
 
 	glColor4f(1.0f,1.0f,1.0f,1.0f);

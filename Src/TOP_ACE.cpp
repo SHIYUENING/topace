@@ -2883,8 +2883,8 @@ void stage0(void)
 	MavePart_WR.TranslateInternal(Vector3d(0.0,0.0,55.0));
 	MavePart_BackL.RotateInternal(Vector3d(InertiaX/256.0f+InertiaZ/256.0f, 0.0f, 0.0f) );
 	MavePart_BackR.RotateInternal(Vector3d(InertiaX/256.0f-InertiaZ/256.0f, 0.0f, 0.0f) );
-	MavePart_FL.RotateInternal(Vector3d(InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
-	MavePart_FR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
+	MavePart_FL.RotateInternal(Vector3d(-InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
+	MavePart_FR.RotateInternal(Vector3d(-InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
 	MavePart_WL.RotateInternal(Vector3d(InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
 	MavePart_WR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
 
