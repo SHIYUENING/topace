@@ -803,7 +803,7 @@ void PlayerControl()
 
 	if (g_keys->keyDown [VK_ESCAPE] == TRUE)					// Is ESC Being Pressed?
 	{
-		TerminateApplication (g_window);						// Terminate The Program
+		//TerminateApplication (g_window);						// Terminate The Program
 	}
 /*
 	if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
@@ -2895,7 +2895,8 @@ void stage0(void)
 	if(!IsHUD)
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
 	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
-	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), CRad(ViewTurnX* 180.0f), 0.0f));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), 0.0f, 0.0f));
+	ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, CRad(ViewTurnX* 180.0f), 0.0f));
 	if(!IsHUD)
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))
 	MFighter=ViewPoint.UDMplane;

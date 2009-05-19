@@ -28,7 +28,7 @@ Unitdata::Unitdata(void)
 
 
 
-	SoundSourceGun=new AudioSource;
+	//SoundSourceGun=new AudioSource;
 	for(int i=0;i<MAXweapon;i++)
 		weapon[MAXweapon]=-1;
 
@@ -229,7 +229,8 @@ void Unitdata::TurnTo(const Vector3d& Position){
 		if(isRSpeed)
 			rotateAngle=0.0;
 
-		mSpeed=mSpeed-0.002f*float(rotateAngle*rotateAngle);
+		if(UDflag!=2)
+			mSpeed=mSpeed-0.002f*float(rotateAngle*rotateAngle);
 		UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
     }
 }
@@ -325,6 +326,11 @@ bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight
 								if(ModelID[UDfighterType].Low>-1)
 									m_VBMD->ShowVBMD(ModelID[UDfighterType].Low);
 							}
+						}
+						if(UDfighterType==3)
+						{
+							glRotatef(180.0f, 0.0f, 1.0f, 0.0);
+							m_VBMD->ShowVBMD(ModelID_MavePart_Normal);
 						}
 //							m_nj->ShowACMD(0,7,0,0,0,0,180,0,1.0,1.0,1.0);
 					glPopMatrix();
