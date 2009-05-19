@@ -1792,7 +1792,8 @@ bool UnitAIBefore(int i)
 	
 	}
 
-	if((TmpL<1000*1000))
+	if((UDfighers[i].attackTGTNum>=0)&&(UDfighers[i].attackTGTNum<maxUnits))
+	if((GetLength_2f(UDfighers[i].UDMplane.RefPos(),UDfighers[UDfighers[i].attackTGTNum].UDMplane.RefPos())<500*500))
 	{
 		UDfighers[i].LockTimer=0;
 		Transform tmp=UDfighers[i].UDMplane;
