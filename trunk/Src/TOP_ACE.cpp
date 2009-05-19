@@ -21,7 +21,7 @@
 #include "EffectImpact.h"
 #include "SkyBox.h"
 #include "Bloom.h"
-
+#include "Video.h"
 //#include "Cloud.h"
 
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
@@ -53,7 +53,7 @@ CSmoke		PSmokes;
 CKeyInput KeyInput;
 CSkyBox SkyBox;
 //CCloud Cloud;
-
+CVideo Video;
 int needloadfile=0;
 bool loadover=false;
 bool isDraw=false;
@@ -268,6 +268,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	KeyInput.initJoyStick();
 
+	//Video.InitVideo(1024);
 	
 
 	strcpy( cpubrand, cpu.GetBrand().c_str() );
@@ -803,7 +804,7 @@ void PlayerControl()
 
 	if (g_keys->keyDown [VK_ESCAPE] == TRUE)					// Is ESC Being Pressed?
 	{
-		//TerminateApplication (g_window);						// Terminate The Program
+		TerminateApplication (g_window);						// Terminate The Program
 	}
 /*
 	if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
@@ -3073,8 +3074,9 @@ void stage0(void)
 			DrawRedar((float)longitude);
 		//DrawUI1(rotation);
 	}
-
+//Video.DrawVideo();
 	//Maptexture=bloomTexId1;
+//	Maptexture=Video.VideoTexID;
 
 
 }
@@ -3181,6 +3183,7 @@ void WaitKeyToStart(void)
 		globalAmbient[2] = LightAmbientB;
 		globalAmbient[3] = LightAmbientA;
 		ViewTurnX=0.0f;
+		//Video.LoadVideo("a.wmv");
 	
 	}
 
@@ -3208,8 +3211,10 @@ void Draw (void)
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
+	
 	if(isDraw)
 	{
+
 		
 		stage0();
 		AfterDraw();

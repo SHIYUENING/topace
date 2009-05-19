@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static.lib"
+				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static_New.lib"
 				OutputFile="$(OutDir)\TOP_ACE.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library"
@@ -507,6 +507,14 @@
 		</File>
 		<File
 			RelativePath=".\VBMD.h"
+			>
+		</File>
+		<File
+			RelativePath=".\Video.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\Video.h"
 			>
 		</File>
 	</Files>
