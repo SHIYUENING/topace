@@ -382,6 +382,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\MyFont.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\MyFont.h"
+			>
+		</File>
+		<File
 			RelativePath=".\NeHeGL.cpp"
 			>
 		</File>
