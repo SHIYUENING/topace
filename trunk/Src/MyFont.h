@@ -10,5 +10,7 @@ public:
 	int GetFontIndex(int InH,int InL);
 
 	unsigned char * MyFontpixels;
+	unsigned char * OneFontpixels;
+	void CreatFont(int FontIndex);
 };
 #endif
