@@ -2497,7 +2497,9 @@ void showloading(void)
 	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();
 	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);
 	case 7:loadover=true;
-	
+	CMyFont MyFont;
+	if(!MyFont.LoadFont("Data/FontCH"))
+		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	
 	}
 	/*
