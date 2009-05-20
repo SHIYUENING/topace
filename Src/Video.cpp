@@ -33,6 +33,10 @@ void CVideo::InitVideo(void)
 }
 bool CVideo::LoadVideo(const char *filename,bool loop)
 {
+	if(isPlaying)
+	{
+		FreeVideo();
+	}
 	isLoop=loop;
 	
 	if(av_open_input_file(&pFormatCtx, filename, NULL, 0, NULL)!=0)
@@ -111,7 +115,7 @@ void CVideo::DrawVideo(void)
 
 	if(!isPlaying)
 	{
-		LoadVideo("Data/video/PSS_1.wmv");
+		//LoadVideo("Data/video/PSS_1.wmv");
 		return;
 	}
 	glBindTexture(GL_TEXTURE_2D, VideoTexID);
@@ -174,6 +178,7 @@ void CVideo::DrawVideo(void)
 
 void CVideo::FreeVideo(void)
 {
+	isPlaying=false;
 
 	if(VideoTexID!=0)
 	{
