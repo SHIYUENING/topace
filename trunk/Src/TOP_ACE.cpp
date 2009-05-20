@@ -268,7 +268,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	KeyInput.initJoyStick();
 
-	//Video.InitVideo(1024);
+	Video.InitVideo();
 	
 
 	strcpy( cpubrand, cpu.GetBrand().c_str() );
@@ -3074,9 +3074,10 @@ void stage0(void)
 			DrawRedar((float)longitude);
 		//DrawUI1(rotation);
 	}
-//Video.DrawVideo();
+	//if(playTime%4==0)
+	//	Video.DrawVideo();
 	//Maptexture=bloomTexId1;
-//	Maptexture=Video.VideoTexID;
+	//Maptexture=Video.VideoTexID;
 
 
 }
@@ -3183,7 +3184,7 @@ void WaitKeyToStart(void)
 		globalAmbient[2] = LightAmbientB;
 		globalAmbient[3] = LightAmbientA;
 		ViewTurnX=0.0f;
-		//Video.LoadVideo("a.wmv");
+		//Video.LoadVideo("Data/video/PSS_1.wmv");
 	
 	}
 
