@@ -1077,7 +1077,8 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	else
 		IsSkip=false;
 	
-
+	if(playTime%4==0)
+		Video.DrawVideo();
 //	FMOD_System_Update(sys);
 	Inertia();
 	if(StartShowTime>0)
@@ -3074,10 +3075,9 @@ void stage0(void)
 			DrawRedar((float)longitude);
 		//DrawUI1(rotation);
 	}
-	//if(playTime%4==0)
-	//	Video.DrawVideo();
+
 	//Maptexture=bloomTexId1;
-	//Maptexture=Video.VideoTexID;
+	Maptexture=Video.VideoTexID;
 
 
 }
@@ -3184,7 +3184,7 @@ void WaitKeyToStart(void)
 		globalAmbient[2] = LightAmbientB;
 		globalAmbient[3] = LightAmbientA;
 		ViewTurnX=0.0f;
-		//Video.LoadVideo("Data/video/PSS_1.wmv");
+//		Video.LoadVideo("Data/video/AFI_Panic01.avi",true);
 	
 	}
 
