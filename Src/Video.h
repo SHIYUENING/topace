@@ -25,10 +25,15 @@ public:
 	int ww,hh;
 	int frameFinished;
 	int	videoStream;
-	void InitVideo(unsigned int VideoTexSize=512);
-	bool LoadVideo(const char *filename);
+	void InitVideo(void);
+	bool LoadVideo(const char *filename,bool loop=false);
 	void DrawVideo(void);
 	GLuint VideoTexID;
+	bool isLoop;
+	bool isPlaying;
+	uint8_t *buffer;
 
+	void FreeVideo(void);
+	unsigned int EmptyTextureRGB(unsigned int VideoTexSize);
 };
 #endif
