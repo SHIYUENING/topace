@@ -4,7 +4,7 @@
 #include "Models.h"
 #include "sound.h"
 #include "Shell.h"
-#include "MyFont.h"
+//#include "MyFont.h"
 int lockflash=0;//决定锁定框是否闪烁
 unsigned int FrameSkip=0;
 #define MAXRedarlocks 100

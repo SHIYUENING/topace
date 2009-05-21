@@ -1120,13 +1120,41 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 
 void LockFPS (void)
 {
+	double waitTime=0.0;
 	QueryPerformanceFrequency(&feq);//每秒跳动次数
 	QueryPerformanceCounter(&t2);//测后跳动次数
     if (t2.QuadPart >= t1.QuadPart)
 	{
 	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+		
     }
-	Delay(__int64((oneframetimelimit-oneframetime)*1000000));
+	else
+		return;
+	//QueryPerformanceCounter(&t1);//测前跳动次数
+
+	double SleepTime=(oneframetimelimit-oneframetime)*1000.0;
+	while(SleepTime>2.0)
+	{
+		Sleep(1);
+		QueryPerformanceFrequency(&feq);//每秒跳动次数
+		QueryPerformanceCounter(&t2);//测后跳动次数
+		if (t2.QuadPart >= t1.QuadPart)
+			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+		else
+			return;
+		SleepTime=(oneframetimelimit-waitTime)*1000.0;
+	}
+	QueryPerformanceFrequency(&feq);//每秒跳动次数
+	QueryPerformanceCounter(&t2);//测后跳动次数
+    if (t2.QuadPart >= t1.QuadPart)
+	{
+	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+		
+    }
+	else
+		return;
+
+	Delay(__int64((oneframetimelimit-waitTime)*1000000));
 	QueryPerformanceCounter(&t1);//测前跳动次数
 }
 /*
@@ -2499,9 +2527,9 @@ void showloading(void)
 	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();
 	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);
 	case 7:loadover=true;
-	CMyFont MyFont;
-	if(!MyFont.LoadFont("Data/FontCH"))
-		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
+//	CMyFont MyFont;
+//	if(!MyFont.LoadFont("Data/FontCH"))
+//		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	
 	}
 	/*

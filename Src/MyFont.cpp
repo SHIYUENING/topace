@@ -1,8 +1,6 @@
 #include "MyFont.h"
-#include <windows.h>											// Header File For Windows
-#include <stdio.h>												// Header File For Standard Input/Output
-
 CMyFont::CMyFont(void)
+:WordNum(0)
 {
 	OneFontpixels = new unsigned char[0x1000];
 		
@@ -10,9 +8,10 @@ CMyFont::CMyFont(void)
 
 CMyFont::~CMyFont(void)
 {
+	delete [] OneFontpixels;
 }
 
-bool CMyFont::LoadFont(char *filename)
+bool CMyFont::LoadFont(const char *filename)
 {
 	FILE	*m_FilePointer;
 	m_FilePointer= new FILE;
@@ -42,10 +41,11 @@ bool CMyFont::LoadFont(char *filename)
 
 int CMyFont::GetFontIndex(int InH,int InL)
 {
+
 	return (InH-0xA1)*(0xFE-0xA1+1)+InL-0xA1;
 }
 
-void CMyFont::CreatFont(int FontIndex)
+unsigned int CMyFont::CreatFont(int FontIndex)
 {
 	for(int i=0;i<0x80;i++)
 	{
@@ -76,4 +76,33 @@ void CMyFont::CreatFont(int FontIndex)
 	
 	}
 
+	unsigned int FontTexID;
+
+
+	glGenTextures(1, &FontTexID);				// 创建一个纹理
+	glBindTexture(GL_TEXTURE_2D, FontTexID);			// 构造纹理
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, OneFontpixels);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	return FontTexID;
+
+}
+
+void CMyFont::inputTxt(const char * Chars)
+{
+	WordNum=strlen(Chars)/2;
+	DrawTXT=new unsigned int[WordNum*sizeof(unsigned int)];
+	for(int i=0;i<WordNum;i++)
+	{
+		//if(Chars[i*2]*Chars[i*2+1]==0)
+			//return;
+		DrawTXT[i]=CreatFont(GetFontIndex(Chars[i*2],Chars[i*2+1]));
+	
+	}
+}
+
+void CMyFont::ClearTXT(void)
+{
+	if(WordNum==0)
+		return;
 }
