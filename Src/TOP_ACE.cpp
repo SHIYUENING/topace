@@ -765,6 +765,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.47f),winheight*3/5-16,StrWarning,0,true);
 
 	glColor3f(1.0f,1.0f,1.0f);
+	MyFont.DrawTXT(winwidth,winheight,128,128,32,32);
 }
 
 
@@ -2528,10 +2529,11 @@ void showloading(void)
 	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);
 	case 7:loadover=true;
 //	CMyFont MyFont;
-//	if(!MyFont.LoadFont("Data/FontCH"))
-//		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
+	if(!MyFont.LoadFont("Data/FontCH"))
+		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	
 	}
+	MyFont.inputTxt("≤‚ ‘");
 	/*
 	
 	if(needloadfile==1)
@@ -3105,7 +3107,9 @@ void stage0(void)
 	}
 
 	//Maptexture=bloomTexId1;
-	Maptexture=Video.VideoTexID;
+	//Maptexture=Video.VideoTexID;
+	Maptexture=MyFont.TXTTexIDs[0];
+	
 
 
 }

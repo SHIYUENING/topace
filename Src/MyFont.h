@@ -13,14 +13,17 @@ public:
 	CMyFont(void);
 	~CMyFont(void);
 	bool LoadFont(const char *filename);
-	int GetFontIndex(int InH,int InL);
+	int GetFontIndex(BYTE InH,BYTE InL);
 
 	unsigned char * MyFontpixels;
 	unsigned char * OneFontpixels;
 	unsigned int CreatFont(int FontIndex);
 	void inputTxt(const char * Chars);
-	unsigned int * DrawTXT;
+	unsigned int * TXTTexIDs;
 	unsigned int WordNum;
 	void ClearTXT(void);
+	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH);
+	GLuint WordList;
+	bool ifloadedFont;
 };
 #endif
