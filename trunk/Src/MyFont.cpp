@@ -136,7 +136,7 @@ void CMyFont::ClearTXT(void)
 	delete [] TXTTexIDs;
 }
 
-void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH)
+void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit)
 {
 	if(WordNum<1)
 		return;
@@ -157,7 +157,7 @@ void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 		glBindTexture(GL_TEXTURE_2D, TXTTexIDs[i]);
 		glLoadIdentity();
 		WinPosX=WinPosX+SizeW;
-		if(WinPosX>(WinW-PosX))
+		if(WinPosX>(WordRightLimit-PosX))
 		{
 			WinPosX=0;
 			WinPosY=WinPosY-SizeH;
