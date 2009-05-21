@@ -765,7 +765,8 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.47f),winheight*3/5-16,StrWarning,0,true);
 
 	glColor3f(1.0f,1.0f,1.0f);
-	MyFont.DrawTXT(winwidth,winheight,128,128,32,32);
+	int txtpringsize=((winheight/30)/8)*8;
+	MyFont.DrawTXT(winwidth,winheight,128,128,txtpringsize,txtpringsize,winwidth);
 }
 
 

@@ -22,7 +22,7 @@ public:
 	unsigned int * TXTTexIDs;
 	unsigned int WordNum;
 	void ClearTXT(void);
-	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH);
+	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit);
 	GLuint WordList;
 	bool ifloadedFont;
 };
