@@ -1,16 +1,26 @@
 //#pragma once
 #ifndef _MYFONT_H
 #define _MYFONT_H
+#include <windows.h>		// Header File For Windows
+#include <stdio.h>			// Header File For Standard Input/Output
+#include <gl\gl.h>			// Header File For The OpenGL32 Library
+#include <gl\glu.h>			// Header File For The GLu32 Library
+#include <gl\glaux.h>		// Header File For The Glaux Library
+
 class CMyFont
 {
 public:
 	CMyFont(void);
 	~CMyFont(void);
-	bool LoadFont(char *filename);
+	bool LoadFont(const char *filename);
 	int GetFontIndex(int InH,int InL);
 
 	unsigned char * MyFontpixels;
 	unsigned char * OneFontpixels;
-	void CreatFont(int FontIndex);
+	unsigned int CreatFont(int FontIndex);
+	void inputTxt(const char * Chars);
+	unsigned int * DrawTXT;
+	unsigned int WordNum;
+	void ClearTXT(void);
 };
 #endif
