@@ -1,19 +1,11 @@
 #include "MyFont.h"
 CMyFont::CMyFont(void)
 :WordNum(0)
-,WordList(0)
+,TXTTexID(0)
 ,ifloadedFont(false)
 {
-	OneFontpixels = new unsigned char[0x1000];
-	WordList=glGenLists(1);
-	glNewList(WordList,GL_COMPILE);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,1.0f);glVertex2f(0.0f,1.0f);
-			glTexCoord2f(0.0f,0.0f);glVertex2f(0.0f,0.0f);
-			glTexCoord2f(1.0f,0.0f);glVertex2f(1.0f,0.0f);
-			glTexCoord2f(1.0f,1.0f);glVertex2f(1.0f,1.0f);
-		glEnd();
-	glEndList();
+	OneFontpixels=new unsigned char[0x1000];
+	
 		
 }
 
@@ -21,12 +13,24 @@ CMyFont::~CMyFont(void)
 {
 	delete [] OneFontpixels;
 	delete [] MyFontpixels;
-	ClearTXT();
-	glDeleteLists(WordList,1);
+	glDeleteTextures(1,&TXTTexID);
 }
 
 bool CMyFont::LoadFont(const char *filename)
 {
+
+	if(TXTTexID!=0)
+		glDeleteTextures(1,&TXTTexID);
+	unsigned char* data;	
+	data = new unsigned char[256*256*4];
+	ZeroMemory(data,256*256*4);	// 清除存储区
+	glGenTextures(1, &TXTTexID);				// 创建一个纹理
+	glBindTexture(GL_TEXTURE_2D, TXTTexID);			// 构造纹理
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, 256, 256, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	delete [] data;
+
 	FILE	*m_FilePointer;
 	m_FilePointer= new FILE;
 	if ((m_FilePointer=fopen(filename,"rb"))==NULL)
@@ -60,8 +64,10 @@ int CMyFont::GetFontIndex(BYTE InH,BYTE InL)
 	return (InH-0xA1)*(0xFE-0xA1+1)+InL-0xA1;
 }
 
-unsigned int CMyFont::CreatFont(int FontIndex)
+void CMyFont::CreatFont(int FontIndex,int FontInTexNum)
 {
+	if(FontInTexNum>=64)
+		return;
 	for(int i=0;i<0x80;i++)
 	{
 		BYTE pixels8 = MyFontpixels[FontIndex*0x80+i];
@@ -97,13 +103,9 @@ unsigned int CMyFont::CreatFont(int FontIndex)
 				OneFontpixels[i*0x20+j*4+3]=0x0;
 		}
 	}
-	unsigned int FontTexID;
-	glGenTextures(1, &FontTexID);				// 创建一个纹理
-	glBindTexture(GL_TEXTURE_2D, FontTexID);			// 构造纹理
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, 32, 32, GL_RGBA, GL_UNSIGNED_BYTE, OneFontpixels);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	return FontTexID;
+	glBindTexture(GL_TEXTURE_2D, TXTTexID);
+	glTexSubImage2D(GL_TEXTURE_2D,0,(FontInTexNum%8)*32,(FontInTexNum/8)*32,32,32,GL_RGBA,GL_UNSIGNED_BYTE,OneFontpixels);
+
 
 }
 
@@ -111,30 +113,20 @@ void CMyFont::inputTxt(const char * Chars)
 {
 	if(!ifloadedFont)
 		return;
-	ClearTXT();
+
+	WordNum=0;
 	WordNum=strlen(Chars)/2;
 	if(WordNum<1)
 		return;
-	TXTTexIDs=new unsigned int[WordNum*sizeof(unsigned int)];
+	if(WordNum>64)
+		WordNum=64;
+
 	for(unsigned int i=0;i<WordNum;i++)
 	{
-		//if(Chars[i*2]*Chars[i*2+1]==0)
-			//return;
-		TXTTexIDs[i]=CreatFont(GetFontIndex(Chars[i*2],Chars[i*2+1]));
+		CreatFont(GetFontIndex(Chars[i*2],Chars[i*2+1]),i);
 	}
 }
 
-void CMyFont::ClearTXT(void)
-{
-	if(WordNum<1)
-		return;
-	for(unsigned int i=0;i<WordNum;i++)
-	{
-		if(TXTTexIDs[i]!=0)
-		glDeleteTextures(1,&TXTTexIDs[i]);
-	}
-	delete [] TXTTexIDs;
-}
 
 void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit)
 {
@@ -152,9 +144,9 @@ void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 	glOrtho(0,WinW,0,WinH,-1,1);							// Set Up An Ortho Screen
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
+	glBindTexture(GL_TEXTURE_2D, TXTTexID);
 	for(unsigned int i=0;i<WordNum;i++)
 	{
-		glBindTexture(GL_TEXTURE_2D, TXTTexIDs[i]);
 		glLoadIdentity();
 		WinPosX=WinPosX+SizeW;
 		if(WinPosX>(WordRightLimit-PosX))
@@ -163,13 +155,13 @@ void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 			WinPosY=WinPosY-SizeH;
 		}
 		glTranslated(WinPosX+PosX,WinPosY-PosY,0);
-		//glScaled(SizeW,SizeH,0.0);
-		//glCallList(WordList);
+		float FontTexPosX=(float(i%8))/8.0f;
+		float FontTexPosY=(float(i/8))/8.0f;
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(-SizeW/2,-SizeH/2);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( SizeW/2,-SizeH/2);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( SizeW/2, SizeH/2);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(-SizeW/2, SizeH/2);
+				glTexCoord2f(FontTexPosX+0.0f,FontTexPosY+1.0f/8.0f);glVertex2i(-SizeW/2,-SizeH/2);
+				glTexCoord2f(FontTexPosX+1.0f/8.0f,FontTexPosY+1.0f/8.0f);glVertex2i( SizeW/2,-SizeH/2);
+				glTexCoord2f(FontTexPosX+1.0f/8.0f,FontTexPosY+0.0f);glVertex2i( SizeW/2, SizeH/2);
+				glTexCoord2f(FontTexPosX+0.0f,FontTexPosY+0.0f);glVertex2i(-SizeW/2, SizeH/2);
 			glEnd();
 	
 	}
