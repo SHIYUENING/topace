@@ -1,18 +1,21 @@
 #include "MyFont.h"
+unsigned char * MyFontpixels;
+unsigned char * OneFontpixels;
+bool ifloadedFont=false;
+void DeleteFont(void)
+{
+	delete [] OneFontpixels;
+	delete [] MyFontpixels;
+}
 CMyFont::CMyFont(void)
 :WordNum(0)
 ,TXTTexID(0)
-,ifloadedFont(false)
-{
-	OneFontpixels=new unsigned char[0x1000];
-	
-		
+{	
 }
 
 CMyFont::~CMyFont(void)
 {
-	delete [] OneFontpixels;
-	delete [] MyFontpixels;
+
 	glDeleteTextures(1,&TXTTexID);
 }
 
@@ -31,31 +34,35 @@ bool CMyFont::LoadFont(const char *filename)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	delete [] data;
 
-	FILE	*m_FilePointer;
-	m_FilePointer= new FILE;
-	if ((m_FilePointer=fopen(filename,"rb"))==NULL)
+	if(!ifloadedFont)
 	{
-		return false;	// 打开文件失败
-	}
+		FILE	*m_FilePointer;
+		m_FilePointer= new FILE;
+		if ((m_FilePointer=fopen(filename,"rb"))==NULL)
+		{
+			return false;	// 打开文件失败
+		}
 
-	unsigned int filesize = 0;
-	while (!feof(m_FilePointer))
-	{
-		fgetc(m_FilePointer);
-		filesize++;
+		unsigned int filesize = 0;
+		while (!feof(m_FilePointer))
+		{
+			fgetc(m_FilePointer);
+			filesize++;
+		}
+		filesize--;
+		rewind(m_FilePointer);
+		if(filesize==0xFF900)
+		{
+			OneFontpixels=new unsigned char[0x1000];
+			MyFontpixels = new unsigned char[filesize];
+			fread( MyFontpixels, 1, filesize, m_FilePointer );
+			fclose(m_FilePointer);
+			ifloadedFont=true;
+			return true;
+		}
+		return false;
 	}
-	filesize--;
-	rewind(m_FilePointer);
-	if(filesize==0xFF900)
-	{
-		MyFontpixels = new unsigned char[filesize];
-		fread( MyFontpixels, 1, filesize, m_FilePointer );
-		fclose(m_FilePointer);
-		ifloadedFont=true;
-		return true;
-	}
-
-	return false;
+	return true;
 }
 
 int CMyFont::GetFontIndex(BYTE InH,BYTE InL)
@@ -148,13 +155,19 @@ void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 	for(unsigned int i=0;i<WordNum;i++)
 	{
 		glLoadIdentity();
-		WinPosX=WinPosX+SizeW;
-		if(WinPosX>(WordRightLimit-PosX))
+		if(WordRightLimit>0)
 		{
-			WinPosX=0;
-			WinPosY=WinPosY-SizeH;
+			if(WinPosX>(WordRightLimit-PosX-SizeW))
+			{
+				WinPosX=0;
+				WinPosY=WinPosY-SizeH;
+			}
 		}
-		glTranslated(WinPosX+PosX,WinPosY-PosY,0);
+
+		if(WordRightLimit>0)
+			glTranslated(WinPosX+PosX,WinPosY-PosY,0);
+		else
+			glTranslated(WinPosX+(WinW-WordNum*SizeW)/2+SizeW/2,WinPosY-PosY,0);
 		float FontTexPosX=(float(i%8))/8.0f;
 		float FontTexPosY=(float(i/8))/8.0f;
 			glBegin(GL_QUADS);
@@ -163,6 +176,7 @@ void CMyFont::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 				glTexCoord2f(FontTexPosX+1.0f/8.0f,FontTexPosY+0.0f);glVertex2i( SizeW/2, SizeH/2);
 				glTexCoord2f(FontTexPosX+0.0f,FontTexPosY+0.0f);glVertex2i(-SizeW/2, SizeH/2);
 			glEnd();
+		WinPosX=WinPosX+SizeW;
 	
 	}
 
