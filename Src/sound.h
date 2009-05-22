@@ -3,6 +3,7 @@
 #include <windows.h>											// Header File For Windows
 #include "Mathematics.h"
 #include "Physics.h"
+#include "MyFont.h"
 //#include <stdio.h>												// Header File For Standard Input / Output
 //#include <stdarg.h>
 //#include   <time.h>
@@ -48,6 +49,7 @@ FMOD_CHANNEL* missvoicechannel;
 FMOD_CHANNEL* BGMchannel;
 FMOD_VECTOR pos;
 */
+extern CMyFont MyFont;
 #define MAX_missleWarning 10
 #define MAX_fox2voice 3
 #define MAX_hitvoice 4
@@ -273,6 +275,12 @@ void Playfox2voice(int Num)
 	voiceSourceAWACS->Unlink();
 	voiceSourceAWACS->Link(fox2voice[Num]);
 	voiceSourceAWACS->Play();
+	if(Num==0)
+		MyFont.inputTxt("《ＦＯＸ２！》");
+	if(Num==1)
+		MyFont.inputTxt("《ＦＯＸ２！ＦＯＸ２！》");
+	if(Num==2)
+		MyFont.inputTxt("《ＦＯＸ２》");
 
 
 }
@@ -288,7 +296,14 @@ void Playhitvoice(int Num)
 	voiceSourceAWACS->Unlink();
 	voiceSourceAWACS->Link(hitvoice[Num]);
 	voiceSourceAWACS->Play();
-
+	if(Num==0)
+		MyFont.inputTxt("《导弹命中！》");
+	if(Num==1)
+		MyFont.inputTxt("《击中目标！》");
+	if(Num==2)
+		MyFont.inputTxt("《导弹命中！》");
+	if(Num==3)
+		MyFont.inputTxt("《目标命中！》");
 
 }
 void Playkillvoice(int Num)
@@ -298,11 +313,11 @@ void Playkillvoice(int Num)
 		return;
 	if(killvoice[Num]->Time<0.001)
 		return;
-	if(voiceSourceAWACS->State==AL_PLAYING)
+	if(voiceSource->State==AL_PLAYING)
 		return;
-	voiceSourceAWACS->Unlink();
-	voiceSourceAWACS->Link(killvoice[Num]);
-	voiceSourceAWACS->Play();
+	voiceSource->Unlink();
+	voiceSource->Link(killvoice[Num]);
+	voiceSource->Play();
 
 
 }
@@ -318,6 +333,13 @@ void Playmissvoice(int Num)
 	voiceSourceAWACS->Unlink();
 	voiceSourceAWACS->Link(missvoice[Num]);
 	voiceSourceAWACS->Play();
-
+	if(Num==0)
+		MyFont.inputTxt("《没有命中，被躲开了》");
+	if(Num==1)
+		MyFont.inputTxt("《ＭＩＳＳ！》");
+	if(Num==2)
+		MyFont.inputTxt("《导弹丢失目标！》");
+	if(Num==3)
+		MyFont.inputTxt("《ＭＩＳＳ》");
 
 }

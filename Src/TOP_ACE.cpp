@@ -384,6 +384,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
+	DeleteFont();
 	glDeleteFramebuffersEXT(1, &fbo);
 	glDeleteRenderbuffersEXT(1, &depthBuffer);
 	glDeleteTextures(1,&img);
@@ -754,9 +755,12 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.65f),winheight/2-16,szshowSpeed,0,true);
 	glPrint((GLint)(winwidth*0.29f),winheight/2-16,szshowHigh,0,true);
 	glPrint((GLint)(winwidth*0.85f),winheight/5-16,PlayerHP,0,true);
-	glPrint(0,winheight-16,szTitle,0);
-	glPrint(0,winheight-32,szVERSION,0);
-	glPrint(0,winheight-48,cpubrand,0);
+	if(voiceSourceAWACS->State!=AL_PLAYING)
+	{
+		glPrint(0,winheight-16,szTitle,0);
+		glPrint(0,winheight-32,szVERSION,0);
+		glPrint(0,winheight-48,cpubrand,0);
+	}
 	glPrint(winwidth/4,0,test,0);
 	glColor3f(1.0f,1.0f,1.0f);
 
@@ -765,8 +769,8 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.47f),winheight*3/5-16,StrWarning,0,true);
 
 	glColor3f(1.0f,1.0f,1.0f);
-	int txtpringsize=((winheight/30)/8)*8;
-	MyFont.DrawTXT(winwidth,winheight,128,128,txtpringsize,txtpringsize,winwidth);
+	//int txtpringsize=((winheight/30)/8)*8;
+	//MyFont.DrawTXT(winwidth,winheight,128,128,txtpringsize,txtpringsize,winwidth);
 }
 
 
@@ -1170,6 +1174,18 @@ void testFPS (void)
 }
 */
 
+void DrawRadioTXT(void)
+{
+
+	if(voiceSourceAWACS->State!=AL_PLAYING)
+		return;
+	glEnable(GL_BLEND);
+	glColor3f(0.0f,0.0f,1.0f);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
+	glPrint(winwidth/2-20,winheight-winheight/36,"AWACS",0,false);
+	MyFont.DrawTXT(winwidth,winheight,winwidth/8,winheight/16,((winheight/30)/8)*12,((winheight/30)/8)*12,0);
+	glColor3f(1.0f,1.0f,1.0f);
+}
 void DrawBom(void)
 {
 	glEnable(GL_DEPTH_TEST);
@@ -2534,7 +2550,8 @@ void showloading(void)
 		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	
 	}
-	MyFont.inputTxt("≤‚ ‘µ•Œ∆¿Ì◊÷ø‚");
+	MyFont.inputTxt("£‘£œ£–°°£¡£√£≈");
+	//MyFont.inputTxt("≤‚ ‘µ•Œ∆¿Ì◊÷ø‚°£≤‚ ‘µ•Œ∆¿Ì◊÷ø‚°£≤‚ ‘µ•Œ∆¿Ì◊÷ø‚°£≤‚ ‘µ•Œ∆¿Ì◊÷ø‚°£≤‚ ‘µ•Œ∆¿Ì◊÷ø‚°£≤‚ ‘µ•Œ∆¿Ì◊÷ø‚°£");
 	/*
 	
 	if(needloadfile==1)
@@ -3106,6 +3123,7 @@ void stage0(void)
 			DrawRedar((float)longitude);
 		//DrawUI1(rotation);
 	}
+	DrawRadioTXT();
 
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
@@ -3199,6 +3217,7 @@ void WaitKeyToStart(void)
 	DrawShadowMap();
 	DrawPlayer();
 	glEnable(GL_BLEND);
+	MyFont.DrawTXT(winwidth,winheight,winwidth/2-224,winheight/7,64,64,winwidth);
 	glPrint(16,16,"Push Any Key To Start ",0);
 	glDisable(GL_BLEND);
 	if(isKeyDown||KeyInput.isAnyKeyDown)
