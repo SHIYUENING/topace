@@ -17,13 +17,12 @@ public:
 
 	unsigned char * MyFontpixels;
 	unsigned char * OneFontpixels;
-	unsigned int CreatFont(int FontIndex);
+	void CreatFont(int FontIndex,int FontInTexNum);
 	void inputTxt(const char * Chars);
-	unsigned int * TXTTexIDs;
+	unsigned int TXTTexID;
+	unsigned int TXTID[64];
 	unsigned int WordNum;
-	void ClearTXT(void);
 	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit);
-	GLuint WordList;
 	bool ifloadedFont;
 };
 #endif

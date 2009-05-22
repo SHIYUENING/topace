@@ -2534,7 +2534,7 @@ void showloading(void)
 		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	
 	}
-	MyFont.inputTxt("≤‚ ‘");
+	MyFont.inputTxt("≤‚ ‘µ•Œ∆¿Ì◊÷ø‚");
 	/*
 	
 	if(needloadfile==1)
@@ -3109,7 +3109,7 @@ void stage0(void)
 
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
-	Maptexture=MyFont.TXTTexIDs[0];
+	Maptexture=MyFont.TXTTexID;
 	
 
 
