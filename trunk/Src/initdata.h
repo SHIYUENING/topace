@@ -75,9 +75,13 @@ void initUnitdata(int stage=0 )
 			UDfighers[i].UDlife=99;
 			UDfighers[i].UDflag=(i/5)%4;
 			if(UDfighers[i].UDflag==2)
+			{
 				sprintf(UDfighers[i].UDname,"Mave");
+			}
 			else
+			{
 				sprintf(UDfighers[i].UDname,"Neo1");
+			}
 			UDfighers[i].UDlockselect=false;
 			UDfighers[i].UDMplane.Translate(Vector3d(500.0f*(i-maxUnits/2), 35000.0f+5000.0f*(i%4), 2000.0f*(i%20-10)));
 			UDfighers[i].MoveToPos=Vector3d(500.0f*(i-maxUnits/2), 35000.0f+5000.0f*(i%4), 2000.0f*(i%20-10));

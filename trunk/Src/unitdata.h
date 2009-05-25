@@ -74,6 +74,8 @@ public:
 	bool inGunRange;
 	bool inGunSoundRange;
 	Vector3d MoveToPos;
+	int SelfNormalModelID;
+	int SelfLowModelID;
 
 
 	//AudioSource * SoundSourceGun;
