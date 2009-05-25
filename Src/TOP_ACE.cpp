@@ -2322,8 +2322,8 @@ void DrawPlayer(void)
 					//shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					
 					//m_VBMD->ShowVBMD(PlayerMainModel);
-					shaderT(m_VBMD->GetNormalTexID(ModelID_MavePart_Main),m_VBMD->GetSpecularTexID(ModelID_MavePart_Main));
-					m_VBMD->ShowVBMD(ModelID_MavePart_Main);
+					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
+					m_VBMD->ShowVBMD(PlayerMainModel);
 					glPushMatrix();
 						glMultMatrixd(MavePart_BackL.Matrix4());
 						m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
@@ -2645,7 +2645,7 @@ void DrawShadowMap(void)
 							glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapmvmatrix);
 							glGetFloatv(GL_PROJECTION_MATRIX,ShadowMapprojmatrix);
 							//m_VBMD->ShowVBMD(PlayerMainModel);
-							m_VBMD->ShowVBMD(ModelID_MavePart_Main);
+							m_VBMD->ShowVBMD(PlayerMainModel);
 							glPushMatrix();
 							glMultMatrixd(MavePart_BackL.Matrix4());
 								m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
@@ -2843,6 +2843,8 @@ void DrawGround(void)
 	eyePositionSea[2]=(float)MFighter.RefPos()(2);
 
 
+	glDisable(GL_BLEND);
+	m_VBMD->ShowVBMD(ModelID_Stage1Ship_Normal);
 	if(ShaderWater)
 	{
 		DrawSea();
@@ -2887,10 +2889,10 @@ void DrawGround(void)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
-						glTexCoord2f(0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(0.0f,0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(10.0f,0.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(10.0f,10.0f);glVertex3f(	20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f( 0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f( 0.0f, 0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f, 0.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f,10.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
 				}
 			glColor4f(1.0f,1.0f,1.0f,1.0f);

@@ -23,6 +23,8 @@ Unitdata::Unitdata(void)
 ,AIactTimer2(0)
 ,inGunRange(false)
 ,inGunSoundRange(false)
+,SelfNormalModelID(0)
+,SelfLowModelID(0)
 {
 
 
