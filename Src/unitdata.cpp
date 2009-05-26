@@ -374,11 +374,11 @@ void Unitdata::AttackTo(const Vector3d& Position)
 
 	double cos_angle = dot(target, current);
 
-	if(((tmpx*tmpx+tmpy*tmpy+tmpz*tmpz)<(attackRange*attackRange/9))&&(cos_angle>0.95))
+	if(((tmpx*tmpx+tmpy*tmpy+tmpz*tmpz)<(attackRange*attackRange/16.0))&&(cos_angle>0.95))
 		inGunRange=true;
 	else
 		inGunRange=false;
-	if(cos_angle>0.5)
+	if(cos_angle>0.9)
 		LockTimer=LockTimer+1;
 	else
 	{
