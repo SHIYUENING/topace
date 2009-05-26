@@ -76,8 +76,8 @@ bool CVideo::LoadVideo(const char *filename,bool loop)
 		return false;
 	}
 
-	if(pCodec->capabilities & CODEC_CAP_TRUNCATED)
-		pCodecCtx->flags|=CODEC_FLAG_TRUNCATED;
+	//if(pCodec->capabilities & CODEC_CAP_TRUNCATED)
+	//	pCodecCtx->flags|=CODEC_FLAG_TRUNCATED;
 
 // ´ò¿ª½âÂëÆ÷
 	if(avcodec_open(pCodecCtx, pCodec)<0)
