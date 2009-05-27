@@ -67,13 +67,16 @@ void initUnitdata(int stage=0 )
 		UDfighers[3].UDlockselect=false;
 		UDfighers[3].UDMplane.Translate(Vector3d(300.0f, 50100.0f, -2000.0f));
 		*/
-		for(int i=5;i<maxUnits;i++)
+		for(int i=1;i<maxUnits;i++)
 		{
 			UDfighers[i].ResetData();
 			UDfighers[i].UDMplane.Reset();
 			UDfighers[i].UDfighterType=2;
 			UDfighers[i].UDlife=99;
-			UDfighers[i].UDflag=(i/5)%4;
+			if(i>=5)
+				UDfighers[i].UDflag=1;
+			else
+				UDfighers[i].UDflag=2;
 			if(UDfighers[i].UDflag==2)
 			{
 				sprintf(UDfighers[i].UDname,"Mave");
@@ -91,6 +94,8 @@ void initUnitdata(int stage=0 )
 				UDfighers[i].UDfighterType=3;
 				UDfighers[i].LockOnTime=1;
 				UDfighers[i].RefireTime=450;
+				UDfighers[i].UDPstate.MaxAngleSpeed=CRad(2.0);
+				UDfighers[i].UDPstate.MaxSpeed=8.0;
 			}
 		}
 
