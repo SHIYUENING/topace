@@ -1832,13 +1832,14 @@ bool UnitAIBefore(int i)
 	float TmpY=float(UDfighers[i].UDMplane.RefPos()(1) - UDfighers[i].MoveToPos(1));
 	float TmpZ=float(UDfighers[i].UDMplane.RefPos()(2) - UDfighers[i].MoveToPos(2));
 	float TmpL=TmpX*TmpX+TmpY*TmpY+TmpZ*TmpZ;
-	if(TmpL>tmpredarRenge*tmpredarRenge)
+	if((TmpL>tmpredarRenge*tmpredarRenge)||(TmpL<10000.0f))
 	{
 		UDfighers[i].LockTimer=0;
 		UDfighers[i].AIact=1;
 		return true;
 	
 	}
+	
 
 	if((UDfighers[i].attackTGTNum>=0)&&(UDfighers[i].attackTGTNum<maxUnits))
 	if((GetLength_2f(UDfighers[i].UDMplane.RefPos(),UDfighers[UDfighers[i].attackTGTNum].UDMplane.RefPos())<500*500))
@@ -1965,7 +1966,7 @@ void UnitMove(void)
 	}
 */
     PlayerLocking=false;
-	for(int i=2;i<maxUnits;i++)
+	for(int i=1;i<maxUnits;i++)
 	{
 		if(UDfighers[i].smokeTime>0)
 		UDfighers[i].smokeTime=UDfighers[i].smokeTime-1;
@@ -1980,6 +1981,8 @@ void UnitMove(void)
 				UnitAI(i);
 
 
+			if(UDfighers[i].UDflag==2)
+				UDfighers[i].MoveToPos=UDfighers[0].UDMplane.RefPos();
 			UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,UDfighers[i].mSpeed));
 		}
 		
@@ -2135,7 +2138,10 @@ void UnitMove(void)
 				PMissleList.Missles[i].TurnTo(UDfighers[PMissleList.Missles[i].TGTnum].UDMplane.RefPos());
 				PMissleList.Missles[i].Move();
 
-				if(tmpD<10000)//ÁÙÊ±±¬Õ¨·¶Î§
+				float BoomRange=10000.0f;
+				if(PMissleList.Missles[i].onwer==0)
+					BoomRange=50000.0f;
+				if(tmpD<BoomRange)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
 					if(GetLength_2f(PMissleList.Missles[i].UDMplane.RefPos(),MFighter.RefPos())<tmpLookRenge*tmpLookRenge*2)
 					AddSound(1,PMissleList.Missles[i].UDMplane.RefPos());
@@ -2146,7 +2152,7 @@ void UnitMove(void)
 					}
 					else
 					{
-						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-15-rand()%5;
+						UDfighers[PMissleList.Missles[i].TGTnum].UDlife=UDfighers[PMissleList.Missles[i].TGTnum].UDlife-5-rand()%2;
 					}
 
 					if(UDfighers[PMissleList.Missles[i].TGTnum].UDlife>0)

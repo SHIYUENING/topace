@@ -152,7 +152,7 @@ void DrawRedar(float ne=0.0)
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPushMatrix();										// Store The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
-	glOrtho(-DRX,winwidth,-DRY,winheight,-1,100);							// Set Up An Ortho Screen
+	glOrtho(-DRY,winwidth+(DRX-DRY),-DRY,winheight,-1,100);							// Set Up An Ortho Screen
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
@@ -163,18 +163,24 @@ void DrawRedar(float ne=0.0)
 		glColor4f(1.0f,0.5f,0.5f,1.0f);
 	glPushMatrix();	
 		glBindTexture(GL_TEXTURE_2D, textureRedar);	
-		glTranslated(-DRY,DRY,0);
+		//glTranslated(-DRY,DRY,0);
+		
 		if(hited>0)
 		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 				glBegin(GL_QUADS);							// Use A Quad For Each Character
-					glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
-					glVertex2i(0,0);						// Vertex Coord (Bottom Left)
-					glTexCoord2f(1.0,0.0f);	// Texture Coord (Bottom Right)
-					glVertex2i(DRY*2,0);						// Vertex Coord (Bottom Right)
-					glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
-					glVertex2i(DRY*2,-DRY*2);						// Vertex Coord (Top Right)
-					glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
-					glVertex2i(0,-DRY*2);						// Vertex Coord (Top Left)
+					glTexCoord2f(0.0f,0.0f);glVertex2i(-DRY*0.9, DRY*0.9);						// Vertex Coord (Bottom Left)
+					glTexCoord2f(1.0f,0.0f);glVertex2i( DRY*0.9, DRY*0.9);						// Vertex Coord (Bottom Right)
+					glTexCoord2f(1.0f,1.0f);glVertex2i( DRY*0.9,-DRY*0.9);						// Vertex Coord (Top Right)
+					glTexCoord2f(0.0f,1.0f);glVertex2i(-DRY*0.9,-DRY*0.9);						// Vertex Coord (Top Left)
+				glEnd();
+
+				glBindTexture(GL_TEXTURE_2D, CompassTexID);	
+				glRotatef(180.0f-ne,0.0f,0.0f,1.0f);
+				glBegin(GL_QUADS);							// Use A Quad For Each Character
+					glTexCoord2f(0.0f,0.0f);glVertex2i(-DRY*1.1, DRY*1.1);						// Vertex Coord (Bottom Left)
+					glTexCoord2f(1.0f,0.0f);glVertex2i( DRY*1.1, DRY*1.1);						// Vertex Coord (Bottom Right)
+					glTexCoord2f(1.0f,1.0f);glVertex2i( DRY*1.1,-DRY*1.1);						// Vertex Coord (Top Right)
+					glTexCoord2f(0.0f,1.0f);glVertex2i(-DRY*1.1,-DRY*1.1);						// Vertex Coord (Top Left)
 				glEnd();
 	glPopMatrix();	
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -182,7 +188,7 @@ void DrawRedar(float ne=0.0)
 	glPushMatrix();
 			glRotatef(180.0f-ne+25.0f,0.0f,0.0f,1.0f);
 			glBindTexture(GL_TEXTURE_2D, RedarTexture);	
-			glScaled(-0.0199*DRY, 0.0199*DRY, 0.0199*DRY);
+			glScaled(-0.0199*DRY*0.9, 0.0199*DRY*0.9, 0.0199*DRY*0.9);
 			m_VBMD->ShowVBMD(ModelID_redarUI,false);
 			glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glPopMatrix();

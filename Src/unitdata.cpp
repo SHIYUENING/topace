@@ -205,7 +205,8 @@ void Unitdata::TurnTo(const Vector3d& Position){
 
 		if(isRSpeed)
 			rotateAngle=0.0;
-		mSpeed=mSpeed-0.01f*float(rotateAngle*rotateAngle);
+		if(UDflag!=2)
+			mSpeed=mSpeed-0.01f*float(rotateAngle*rotateAngle);
         UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
     }
     else{
@@ -415,8 +416,12 @@ void Unitdata::ResetData(void)
 	attackedMissleNum=-1;
 	fireTimer=0;
 	RefireTime=900;
+	if(this->UDflag==2)
+		RefireTime=450;
 	LockTimer=0;
 	LockOnTime=150;
+	if(this->UDflag==2)
+		LockOnTime=1;
 	attackRange=10000.0f;
 	mSpeed=30;
 	AIactTimer1=0;

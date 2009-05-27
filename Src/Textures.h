@@ -15,7 +15,7 @@ int gpuType=0;//0未知 1NV 2ATI
 bool LoadTGA(Texture *, char *);
 Texture textureAlphaFont[1],textureLock[1];	//,textureBoms[MAXBOMS]
 //GLuint	texture[2];	//gui相关纹理编号
-GLuint textureRedar,UItexture4,Maptexture;
+GLuint textureRedar,UItexture4,Maptexture,CompassTexID;
 GLuint fbo;					// Our handle to the FBO
 GLuint depthBuffer;			// Our handle to the depth render buffer
 GLuint img,fboBloomImg,dtex;					// Our handle to a texture
@@ -545,6 +545,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 	CDDS loadDDS;
 	textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
 	ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
+	CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
 	/*
 	if (TextureImage[2]=LoadBMP("Data/redar.bmp"))
 	{
