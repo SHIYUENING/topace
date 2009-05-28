@@ -805,13 +805,9 @@ void fireShell()
 void PlayerControl()
 {
 
-	KeyInput.UpData();
-	g_flYRot +=0.1f;		// Consistantly Rotate The Scenery
 
-	if (g_keys->keyDown [VK_ESCAPE] == TRUE)					// Is ESC Being Pressed?
-	{
-		TerminateApplication (g_window);						// Terminate The Program
-	}
+
+
 /*
 	if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
 	{
@@ -1089,7 +1085,12 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	Inertia();
 	if(StartShowTime>0)
 		StartShow();
-
+	if (g_keys->keyDown [VK_ESCAPE] == TRUE)					// Is ESC Being Pressed?
+	{
+		TerminateApplication (g_window);						// Terminate The Program
+	}
+	KeyInput.UpData();
+	g_flYRot +=0.1f;		// Consistantly Rotate The Scenery
 	if(isPlayerControl)
 		PlayerControl();
     if (turnX != 0 || turnY != 0 || turnZ != 0){
@@ -2544,16 +2545,22 @@ void showloading(void)
 	glClear (GL_COLOR_BUFFER_BIT );
 	switch (needloadfile)
 	{
-	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
-	case 2:glPrint(16,16,"3/7 Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);
-	case 3:glPrint(16,16,"4/7 Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;//Cloud.Init();
-	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));
-	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();
-	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);
-	case 7:loadover=true;
+	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");break;
+	case 2:glPrint(16,16,"3/7 Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);break;
+	case 3:glPrint(16,16,"4/7 Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;break;//Cloud.Init();
+	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));break;
+	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();break;
+	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);break;
+	case 7:loadover=true;MavePart_BackL.TranslateInternal(Vector3d(0.0,-4.0,37.0));
+	MavePart_BackR.TranslateInternal(Vector3d(0.0,-4.0,37.0));
+	MavePart_FL.TranslateInternal(Vector3d(-8.5,3.5,-20.0));
+	MavePart_FR.TranslateInternal(Vector3d( 8.5,3.5,-20.0));
+	MavePart_WL.TranslateInternal(Vector3d(0.0,0.0,55.0));
+	MavePart_WR.TranslateInternal(Vector3d(0.0,0.0,55.0));
 //	CMyFont MyFont;
 	if(!MyFont.LoadFont("Data/FontCH"))
 		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
+	break;
 	
 	}
 	MyFont.inputTxt("£Ô£Ï£Ð¡¡£Á£Ã£Å");
@@ -3187,6 +3194,7 @@ void WaitKeyToStart(void)
 		paraLightColor[1] = 1.0f;
 		paraLightColor[2] = 1.0f;
 		paraLightColor[3] = 1.0f;
+
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 20.0f, 0.0f));
