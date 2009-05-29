@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static.lib"
+				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static_New.lib"
 				OutputFile="$(OutDir)\TOP_ACE.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library"
@@ -258,6 +258,10 @@
 			</File>
 			<File
 				RelativePath=".\Sea_vertex.cg"
+				>
+			</File>
+			<File
+				RelativePath=".\ToneMapping_pixel.cg"
 				>
 			</File>
 			<File

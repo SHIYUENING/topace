@@ -2855,9 +2855,10 @@ void DrawGround(void)
 	eyePositionSea[1]=(float)MFighter.RefPos()(1);
 	eyePositionSea[2]=(float)MFighter.RefPos()(2);
 
-
+	glEnable(GL_FOG);
 	glDisable(GL_BLEND);
 	m_VBMD->ShowVBMD(ModelID_Stage1Ship_Normal);
+	glDisable(GL_FOG);
 	if(ShaderWater)
 	{
 		DrawSea();
@@ -3140,9 +3141,9 @@ void stage0(void)
 	}
 	DrawRadioTXT();
 
-	//Maptexture=bloomTexId1;
+	Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
-	Maptexture=MyFont.TXTTexID;
+	//Maptexture=MyFont.TXTTexID;
 	
 
 
