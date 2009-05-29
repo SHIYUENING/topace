@@ -29,6 +29,7 @@ CGprogram	g_Sea_pixel;
 CGprogram	g_BloomW_pixel;
 CGprogram	g_BloomH_pixel;
 CGprogram	g_BloomMap_pixel;
+CGprogram	g_ToneMapping_pixel;
 
 CGparameter   g_CGparam_ShadowMapTexture;
 CGparameter   g_CGparam_AmbientReflective;
@@ -246,7 +247,12 @@ void InitCG()
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
-	
+	g_ToneMapping_pixel = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"ToneMapping_pixel.cg",
+												g_CGprofile_pixel,
+												NULL,
+												NULL );
 	//
 	// Load the programs using Cg's expanded interface...
 	//
@@ -278,6 +284,7 @@ void InitCG()
 	cgGLLoadProgram(g_BloomW_pixel);
 	cgGLLoadProgram(g_BloomH_pixel);
 	cgGLLoadProgram(g_BloomMap_pixel);
+	cgGLLoadProgram(g_ToneMapping_pixel);
 
 	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
 	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
@@ -506,5 +513,10 @@ void DrawBloomH(int WinH)
 {
 	cgSetParameter1f(cgGetNamedParameter( g_BloomH_pixel, "imgH"), (float)WinH);
 	cgGLBindProgram( g_BloomH_pixel );
+	cgGLEnableProfile( g_CGprofile_pixel );
+}
+void ToneMapping()
+{
+	cgGLBindProgram( g_ToneMapping_pixel );
 	cgGLEnableProfile( g_CGprofile_pixel );
 }

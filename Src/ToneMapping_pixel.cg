@@ -1,0 +1,19 @@
+struct pixel
+{
+    float4 colorout : COLOR;
+};
+pixel main(
+			float2 oPosition : TEXCOORD0,
+			uniform sampler2D texSrc 
+		   )
+{
+	float4 color;
+	color.r=1.0;
+	color.g=1.0;
+	color.b=1.0;
+	color.a=tex2D(texSrc,oPosition ).r;
+	pixel OUT;
+	OUT.colorout=color;
+
+	return OUT;
+}
