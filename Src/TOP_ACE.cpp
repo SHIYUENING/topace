@@ -2797,6 +2797,7 @@ void DrawHighLight(void)
 	}
 	glEnable(GL_BLEND);*/
 }
+/*
 void glPrintHighLight(void)
 {
 
@@ -2817,24 +2818,7 @@ void glPrintHighLight(void)
 	glEnable(GL_BLEND);
 
 	glBindTexture(GL_TEXTURE_2D, fboBloomImg);	
-		/*
-	VertexQ g_cubeVertices[]={
-		{0.0f,0.0f, 0.0f,0.0f,testNum},
-		{1.0f,0.0f, (float)winwidth,0.0f,testNum},
-		{1.0f,1.0f, (float)winwidth,(float)winheight,testNum},
-		{0.0f,1.0f, 0.0f,(float)winheight,testNum},
-	};
-	glInterleavedArrays( GL_T2F_V3F, 0, g_cubeVertices );
-	glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
-	*/
-/*
-			glBegin(GL_TRIANGLE_STRIP);	
-			glTexCoord2f(0.0f, 0.0f);glVertex2i(0,0);	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(1.0f, 0.0f);glVertex2i(winwidth,0);	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(1.0f, 1.0f);glVertex2i(winwidth,winheight);	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0f, 1.0f);glVertex2i(0, winheight);	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-			glEnd();
-*/
+
 	glTranslated(winwidth/2.0,winheight/2.0,0.0);
 	glScaled(winwidth/2.0,winheight/2.0,1.0);
 	BasicLight();
@@ -2847,7 +2831,7 @@ void glPrintHighLight(void)
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 	glBindTexture(GL_TEXTURE_2D,0);
 }
-
+*/
 void DrawGround(void)
 {
 
@@ -3141,10 +3125,10 @@ void stage0(void)
 	}
 	DrawRadioTXT();
 
-	Maptexture=bloomTexId1;
+	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
 	//Maptexture=MyFont.TXTTexID;
-	
+	Maptexture=dtex;
 
 
 }

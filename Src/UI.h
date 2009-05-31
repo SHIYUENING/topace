@@ -301,8 +301,9 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 	glLoadMatrixd(LMView.Matrix4());
 	glMultMatrixd(FModel.Matrix4());
 
-	
+	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	m_VBMD->ShowVBMD(ShowHPmodel);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
 
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -312,4 +313,7 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
+}
+void DrawMissleView(int ViewPortX,int ViewPortY,Transform& Missle,Transform& MissleTGT,Transform& tfWorld)
+{
 }

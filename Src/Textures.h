@@ -18,7 +18,7 @@ Texture textureAlphaFont[1],textureLock[1];	//,textureBoms[MAXBOMS]
 GLuint textureRedar,UItexture4,Maptexture,CompassTexID;
 GLuint fbo;					// Our handle to the FBO
 GLuint depthBuffer;			// Our handle to the depth render buffer
-GLuint img,fboBloomImg,dtex;					// Our handle to a texture
+GLuint img,dtex;//,fboBloomImg					// Our handle to a texture
 //GLuint blurtexture2;
 GLuint PlayerSign;
 GLuint ShowHPTexID;
@@ -217,7 +217,7 @@ void initFBO()
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
+/*
 		glGenTextures(1, &fboBloomImg);
 		glBindTexture(GL_TEXTURE_2D, fboBloomImg);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
@@ -226,14 +226,14 @@ void initFBO()
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-
+*/
 			
 		glGenTextures(1, &dtex);
 		glBindTexture(GL_TEXTURE_2D, dtex);
 		if(gpuType==0)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		if(gpuType==2)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		if(gpuType==1)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -242,7 +242,7 @@ void initFBO()
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, img, 0);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, fboBloomImg, 0);
+		//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, fboBloomImg, 0);
 
 		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 		switch(status) 
