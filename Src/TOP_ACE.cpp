@@ -2654,9 +2654,16 @@ void DrawShadowMap(void)
 							glDisable(GL_BLEND);
 							RenderShadowMap();
 							
-							
-							glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapmvmatrix);
-							glGetFloatv(GL_PROJECTION_MATRIX,ShadowMapprojmatrix);
+							GLfloat MVmatrix[16],Projmatrix[16];
+							glGetFloatv(GL_MODELVIEW_MATRIX,MVmatrix);
+							glGetFloatv(GL_PROJECTION_MATRIX,Projmatrix);
+							glPushMatrix();
+								glLoadIdentity();	
+								glLoadMatrixf(Projmatrix);
+								glMultMatrixf(MVmatrix);
+								glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapMVPmatrix);
+
+							glPopMatrix();
 							//m_VBMD->ShowVBMD(PlayerMainModel);
 							m_VBMD->ShowVBMD(PlayerMainModel);
 							glPushMatrix();
@@ -3128,7 +3135,7 @@ void stage0(void)
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
 	//Maptexture=MyFont.TXTTexID;
-	Maptexture=dtex;
+	Maptexture=img;
 
 
 }
