@@ -74,6 +74,7 @@ float Ppos2=150.0f;
 float pixelfogColor[3];
 float seatime=0.0f;
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
+GLfloat ShadowMapMVPmatrix[16];
 //≥ı ºªØshader
 void InitCG()
 {
@@ -383,6 +384,8 @@ void shaderT(int NormalTex=0,int SpecularTex=0)//bool UseBloom=false
 		//cgSetParameter1f(cgGetNamedParameter( g_CGvertex_t, "testnum" ), testNum2);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
+
+		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapMVPmatrix" ),ShadowMapMVPmatrix);
 		cgSetParameter4fv(cgGetNamedParameter( g_CGvertex_t, "MissleLightDirection" ),MissleLightDirection);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGvertex_t, "paraLightColor" ),MissleLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "globalAmbient" ), globalAmbient);
@@ -421,6 +424,7 @@ void HighLight()
 	
 	cgSetMatrixParameterfc(cgGetNamedParameter( g_CGHighLight_vertex, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 	cgSetMatrixParameterfc(cgGetNamedParameter( g_CGHighLight_vertex, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
+	cgSetMatrixParameterfc(cgGetNamedParameter( g_CGHighLight_vertex, "ShadowMapMVPmatrix" ),ShadowMapMVPmatrix);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "globalAmbient" ), globalAmbient);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "paraLightColor" ), paraLightColor);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "paraLightDirection" ), paraLightDirection);

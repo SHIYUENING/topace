@@ -212,7 +212,7 @@ void initFBO()
 
 		glGenTextures(1, &img);
 		glBindTexture(GL_TEXTURE_2D, img);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB10_A2,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

@@ -29,13 +29,13 @@ fragment main(
 			  vertex IN,
 			  uniform float4x4 ShadowMapmvmatrix,
 			  uniform float4x4 ShadowMapprojmatrix,
+			  uniform float4x4 ShadowMapMVPmatrix,
 			  uniform float4 MissleLightDirection,
 			  uniform float3 paraLightColor
 			  )
 {
 	fragment OUT;
-	float4x4 modelViewProj2=mul(ShadowMapprojmatrix,ShadowMapmvmatrix);
-	float4 objectPosShadowMap=mul( modelViewProj2, IN.position );
+	float4 objectPosShadowMap=mul( ShadowMapMVPmatrix, IN.position );
 	OUT.texcoord3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2)+0.5;
 	OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
 	OUT.objectPos2 = objectPosShadowMap;
