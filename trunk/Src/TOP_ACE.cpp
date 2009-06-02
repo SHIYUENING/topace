@@ -1,3 +1,7 @@
+#include "ms3d.h"
+
+#include <stdlib.h>
+
 #include <GL/glew.h>
 #include <math.h>
 #include "testNum.h"
@@ -72,7 +76,9 @@ float ViewTurnX=0.0f;
 float ViewTurnY=0.0f;
 bool pushkeyHUD=false;
 
-
+static ms3d_t       ms3d            = 0;
+static float        rangeMin[3];
+static float        rangeMax[3];
 
 
 char szVERSION[512]={0};//opengl°æ±¾
@@ -363,7 +369,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	initlocks();
 	initUnitdata(0);
-	
+	    
+	ms3d = ms3d_loadFromFile("treasure.ms3d",0);
+    ms3d_range(ms3d, rangeMin, rangeMax);
+
 	
 	//glEnable(GL_LINE_SMOOTH);
 	//glHint(GL_LINE_SMOOTH_HINT,GL_LINE_SMOOTH_HINT);
@@ -2357,6 +2366,7 @@ void DrawPlayer(void)
 					glPopMatrix();
 				
 	
+					ms3d_drawAnimation(ms3d, float(playTime%500)/500.0f);
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
 					glColor4f(1.0f,1.0f,1.0f,0.0f);
