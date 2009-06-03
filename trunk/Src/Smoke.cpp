@@ -188,13 +188,13 @@ void CSmoke::DrawSmoke(const Vector3d& ViewPos,Transform& would,int winwidth,int
 			
 			if(SmokesList[i].life>0.0f)//´æÔÚ
 			{
-				SmokesList[i].pos[0]=SmokesList[i].pos[0]+SmokesList[i].posMove[0];
+/*				SmokesList[i].pos[0]=SmokesList[i].pos[0]+SmokesList[i].posMove[0];
 				SmokesList[i].pos[1]=SmokesList[i].pos[1]+SmokesList[i].posMove[1];
 				SmokesList[i].pos[2]=SmokesList[i].pos[2]+SmokesList[i].posMove[2];
 				SmokesList[i].size=SmokesList[i].size+SmokesList[i].sizeMove;
 				if(SmokesList[i].type!=2)
 				SmokesList[i].life=SmokesList[i].life-1.0f;
-
+*/
 				if(!m_IsSkip)
 				{
 					tmpX=SmokesList[i].pos[0]-(float)ViewPos(0);
