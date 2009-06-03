@@ -142,7 +142,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4996"
+				DisableSpecificWarnings="4996;4204;4800"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -322,6 +322,38 @@
 			</File>
 			<File
 				RelativePath=".\ms3d_load.c"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="MD5"
+			>
+			<File
+				RelativePath=".\MD5Model.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MD5Model.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Quat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Quat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Trackball.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Trackball.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Vector3.h"
 				>
 			</File>
 		</Filter>

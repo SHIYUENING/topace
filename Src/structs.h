@@ -139,4 +139,74 @@ GLfloat Part_WR_ShadowMapMVPmatrix[16];
 int MissleFireLightNum=-1;
 Vector3d SunPos3d;
 CMyFont MyFont;
+int winwidth,winheight;//全局变量，用于记录窗口实时大小，gui部分大多会使用到
 
+bool		g_fVBOSupported = false;							// ARB_vertex_buffer_object supported?
+								// Rotation
+int			g_nFPS = 0, g_nFrames = 0;							// FPS and FPS Counter
+DWORD		g_dwLastFPS = 0;									// Last FPS Check Time	
+//~TUTORIAL
+double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
+double oneframetimeT=0.0;
+int needloadfile=0;
+bool loadover=false;
+bool isDraw=false;
+bool lockedsound=false;
+bool GunFiresound=false;
+float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
+float shellturn;
+//GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
+//下面三个是惯性计算相关变量
+float InertiaX=0.0f;
+float InertiaY=0.0f;
+float InertiaZ=0.0f;
+float InertiaSpeed=0.0f;
+
+float ViewTurnX=0.0f;
+float ViewTurnY=0.0f;
+bool pushkeyHUD=false;
+
+char szVERSION[512]={0};//opengl版本
+
+char szResolution[128]={0};//屏幕高宽
+char szTitle[256]={0};	//标题
+
+GLdouble lockX,lockY;//锁定框位置
+float MAXSpeed=0.05f;
+float MINSpeed=0.0001f;
+float Acceleration=0.0001f;
+float SpeedShowPercentage=30000;
+float TurnRateX=0.005f;
+float TurnRateY=0.05f;
+float TurnRateZ=0.005f;
+
+float glClearColorR=0.72f;
+float glClearColorG=0.73f;
+float glClearColorB=0.82f;
+float glClearColorA=1.0f;
+float fogColorR=0.72f;
+float fogColorG=0.73f;
+float fogColorB=0.82f;
+float fogColorA=1.0f;
+float fogDENSITY=0.35f;
+float Fog_Far=1000.0f;
+float Fog_Near=800.0f;
+float LightAmbientR=0.7f;
+float LightAmbientG=0.7f;
+float LightAmbientB=0.7f;
+float LightAmbientA=1.0f;
+float LightDiffuseR=1.0f;
+float LightDiffuseG=1.0f;
+float LightDiffuseB=1.0f;
+float LightDiffuseA=1.0f;
+//bool Bgens=false;//环境贴图相关
+//bool Bgent=false;//环境贴图相关
+
+bool lockedX=false;//X轴是否锁定到目标
+bool lockedY=false;//Y轴是否锁定到目标
+bool lockselect=false;//是否要锁定目标
+bool KeyQ=false;//按键“Q”是否按下
+bool KeyF=false;//按键“F”是否按下
+bool KeyR=false;//按键“R”是否按下
+bool KeyT=false;
+double oneframetimelimit=1.0/60.0;//每桢最大时间

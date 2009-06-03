@@ -1,4 +1,4 @@
-#include "ms3d.h"
+//#include "ms3d.h"
 
 #include <stdlib.h>
 
@@ -37,18 +37,8 @@
 #pragma comment( lib, "glew32d.lib" )
 #pragma comment( lib, "SDL.lib" )
 #pragma comment( lib, "SDLmain.lib" )
-#pragma comment( lib, "SDLmain.lib" )
 
-int winwidth,winheight;//全局变量，用于记录窗口实时大小，gui部分大多会使用到
 
-bool		g_fVBOSupported = false;							// ARB_vertex_buffer_object supported?
-
-float		g_flYRot = 0.0f;									// Rotation
-int			g_nFPS = 0, g_nFrames = 0;							// FPS and FPS Counter
-DWORD		g_dwLastFPS = 0;									// Last FPS Check Time	
-//~TUTORIAL
-double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
-double oneframetimeT=0.0;
 LARGE_INTEGER t1,t2,feq,t3;//计算每桢运行时间相关
 GL_Window*	g_window;
 Keys*		g_keys;
@@ -56,76 +46,7 @@ CSmoke		PSmokes;
 
 CKeyInput KeyInput;
 CSkyBox SkyBox;
-//CCloud Cloud;
 CVideo Video;
-int needloadfile=0;
-bool loadover=false;
-bool isDraw=false;
-bool lockedsound=false;
-bool GunFiresound=false;
-float turnX,turnY,turnZ,moveX,moveY,moveZ,turnSpeed;//玩家旋转和移动变量
-float shellturn;
-//GLdouble wx,wy,wz;//某单位在窗口上的坐标，Z<0说明在前方，Z>0说明在后方，Z值应该是深度
-//下面三个是惯性计算相关变量
-float InertiaX=0.0f;
-float InertiaY=0.0f;
-float InertiaZ=0.0f;
-float InertiaSpeed=0.0f;
-
-float ViewTurnX=0.0f;
-float ViewTurnY=0.0f;
-bool pushkeyHUD=false;
-
-static ms3d_t       ms3d            = 0;
-static float        rangeMin[3];
-static float        rangeMax[3];
-
-
-char szVERSION[512]={0};//opengl版本
-
-char szResolution[128]={0};//屏幕高宽
-char szTitle[256]={0};	//标题
-float V2TY=0.0f;
-GLdouble lockX,lockY;//锁定框位置
-float MAXSpeed=0.05f;
-float MINSpeed=0.0001f;
-float Acceleration=0.0001f;
-float SpeedShowPercentage=30000;
-float TurnRateX=0.005f;
-float TurnRateY=0.05f;
-float TurnRateZ=0.005f;
-
-float glClearColorR=0.72f;
-float glClearColorG=0.73f;
-float glClearColorB=0.82f;
-float glClearColorA=1.0f;
-float fogColorR=0.72f;
-float fogColorG=0.73f;
-float fogColorB=0.82f;
-float fogColorA=1.0f;
-float fogDENSITY=0.35f;
-float Fog_Far=1000.0f;
-float Fog_Near=800.0f;
-float LightAmbientR=0.7f;
-float LightAmbientG=0.7f;
-float LightAmbientB=0.7f;
-float LightAmbientA=1.0f;
-float LightDiffuseR=1.0f;
-float LightDiffuseG=1.0f;
-float LightDiffuseB=1.0f;
-float LightDiffuseA=1.0f;
-//bool Bgens=false;//环境贴图相关
-//bool Bgent=false;//环境贴图相关
-
-bool lockedX=false;//X轴是否锁定到目标
-bool lockedY=false;//Y轴是否锁定到目标
-bool lockselect=false;//是否要锁定目标
-bool KeyQ=false;//按键“Q”是否按下
-bool KeyF=false;//按键“F”是否按下
-bool KeyR=false;//按键“R”是否按下
-bool KeyT=false;
-double oneframetimelimit=1.0/60.0;//每桢最大时间
-int ModelsNO=499;//第一个模型的编号
 int gamestage=0;
 CPUID cpu;//查询cpu
 char cpubrand[128]={0};
@@ -361,7 +282,6 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	if(ShaderBloom)
 		InitBloom(winwidth,winheight);
-	//AmbientReflectiveTexture=EmptyTexture(512);
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
@@ -370,8 +290,6 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	initlocks();
 	initUnitdata(0);
 	    
-	ms3d = ms3d_loadFromFile("treasure.ms3d",0);
-    ms3d_range(ms3d, rangeMin, rangeMax);
 
 	
 	//glEnable(GL_LINE_SMOOTH);
@@ -1099,7 +1017,6 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		TerminateApplication (g_window);						// Terminate The Program
 	}
 	KeyInput.UpData();
-	g_flYRot +=0.1f;		// Consistantly Rotate The Scenery
 	if(isPlayerControl)
 		PlayerControl();
     if (turnX != 0 || turnY != 0 || turnZ != 0){
@@ -2365,8 +2282,6 @@ void DrawPlayer(void)
 						m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
 					glPopMatrix();
 				
-	
-					ms3d_drawAnimation(ms3d, float(playTime%500)/500.0f);
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
 					glColor4f(1.0f,1.0f,1.0f,0.0f);
@@ -2915,30 +2830,8 @@ void DrawGround(void)
 		glPopMatrix();	
 	}
 }
-void stage0(void)
+void SetPlayerTransform(void)
 {
-
-
-	Vector3d pos;
-    pos = MFighter.RefPos();
-    Vector3d dir;
-    dir = MFighter.Matrix() * Vector3d(0, 0, -1);
-    Vector3d dir2;
-    dir2 = MFighter.Matrix() * Vector3d(1, 0, 0);
-    
-    // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
-    double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
-    if (abs(r)>1){ r = 1.0f; }
-    double latitude = acos_s(r) * 180.0f / PI;
-    if (dir(1) < 0){ latitude = -latitude; }
-    // longitude is the rotation angle against y-axis. longitude = ArcCos[dir[2] / Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[0]]
-    double longitude = acos_s(dir(2) / r) * 180.0f / PI;
-    if (dir(0) < 0){ longitude = -longitude; }
-    // rotation is the rotation angle against the fighter velocity. rotation = ArcCos[dir2 * xOz.FindIntersect[dir].Normalize] * Sign[dir2[1]]
-    double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
-    double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
-    if (dir2(1) < 0){ rotation = -rotation; }
-
 	MavePart_BackL.Reset();
 	MavePart_BackR.Reset();
 	MavePart_FL.Reset();
@@ -3038,6 +2931,33 @@ void stage0(void)
 		}
 	
 	}
+}
+void stage0(void)
+{
+
+
+	Vector3d pos;
+    pos = MFighter.RefPos();
+    Vector3d dir;
+    dir = MFighter.Matrix() * Vector3d(0, 0, -1);
+    Vector3d dir2;
+    dir2 = MFighter.Matrix() * Vector3d(1, 0, 0);
+    
+    // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
+    double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
+    if (abs(r)>1){ r = 1.0f; }
+    double latitude = acos_s(r) * 180.0f / PI;
+    if (dir(1) < 0){ latitude = -latitude; }
+    // longitude is the rotation angle against y-axis. longitude = ArcCos[dir[2] / Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[0]]
+    double longitude = acos_s(dir(2) / r) * 180.0f / PI;
+    if (dir(0) < 0){ longitude = -longitude; }
+    // rotation is the rotation angle against the fighter velocity. rotation = ArcCos[dir2 * xOz.FindIntersect[dir].Normalize] * Sign[dir2[1]]
+    double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
+    double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
+    if (dir2(1) < 0){ rotation = -rotation; }
+
+
+	SetPlayerTransform();
 
 		
 	//if(ShaderBloom)
@@ -3060,7 +2980,6 @@ void stage0(void)
 		if(!KeyT)
 			DrawRedarToTexture();
 		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
-		//glClear (GL_COLOR_BUFFER_BIT );
 		DrawDataLine1();
 		if(!IsHUD)
 		DrawShadowMap();
@@ -3070,32 +2989,17 @@ void stage0(void)
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
 		if(!IsSkip)
-		DrawSky((float)longitude);
-
-		if(!IsSkip)
+		{
+			DrawSky((float)longitude);
 			SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight);
-
-
-		if(!IsSkip)
 			DrawGround();
-		//glBindTexture(GL_TEXTURE_2D,AmbientReflectiveTexture);
-		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 100, 88, 512, 512, 0);
-
-		if(!IsSkip)
 			if(!IsHUD)
-			DrawPlayer();
-/*
-		if(!IsSkip)
-		if(ShaderBloom)
-			glPrintHighLight();
-*/
-		if(!IsSkip)
+				DrawPlayer();
 			DrawUnit();
-		DrawBom();	
-		if(!IsSkip)
-		Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
-		if(!IsSkip)
+			Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			DrawMissle();
+		}
+		DrawBom();	
 		PSmokes.m_IsSkip=IsSkip;
 		PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 		//DrawSmoke();
@@ -3108,12 +3012,12 @@ void stage0(void)
 		EffectImpact.EffectImpactDraw(DrawEffectImpact);
 	DrawEffectImpact=false;
 
-	if(!IsSkip)
-	if(ShaderBloom)
-		DrawBloom(winwidth,winheight);
-	//Maptexture=EffectImpact.TextureID;
+		
 	if(!IsSkip)
 	{
+		if(ShaderBloom)
+			DrawBloom(winwidth,winheight);
+
 		if(IsHUD)
 		{
 			DrawUI2();
@@ -3123,22 +3027,11 @@ void stage0(void)
 		}
 		DrawHP(UDfighers[0].UDlife,UDfighers[0].UDMplane,MWorld);
 		DrawDataLine2(MFighter.RefPos()(1),longitude,latitude);
-		
-	
-/*
-	glClear (GL_DEPTH_BUFFER_BIT);
-	glDisable(GL_BLEND);	
-	glViewport (0, 0, window_width/4, window_height/4);
-	glLoadIdentity ();												// Reset The Modelview Matrix
-	glClear (GL_DEPTH_BUFFER_BIT);	
-	Drawland2();
-	glEnable(GL_BLEND);	*/
 
 		if(KeyT)
 			DrawAREARedarToTexture((float)longitude);
 		else
 			DrawRedar((float)longitude);
-		//DrawUI1(rotation);
 	}
 	DrawRadioTXT();
 
