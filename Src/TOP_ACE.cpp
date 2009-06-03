@@ -27,6 +27,7 @@
 #include "Bloom.h"
 #include "Video.h"
 //#include "Cloud.h"
+//#include "MD5Model.h"
 
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
@@ -1892,6 +1893,19 @@ void UnitMove(void)
 		}
 	}
 */
+	for(int i=0;i<MAXSMOKESLIST;i++)
+	{
+		if(PSmokes.SmokesList[i].life>0.0f)//存在
+		{
+			PSmokes.SmokesList[i].pos[0]=PSmokes.SmokesList[i].pos[0]+PSmokes.SmokesList[i].posMove[0];
+			PSmokes.SmokesList[i].pos[1]=PSmokes.SmokesList[i].pos[1]+PSmokes.SmokesList[i].posMove[1];
+			PSmokes.SmokesList[i].pos[2]=PSmokes.SmokesList[i].pos[2]+PSmokes.SmokesList[i].posMove[2];
+			PSmokes.SmokesList[i].size=PSmokes.SmokesList[i].size+PSmokes.SmokesList[i].sizeMove;
+			if(PSmokes.SmokesList[i].type!=2)
+				PSmokes.SmokesList[i].life=PSmokes.SmokesList[i].life-1.0f;
+		}
+	}
+
     PlayerLocking=false;
 	for(int i=1;i<maxUnits;i++)
 	{
@@ -2255,6 +2269,7 @@ void DrawPlayer(void)
 					//shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					
 					//m_VBMD->ShowVBMD(PlayerMainModel);
+
 					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					m_VBMD->ShowVBMD(PlayerMainModel);
 					glPushMatrix();
@@ -2281,14 +2296,14 @@ void DrawPlayer(void)
 						glMultMatrixd(MavePart_WR.Matrix4());
 						m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
 					glPopMatrix();
-				
+
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
 					glColor4f(1.0f,1.0f,1.0f,0.0f);
 					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
 					glColor4f(1.0f,1.0f,1.0f,1.0f);
 					glDepthMask(GL_TRUE);
-				
+
 
 					cgGLDisableProfile( g_CGprofile_pixel );
 					cgGLDisableProfile( g_CGprofile_vertex );
@@ -2482,13 +2497,14 @@ void showloading(void)
 	MavePart_FR.TranslateInternal(Vector3d( 8.5,3.5,-20.0));
 	MavePart_WL.TranslateInternal(Vector3d(0.0,0.0,55.0));
 	MavePart_WR.TranslateInternal(Vector3d(0.0,0.0,55.0));
-//	CMyFont MyFont;
+
 	if(!MyFont.LoadFont("Data/FontCH"))
 		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	break;
 	
 	}
 	MyFont.inputTxt("ＴＯＰ　ＡＣＥ");
+
 	//MyFont.inputTxt("测试单纹理字库。测试单纹理字库。测试单纹理字库。测试单纹理字库。测试单纹理字库。测试单纹理字库。");
 	/*
 	
@@ -2998,14 +3014,9 @@ void stage0(void)
 			DrawUnit();
 			Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			DrawMissle();
+			PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
+			Drawlocksign();
 		}
-		DrawBom();	
-		PSmokes.m_IsSkip=IsSkip;
-		PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
-		//DrawSmoke();
-		locksmove();
-		if(!IsSkip)
-		Drawlocksign();
 	glPopMatrix();
 	glEnable(GL_BLEND);
 	if((UseEffectImpact)&&(!IsSkip))
@@ -3033,7 +3044,7 @@ void stage0(void)
 		else
 			DrawRedar((float)longitude);
 	}
-	DrawRadioTXT();
+	
 
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
@@ -3044,6 +3055,9 @@ void stage0(void)
 }
 void AfterDraw (void)
 {
+	DrawBom();	
+	locksmove();
+	DrawRadioTXT();
 	MoveSound(MView,tmpLookRenge);
 	UnitMove();
 	if(PlayerLocked)
@@ -3157,12 +3171,6 @@ void Draw (void)
 
 	if(UDfighers[0].UDlife<0)
 		initUnitdata();
-	RECT	rect;										// 保存长方形坐标
-
-
-	GetClientRect(g_window->hWnd, &rect);							// 获得窗口大小
-	int window_width=rect.right-rect.left;							
-	int window_height=rect.bottom-rect.top;	
 
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
@@ -3171,16 +3179,13 @@ void Draw (void)
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();	
 
-
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
-	
 	if(isDraw)
 	{
-
-		
-		stage0();
+		if(!IsSkip)
+			stage0();
 		AfterDraw();
 	}
 	else
@@ -3191,8 +3196,6 @@ void Draw (void)
 
 	if(!loadover)
 	showloading();
-
-
 
 	if(!IsSkip)
 	LockFPS();
