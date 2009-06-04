@@ -3079,7 +3079,7 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 		Transform MSmallWindowView;
 		Transform MSmallWindow;
 		MSmallWindow=MSmallWindowIn;
-		MSmallWindow.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(90.0));
+		MSmallWindow.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(180.0+float(playTime%1800)/1800.0f));
 		MSmallWindow.TranslateInternal(Vector3d(0.0f, 0.0f, 250.0f));
 		MSmallWindowView=(MWorld * MSmallWindow).Invert();
 		glPushMatrix();
@@ -3231,7 +3231,7 @@ void Draw (void)
 	{
 		if(!IsSkip)
 		{
-			DrawSmallWindow(UDfighers[1].UDMplane,0,0,128,128,100000);
+			DrawSmallWindow(UDfighers[11].UDMplane,0,0,128,128,100000);
 			stage0();
 			
 		}

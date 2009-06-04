@@ -1,7 +1,7 @@
 #include "Unitdata.h"
 
 Unitdata::Unitdata(void)
-: UDPstate(UDMplane, 5, CRad(2.0), 0.1, 0.4)
+: UDPstate(UDMplane, 5, CRad(2.0), 0.1, 0.7)
 ,UDlife(-1)
 ,UDlockselect(false)
 ,UDlockde(false)
@@ -26,14 +26,9 @@ Unitdata::Unitdata(void)
 ,SelfNormalModelID(0)
 ,SelfLowModelID(0)
 {
-
-
-
-
 	//SoundSourceGun=new AudioSource;
 	for(int i=0;i<MAXweapon;i++)
 		weapon[MAXweapon]=-1;
-
 }
 
 Unitdata::~Unitdata(void)
