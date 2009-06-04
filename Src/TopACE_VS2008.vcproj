@@ -345,14 +345,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Trackball.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Trackball.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Vector3.h"
 				>
 			</File>
