@@ -42,6 +42,7 @@ void initUnitdata(int stage=0 )
 		UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
 		UDfighers[0].UDlife=100;
 		UDfighers[0].UDflag=2;
+		UDfighers[0].UDfighterType=3;
 		/*
 		UDfighers[0].UDlife=100;
 		UDfighers[0].UDflag=2;
