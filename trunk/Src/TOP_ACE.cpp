@@ -1670,7 +1670,7 @@ void DrawMisslesign(const Vector3d& MisslePosition)
 		
 	glPopMatrix();
 	glEnable(GL_TEXTURE_2D);
-
+	glEnable(GL_BLEND);
 	glPrint((int)SUFwinX,(int)SUFwinY,missleLL,0,true);
 
 	glColor3f(1.0f,1.0f,1.0f);
@@ -1680,6 +1680,7 @@ void Drawlocksign(void)
 {
 	glDisable(GL_TEXTURE_2D);
 
+	glEnable(GL_BLEND);
 	for(int i=0;i<8;i++)
 	{
 		if(lockUnits[i].locksTGT>-1)
@@ -2951,6 +2952,16 @@ void SetPlayerTransform(void)
 void stage0(void)
 {
 
+	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
+	glLoadIdentity ();													// Reset The Projection Matrix
+	gluPerspective (60.0f+float(max(EffectImpact.EffectTime-45,0))*0.1, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
+					10.0f, 100000.0f);		
+	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
+	glLoadIdentity ();	
+
+	glClearColor (0.0, 0.0, 0.0, 0.0);	
+	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
+
 
 	Vector3d pos;
     pos = MFighter.RefPos();
@@ -3049,8 +3060,47 @@ void stage0(void)
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
 	//Maptexture=MyFont.TXTTexID;
-	Maptexture=img;
+	Maptexture=SmallWinTexID;
 
+
+}
+void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int SmallWindowW,int SmallWindowH,float SmallWindowLookRenge)
+{
+	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
+	glLoadIdentity ();													// Reset The Projection Matrix
+	gluPerspective (45, (GLfloat)(SmallWindowW)/(GLfloat)(SmallWindowH),			// Calculate The Aspect Ratio Of The Window
+					10.0f, 100000.0f);		
+	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
+	glLoadIdentity ();
+	
+	glPushAttrib(GL_VIEWPORT_BIT);
+		glViewport(winposX,winposY,SmallWindowW, SmallWindowH);
+		glClear (GL_DEPTH_BUFFER_BIT);
+		Transform MSmallWindowView;
+		Transform MSmallWindow;
+		MSmallWindow=MSmallWindowIn;
+		MSmallWindow.TranslateInternal(Vector3d(0.0f, -20.0f, 150.0f));
+		MSmallWindowView=(MWorld * MSmallWindow).Invert();
+		glPushMatrix();
+			glLoadMatrixd(MSmallWindowView.Matrix4());
+			if(!IsSkip)
+			{
+				DrawSky();
+				SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2), SmallWindowW , SmallWindowH );
+				DrawGround();
+				
+				for(int i=0;i<maxUnits;i++)
+					UDfighers[i].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				glEnable(GL_CULL_FACE);
+				//Shell.DrawShell( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				//PMissleList.DrawMissle( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				PSmokes.DrawSmoke( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				glDisable(GL_CULL_FACE);
+			}
+		glPopMatrix();
+	glPopAttrib();
+	glBindTexture(GL_TEXTURE_2D, SmallWinTexID);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, winposX, winposY, 128, 128, 0);
 
 }
 void AfterDraw (void)
@@ -3060,6 +3110,7 @@ void AfterDraw (void)
 	DrawRadioTXT();
 	MoveSound(MView,tmpLookRenge);
 	UnitMove();
+	DrawTex(SmallWinTexID,winheight/20,winheight-winheight/4-winheight/20,winheight/4,winheight/4,winwidth,winheight,1.0f,1.0f,1.0f,0.8f);
 	if(PlayerLocked)
 	{
 		if(!lockedsound)
@@ -3172,21 +3223,19 @@ void Draw (void)
 	if(UDfighers[0].UDlife<0)
 		initUnitdata();
 
-	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
-	glLoadIdentity ();													// Reset The Projection Matrix
-	gluPerspective (60.0f+float(max(EffectImpact.EffectTime-45,0))*0.1, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-					10.0f, 100000.0f);		
-	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
-	glLoadIdentity ();	
+	glClearColor (0.0, 0.0, 0.0, 0.0);
 
-	glClearColor (0.0, 0.0, 0.0, 0.0);	
-	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 
 	if(isDraw)
 	{
 		if(!IsSkip)
+		{
+			DrawSmallWindow(MFighter,0,0,128,128,100000);
 			stage0();
+			
+		}
 		AfterDraw();
+
 	}
 	else
 	{

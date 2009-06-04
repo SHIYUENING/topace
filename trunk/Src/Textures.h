@@ -23,6 +23,7 @@ GLuint img,dtex;//,fboBloomImg					// Our handle to a texture
 GLuint PlayerSign;
 GLuint ShowHPTexID;
 GLuint SeaTexID;
+GLuint SmallWinTexID=0;
 bool IsSupportFBO=false;
 //int SmokeNumber=0;//读取的尾烟图片总数
 //int BomsNumber=0;//读取的爆炸相关设定总数
@@ -319,6 +320,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 
 	memset(TextureImage,0,sizeof(void *)*1);           	// Set The Pointer To NULL
 
+	SmallWinTexID=EmptyTexture(128);
 	// Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit
 	/*
 	if (TextureImage[0]=LoadBMP("Data/Font.bmp"))

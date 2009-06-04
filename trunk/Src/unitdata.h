@@ -93,7 +93,7 @@ public:
     void TurnTo(const Vector3d& Position);
 	double WaringTo(const Vector3d& Position);
 	//void m_DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
-	bool m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
+	bool m_DrawSelf(const Vector3d& ViewPos,int m_winwidth,int m_winheight,float m_tmpLookRenge);
 	void m_LaunchMissle(int m_TGT_Num);
 	void AttackTo(const Vector3d& Position);
 	void MoveSpeed(void);//Ê§ËÙÏà¹Ø

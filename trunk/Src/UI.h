@@ -317,3 +317,64 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 void DrawMissleView(int ViewPortX,int ViewPortY,Transform& Missle,Transform& MissleTGT,Transform& tfWorld)
 {
 }
+void DrawTex(GLuint PTexID,int posx,int posy,int SizeW,int SizeH,int winW,int winH,float colorR,float colorG,float ColorB,float ColorA)
+{
+	/*
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,0,winW,winH,-10,20);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();
+	glEnable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, PTexID);	
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(colorR,colorG,ColorB,ColorA);
+
+		glBegin(GL_QUADS);							// Use A Quad For Each Character
+			glTexCoord2f(0.0f,0.0f);glVertex2i(posx,posy);	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+			glTexCoord2f(1.0f,0.0f);glVertex2i(posx+SizeW,posy);	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+			glTexCoord2f(1.0f,1.0f);glVertex2i(posx+SizeW,posy-SizeH);	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+			glTexCoord2f(0.0f,1.0f);glVertex2i(posx,posy-SizeH);	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+		glEnd();
+
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);	
+	*/
+
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,winW,0,winH,-10,20);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	
+
+	glEnable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, PTexID);	
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(colorR,colorG,ColorB,ColorA);
+
+		glBegin(GL_QUADS);							// Use A Quad For Each Character
+			glTexCoord2f(0.0f,0.0f);glVertex2i(posx,posy);	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+			glTexCoord2f(1.0f,0.0f);glVertex2i(posx+SizeW,posy);	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+			glTexCoord2f(1.0f,1.0f);glVertex2i(posx+SizeW,posy+SizeH);	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+			glTexCoord2f(0.0f,1.0f);glVertex2i(posx,posy+SizeH);	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+		glEnd();
+
+
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);				
+}

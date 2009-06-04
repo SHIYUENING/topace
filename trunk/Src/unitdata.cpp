@@ -276,7 +276,7 @@ void Unitdata::m_DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheig
 	
 }
 */
-bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge)
+bool Unitdata::m_DrawSelf(const Vector3d& ViewPos,int m_winwidth,int m_winheight,float m_tmpLookRenge)
 {
 
 	inGunSoundRange=false;
@@ -285,9 +285,9 @@ bool Unitdata::m_DrawSelf(const Vector3d& m_world,int m_winwidth,int m_winheight
 	{
 
 
-		float tmpX=(float)(m_world(0)-UDMplane.RefPos()(0));
-		float tmpY=(float)(m_world(1)-UDMplane.RefPos()(1));
-		float tmpZ=(float)(m_world(2)-UDMplane.RefPos()(2));
+		float tmpX=(float)(ViewPos(0)-UDMplane.RefPos()(0));
+		float tmpY=(float)(ViewPos(1)-UDMplane.RefPos()(1));
+		float tmpZ=(float)(ViewPos(2)-UDMplane.RefPos()(2));
 		UDwinl=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 		if(UDwinl<m_tmpLookRenge*m_tmpLookRenge)
 		{
