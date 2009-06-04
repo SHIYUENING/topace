@@ -2371,7 +2371,7 @@ void DrawPlayer(void)
 	glDisable(GL_BLEND);
 */
 }
-void DrawSky(float ne=0.0)
+void DrawSky(Transform viewSky,float ne=0.0)
 {
 	glDisable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -2382,14 +2382,14 @@ void DrawSky(float ne=0.0)
 	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(ne));
 	double fogbackY;
 	//double skybackY;
-	if(MFighter.RefPos()(1)>50000.0)
-		fogbackY=MFighter.RefPos()(1);
+	if(viewSky.RefPos()(1)>50000.0)
+		fogbackY=viewSky.RefPos()(1);
 	else
 	{
 		fogbackY=50000.0;
 		//skybackY=(10000.0-MFighter.RefPos()(1))/10.0;
 	}
-	Msky.Translate( Vector3d( MFighter.RefPos()(0) ,MFighter.RefPos()(1), MFighter.RefPos()(2) ) );
+	Msky.Translate( Vector3d( viewSky.RefPos()(0) ,viewSky.RefPos()(1), viewSky.RefPos()(2) ) );
 	glMultMatrixd(Msky.Matrix4());	
 
 //glBindTexture(GL_TEXTURE_2D, PlayerSign);
@@ -2473,7 +2473,7 @@ void DrawSky(float ne=0.0)
 	glPopMatrix();
 	
 	//Msky.Translate(MFighter.RefPos()*(-1.0));
-	Msky.Translate( Vector3d( -MFighter.RefPos()(0) ,  -MFighter.RefPos()(1) , -MFighter.RefPos()(2) ) );
+	Msky.Translate( Vector3d( -viewSky.RefPos()(0) ,  -viewSky.RefPos()(1) , -viewSky.RefPos()(2) ) );
 	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-ne));
 	glEnable(GL_BLEND);
 }
@@ -3017,7 +3017,7 @@ void stage0(void)
 		glLoadMatrixd(MView.Matrix4());
 		if(!IsSkip)
 		{
-			DrawSky((float)longitude);
+			DrawSky(MFighter,(float)longitude);
 			SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight);
 			DrawGround();
 			if(!IsHUD)
@@ -3079,20 +3079,21 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 		Transform MSmallWindowView;
 		Transform MSmallWindow;
 		MSmallWindow=MSmallWindowIn;
-		MSmallWindow.TranslateInternal(Vector3d(0.0f, -20.0f, 150.0f));
+		MSmallWindow.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(90.0));
+		MSmallWindow.TranslateInternal(Vector3d(0.0f, 0.0f, 250.0f));
 		MSmallWindowView=(MWorld * MSmallWindow).Invert();
 		glPushMatrix();
 			glLoadMatrixd(MSmallWindowView.Matrix4());
 			if(!IsSkip)
 			{
-				DrawSky();
+				DrawSky(MSmallWindow);
 				SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2), SmallWindowW , SmallWindowH );
 				DrawGround();
 				
 				for(int i=0;i<maxUnits;i++)
 					UDfighers[i].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glEnable(GL_CULL_FACE);
-				//Shell.DrawShell( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				Shell.DrawShell( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				//PMissleList.DrawMissle( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				PSmokes.DrawSmoke( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glDisable(GL_CULL_FACE);
@@ -3230,7 +3231,7 @@ void Draw (void)
 	{
 		if(!IsSkip)
 		{
-			DrawSmallWindow(MFighter,0,0,128,128,100000);
+			DrawSmallWindow(UDfighers[1].UDMplane,0,0,128,128,100000);
 			stage0();
 			
 		}
