@@ -65,9 +65,17 @@ pixel main(
 	float4 SpecularMapcolor;
 	SpecularMapcolor=tex2D( SpecularMapTexture, IN.texcoord0 );
 
+	float lightA=(diffuse.x+diffuse.y+diffuse.z)/3.0;
+	float lightrou=(2.0*lightA-1.0)*(SpecularMapcolor.b-SpecularMapcolor.b*SpecularMapcolor.b)+SpecularMapcolor.b;
+	if(lightA>0.5) lightrou=(2.0*lightA-1.0)*(sqrt(SpecularMapcolor.b)-SpecularMapcolor.b)+SpecularMapcolor.b;
+	float lightqiang=1.0-(1.0-SpecularMapcolor.b)/2.0*lightA;
+	if(lightqiang>0.5) lightqiang=SpecularMapcolor.b/(2.0*(1.0-lightA));
+
+
+
     if(diffuseLight<=0) specularLight=0;
     float4 Ocolor;
-    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8*SpecularMapcolor.xyz;
+    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse*(SpecularMapcolor.x*lightqiang+(1.0-SpecularMapcolor.x)*lightrou)+specularLight*2*SpecularMapcolor.x;
     Ocolor.w = 1.0;
     pixel OUT;
 	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
@@ -78,7 +86,7 @@ pixel main(
 	half3 R = reflect(I, N);
 
 	//OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor*0.3;
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*(texCUBE( AmbientReflectiveTexture, R)+1.0);
+	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor.x*0.3;
 	OUT.color.w=0.5;
 
     return OUT;

@@ -137,6 +137,7 @@ GLfloat Part_FR_ShadowMapMVPmatrix[16];
 GLfloat Part_WL_ShadowMapMVPmatrix[16];
 GLfloat Part_WR_ShadowMapMVPmatrix[16];
 int MissleFireLightNum=-1;
+int SmallWindowTGT=-1;
 Vector3d SunPos3d;
 CMyFont MyFont;
 int winwidth,winheight;//全局变量，用于记录窗口实时大小，gui部分大多会使用到
