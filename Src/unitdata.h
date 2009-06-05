@@ -99,6 +99,7 @@ public:
 	void MoveSpeed(void);//สงหูฯเนุ
 	void ResetData(void);
 	void m_Sound(Transform& would,float LookRenge);
+	bool isPlayer;
 };
 
 
