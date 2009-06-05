@@ -3119,7 +3119,7 @@ void AfterDraw (void)
 	UnitMove();
 	if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
 		if(PMissleList.Missles[SmallWindowTGT].UDlife>1)
-	DrawTex(SmallWinTexID,winheight/20,winheight-winheight/4-winheight/20,winheight/4,winheight/4,winwidth,winheight,1.0f,1.0f,1.0f,0.8f);
+			DrawTex(SmallWinTexID,winheight/20,winheight-winheight/4-winheight/20,winheight/4,winheight/4,winwidth,winheight,1.0f,1.0f,1.0f,0.8f);
 	if(PlayerLocked)
 	{
 		if(!lockedsound)
@@ -3241,7 +3241,7 @@ void Draw (void)
 		{
 			if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
 				if(PMissleList.Missles[SmallWindowTGT].UDlife>1)
-					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,100000);
+					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,tmpLookRenge);
 			stage0();
 			
 		}

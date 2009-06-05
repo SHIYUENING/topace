@@ -25,6 +25,7 @@ Unitdata::Unitdata(void)
 ,inGunSoundRange(false)
 ,SelfNormalModelID(0)
 ,SelfLowModelID(0)
+, isPlayer(false)
 {
 	//SoundSourceGun=new AudioSource;
 	for(int i=0;i<MAXweapon;i++)
@@ -306,6 +307,8 @@ bool Unitdata::m_DrawSelf(const Vector3d& ViewPos,int m_winwidth,int m_winheight
 					m_isDraw=true;
 					glDisable(GL_BLEND);
 					glPushMatrix();
+						if(isPlayer)
+							glRotatef(180.0f, 0.0f, 1.0f, 0.0);
 						if(UDfighterType==1)
 						{//glScaled(0.01, 0.01, 0.01);
 							if(ModelID[UDfighterType].Normal>-1)
