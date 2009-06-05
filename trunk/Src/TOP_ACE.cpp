@@ -1020,21 +1020,7 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	KeyInput.UpData();
 	if(isPlayerControl)
 		PlayerControl();
-    if (turnX != 0 || turnY != 0 || turnZ != 0){
-		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
-    }
-//Acceleration
-	if(moveSpeed>(MAXSpeed/3.0f))
-		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
 
-	if(hited>0)
-	{
-		hited=hited-1;	
-	}
-	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
 
 	
 
@@ -3087,7 +3073,9 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 			if(!IsSkip)
 			{
 				DrawSky(MSmallWindow);
-				SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2), SmallWindowW , SmallWindowH );
+				Vector3d SunPos3ds;
+				SunPos3ds=MSmallWindowView.Matrix() * Vector3d(100000.0+MSmallWindow.RefPos()(0),100000.0+MSmallWindow.RefPos()(1),100000.0+MSmallWindow.RefPos()(2)) + MSmallWindowView.RefPos();
+				SkyBox.DrawSun((float)SunPos3ds(0),(float)SunPos3ds(1),(float)SunPos3ds(2), SmallWindowW , SmallWindowH );
 				DrawGround();
 				
 				for(int i=0;i<maxUnits;i++)
@@ -3106,11 +3094,31 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 }
 void AfterDraw (void)
 {
+
+	 if (turnX != 0 || turnY != 0 || turnZ != 0){
+		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
+        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
+    }
+//Acceleration
+	if(moveSpeed>(MAXSpeed/3.0f))
+		moveSpeed=moveSpeed-Acceleration*(moveSpeed-(MAXSpeed/3.0f))/(MAXSpeed-(MAXSpeed/3.0f));
+
+	if(hited>0)
+	{
+		hited=hited-1;	
+	}
+	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
+
+
 	DrawBom();	
 	locksmove();
 	DrawRadioTXT();
 	MoveSound(MView,tmpLookRenge);
 	UnitMove();
+	if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
+		if(PMissleList.Missles[SmallWindowTGT].UDlife>1)
 	DrawTex(SmallWinTexID,winheight/20,winheight-winheight/4-winheight/20,winheight/4,winheight/4,winwidth,winheight,1.0f,1.0f,1.0f,0.8f);
 	if(PlayerLocked)
 	{
@@ -3231,7 +3239,9 @@ void Draw (void)
 	{
 		if(!IsSkip)
 		{
-			DrawSmallWindow(UDfighers[11].UDMplane,0,0,128,128,100000);
+			if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
+				if(PMissleList.Missles[SmallWindowTGT].UDlife>1)
+					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,100000);
 			stage0();
 			
 		}

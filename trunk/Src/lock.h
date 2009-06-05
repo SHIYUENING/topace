@@ -57,7 +57,7 @@ void fireMissle()
 					::MessageBox(HWND_DESKTOP,WaringString,"Error",MB_OK | MB_ICONEXCLAMATION);
 					return;
 				}
-				MissleFireLightNum=UDfighers[lockUnits[i].locksTGT].attackedMissleNum=PMissleList.AddMissle(UDfighers[0].UDMplane,lockUnits[i].locksTGT,0,moveSpeed* 2000);
+				SmallWindowTGT=MissleFireLightNum=UDfighers[lockUnits[i].locksTGT].attackedMissleNum=PMissleList.AddMissle(UDfighers[0].UDMplane,lockUnits[i].locksTGT,0,moveSpeed* 2000);
 			}
 			
 		}
