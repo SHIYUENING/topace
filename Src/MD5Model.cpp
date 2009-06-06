@@ -15,7 +15,7 @@
 #include <GL/gl.h>
 
 #include "MD5Model.h"
-
+#include "TBN.h"
 #define IS_WHITESPACE(c) (' ' == c || '\t' == c || '\r' ==c || '\n' == c )
 
 
@@ -158,6 +158,7 @@ void MD5Model::render() {
 }
 */
 void MD5Model::render() {
+	
 	glBegin(GL_TRIANGLES);
 	for( size_t i=0; i < meshes.size(); i++ )
 	{
@@ -166,13 +167,15 @@ void MD5Model::render() {
 		{
 			for ( size_t k=0; k < 3; k++ )
 			{
+				glColor3fv(mesh->verts[ mesh->tris[j].v[k]].nt);
 				glTexCoord2fv(mesh->verts[ mesh->tris[j].v[k]].tc);
-				glNormal3fv(mesh->verts[ mesh->tris[j].v[k]].n);
+				glNormal3f(-mesh->verts[ mesh->tris[j].v[k]].n[0],-mesh->verts[ mesh->tris[j].v[k]].n[1],-mesh->verts[ mesh->tris[j].v[k]].n[2]);
 				glVertex3fv(mesh->verts[ mesh->tris[j].v[k]].pos);
 			}
 		}
 	}
 	glEnd();
+	glColor3f(1.0f,1.0f,1.0f);
 }
 void MD5Model::loadMesh(const char *filename) {
   // sanity check
@@ -216,6 +219,7 @@ void MD5Model::loadMesh(const char *filename) {
   // calculate vertex positions and normals from information in joints
   buildVerts();
   buildNormals();
+  buildTBNs();
 }
 
 
@@ -1040,7 +1044,49 @@ void MD5Model::buildNormals() {
   } // for (meshes)
 }
 
+void MD5Model::buildTBNs() {
+  // zero out the normals
+  for ( size_t i=0; i < meshes.size(); i++) {
 
+    // for each normal, add contribution to normal from every face that vertex
+    // is part of
+    for ( size_t j=0; j < meshes[i]->tris.size(); j++ ) {
+      Vertex &v0 = meshes[i]->verts[ meshes[i]->tris[j].v[0] ];
+      Vertex &v1 = meshes[i]->verts[ meshes[i]->tris[j].v[1] ];
+      Vertex &v2 = meshes[i]->verts[ meshes[i]->tris[j].v[2] ];
+	  CTBN TBN;
+	  TBN.TexCoordsInToTBN[0][0]=v0.tc[0];
+	  TBN.TexCoordsInToTBN[0][1]=v0.tc[1];
+	  TBN.TexCoordsInToTBN[1][0]=v1.tc[0];
+	  TBN.TexCoordsInToTBN[1][1]=v1.tc[1];
+	  TBN.TexCoordsInToTBN[2][0]=v2.tc[0];
+	  TBN.TexCoordsInToTBN[2][1]=v2.tc[1];
+
+	  TBN.VerticesInToTBN[0][0]=v0.pos[0];
+	  TBN.VerticesInToTBN[0][1]=v0.pos[1];
+	  TBN.VerticesInToTBN[0][2]=v0.pos[2];
+	  TBN.VerticesInToTBN[1][0]=v1.pos[0];
+	  TBN.VerticesInToTBN[1][1]=v1.pos[1];
+	  TBN.VerticesInToTBN[1][2]=v1.pos[2];
+	  TBN.VerticesInToTBN[2][0]=v2.pos[0];
+	  TBN.VerticesInToTBN[2][1]=v2.pos[1];
+	  TBN.VerticesInToTBN[2][2]=v2.pos[2];
+	  TBN.TBN();
+	  v0.nt[0]=TBN.TBNout[0];
+	  v0.nt[1]=TBN.TBNout[1];
+	  v0.nt[2]=TBN.TBNout[2];
+	  v1.nt[0]=TBN.TBNout[0];
+	  v1.nt[1]=TBN.TBNout[1];
+	  v1.nt[2]=TBN.TBNout[2];
+	  v2.nt[0]=TBN.TBNout[0];
+	  v2.nt[1]=TBN.TBNout[1];
+	  v2.nt[2]=TBN.TBNout[2];
+
+
+
+    }
+  } // for (meshes)
+}
 void MD5Model::buildFrames(Anim &anim) {
   for ( int i=0; i < anim.numFrames; i++ ) {
     // allocate storage for joints for this frame

@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static.lib"
+				AdditionalDependencies="OpenALEEStandAlone_VC9_Release_Ansi_Static_New.lib"
 				OutputFile="$(OutDir)\TOP_ACE.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library"
@@ -402,6 +402,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\image.c"
+			>
+		</File>
+		<File
+			RelativePath=".\image.h"
+			>
+		</File>
+		<File
 			RelativePath=".\initdata.h"
 			>
 		</File>
@@ -426,6 +434,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\matrix.c"
+			>
+		</File>
+		<File
+			RelativePath=".\matrix.h"
+			>
+		</File>
+		<File
 			RelativePath=".\missle.cpp"
 			>
 		</File>
@@ -443,6 +459,22 @@
 		</File>
 		<File
 			RelativePath=".\Models.h"
+			>
+		</File>
+		<File
+			RelativePath=".\ms3d.h"
+			>
+		</File>
+		<File
+			RelativePath=".\ms3d_draw.c"
+			>
+		</File>
+		<File
+			RelativePath=".\ms3d_impl.h"
+			>
+		</File>
+		<File
+			RelativePath=".\ms3d_load.c"
 			>
 		</File>
 		<File
@@ -511,6 +543,14 @@
 		</File>
 		<File
 			RelativePath=".\structs.h"
+			>
+		</File>
+		<File
+			RelativePath=".\TBN.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\TBN.h"
 			>
 		</File>
 		<File
