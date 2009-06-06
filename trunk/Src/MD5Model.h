@@ -49,6 +49,7 @@ protected:
     float pos[3];
     float tc[2];
     float n[3];
+	float nt[3];
   };
   
   class Joint {
@@ -140,6 +141,8 @@ protected:
   void buildVerts(Frame &frame);
   void buildNormals();
   void buildFrames(Anim &anim);
+  void buildTBNs();
+  
 
   int numJoints;
   int numMeshes;
