@@ -22,6 +22,7 @@ public:
   void setFrame(int frameIndex);
   void animate(float dt);
   void render();
+  bool LoadOK;
 
   inline int getNumAnims() const { return int(anims.size()); }
 

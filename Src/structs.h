@@ -123,12 +123,14 @@ Transform MFighter;//玩家
 Transform MViewPoint;
 Transform Msky;//天空位置
 Transform MFireShellPos;
+/*
 Transform MavePart_BackL;
 Transform MavePart_BackR;
 Transform MavePart_FL;
 Transform MavePart_FR;
 Transform MavePart_WL;
 Transform MavePart_WR;
+*/
 GLfloat Part_Main_ShadowMapMVPmatrix[16];
 GLfloat Part_BackL_ShadowMapMVPmatrix[16];
 GLfloat Part_BackR_ShadowMapMVPmatrix[16];
@@ -211,3 +213,4 @@ bool KeyF=false;//按键“F”是否按下
 bool KeyR=false;//按键“R”是否按下
 bool KeyT=false;
 double oneframetimelimit=1.0/60.0;//每桢最大时间
+int wingFrame=0;

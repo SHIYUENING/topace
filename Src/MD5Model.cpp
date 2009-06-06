@@ -24,7 +24,8 @@ MD5Model::MD5Model():
      numMeshes(0),
      currAnim(-1),
      currFrame(0),
-     animTime(0.0f) {
+     animTime(0.0f),
+	 LoadOK(false){
 
 }
 

@@ -245,7 +245,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	glPrint(16,16,"Loading Textures",0);
 	
-	
+
 //	BuildSmoke();
 	if(!InitLoadfile())
 		return false;
@@ -801,7 +801,7 @@ void PlayerControl()
 			InertiaSpeed=InertiaSpeed+1.0f;
 		if(InertiaSpeed>50.0f)
 			InertiaSpeed=50.0f;
-		DrawEffectImpact=true;
+		//DrawEffectImpact=true;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedDown] == TRUE)||KeyInput.m_IskeySpeedDown)					
 	{
@@ -2239,7 +2239,11 @@ void DrawPlayer(void)
 					glLoadIdentity();	
 
 					glLoadMatrixd(MView.Matrix4());
+	//				Transform ViewPlayer;
+	//				ViewPlayer=UDfighers[0].UDMplane;
+	//				ViewPlayer.RotateInternal(Vector3d(CRad(270.0f), 0.0f, 0.0f));
 					glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
+					//glRotatef(270.0, 1.0, 0.0, 0.0);
 
 					
 					if(hited>0)
@@ -2247,6 +2251,7 @@ void DrawPlayer(void)
 					//glTranslatef(0, -Ppos1, -Ppos2);
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 0.0, 1.0);
+					//glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 					//glScaled(0.02, 0.02, 0.02);
 					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);
@@ -2259,7 +2264,7 @@ void DrawPlayer(void)
 
 					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					m_VBMD->ShowVBMD(PlayerMainModel);
-					glPushMatrix();
+/*					glPushMatrix();
 						glMultMatrixd(MavePart_BackL.Matrix4());
 						m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
 					glPopMatrix();
@@ -2283,7 +2288,17 @@ void DrawPlayer(void)
 						glMultMatrixd(MavePart_WR.Matrix4());
 						m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
 					glPopMatrix();
+*/
 
+					glDisable(GL_CULL_FACE);
+					md5_weiyiL.render();
+					md5_weiyiR.render();
+					md5_wingL.render();
+					md5_wingR.render();
+					md5_yayiL.render();
+					md5_yayiR.render();
+					md5_yinqingL.render();
+					md5_yinqingR.render();
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
 					glColor4f(1.0f,1.0f,1.0f,0.0f);
@@ -2478,13 +2493,14 @@ void showloading(void)
 	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));break;
 	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();break;
 	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);break;
-	case 7:loadover=true;MavePart_BackL.TranslateInternal(Vector3d(0.0,-4.0,37.0));
+	case 7:loadover=true;
+	/*MavePart_BackL.TranslateInternal(Vector3d(0.0,-4.0,37.0));
 	MavePart_BackR.TranslateInternal(Vector3d(0.0,-4.0,37.0));
 	MavePart_FL.TranslateInternal(Vector3d(-8.5,3.5,-20.0));
 	MavePart_FR.TranslateInternal(Vector3d( 8.5,3.5,-20.0));
 	MavePart_WL.TranslateInternal(Vector3d(0.0,0.0,55.0));
 	MavePart_WR.TranslateInternal(Vector3d(0.0,0.0,55.0));
-
+*/
 	if(!MyFont.LoadFont("Data/FontCH"))
 		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	break;
@@ -2594,7 +2610,7 @@ void DrawShadowMap(void)
 							glPopMatrix();
 							//m_VBMD->ShowVBMD(PlayerMainModel);
 							m_VBMD->ShowVBMD(PlayerMainModel);
-							glPushMatrix();
+	/*						glPushMatrix();
 							glMultMatrixd(MavePart_BackL.Matrix4());
 								m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
 							glPopMatrix();
@@ -2618,7 +2634,16 @@ void DrawShadowMap(void)
 								glMultMatrixd(MavePart_WR.Matrix4());
 								m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
 							glPopMatrix();
-				
+				*/
+							glDisable(GL_CULL_FACE);
+							md5_weiyiL.render();
+							md5_weiyiR.render();
+							md5_wingL.render();
+							md5_wingR.render();
+							md5_yayiL.render();
+							md5_yayiR.render();
+							md5_yinqingL.render();
+							md5_yinqingR.render();
 
 							cgGLDisableProfile( g_CGprofile_pixel );
 							cgGLDisableProfile( g_CGprofile_vertex );					// Select The Projection Matrix
@@ -2834,7 +2859,7 @@ void DrawGround(void)
 	}
 }
 void SetPlayerTransform(void)
-{
+{/*
 	MavePart_BackL.Reset();
 	MavePart_BackR.Reset();
 	MavePart_FL.Reset();
@@ -2853,8 +2878,16 @@ void SetPlayerTransform(void)
 	MavePart_FR.RotateInternal(Vector3d(-InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
 	MavePart_WL.RotateInternal(Vector3d(InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
 	MavePart_WR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
+*/
+	md5_weiyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+	md5_weiyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+	md5_wingL.setFrame(wingFrame);
+	md5_wingR.setFrame(wingFrame);
+	md5_yayiL.setFrame(-int(InertiaX*6.0/5.0)+30);
+	md5_yayiR.setFrame(-int(InertiaX*6.0/5.0)+30);
+	md5_yinqingL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+	md5_yinqingR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
 
-	
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	if(!IsHUD)
@@ -3109,7 +3142,20 @@ void AfterDraw (void)
 	{
 		hited=hited-1;	
 	}
-	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000));
+	UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -moveSpeed * 2000.0f));
+
+	float playerSpeed=moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f;
+
+	if(playerSpeed>1000.0f)
+		DrawEffectImpact=true;
+	if((playerSpeed>1000.0f)&&(wingFrame<60))
+		wingFrame=wingFrame+1;
+	if((playerSpeed<1000.0f)&&(wingFrame>0))
+		wingFrame=wingFrame-1;
+	if(wingFrame>60)
+		wingFrame=60;
+	if(wingFrame<0)
+		wingFrame=0;
 
 
 	DrawBom();	
