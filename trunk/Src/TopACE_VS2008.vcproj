@@ -350,6 +350,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\ARB_Multisample.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ARB_Multisample.h"
+			>
+		</File>
+		<File
 			RelativePath=".\Bloom.h"
 			>
 		</File>
