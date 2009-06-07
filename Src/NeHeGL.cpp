@@ -14,9 +14,10 @@
 #include <stdio.h>	
 #include <math.h>	
 #include "NeHeGL.h"														// Header File For The NeHeGL Basecode
-//#include <joystick.h>
+#include "ARB_MULTISAMPLE.h"
 
-//#pragma comment( lib, "WinMM.Lib" )	
+BOOL DestroyWindowGL (GL_Window* window);
+BOOL CreateWindowGL (GL_Window* window);
 #define WM_TOGGLEFULLSCREEN (WM_USER+1)									// Application Define Message For Toggling
 
 static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScreen/Windowed Toggle																		// Between Fullscreen / Windowed Mode
@@ -167,17 +168,32 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		return FALSE;													// Return False
 	}
 
-	PixelFormat = ChoosePixelFormat (window->hDC, &pfd);				// Find A Compatible Pixel Format
-	if (PixelFormat == 0)												// Did We Find A Compatible Format?
+//ROACH
+	/*
+	Our first pass, Multisampling hasn't been created yet, so we create a window normally
+	If it is supported, then we're on our second pass
+	that means we want to use our pixel format for sampling
+	so set PixelFormat to arbMultiSampleformat instead
+  */
+	if(!arbMultisampleSupported)
 	{
-		// Failed
-		ReleaseDC (window->hWnd, window->hDC);							// Release Our Device Context
-		window->hDC = 0;												// Zero The Device Context
-		DestroyWindow (window->hWnd);									// Destroy The Window
-		window->hWnd = 0;												// Zero The Window Handle
-		return FALSE;													// Return False
-	}
+		PixelFormat = ChoosePixelFormat (window->hDC, &pfd);				// Find A Compatible Pixel Format
+		if (PixelFormat == 0)												// Did We Find A Compatible Format?
+		{
+			// Failed
+			ReleaseDC (window->hWnd, window->hDC);							// Release Our Device Context
+			window->hDC = 0;												// Zero The Device Context
+			DestroyWindow (window->hWnd);									// Destroy The Window
+			window->hWnd = 0;												// Zero The Window Handle
+			return FALSE;													// Return False
+		}
 
+	}
+	else
+	{
+		PixelFormat = arbMultisampleFormat;
+	}
+//ENDROACH
 	if (SetPixelFormat (window->hDC, PixelFormat, &pfd) == FALSE)		// Try To Set The Pixel Format
 	{
 		// Failed
@@ -211,7 +227,25 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		window->hWnd = 0;												// Zero The Window Handle
 		return FALSE;													// Return False
 	}
+//ROACH
+	/*
+	Now that our window is created, we want to queary what samples are available
+	we call our InitMultiSample window
+	if we return a valid context, we want to destroy our current window
+	and create a new one using the multisample interface.
+	*/
+	if(!arbMultisampleSupported && CHECK_FOR_MULTISAMPLE)
+	{
+	
+		if(InitMultisample(window->init.application->hInstance,window->hWnd,pfd))
+		{
+			
+			DestroyWindowGL (window);
+			return CreateWindowGL(window);
+		}
+	}
 
+//ENDROACH
 	ShowWindow (window->hWnd, SW_NORMAL);								// Make The Window Visible
 	window->isVisible = TRUE;											// Set isVisible To True
 
@@ -526,6 +560,7 @@ bool inifile ()
 		WritePrivateProfileString("Resolution","bits","16",".\\set.ini");
 		WritePrivateProfileString("Resolution","isFullScreen","0",".\\set.ini");
 		WritePrivateProfileString("Resolution","FrameSkip","0",".\\set.ini");
+		WritePrivateProfileString("Resolution","AA","0",".\\set.ini");
 		WritePrivateProfileString("FlySet","moveSpeed","100",".\\set.ini");
 		WritePrivateProfileString("FlySet","MAXSpeed","500",".\\set.ini");
 		WritePrivateProfileString("FlySet","MINSpeed","1",".\\set.ini");

@@ -28,7 +28,7 @@
 #include "Video.h"
 //#include "Cloud.h"
 //#include "MD5Model.h"
-
+#include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
@@ -215,6 +215,13 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
         ))&&(!GraphicsLOW))
 		IsSupportFBO=true;
 	initFBO();
+/*
+	if (glewIsSupported("WGL_ARB_multisample"))
+		Multisample=GetPrivateProfileInt("Resolution","AA",0,".\\set.ini");
+	else
+		::MessageBox(HWND_DESKTOP," no WGL_ARB_multisample","Error",MB_OK | MB_ICONEXCLAMATION);
+*/
+
 
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
 	g_fVBOSupported=true;
@@ -3040,7 +3047,11 @@ void stage0(void)
 			SkyBox.DrawSun((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight);
 			DrawGround();
 			if(!IsHUD)
+			{
+				glEnable(GL_MULTISAMPLE_ARB);
 				DrawPlayer();
+				glDisable(GL_MULTISAMPLE_ARB);
+			}
 			DrawUnit();
 			Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			DrawMissle();
