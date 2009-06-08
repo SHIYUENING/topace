@@ -598,6 +598,11 @@ bool inifile ()
 		WritePrivateProfileString("Effect","MoveBlur","1",".\\set.ini");
 		WritePrivateProfileString("Effect","Cloud","1",".\\set.ini");
 		WritePrivateProfileString("Graphics","LOW","0",".\\set.ini");
+		WritePrivateProfileString("UI","SmallWindowSet","0",".\\set.ini");
+		WritePrivateProfileString("Sound","Effect","100",".\\set.ini");
+		WritePrivateProfileString("Sound","Voice","100",".\\set.ini");
+		WritePrivateProfileString("Sound","BGM","50",".\\set.ini");
+
 											// Close The Handle
 		//fclose(File);
 		return true;

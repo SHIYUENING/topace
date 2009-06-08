@@ -83,10 +83,13 @@ AudioPlayer * BGMplayer;
 tSoundSourceDate SoundSourceDate[MAX_soundSource];
 void initsound()
 {
+	float BGMvol	=(float)GetPrivateProfileInt("Sound","BGM",50,".\\set.ini")/100.0f;
+	float Effectvol	=(float)GetPrivateProfileInt("Sound","Effect",100,".\\set.ini")/100.0f;
+	float Voicevol	=(float)GetPrivateProfileInt("Sound","Voice",100,".\\set.ini")/100.0f;
 	openal::InitOpenALEE();
 	BGMplayer= new AudioPlayer;
 	BGMplayer->Load(L"Data/bgm.ogg");
-	BGMplayer->Gain=0.5f;
+	BGMplayer->Gain=BGMvol;
 	
 	
 	missleWarning[0] = new AudioBuffer;missleWarning[0]->Load(L"Data/voice/missleWarning0.ogg");
@@ -127,14 +130,17 @@ void initsound()
 	sounds[4] = new AudioBuffer;sounds[4]->Load(L"Data/sound/lock.ogg");
 	sounds[5] = new AudioBuffer;sounds[5]->Load(L"Data/sound/locked.ogg");
 	sounds[6] = new AudioBuffer;sounds[6]->Load(L"Data/sound/Lockon.ogg");
-	voiceSource=new AudioSource;
-	voiceSourceLock=new AudioSource;voiceSourceLock->Link(sounds[4]);
-	voiceSourceLockOn=new AudioSource;voiceSourceLockOn->Link(sounds[6]);
-	voiceSourceLocked=new AudioSource;voiceSourceLocked->Link(sounds[5]);
-	voiceSourceGunFire=new AudioSource;voiceSourceGunFire->Link(sounds[2]);
-	voiceSourceAWACS=new AudioSource;
+	voiceSource=new AudioSource;voiceSource->Gain=Voicevol;
+	voiceSourceLock=new AudioSource;voiceSourceLock->Link(sounds[4]);voiceSourceLock->Gain=Effectvol;
+	voiceSourceLockOn=new AudioSource;voiceSourceLockOn->Link(sounds[6]);voiceSourceLockOn->Gain=Effectvol;
+	voiceSourceLocked=new AudioSource;voiceSourceLocked->Link(sounds[5]);voiceSourceLocked->Gain=Effectvol;
+	voiceSourceGunFire=new AudioSource;voiceSourceGunFire->Link(sounds[2]);voiceSourceGunFire->Gain=Effectvol;
+	voiceSourceAWACS=new AudioSource;voiceSourceAWACS->Gain=Voicevol;
 	for(int i=0;i<MAX_soundSource;i++)
+	{
 		soundSource[i]=new AudioSource;
+		soundSource[i]->Gain=Effectvol;
+	}
 
 	/*
 	for(int i=0;i<MAX_missleWarning;i++)

@@ -214,3 +214,4 @@ bool KeyR=false;//按键“R”是否按下
 bool KeyT=false;
 double oneframetimelimit=1.0/60.0;//每桢最大时间
 int wingFrame=0;
+int SmallWindowType=0;
