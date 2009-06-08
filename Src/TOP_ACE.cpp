@@ -2307,6 +2307,11 @@ void DrawPlayer(void)
 					md5_yayiR.render();
 					md5_yinqingL.render();
 					md5_yinqingR.render();
+					md5_chuiweiL.render();
+					md5_chuiweiR.render();
+					md5_jinyiL.render();
+					md5_jinyiR.render();
+					md5_MissleBox.render();
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
 					glColor4f(1.0f,1.0f,1.0f,0.0f);
@@ -2652,7 +2657,11 @@ void DrawShadowMap(void)
 							md5_yayiR.render();
 							md5_yinqingL.render();
 							md5_yinqingR.render();
-
+							md5_chuiweiL.render();
+							md5_chuiweiR.render();
+							md5_jinyiL.render();
+							md5_jinyiR.render();
+							md5_MissleBox.render();
 							cgGLDisableProfile( g_CGprofile_pixel );
 							cgGLDisableProfile( g_CGprofile_vertex );					// Select The Projection Matrix
 						glPopMatrix();
@@ -2895,7 +2904,11 @@ void SetPlayerTransform(void)
 	md5_yayiR.setFrame(-int(InertiaX*6.0/5.0)+30);
 	md5_yinqingL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
 	md5_yinqingR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
-
+	md5_chuiweiL.setFrame(-int(InertiaX*6.0/5.0)+30);
+	md5_chuiweiR.setFrame(-int(InertiaX*6.0/5.0)+30);
+	md5_jinyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+	md5_jinyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+	md5_MissleBox.setFrame(MissleBoxFrame);
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	if(!IsHUD)
