@@ -235,6 +235,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	FrameSkip=GetPrivateProfileInt("Resolution","FrameSkip",0,".\\set.ini")+1;
 	oneframetimelimit=(double)FrameSkip/60.0;
+	SmallWindowType=GetPrivateProfileInt("UI","SmallWindowSet",0,".\\set.ini");
 
 	moveSpeed=GetPrivateProfileInt("FlySet","moveSpeed",100,".\\set.ini")*0.0001f;
 	MAXSpeed=GetPrivateProfileInt("FlySet","MAXSpeed",300,".\\set.ini")*0.0001f;
@@ -3022,6 +3023,7 @@ void stage0(void)
 			DrawBloomTex(winwidth,winheight);
 		if(IsHUD)
 		{
+			glEnable(GL_BLEND);
 			glClear (GL_COLOR_BUFFER_BIT );
 			DrawUI1totexture(latitude);
 			glClear (GL_COLOR_BUFFER_BIT );
@@ -3072,6 +3074,7 @@ void stage0(void)
 
 		if(IsHUD)
 		{
+			glEnable(GL_BLEND);
 			DrawUI2();
 			DrawUI3();
 			DrawUI4((float)InertiaX,(float)InertiaY,(float)InertiaZ);
