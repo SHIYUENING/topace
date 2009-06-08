@@ -2985,18 +2985,14 @@ void stage0(void)
 					10.0f, 100000.0f);		
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();	
-
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
-
-
 	Vector3d pos;
     pos = MFighter.RefPos();
     Vector3d dir;
     dir = MFighter.Matrix() * Vector3d(0, 0, -1);
     Vector3d dir2;
     dir2 = MFighter.Matrix() * Vector3d(1, 0, 0);
-    
     // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
     double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
     if (abs(r)>1){ r = 1.0f; }
@@ -3009,11 +3005,7 @@ void stage0(void)
     double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
-
-
 	SetPlayerTransform();
-
-		
 	//if(ShaderBloom)
 	//	DrawHighLight();
 	if(!IsSkip)
@@ -3097,7 +3089,7 @@ void stage0(void)
 
 
 }
-void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int SmallWindowW,int SmallWindowH,float SmallWindowLookRenge)
+void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int SmallWindowW,int SmallWindowH,float SmallWindowLookRenge,int Windowtype)
 {
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
@@ -3117,7 +3109,21 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 		MSmallWindowView=(MWorld * MSmallWindow).Invert();
 		glPushMatrix();
 			glLoadMatrixd(MSmallWindowView.Matrix4());
-			if(!IsSkip)
+			if(Windowtype==0)
+			{
+				glClearColor (0.0, 0.0, 0.0, 1.0);	
+				glClear (GL_COLOR_BUFFER_BIT );
+				glDisable(GL_TEXTURE_2D);
+				glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+				DrawGround();
+				glColor3f(0.0f,1.0f,0.0f);
+				for(int i=0;i<maxUnits;i++)
+					UDfighers[i].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+				glEnable(GL_TEXTURE_2D);
+				glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
+			}
+			if(Windowtype==1)
 			{
 				DrawSky(MSmallWindow);
 				Vector3d SunPos3ds;
@@ -3301,7 +3307,7 @@ void Draw (void)
 		{
 			if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
 				if(PMissleList.Missles[SmallWindowTGT].UDlife>1)
-					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,tmpLookRenge);
+					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,tmpLookRenge,SmallWindowType);
 			stage0();
 			
 		}
