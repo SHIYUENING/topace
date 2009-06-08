@@ -24,14 +24,23 @@ int ModelID_MavePart_Glass=0;
 int ModelID_MavePart_Normal=0;
 int ModelID_Stage1Ship_Normal=0;
 int ShowHPmodel=0;
-MD5Model md5_weiyiL;
-MD5Model md5_weiyiR;
-MD5Model md5_wingL;
+MD5Model md5_weiyiL;//Ë®Æ½Î²Òí×ó
+MD5Model md5_weiyiR;//Ë®Æ½Î²ÒíÓÒ
+MD5Model md5_wingL;//Ö÷Òí×ó
 MD5Model md5_wingR;
-MD5Model md5_yayiL;
+MD5Model md5_yayiL;//Ñ¼Òí
 MD5Model md5_yayiR;
-MD5Model md5_yinqingL;
+MD5Model md5_yinqingL;//ÒýÇæ
 MD5Model md5_yinqingR;
+MD5Model md5_chuiweiL;//´¹Î²
+MD5Model md5_chuiweiR;
+MD5Model md5_jinyiL;//½óÒí
+MD5Model md5_jinyiR;
+MD5Model md5_MissleBox;//µ¼µ¯µ¯²Ö
+MD5Model md5_Other1;
+MD5Model md5_Other2;
+MD5Model md5_Other3;
+MD5Model md5_Other4;
 //int ModelID_MavePart_Low=0;
 void LoadVBMDModels(bool IsSupportFBO)
 {
@@ -76,23 +85,34 @@ void LoadVBMDModels(bool IsSupportFBO)
 	sprintf(ModelFileName,"Data/models/%s/%s",ModelName,"Glass");	ModelID_MavePart_Glass	= m_VBMD ->Init(ModelFileName,false,0,true);
 	sprintf(ModelFileName,"Data/models/%s/%s",ModelName,"Normal");	ModelID_MavePart_Normal	= m_VBMD ->Init(ModelFileName);
 
-	md5_weiyiL.loadMesh("Data/models/mave/weiyiL.md5mesh");
-	md5_weiyiR.loadMesh("Data/models/mave/weiyiR.md5mesh");
-	md5_wingL.loadMesh("Data/models/mave/wingL.md5mesh");
-	md5_wingR.loadMesh("Data/models/mave/wingR.md5mesh");
-	md5_yayiL.loadMesh("Data/models/mave/yayiL.md5mesh");
-	md5_yayiR.loadMesh("Data/models/mave/yayiR.md5mesh");
-	md5_yinqingL.loadMesh("Data/models/mave/yinqingL.md5mesh");
-	md5_yinqingR.loadMesh("Data/models/mave/yinqingR.md5mesh");
+	sprintf(ModelFileName,"Data/models/%s/weiyiL.md5mesh",ModelName);	md5_weiyiL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/weiyiR.md5mesh",ModelName);	md5_weiyiR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/wingL.md5mesh",ModelName);	md5_wingL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/wingR.md5mesh",ModelName);	md5_wingR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yayiL.md5mesh",ModelName);	md5_yayiL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yayiR.md5mesh",ModelName);	md5_yayiR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yinqingL.md5mesh",ModelName);	md5_yinqingL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yinqingR.md5mesh",ModelName);	md5_yinqingR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/chuiweiL.md5mesh",ModelName);	md5_chuiweiL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/chuiweiR.md5mesh",ModelName);	md5_chuiweiR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/jinyiL.md5mesh",ModelName);	md5_jinyiL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/jinyiR.md5mesh",ModelName);	md5_jinyiR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/MissleBox.md5mesh",ModelName);	md5_MissleBox.loadMesh(ModelFileName);
 
-	md5_weiyiL.loadAnim("Data/models/mave/weiyiL.md5anim");
-	md5_weiyiR.loadAnim("Data/models/mave/weiyiR.md5anim");
-	md5_wingL.loadAnim("Data/models/mave/wingL.md5anim");
-	md5_wingR.loadAnim("Data/models/mave/wingR.md5anim");
-	md5_yayiL.loadAnim("Data/models/mave/yayiL.md5anim");
-	md5_yayiR.loadAnim("Data/models/mave/yayiR.md5anim");
-	md5_yinqingL.loadAnim("Data/models/mave/yinqingL.md5anim");
-	md5_yinqingR.loadAnim("Data/models/mave/yinqingR.md5anim");
+	sprintf(ModelFileName,"Data/models/%s/weiyiL.md5anim",ModelName);	md5_weiyiL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/weiyiR.md5anim",ModelName);	md5_weiyiR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/wingL.md5anim",ModelName);	md5_wingL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/wingR.md5anim",ModelName);	md5_wingR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yayiL.md5anim",ModelName);	md5_yayiL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yayiR.md5anim",ModelName);	md5_yayiR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yinqingL.md5anim",ModelName);	md5_yinqingL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/yinqingR.md5anim",ModelName);	md5_yinqingR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/chuiweiL.md5anim",ModelName);	md5_chuiweiL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/chuiweiR.md5anim",ModelName);	md5_chuiweiR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/jinyiL.md5anim",ModelName);	md5_jinyiL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/jinyiR.md5anim",ModelName);	md5_jinyiR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/MissleBox.md5anim",ModelName);	md5_MissleBox.loadAnim(ModelFileName);
+
 
 	md5_weiyiL.setAnim(0);
 	md5_weiyiR.setAnim(0);
@@ -102,6 +122,11 @@ void LoadVBMDModels(bool IsSupportFBO)
 	md5_yayiR.setAnim(0);
 	md5_yinqingL.setAnim(0);
 	md5_yinqingR.setAnim(0);
+	md5_chuiweiL.setAnim(0);
+	md5_chuiweiR.setAnim(0);
+	md5_jinyiL.setAnim(0);
+	md5_jinyiR.setAnim(0);
+	md5_MissleBox.setAnim(0);
 
 	ShowHPmodel=ModelID_MavePart_Normal;
 	PlayerMainModel=ModelID_MavePart_Main;
