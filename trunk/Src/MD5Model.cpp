@@ -53,6 +53,8 @@ void MD5Model::clear() {
 
 void MD5Model::animate(float dt) {
   // sanity check #1
+	if(!LoadOK)
+		return;
   if ( currAnim < 0 || currAnim >= int(anims.size()) || !anims[currAnim] )
     throw Exception("MD5Model::animate(): currAnim is invalid");
 
@@ -106,6 +108,8 @@ void MD5Model::animate(float dt) {
 
 // sets current animation
 void MD5Model::setAnim(int animIndex, int frameIndex) {
+	if(!LoadOK)
+		return;
   if ( animIndex < 0 || animIndex >= int(anims.size()) )
     throw Exception("MD5Model::setAnim(): invalid animation index");
 
@@ -118,6 +122,8 @@ void MD5Model::setAnim(int animIndex, int frameIndex) {
 
 void MD5Model::setFrame(int frameIndex) {
   // sanity check #1
+	if(!LoadOK)
+		return;
   if ( anims.size() == 0 || currAnim < 0 )
     throw Exception("MD5Model::setFrame(): no animation has beens set");
 
@@ -158,7 +164,8 @@ void MD5Model::render() {
 }
 */
 void MD5Model::render() {
-	
+	if(!LoadOK)
+		return;
 	glBegin(GL_TRIANGLES);
 	for( size_t i=0; i < meshes.size(); i++ )
 	{
@@ -179,6 +186,7 @@ void MD5Model::render() {
 }
 void MD5Model::loadMesh(const char *filename) {
   // sanity check
+	LoadOK=false;
   if ( !filename )
     throw Exception("MD5Model::loadMesh(): filename is NULL");
 
@@ -189,7 +197,7 @@ void MD5Model::loadMesh(const char *filename) {
   if ( !fin.is_open() ) {
     std::string msg = std::string("MD5Model::loadMesh(): unable to open ") +
                       std::string(filename) + std::string(" for reading");
-    throw Exception(msg);
+    return;//throw Exception(msg);
   }
 
   // read in file version
@@ -220,11 +228,14 @@ void MD5Model::loadMesh(const char *filename) {
   buildVerts();
   buildNormals();
   buildTBNs();
+  LoadOK=true;
 }
 
 
 int MD5Model::loadAnim(const char *filename) {
   // attempt to open file for reading
+	if(!LoadOK)
+		return 0;
   std::ifstream fin(filename, std::ifstream::in);
 
   if ( !fin.is_open() ) {
