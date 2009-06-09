@@ -2076,7 +2076,7 @@ void UnitMove(void)
 
 				float BoomRange=10000.0f;
 				if(PMissleList.Missles[i].onwer==0)
-					BoomRange=50000.0f;
+					BoomRange=20000.0f;
 				if(tmpD<BoomRange)//ÁÙÊ±±¬Õ¨·¶Î§
 				{
 					if(GetLength_2f(PMissleList.Missles[i].UDMplane.RefPos(),MFighter.RefPos())<tmpLookRenge*tmpLookRenge*2)
@@ -3128,10 +3128,19 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 				glClear (GL_COLOR_BUFFER_BIT );
 				glDisable(GL_TEXTURE_2D);
 				glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-				DrawGround();
+				//DrawGround();
 				glColor3f(0.0f,1.0f,0.0f);
-				for(int i=0;i<maxUnits;i++)
-					UDfighers[i].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				if((PMissleList.Missles[SmallWindowTGT].TGTnum>=0)&&(PMissleList.Missles[SmallWindowTGT].TGTnum<MAXMISSLE))
+				{
+					if(UDfighers[PMissleList.Missles[SmallWindowTGT].TGTnum].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge ))
+					{
+					}
+					else
+					{
+					}
+				}
+				if((PMissleList.Missles[SmallWindowTGT].onwer>=0)&&(PMissleList.Missles[SmallWindowTGT].onwer<MAXMISSLE))
+					UDfighers[PMissleList.Missles[SmallWindowTGT].onwer].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 				glEnable(GL_TEXTURE_2D);
 				glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
@@ -3145,7 +3154,7 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 				DrawGround();
 				
 				for(int i=0;i<maxUnits;i++)
-					UDfighers[i].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+					UDfighers[SmallWindowTGT].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glEnable(GL_CULL_FACE);
 				Shell.DrawShell( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				//PMissleList.DrawMissle( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
@@ -3319,7 +3328,7 @@ void Draw (void)
 		if(!IsSkip)
 		{
 			if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
-				if(PMissleList.Missles[SmallWindowTGT].UDlife>1)
+				if(PMissleList.Missles[SmallWindowTGT].UDlife>2)
 					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,tmpLookRenge,SmallWindowType);
 			stage0();
 			

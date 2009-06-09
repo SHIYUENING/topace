@@ -26,10 +26,8 @@ Unitdata::Unitdata(void)
 ,SelfNormalModelID(0)
 ,SelfLowModelID(0)
 , isPlayer(false)
+,AIType(0)
 {
-	//SoundSourceGun=new AudioSource;
-	for(int i=0;i<MAXweapon;i++)
-		weapon[MAXweapon]=-1;
 }
 
 Unitdata::~Unitdata(void)
@@ -228,7 +226,7 @@ void Unitdata::TurnTo(const Vector3d& Position){
 		if(isRSpeed)
 			rotateAngle=0.0;
 
-		if(UDflag!=2)
+		if((UDflag!=2)&&(AIType=0))
 			mSpeed=mSpeed-0.002f*float(rotateAngle*rotateAngle);
 		UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
     }

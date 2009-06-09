@@ -60,6 +60,7 @@ public:
 	int attackedTGTNum;//被攻击的敌人编号
 	int AImode;//行动模式1 被攻击时反击 ；2被攻击时继续之前的行为
 	int AIact;//当前行为1 向指定点移动或在指定点周围盘旋 ；2攻击 ；3闪避
+	int AIType;//0 一般 1 ace 2 boss
 	int AIactTimer1;
 	int AIactTimer2;
 	int LockListNum;//锁定编号
