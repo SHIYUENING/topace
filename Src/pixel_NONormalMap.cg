@@ -26,6 +26,7 @@ pixel main(
     uniform float3	paraLightColor,
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
+	uniform float4x4 Worldmatrix,
 //    uniform float3	Ke,
 //    uniform float3	Ka,
 //    uniform float3	Kd,

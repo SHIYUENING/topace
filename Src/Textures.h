@@ -18,7 +18,8 @@ Texture textureAlphaFont[1],textureLock[1];	//,textureBoms[MAXBOMS]
 GLuint textureRedar,UItexture4,Maptexture,CompassTexID;
 GLuint fbo;					// Our handle to the FBO
 GLuint depthBuffer;			// Our handle to the depth render buffer
-GLuint img,dtex;//,fboBloomImg					// Our handle to a texture
+GLuint img=0;
+GLuint dtex=0;//,fboBloomImg					// Our handle to a texture
 //GLuint blurtexture2;
 GLuint PlayerSign;
 GLuint ShowHPTexID;
