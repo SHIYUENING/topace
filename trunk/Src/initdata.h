@@ -71,7 +71,7 @@ void initUnitdata(int stage=0 )
 		*/
 		UDfighers[5].UDPstate.MaxAngleSpeed=CRad(2.5);
 		UDfighers[5].UDPstate.MaxSpeed=8.0;
-		UDfighers[5].AIType=0;
+		UDfighers[5].AIType=2;
 		for(int i=1;i<maxUnits;i++)
 		{
 			UDfighers[i].ResetData();
@@ -99,8 +99,6 @@ void initUnitdata(int stage=0 )
 				UDfighers[i].UDfighterType=3;
 				UDfighers[i].LockOnTime=1;
 				UDfighers[i].RefireTime=450;
-				UDfighers[i].UDPstate.MaxAngleSpeed=CRad(2.2);
-				UDfighers[i].UDPstate.MaxSpeed=8.0;
 			}
 		}
 

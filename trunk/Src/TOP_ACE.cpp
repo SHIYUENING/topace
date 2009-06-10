@@ -295,6 +295,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
 	UItexture3=EmptyTexture(512);
+	while(SmallWinSize<(winheight/6))
+		SmallWinSize=SmallWinSize*2;
+	SmallWinTexID=EmptyTexture(SmallWinSize);
 
 	initlocks();
 	initUnitdata(0);
@@ -3121,6 +3124,7 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 		MSmallWindow.TranslateInternal(Vector3d(0.0f, 0.0f, 250.0f));
 		MSmallWindowView=(MWorld * MSmallWindow).Invert();
 		glPushMatrix();
+		bool locking=false;
 			glLoadMatrixd(MSmallWindowView.Matrix4());
 			if(Windowtype==0)
 			{
@@ -3131,14 +3135,7 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 				//DrawGround();
 				glColor3f(0.0f,1.0f,0.0f);
 				if((PMissleList.Missles[SmallWindowTGT].TGTnum>=0)&&(PMissleList.Missles[SmallWindowTGT].TGTnum<MAXMISSLE))
-				{
-					if(UDfighers[PMissleList.Missles[SmallWindowTGT].TGTnum].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge ))
-					{
-					}
-					else
-					{
-					}
-				}
+					locking=UDfighers[PMissleList.Missles[SmallWindowTGT].TGTnum].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				if((PMissleList.Missles[SmallWindowTGT].onwer>=0)&&(PMissleList.Missles[SmallWindowTGT].onwer<MAXMISSLE))
 					UDfighers[PMissleList.Missles[SmallWindowTGT].onwer].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
@@ -3152,19 +3149,36 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 				SunPos3ds=MSmallWindowView.Matrix() * Vector3d(100000.0+MSmallWindow.RefPos()(0),100000.0+MSmallWindow.RefPos()(1),100000.0+MSmallWindow.RefPos()(2)) + MSmallWindowView.RefPos();
 				SkyBox.DrawSun((float)SunPos3ds(0),(float)SunPos3ds(1),(float)SunPos3ds(2), SmallWindowW , SmallWindowH );
 				DrawGround();
-				
-				for(int i=0;i<maxUnits;i++)
-					UDfighers[SmallWindowTGT].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glEnable(GL_CULL_FACE);
+				for(int i=0;i<maxUnits;i++)
+				{
+					bool lockingt=UDfighers[i].m_DrawSelf( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+					if(i==PMissleList.Missles[SmallWindowTGT].TGTnum)
+						locking=lockingt;
+				}
+				
 				Shell.DrawShell( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				//PMissleList.DrawMissle( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				PSmokes.DrawSmoke( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glDisable(GL_CULL_FACE);
 			}
+			
+			if(locking)
+			{
+				glColor3f(0.0f,1.0f,0.0f);
+				glPrints(16,0,128,128,"LOCK");
+			}
+			else
+			{
+				glColor3f(1.0f,0.0f,0.0f);
+				if(lockflash>15)
+					glPrints(16,0,128,128,"LOST");
+			}
+			glColor3f(1.0f,1.0f,1.0f);
 		glPopMatrix();
 	glPopAttrib();
 	glBindTexture(GL_TEXTURE_2D, SmallWinTexID);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, winposX, winposY, 128, 128, 0);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, winposX, winposY, SmallWinSize, SmallWinSize, 0);
 
 }
 void AfterDraw (void)
@@ -3329,7 +3343,7 @@ void Draw (void)
 		{
 			if((SmallWindowTGT>=0)&&(SmallWindowTGT<MAXMISSLE))
 				if(PMissleList.Missles[SmallWindowTGT].UDlife>2)
-					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,128,128,tmpLookRenge,SmallWindowType);
+					DrawSmallWindow(PMissleList.Missles[SmallWindowTGT].UDMplane,0,0,SmallWinSize,SmallWinSize,tmpLookRenge,SmallWindowType);
 			stage0();
 			
 		}
