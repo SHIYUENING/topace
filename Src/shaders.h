@@ -3,10 +3,12 @@
 #include <Cg/cgGL.h>
 #include "Textures.h"
 GLuint AmbientReflectiveTexture;
+GLuint shadowDummyTexture=0;
 bool ShaderLight=true;//是否使用shader
 bool ShaderWater=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
 bool UseHighShadow=true;
+bool UseShadow=true;
 CGprofile   g_CGprofile_vertex;
 CGprofile   g_CGprofile_pixel;
 CGcontext   g_CGcontext;
