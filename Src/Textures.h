@@ -2,7 +2,6 @@
 #pragma once
 #include "DDS.h"										
 #include "texture.h"
-#include "testNum.h"
 //#include "VBMD.h"
 #include "shaders.h"
 #include "BomTeams.h"
@@ -25,7 +24,7 @@ GLuint PlayerSign;
 GLuint ShowHPTexID;
 GLuint SeaTexID;
 GLuint SmallWinTexID=0;
-GLuint SmallWinSize=128;
+GLint SmallWinSize=128;
 bool IsSupportFBO=false;
 //int SmokeNumber=0;//读取的尾烟图片总数
 //int BomsNumber=0;//读取的爆炸相关设定总数
@@ -215,11 +214,11 @@ void initFBO()
 
 		glGenTextures(1, &img);
 		glBindTexture(GL_TEXTURE_2D, img);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB10_A2,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 /*
 		glGenTextures(1, &fboBloomImg);
 		glBindTexture(GL_TEXTURE_2D, fboBloomImg);
@@ -236,7 +235,7 @@ void initFBO()
 		if(gpuType==0)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		if(gpuType==2)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		if(gpuType==1)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

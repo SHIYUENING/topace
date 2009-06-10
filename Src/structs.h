@@ -216,3 +216,5 @@ double oneframetimelimit=1.0/60.0;//每桢最大时间
 int wingFrame=0;
 int MissleBoxFrame=0;
 int SmallWindowType=0;
+float moveSpeedT=0.0f;
+float changeInertia=0.0f;

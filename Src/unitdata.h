@@ -92,6 +92,7 @@ public:
 //	void PrintLinePos(Transform& MView);
 	//void setpos(int smokeN=0);
     void TurnTo(const Vector3d& Position);
+	void TurnTom(const Vector3d& Position);
 	double WaringTo(const Vector3d& Position);
 	//void m_DrawMissle(const Vector3d& m_world,int m_winwidth,int m_winheight,float m_tmpLookRenge);
 	bool m_DrawSelf(const Vector3d& ViewPos,int m_winwidth,int m_winheight,float m_tmpLookRenge);

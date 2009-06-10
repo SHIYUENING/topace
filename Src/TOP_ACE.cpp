@@ -394,7 +394,9 @@ void Inertia()              //处理惯性
 		if(InertiaSpeed<0.0f)
 			InertiaSpeed=InertiaSpeed+0.5f;
 	}
+	float Speedloss=max(0.0f,1.0f-moveSpeed*moveSpeed/(MAXSpeed*MAXSpeed*2.0f+0.000001f));
 
+	changeInertia= min(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f/200.0f,1.0f);
 
 	if(!(InertiaZ==0.0f))
 	{
@@ -405,7 +407,7 @@ void Inertia()              //处理惯性
 		if(InertiaZ<0.0f)
 			InertiaZ=InertiaZ+1.0f;
 	}
-	turnZ=InertiaZ*TurnRateZ;
+	turnZ=InertiaZ*TurnRateZ*changeInertia*Speedloss;
 
 	if(!(InertiaY==0.0f))
 	{
@@ -416,7 +418,7 @@ void Inertia()              //处理惯性
 		if(InertiaY<0.0f)
 			InertiaY=InertiaY+1.0f;
 	}
-	turnY=InertiaY*0.004f;
+	turnY=InertiaY*0.004f*changeInertia*Speedloss;
 
 	if(!(InertiaX==0.0f))
 	{
@@ -427,9 +429,25 @@ void Inertia()              //处理惯性
 		if(InertiaX<0.0f)
 			InertiaX=InertiaX+1.0f;
 	}
-	turnX=InertiaX*TurnRateX;
+	turnX=InertiaX*TurnRateX*changeInertia*Speedloss;
+	moveSpeed=moveSpeed-InertiaX*InertiaX/60000000.0f+moveSpeedT/3000000.0f;
 
 	shellturn=turnX*150.0f;
+	if(changeInertia<1.0f)
+	{
+		UDfighers[0].UDMplane.Translate(Vector3d(0.0f,2.0f-2.0f*changeInertia,0.0f));
+		if(moveSpeedT<85.0f)
+		{
+			Transform rallto;
+			rallto=UDfighers[0].UDMplane;
+			rallto.Translate(Vector3d(0.0f,50.0f,0.0f));
+			UDfighers[0].TurnTom(rallto.RefPos());
+			UDfighers[0].UDPstate.NextState();
+			UDfighers[0].UDPstate.MaxAngleSpeed=CRad(3.0);
+
+			//UDfighers[0].UDMplane.Rotate(Vector3d(1.0f,0.0f,0.0f)*CRad(changeInertia*6.0f-6.0f));
+		}
+	}
 	
 
 }
@@ -455,7 +473,7 @@ void DrawDataLine1 (void)
 		strcat( szTitle, ", Light:Shader" );
 	else
 		strcat( szTitle, ", Light:glLight" );
-	if((IsSupportFBO)&&(ShaderLight))
+	if((IsSupportFBO)&&(ShaderLight)&&UseShadow)
 	{
 		if(UseHighShadow)
 			strcat( szTitle, ", Shadow:High" );
@@ -463,7 +481,7 @@ void DrawDataLine1 (void)
 			strcat( szTitle, ", Shadow:Low" );
 	}
 	else
-		strcat( szTitle, ", Shadow:No" );
+		strcat( szTitle, ", Shadow:Off" );
 
 	if(ShaderWater)
 	{
@@ -3033,6 +3051,7 @@ void stage0(void)
     if (abs(r)>1){ r = 1.0f; }
     double latitude = acos_s(r) * 180.0f / PI;
     if (dir(1) < 0){ latitude = -latitude; }
+	moveSpeedT=-latitude;
     // longitude is the rotation angle against y-axis. longitude = ArcCos[dir[2] / Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[0]]
     double longitude = acos_s(dir(2) / r) * 180.0f / PI;
     if (dir(0) < 0){ longitude = -longitude; }
@@ -3120,7 +3139,7 @@ void stage0(void)
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
 	//Maptexture=MyFont.TXTTexID;
-	Maptexture=SmallWinTexID;
+	Maptexture=img;
 
 
 }
@@ -3185,13 +3204,13 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 			if(locking)
 			{
 				glColor3f(0.0f,1.0f,0.0f);
-				glPrints(16,0,128,128,"LOCK");
+				glPrints(0,0,128,128,"LOCK");
 			}
 			else
 			{
 				glColor3f(1.0f,0.0f,0.0f);
 				if(lockflash>15)
-					glPrints(16,0,128,128,"LOST");
+					glPrints(0,0,128,128,"LOST");
 			}
 			glColor3f(1.0f,1.0f,1.0f);
 		glPopMatrix();
