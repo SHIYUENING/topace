@@ -26,6 +26,7 @@ pixel main(
     uniform float3	paraLightColor,
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
+	uniform float4x4 Worldmatrix,
 //    uniform float3	Ke,
 //    uniform float3	Ka,
 //    uniform float3	Kd,
@@ -160,14 +161,16 @@ pixel main(
 	colorposZ=tex2D( ShadowMapTexture, IN.texcoord3-MU*3 );
 	posz=(colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0)*tmp1;
 	if(IN.objectPos2.z>posz) tmp0=tmp0+1;
-	half3 I = IN.objectPos2.xyz - eyePosition;
-	half3 R = reflect(I, N);
+	float4 R2;
+	R2.xyz= reflect((eyePosition-IN.objectPos.xyz/IN.objectPos.w), N);
+	R2.w=0;
+	R2=mul(Worldmatrix,R2);
 	Ocolor.xyz=globalAmbient +IN.Light2color+(diffuse+specularLight*8*SpecularMapcolor.xyz)*(21-tmp0)/21;
 
 
 
 
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*(texCUBE( AmbientReflectiveTexture, R)+1.0);
+	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*(texCUBE( AmbientReflectiveTexture, R2)+1.0);
 	OUT.color.w=0.5;
 
     return OUT;

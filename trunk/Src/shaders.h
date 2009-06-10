@@ -3,7 +3,6 @@
 #include <Cg/cgGL.h>
 #include "Textures.h"
 GLuint AmbientReflectiveTexture;
-GLuint shadowDummyTexture=0;
 bool ShaderLight=true;//是否使用shader
 bool ShaderWater=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
@@ -76,7 +75,7 @@ float Ppos2=150.0f;
 float pixelfogColor[3];
 float seatime=0.0f;
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
-GLfloat ShadowMapMVPmatrix[16];
+GLfloat ShadowMapMVPmatrix[16],Worldmatrix[16];
 //初始化shader
 void InitCG()
 {
@@ -394,6 +393,7 @@ void shaderT(int NormalTex=0,int SpecularTex=0)//bool UseBloom=false
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightColor" ), paraLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightDirection" ), paraLightDirection);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "eyePosition"), eyePosition);
+		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGpixel_NOBloom, "Worldmatrix" ),Worldmatrix);
 //		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ke" ), Ke);
 //		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Ka" ), Ka);
 //		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "Kd" ), Kd);

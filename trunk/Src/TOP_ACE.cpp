@@ -2219,6 +2219,7 @@ void UnitMove(void)
 
 void DrawPlayer(void)
 {
+	glGetFloatv(GL_MODELVIEW_MATRIX,Worldmatrix);
 	glEnable(GL_CULL_FACE);
 	glPushMatrix();
     glLoadIdentity();
@@ -2285,6 +2286,7 @@ void DrawPlayer(void)
 					//shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					
 					//m_VBMD->ShowVBMD(PlayerMainModel);
+					
 
 					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
 					m_VBMD->ShowVBMD(PlayerMainModel);
@@ -2581,7 +2583,6 @@ void DrawShadowMap(void)
 {
 	if(!UseShadow)
 	{
-		img=shadowDummyTexture;
 		return;
 	}
 	if(IsSupportFBO)
