@@ -206,6 +206,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		cpubrand[i]=cpubrand[i+1];
 	}
 
+
 	//GL_ARB_vertex_program
     if ((glewIsSupported(
         "GL_VERSION_2_0 "
@@ -214,7 +215,16 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
         "GL_ARB_fragment_program "
         ))&&(!GraphicsLOW))
 		IsSupportFBO=true;
-	initFBO();
+	int ShadowSet=GetPrivateProfileInt("Light","Shadow",2,".\\set.ini");
+	if(ShadowSet<2)
+		UseHighShadow=false;
+	if(ShadowSet<1)
+	{
+		UseShadow=false;
+		img=EmptyTexture(64);
+	}
+	else
+		initFBO();
 /*
 	if (glewIsSupported("WGL_ARB_multisample"))
 		Multisample=GetPrivateProfileInt("Resolution","AA",0,".\\set.ini");
@@ -260,8 +270,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	InitFogAndLight();
 	InitTile();
-	if(GetPrivateProfileInt("Light","HighShadow",1,".\\set.ini")==0)
-		UseHighShadow=false;
+
 	if((GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)&&(!GraphicsLOW))
 		InitCG();
 	else
@@ -324,8 +333,12 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
 	DeleteFont();
-	glDeleteFramebuffersEXT(1, &fbo);
-	glDeleteRenderbuffersEXT(1, &depthBuffer);
+	if(UseShadow)
+	{
+		glDeleteFramebuffersEXT(1, &fbo);
+		glDeleteRenderbuffersEXT(1, &depthBuffer);
+	}
+
 	glDeleteTextures(1,&img);
 /*
 	for(int i=1;i<11;i++)
@@ -2566,6 +2579,11 @@ void showloading(void)
 }
 void DrawShadowMap(void)
 {
+	if(!UseShadow)
+	{
+		img=shadowDummyTexture;
+		return;
+	}
 	if(IsSupportFBO)
 	{
 		glClearColor (1.0f, 1.0f, 1.0f, 1.0f);	
