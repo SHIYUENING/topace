@@ -26,7 +26,7 @@ int windowswidth=800;
 int windowsheight=600;
 int windowsbits=16;
 bool BisFullScreen=FALSE;
-int ACver=33;
+int ACver=34;
 int (__stdcall *hglSwapBuffers)(void *);
 HMODULE gl_dll=false;
 

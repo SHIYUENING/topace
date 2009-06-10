@@ -130,6 +130,32 @@ GLvoid glPrint(GLint x, GLint y, char *string, int set,bool isover800_600=false)
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 }
+
+GLvoid glPrints(GLint x, GLint y, GLint winW,GLint winH,char *string)	// Where The Printing Happens
+{
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
+
+	glBindTexture(GL_TEXTURE_2D, AsciiFontTexId);			// Select Our Font Texture
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,winW,0,winH,-1,1);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	
+	glTranslated(x,y,0);								// Position The Text (0,0 - Bottom Left)
+
+	glListBase(base-32);						// Choose The Font Set (0 or 1)
+	glCallLists(strlen(string),GL_UNSIGNED_BYTE,string);// Write The Text To The Screen
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+}
 //绘制绿色的目标框或者红色的锁定框，每桢可以同时多次绘制
 GLvoid glPrintW(float HUDx=0.0,float HUDy=0.0, bool locked=false)	// Where The Printing Happens
 {
