@@ -56,6 +56,9 @@ bool CKeyInput::initJoyStick(void)
 			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 104 , ".\\set.ini" );
 			m_keyViewReset		= GetPrivateProfileInt( "JoyStick" , "ViewReset" , 0 , ".\\set.ini" );
 			m_keySetHUD		= GetPrivateProfileInt( "JoyStick" , "SetHUD" , 9 , ".\\set.ini" );
+			m_keyStart		= GetPrivateProfileInt( "JoyStick" , "Start" , 0 , ".\\set.ini" );
+			m_keySelect		= GetPrivateProfileInt( "JoyStick" , "Select" , 0 , ".\\set.ini" );
+			m_keyOther		= GetPrivateProfileInt( "JoyStick" , "Other" , 0 , ".\\set.ini" );
 			m_IsUseJoyStick	= true;
 		}
 		return true;
@@ -87,6 +90,9 @@ int CKeyInput::UpData(void)
 		 m_IskeyViewRight=false;
 		 m_IskeyViewReset=false;
 		 m_IskeySetHUD=false;
+		 m_IskeyStart=false;
+		 m_IskeySelect=false;
+		 m_IskeyOther=false;
 		SDL_JoystickUpdate();
 		if(m_keyUp>999)
 		{
@@ -472,8 +478,71 @@ int CKeyInput::UpData(void)
 		}
 		if(m_SetHUD>0.1f)
 			m_IskeySetHUD=true;
+
+		if(m_keyStart>999)
+		{
+			m_Start=SDL_JoystickGetHat(joystick,m_keyStart-1000);
+		}
+		else
+		{
+			if(m_keyStart>99)
+			{
+				if((m_keyStart-100)%2==0)
+					m_Start=(float)SDL_JoystickGetAxis(joystick,(m_keyStart-100)/2)/32500.0f;
+				else
+					m_Start=-(float)SDL_JoystickGetAxis(joystick,(m_keyStart-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_Start=SDL_JoystickGetButton(joystick,m_keyStart);
+			}
+		}
+		if(m_Start>0.1f)
+			m_IskeyStart=true;
+
+		if(m_keySelect>999)
+		{
+			m_Select=SDL_JoystickGetHat(joystick,m_keySelect-1000);
+		}
+		else
+		{
+			if(m_keySelect>99)
+			{
+				if((m_keySelect-100)%2==0)
+					m_Select=(float)SDL_JoystickGetAxis(joystick,(m_keySelect-100)/2)/32500.0f;
+				else
+					m_Select=-(float)SDL_JoystickGetAxis(joystick,(m_keySelect-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_Select=SDL_JoystickGetButton(joystick,m_keySelect);
+			}
+		}
+		if(m_Select>0.1f)
+			m_IskeySelect=true;
+
+		if(m_keyOther>999)
+		{
+			m_Other=SDL_JoystickGetHat(joystick,m_keyOther-1000);
+		}
+		else
+		{
+			if(m_keyOther>99)
+			{
+				if((m_keyOther-100)%2==0)
+					m_Other=(float)SDL_JoystickGetAxis(joystick,(m_keyOther-100)/2)/32500.0f;
+				else
+					m_Other=-(float)SDL_JoystickGetAxis(joystick,(m_keyOther-100-1)/2)/32500.0f;
+			}
+			else
+			{
+				m_Other=SDL_JoystickGetButton(joystick,m_keyOther);
+			}
+		}
+		if(m_Other>0.1f)
+			m_IskeyOther=true;
+
 		if(m_IskeyUp||m_IskeyDown||m_IskeyLeft||m_IskeyRight||m_IskeyMissle||m_IskeyGun||m_IskeyMap||m_IskeyLock||m_IskeySpeedUp||m_IskeyViewDown||m_IskeyViewLeft||m_IskeyViewRight||m_IskeyViewReset||m_IskeySetHUD)
-		
 			isAnyKeyDown=true;
 		else
 			isAnyKeyDown=false;
@@ -510,4 +579,8 @@ void CKeyInput::initKeyboard(void)
 			m_keyboardViewRight		= GetPrivateProfileInt( "keyboard" , "ViewRight" , 10098 , ".\\set.ini" )-10000;
 			m_keyboardViewReset		= GetPrivateProfileInt( "keyboard" , "ViewReset" , 10103 , ".\\set.ini" )-10000;
 			m_keyboardSetHUD		= GetPrivateProfileInt( "keyboard" , "SetHUD"	 , 10090 , ".\\set.ini" )-10000;
+			m_keyboardStart		= GetPrivateProfileInt( "keyboard" , "Start"	 , 10032 , ".\\set.ini" )-10000;
+			m_keyboardSelect		= GetPrivateProfileInt( "keyboard" , "Select"	 , 10017 , ".\\set.ini" )-10000;
+			m_keyboardOther		= GetPrivateProfileInt( "keyboard" , "Other"	 , 10016 , ".\\set.ini" )-10000;
+			
 }

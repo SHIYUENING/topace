@@ -168,6 +168,10 @@ float InertiaSpeed=0.0f;
 float ViewTurnX=0.0f;
 float ViewTurnY=0.0f;
 bool pushkeyHUD=false;
+bool GamePause=false;
+bool KeyStart=false;
+bool KeySelect=false;
+bool KeyOther=false;
 
 char szVERSION[512]={0};//opengl°æ±¾
 

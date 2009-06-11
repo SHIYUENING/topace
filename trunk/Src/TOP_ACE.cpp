@@ -396,7 +396,8 @@ void Inertia()              //处理惯性
 	}
 	float Speedloss=max(0.0f,1.0f-moveSpeed*moveSpeed/(MAXSpeed*MAXSpeed*2.0f+0.000001f));
 
-	changeInertia= min(moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f/200.0f,1.0f);
+	float speedKmh=moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f;
+	changeInertia= min(speedKmh/200.0f,1.0f);
 
 	if(!(InertiaZ==0.0f))
 	{
@@ -430,7 +431,7 @@ void Inertia()              //处理惯性
 			InertiaX=InertiaX+1.0f;
 	}
 	turnX=InertiaX*TurnRateX*changeInertia*Speedloss;
-	moveSpeed=moveSpeed-InertiaX*InertiaX/60000000.0f+moveSpeedT/3000000.0f;
+	moveSpeed=moveSpeed+moveSpeedT/4000000.0f-(InertiaX*InertiaX/60000000.0f)*min(1.0f,speedKmh/350.0f)+(1.0f-min(1.0f,speedKmh/600.0f))*Acceleration;
 
 	shellturn=turnX*150.0f;
 	if(changeInertia<1.0f)
@@ -952,7 +953,6 @@ void PlayerControl()
 	}*/
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewLeft] == TRUE)||KeyInput.m_IskeyViewLeft)	
 	{
-		
 			ViewTurnX=ViewTurnX+0.005f;
 		if(ViewTurnX>1.0f)
 			ViewTurnX=1.0f;
@@ -969,9 +969,6 @@ void PlayerControl()
 	}*/
 	if ((g_keys->keyDown [KeyInput.m_keyboardViewRight] == TRUE)||KeyInput.m_IskeyViewRight)	
 	{
-	
-
-
 			ViewTurnX=ViewTurnX-0.005f;
 		if(ViewTurnX<-1.0f)
 			ViewTurnX=-1.0f;
@@ -1031,7 +1028,121 @@ void PlayerControl()
 	if(!(g_keys->keyDown [KeyInput.m_keyboardSetHUD]||KeyInput.m_IskeySetHUD))
 		pushkeyHUD=false;
 
+	if ((g_keys->keyDown [KeyInput.m_keyboardStart]||KeyInput.m_IskeyStart) && !KeyStart )
+	{
+		KeyStart=true;
+		GamePause=!GamePause;
+		SoundPause();
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardStart]||KeyInput.m_IskeyStart))
+		KeyStart=false;
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardSelect]||KeyInput.m_IskeySelect) && !KeySelect )
+	{
+		KeySelect=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardSelect]||KeyInput.m_IskeySelect))
+		KeySelect=false;
 	
+	if ((g_keys->keyDown [KeyInput.m_keyboardOther]||KeyInput.m_IskeyOther) && !KeyOther )
+	{
+		KeyOther=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardOther]||KeyInput.m_IskeyOther))
+		KeyOther=false;
+}
+void UIPlayerControl()
+{
+	if ((g_keys->keyDown [KeyInput.m_keyboardLeft] == TRUE)||KeyInput.m_IskeyLeft)					
+	{}
+	
+	if ((g_keys->keyDown [KeyInput.m_keyboardRight] == TRUE)||KeyInput.m_IskeyRight)					
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardUp] == TRUE)||KeyInput.m_IskeyUp)					
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardDown] == TRUE)||KeyInput.m_IskeyDown)					
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedUp] == TRUE)||KeyInput.m_IskeySpeedUp)					
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedDown] == TRUE)||KeyInput.m_IskeySpeedDown)					
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardL] == TRUE)||KeyInput.m_IskeyL)
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardR] == TRUE)||KeyInput.m_IskeyR)
+	{}
+
+	if(g_keys->keyDown[KeyInput.m_keyboardGun]||KeyInput.m_IskeyGun)
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardMap]||KeyInput.m_IskeyMap) && !KeyT )
+	{
+		KeyT=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardMap]||KeyInput.m_IskeyMap))
+		KeyT=false;
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardMissle]||KeyInput.m_IskeyMissle) && !KeyF )
+	{
+		KeyF=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardMissle]||KeyInput.m_IskeyMissle))
+		KeyF=false;
+
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardLock]||KeyInput.m_IskeyLock) && !KeyQ )	
+	{
+		KeyQ=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardLock]||KeyInput.m_IskeyLock))
+		KeyQ=false;
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewUp] == TRUE)||KeyInput.m_IskeyViewUp)
+	{}
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewDown] == TRUE)||KeyInput.m_IskeyViewDown)
+	{}
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewLeft] == TRUE)||KeyInput.m_IskeyViewLeft)
+	{}
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewRight] == TRUE)||KeyInput.m_IskeyViewRight)
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardViewReset] == TRUE)||KeyInput.m_IskeyViewReset)	
+	{}
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardSetHUD]||KeyInput.m_IskeySetHUD) && !pushkeyHUD )
+	{
+		pushkeyHUD=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardSetHUD]||KeyInput.m_IskeySetHUD))
+		pushkeyHUD=false;
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardStart]||KeyInput.m_IskeyStart) && !KeyStart )
+	{
+		KeyStart=true;
+		GamePause=!GamePause;
+		SoundPause();
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardStart]||KeyInput.m_IskeyStart))
+		KeyStart=false;
+
+	if ((g_keys->keyDown [KeyInput.m_keyboardSelect]||KeyInput.m_IskeySelect) && !KeySelect )
+	{
+		KeySelect=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardSelect]||KeyInput.m_IskeySelect))
+		KeySelect=false;
+	
+	if ((g_keys->keyDown [KeyInput.m_keyboardOther]||KeyInput.m_IskeyOther) && !KeyOther )
+	{
+		KeyOther=true;
+	}
+	if(!(g_keys->keyDown [KeyInput.m_keyboardOther]||KeyInput.m_IskeyOther))
+		KeyOther=false;
 }
 void StartShow()
 {
@@ -1052,7 +1163,7 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(playTime%4==0)
 		Video.DrawVideo();
 //	FMOD_System_Update(sys);
-	Inertia();
+	
 	if(StartShowTime>0)
 		StartShow();
 	if (g_keys->keyDown [VK_ESCAPE] == TRUE)					// Is ESC Being Pressed?
@@ -1060,8 +1171,14 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		TerminateApplication (g_window);						// Terminate The Program
 	}
 	KeyInput.UpData();
-	if(isPlayerControl)
-		PlayerControl();
+	if(!GamePause)
+	{
+		Inertia();
+		if(isPlayerControl)
+			PlayerControl();
+	}
+	else
+		UIPlayerControl();
 
 
 	
@@ -3041,11 +3158,11 @@ void stage0(void)
 	glClearColor (0.0, 0.0, 0.0, 0.0);	
 	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer										// Reset The Modelview Matrix
 	Vector3d pos;
-    pos = MFighter.RefPos();
+	pos = UDfighers[0].UDMplane.RefPos();
     Vector3d dir;
-    dir = MFighter.Matrix() * Vector3d(0, 0, -1);
+    dir = UDfighers[0].UDMplane.Matrix() * Vector3d(0, 0, -1);
     Vector3d dir2;
-    dir2 = MFighter.Matrix() * Vector3d(1, 0, 0);
+    dir2 = UDfighers[0].UDMplane.Matrix() * Vector3d(1, 0, 0);
     // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
     double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
     if (abs(r)>1){ r = 1.0f; }
@@ -3385,7 +3502,17 @@ void Draw (void)
 			stage0();
 			
 		}
-		AfterDraw();
+		if(!GamePause)
+			AfterDraw();
+		else
+		{
+			if((playTime%40)>20)
+			{
+				glColor3f(0.0f,1.0f,0.0f);
+				glPrints(winwidth/2-40,winheight/2,winwidth,winheight,"Pause");
+				glColor3f(1.0f,1.0f,1.0f);
+			}
+		}
 
 	}
 	else
