@@ -349,3 +349,16 @@ void Playmissvoice(int Num)
 		MyFont.inputTxt("¡¶£Í£É£Ó£Ó¡·");
 
 }
+void SoundPause()
+{
+	if(BGMplayer->State==AL_PLAYING)
+	{
+		BGMplayer->Pause();
+		return;
+	}
+	if(BGMplayer->State==AL_PAUSED)
+	{
+		BGMplayer->Rewind();
+		return;
+	}
+}

@@ -28,6 +28,9 @@ public:
 	int m_keyViewRight;
 	int m_keyViewReset;
 	int m_keySetHUD;
+	int m_keyStart;
+	int m_keySelect;
+	int m_keyOther;
 
 	//int m_keyboardtmp;
 	int m_keyboardUp;
@@ -48,6 +51,9 @@ public:
 	int m_keyboardViewRight;
 	int m_keyboardViewReset;
 	int m_keyboardSetHUD;
+	int m_keyboardStart;
+	int m_keyboardSelect;
+	int m_keyboardOther;
 
 
 	bool m_IskeyUp;
@@ -68,6 +74,9 @@ public:
 	bool m_IskeyViewRight;
 	bool m_IskeyViewReset;
 	bool m_IskeySetHUD;
+	bool m_IskeyStart;
+	bool m_IskeySelect;
+	bool m_IskeyOther;
 
 	float m_Up;
 	float m_Down;
@@ -87,6 +96,9 @@ public:
 	float m_ViewRight;
 	float m_ViewReset;
 	float m_SetHUD;
+	float m_Start;
+	float m_Select;
+	float m_Other;
 
 	bool isAnyKeyDown;
 
