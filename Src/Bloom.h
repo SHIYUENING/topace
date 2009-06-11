@@ -78,8 +78,7 @@ void DrawBloomTex(int winW,int winH)
 }
 void DrawBloom(int winW,int winH)
 {
-		glBindTexture(GL_TEXTURE_2D, bloomTexId2);
-		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winW)/2, -(bloomTexSize-winH)/2, bloomTexSize, bloomTexSize, 0);
+
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 		glBindTexture(GL_TEXTURE_2D, bloomTexId1);
 
