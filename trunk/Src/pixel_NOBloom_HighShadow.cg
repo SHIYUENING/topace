@@ -165,7 +165,7 @@ pixel main(
 	R2.xyz= reflect((eyePosition-IN.objectPos.xyz/IN.objectPos.w), N);
 	R2.w=0;
 	R2=mul(Worldmatrix,R2);
-	Ocolor.xyz=globalAmbient +IN.Light2color+(diffuse+specularLight*8*SpecularMapcolor.xyz)*(21-tmp0)/21;
+	Ocolor.xyz=globalAmbient +IN.Light2color+(diffuse+specularLight*10*SpecularMapcolor.x)*(21-tmp0)/21;
 
 
 

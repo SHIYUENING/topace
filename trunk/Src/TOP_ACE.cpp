@@ -3220,6 +3220,8 @@ void stage0(void)
 			DrawUnit();
 			Shell.DrawShell(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			DrawMissle();
+			glBindTexture(GL_TEXTURE_2D, bloomTexId2);
+			glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winwidth)/2, -(bloomTexSize-winheight)/2, bloomTexSize, bloomTexSize, 0);
 			PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			Drawlocksign();
 		}
@@ -3252,7 +3254,6 @@ void stage0(void)
 			DrawRedar((float)longitude);
 	}
 	
-
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
 	//Maptexture=MyFont.TXTTexID;

@@ -55,10 +55,10 @@ bool CKeyInput::initJoyStick(void)
 			m_keyViewLeft		= GetPrivateProfileInt( "JoyStick" , "ViewLeft"	 , 105 , ".\\set.ini" );
 			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 104 , ".\\set.ini" );
 			m_keyViewReset		= GetPrivateProfileInt( "JoyStick" , "ViewReset" , 0 , ".\\set.ini" );
-			m_keySetHUD		= GetPrivateProfileInt( "JoyStick" , "SetHUD" , 9 , ".\\set.ini" );
-			m_keyStart		= GetPrivateProfileInt( "JoyStick" , "Start" , 0 , ".\\set.ini" );
-			m_keySelect		= GetPrivateProfileInt( "JoyStick" , "Select" , 0 , ".\\set.ini" );
-			m_keyOther		= GetPrivateProfileInt( "JoyStick" , "Other" , 0 , ".\\set.ini" );
+			m_keySetHUD		= GetPrivateProfileInt( "JoyStick" , "SetHUD" , 11 , ".\\set.ini" );
+			m_keyStart		= GetPrivateProfileInt( "JoyStick" , "Start" , 12 , ".\\set.ini" );
+			m_keySelect		= GetPrivateProfileInt( "JoyStick" , "Select" , 9 , ".\\set.ini" );
+			m_keyOther		= GetPrivateProfileInt( "JoyStick" , "Other" , 10 , ".\\set.ini" );
 			m_IsUseJoyStick	= true;
 		}
 		return true;
