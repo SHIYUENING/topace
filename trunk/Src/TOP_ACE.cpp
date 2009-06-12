@@ -59,7 +59,6 @@ CPUID cpu;//≤È—Øcpu
 char cpubrand[128]={0};
 
 int playTime=0;
-int bloomMAPSize=256;
 
 CBomType PlaneBom[1];
 CBom Bomings[MAXBom];
@@ -288,13 +287,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	if(GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)
 		ShaderBloom=false;
-	BloomLevel=GetPrivateProfileInt("Light","BloomLevel",0,".\\set.ini");
-	if(BloomLevel<2)
-		bloomMAPSize=1024;
-	if(BloomLevel==2)
-		bloomMAPSize=1024;
-	if(BloomLevel==3)
-		bloomMAPSize=1024;
+
 	
 	lockX=winwidth/2;
 	lockY=winheight/2;
@@ -2872,6 +2865,7 @@ void DrawShadowMap(void)
 		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
 	}
 }
+/*
 void DrawHighLight(void)
 {
 	
@@ -2896,43 +2890,9 @@ void DrawHighLight(void)
 	glPopAttrib();
 	glEnable(GL_BLEND);
 	
-	/*
-	if(IsSupportFBO)
-	{
-		
-		glClearColor (0.0f, 0.0f, 0.0f, 0.0f);	
 
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-		glDrawBuffer(GL_COLOR_ATTACHMENT1_EXT);
-		glPushAttrib(GL_VIEWPORT_BIT);
-			glViewport(0,0,bloomMAPSize, bloomMAPSize);
-
-			glPushMatrix();	
-			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				glLoadIdentity();	
-				glTranslatef(0, -Ppos1, -Ppos2);
-				glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-				glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-				//BasicLight();
-				glBindTexture(GL_TEXTURE_2D, img);	
-				HighLight();
-
-				glEnable(GL_DEPTH_TEST);
-				m_VBMD->ShowVBMD(0,false);
-
-				cgGLDisableProfile( g_CGprofile_vertex );
-				cgGLDisableProfile( g_CGprofile_pixel );
-			glPopMatrix();
-			//glBindTexture(GL_TEXTURE_2D,blurtexture2);
-			//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, bloomMAPSize, bloomMAPSize, 0);						
-
-			
-		glPopAttrib();
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
-	}
-	glEnable(GL_BLEND);*/
 }
+*/
 /*
 void glPrintHighLight(void)
 {

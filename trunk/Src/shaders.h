@@ -42,21 +42,10 @@ CGparameter cg_globalAmbient;
 CGparameter cg_lightColor;
 CGparameter cg_lightPosition;
 CGparameter cg_eyePosition;
-CGparameter cg_Ke;
-CGparameter cg_Ka;
-CGparameter cg_Kd;
-CGparameter cg_Ks;
-CGparameter cg_testnum;
-CGparameter cg_shininess;
-CGparameter cg_UIalpha;
+
 CGparameter cg_ShadowMapmvmatrix;
 CGparameter cg_ShadowMapprojmatrix;
-float Ke[]={0.0f, 0.0f, 0.0f};
-bool Keb[]={true, true, true};
-float Ka[]={1.0f, 1.0f, 1.0f};
-float Kd[]={1.0f, 1.0f, 1.0f};
-float Ks[]={1.0f, 1.0f, 1.0f};
-float shininess=100.0f;
+
 float globalAmbient[4];
 float paraLightColor[4];
 float paraLightDirection[3];
@@ -67,7 +56,7 @@ float eyePosition[3]={0.0f, 150.0f, 30.0f};
 float eyePositionSea[3]={0.0f, 150.0f, 30.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 float lightPositionSea[]= { 0.0f, 0.0f, 2.0f };
-int BloomLevel=0;
+
 float Ppos1=30.0f;
 float Ppos2=150.0f;
 float pixelfogColor[3];
@@ -411,17 +400,11 @@ void shaderT(int NormalTex=0,int SpecularTex=0,int ShadowMapTexID=0)//bool UseBl
 	
 	//}
 }
+/*
 void HighLight()
 {
 
 
-/*
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_vertex, "paraLightColor" ), paraLightColor);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_vertex, "paraLightDirection" ), paraLightDirection);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_vertex, "eyePosition"), eyePosition);
-	cgSetParameter1f(cgGetNamedParameter( g_CGHighLight_vertex, "shininess" ), shininess);*/
-	//Set the parameters for CG
-	
 	cgSetMatrixParameterfc(cgGetNamedParameter( g_CGHighLight_vertex, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 	cgSetMatrixParameterfc(cgGetNamedParameter( g_CGHighLight_vertex, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
 	cgSetMatrixParameterfc(cgGetNamedParameter( g_CGHighLight_vertex, "ShadowMapMVPmatrix" ),ShadowMapMVPmatrix);
@@ -429,45 +412,18 @@ void HighLight()
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "paraLightColor" ), paraLightColor);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "paraLightDirection" ), paraLightDirection);
 	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "eyePosition"), eyePosition);
-//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ke" ), Ke);
-//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ka" ), Ka);
-//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Kd" ), Kd);
-//	cgSetParameter3fv(cgGetNamedParameter( g_CGHighLight_pixel, "Ks" ), Ks);
-//	cgSetParameter1f(cgGetNamedParameter( g_CGHighLight_pixel, "shininess" ), shininess);
 
-	//bind the cg program
 	cgGLBindProgram( g_CGHighLight_vertex );
 	cgGLEnableProfile( g_CGprofile_vertex );
 	cgGLBindProgram( g_CGHighLight_pixel );
 	cgGLEnableProfile( g_CGprofile_pixel );
 
-	
-	
-	//cgGLDisableProfile( g_CGprofile_vertex );
-	//cgGLDisableProfile( g_CGprofile_pixel );
-
 }
-
+*/
+/*
 void BasicLight()
 {
 
-
-
-/*
-	// set the parameters for CG
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "globalAmbient" ), globalAmbient);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "paraLightColor" ), paraLightColor);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "paraLightDirection" ), paraLightDirection);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "eyePosition"), eyePosition);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "Ke" ), Ke);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "Ka" ), Ka);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "Kd" ), Kd);
-	cgSetParameter3fv(cgGetNamedParameter( g_CGbasicLight_vertex, "Ks" ), Ks);
-	cgSetParameter1f(cgGetNamedParameter( g_CGbasicLight_vertex, "shininess" ), shininess);
-	
-	*/
-
-	//bind the cg program
 	if(BloomLevel==0)
 		cgGLBindProgram( g_CGbasicLight_vertex );
 	if(BloomLevel==1)
@@ -480,7 +436,7 @@ void BasicLight()
 	
 	//cgGLDisableProfile( g_CGprofile_vertex );
 }
-
+*/
 void DrawSea()
 {
 	
