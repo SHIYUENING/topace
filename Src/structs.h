@@ -243,3 +243,26 @@ GLint SmallWinSize=128;
 bool IsSupportFBO=false;
 GLuint RedarTexture;
 float tmplockRenge=10000.0f;
+
+extern GLuint AmbientReflectiveTexture;
+extern bool ShaderLight;//是否使用shader
+extern bool ShaderWater;//是否使用shader
+extern bool ShaderBloom;//是否使用Bloom
+extern bool UseHighShadow;
+extern bool UseShadow;
+
+extern float globalAmbient[4];
+extern float paraLightColor[4];
+extern float paraLightDirection[3];
+extern float MissleLightDirection[4];
+extern float MissleLightColor[3];
+extern float lightColor[4];
+extern float eyePosition[3];
+extern float eyePositionSea[3];
+extern float lightPosition[];
+extern float lightPositionSea[];
+
+extern float Ppos1;
+extern float Ppos2;
+extern float pixelfogColor[3];
+extern GLfloat ShadowMapMVPmatrix[16],Worldmatrix[16];
