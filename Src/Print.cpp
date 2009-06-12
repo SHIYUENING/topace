@@ -1,14 +1,10 @@
-//Prints.h
-#pragma once
-#include "Textures.h"
-
-GLuint	base;//字符显示相关编号
-GLuint	smokelist;
-GLuint	AsciiFontTexId=0;
-float tmplockRenge=10000.0f;//临时导弹锁定范围
-
-
-GLvoid BuildFont(GLvoid)								// Build Our Font Display List
+#include "HUDUI.h"
+#include "DDS.h"
+GLuint AsciiFontTexId;
+GLuint base;
+extern int winwidth,winheight;
+extern GLuint LockTexID,PlayerSign;
+void BuildFont()								// Build Our Font Display List
 {
 	/*
 	if (LoadTGA(&textureAlphaFont[0], "Data/font.tga"))
@@ -65,29 +61,7 @@ GLvoid BuildFont(GLvoid)								// Build Our Font Display List
 		glEndList();									// Done Building The Display List
 	}													// Loop Until All 256 Are Built
 }
-/*
-GLvoid BuildSmoke(GLvoid)
-{
-	smokelist=glGenLists(1);
-	glBindTexture(GL_TEXTURE_2D, textureAlpha[0].texID);
-	glNewList(smokelist,GL_COMPILE);
-			glBegin(GL_QUADS);							// Use A Quad For Each Character
-				glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
-				glVertex2i(-50,-50);						// Vertex Coord (Bottom Left)
-				glTexCoord2f(1.0f,0.0f);	// Texture Coord (Bottom Right)
-				glVertex2i(50,-50);						// Vertex Coord (Bottom Right)
-				glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
-				glVertex2i(50,50);						// Vertex Coord (Top Right)
-				glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
-				glVertex2i(-50,50);						// Vertex Coord (Top Left)
-			glEnd();
-
-	glEndList();
-
-}
-*/
-//输出字符
-GLvoid glPrint(GLint x, GLint y, char *string, int set,bool isover800_600=false)	// Where The Printing Happens
+void glPrint(int x, int y, char *string, int set,bool isover800_600)	// Where The Printing Happens
 {
 	if(isover800_600)
 	{
@@ -131,7 +105,7 @@ GLvoid glPrint(GLint x, GLint y, char *string, int set,bool isover800_600=false)
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 }
 
-GLvoid glPrints(GLint x, GLint y, GLint winW,GLint winH,char *string)	// Where The Printing Happens
+void glPrints(int x, int y, int winW,int winH,char *string)	// Where The Printing Happens
 {
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
@@ -157,7 +131,7 @@ GLvoid glPrints(GLint x, GLint y, GLint winW,GLint winH,char *string)	// Where T
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 }
 //绘制绿色的目标框或者红色的锁定框，每桢可以同时多次绘制
-GLvoid glPrintW(float HUDx=0.0,float HUDy=0.0, bool locked=false)	// Where The Printing Happens
+void glPrintW(float HUDx,float HUDy, bool locked)	// Where The Printing Happens
 {
 
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
@@ -214,7 +188,7 @@ GLvoid glPrintW(float HUDx=0.0,float HUDy=0.0, bool locked=false)	// Where The P
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 }
-GLvoid glPrintRedar(float Rx=0.0,float Ry=0.0, int TGTflag=0,float Renge=10000.0f)	// Where The Printing Happens
+void glPrintRedar(float Rx,float Ry, int TGTflag,float Renge)	// Where The Printing Happens
 {
 	
 	glBindTexture(GL_TEXTURE_2D, LockTexID);	
@@ -275,7 +249,7 @@ GLvoid glPrintRedar(float Rx=0.0,float Ry=0.0, int TGTflag=0,float Renge=10000.0
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 	
 }
-GLvoid glPrintAREARedar(float Rx=0.0,float Ry=0.0, int TGTflag=0,float Renge=100000.0f,float turn=0.0f)	// Where The Printing Happens
+void glPrintAREARedar(float Rx,float Ry, int TGTflag,float Renge,float turn)	// Where The Printing Happens
 {
 	
 	glBindTexture(GL_TEXTURE_2D, LockTexID);	
@@ -347,117 +321,3 @@ GLvoid glPrintAREARedar(float Rx=0.0,float Ry=0.0, int TGTflag=0,float Renge=100
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 	
 }
-/*
-GLvoid glPrintSmoke(float x,float y,float z,float alpha1=1.0f,int texturenum=0,float SmokeSize=1.0f)
-{
-	if(alpha1<0.0f)
-		alpha1=0.0f;
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glPushMatrix();	
-	glLoadIdentity();
-	glBindTexture(GL_TEXTURE_2D, textureSmoke[texturenum].texID);
-
-	
-	glTranslated(x,y,z);
-
-	if(z<-(tmpLookRenge*(5.0f/6.0f)))
-		//testNum=z;
-		alpha1=alpha1*(tmpLookRenge+z)/(tmpLookRenge/6.0f);
-	if(z>-1000.0f)
-		alpha1=alpha1*(0.0f-z-300.0f)/700.0f;
-	glColor4f(1.0f,1.0f,1.0f,alpha1);
-	glScaled(SmokeSize,SmokeSize,SmokeSize);
-	//glEnable(GL_DEPTH_TEST);
-	//glListBase(smokelist);
-
-	if(z<-300.0f)
-	glCallList(smokelist);
-
-			glColor4f(1.0f,1.0f,1.0f,1.0f);
-
-	glPopMatrix();	
-}
-*/
-/*
-GLvoid glPrintSmokeM(float x,float y,float z,float alpha1=1.0f)
-{
-	if(alpha1<0.0f)
-		alpha1=0.0f;
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	glPushMatrix();	
-	glLoadIdentity();
-	glBindTexture(GL_TEXTURE_2D, textureAlpha[0].texID);
-	glTranslated(x,y,z);
-
-	glScaled(1.0-alpha1/2.0,1.0-alpha1/2.0,1.0-alpha1/2.0);
-	if(z<-(tmpLookRenge*(5.0f/6.0f)))
-		alpha1=alpha1*(tmpLookRenge+z)/(tmpLookRenge/6.0f);
-	if(z>-1000.0f)
-		alpha1=(z-500.0f)/500.0f;
-	glColor4f(1.0f,0.5f,0.0f,alpha1);
-	if(z<-500.0f)
-	glCallList(smokelist);
-			glColor4f(1.0f,1.0f,1.0f,1.0f);
-
-	glPopMatrix();	
-}
-*/
-GLvoid glPrintBom1(float x,float y,float z,int size=0,float colorA=0.0f,GLuint textureboming=0)
-{
-	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-	glPushMatrix();	
-	glLoadIdentity();
-	glBindTexture(GL_TEXTURE_2D, textureboming);
-	glTranslated(x,y,z);
-/*
-	int size,alpha;
-	if(BomsSets[frame].RandomSizeMAX==BomsSets[frame].RandomSizeMIN)
-		size = BomsSets[frame].RandomSizeMAX;
-	else
-		size = BomsSets[frame].RandomSizeMIN + rand() % ( BomsSets[frame].RandomSizeMAX - BomsSets[frame].RandomSizeMIN );
-	*/
-//glScaled(2.0,2.0,2.0);
-	glColor4f(colorA,colorA,colorA,colorA);
-			glBegin(GL_QUADS);							// Use A Quad For Each Character
-				glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
-				glVertex2i(-size,-size);						// Vertex Coord (Bottom Left)
-				glTexCoord2f(1.0f,0.0f);	// Texture Coord (Bottom Right)
-				glVertex2i(size,-size);						// Vertex Coord (Bottom Right)
-				glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
-				glVertex2i(size,size);						// Vertex Coord (Top Right)
-				glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
-				glVertex2i(-size,size);						// Vertex Coord (Top Left)
-			glEnd();
-
-			glColor4f(1.0f,1.0f,1.0f,1.0f);
-
-	glPopMatrix();	
-	//testNum=testNum+1.0f;
-}
-/*
-GLvoid glPrintBom(float x,float y,float z,int frame=0)
-{
-	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-	glPushMatrix();	
-	glLoadIdentity();
-	glBindTexture(GL_TEXTURE_2D, textureBom[frame].texID);
-	glTranslated(x,y,z);
-
-//glScaled(2.0,2.0,2.0);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
-			glBegin(GL_QUADS);							// Use A Quad For Each Character
-				glTexCoord2f(0.0f,0.0f);			// Texture Coord (Bottom Left)
-				glVertex2i(-80,-80);						// Vertex Coord (Bottom Left)
-				glTexCoord2f(1.0f,0.0f);	// Texture Coord (Bottom Right)
-				glVertex2i(80,-80);						// Vertex Coord (Bottom Right)
-				glTexCoord2f(1.0f,1.0f);			// Texture Coord (Top Right)
-				glVertex2i(80,80);						// Vertex Coord (Top Right)
-				glTexCoord2f(0.0f,1.0f);					// Texture Coord (Top Left)
-				glVertex2i(-80,80);						// Vertex Coord (Top Left)
-			glEnd();
-
-			//glColor4f(1.0f,1.0f,1.0f,1.0f);
-
-	glPopMatrix();	
-	testNum=testNum+1.0f;
-}*/

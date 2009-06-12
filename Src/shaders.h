@@ -1,7 +1,6 @@
 #pragma once
 #include <Cg/Cg.h>
 #include <Cg/cgGL.h>
-#include "Textures.h"
 GLuint AmbientReflectiveTexture;
 bool ShaderLight=true;//是否使用shader
 bool ShaderWater=true;//是否使用shader
@@ -68,7 +67,6 @@ float eyePosition[3]={0.0f, 150.0f, 30.0f};
 float eyePositionSea[3]={0.0f, 150.0f, 30.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 float lightPositionSea[]= { 0.0f, 0.0f, 2.0f };
-float UIalpha[]={1.0f, 1.0f, 1.0f};
 int BloomLevel=0;
 float Ppos1=30.0f;
 float Ppos2=150.0f;
@@ -313,7 +311,7 @@ void RenderShadowMap()
 	cgGLEnableProfile( g_CGprofile_pixel );
 
 }
-void shaderT(int NormalTex=0,int SpecularTex=0)//bool UseBloom=false
+void shaderT(int NormalTex=0,int SpecularTex=0,int ShadowMapTexID=0)//bool UseBloom=false
 {/*
 	if(Keb[0])
 	Ke[0]=Ke[0]+0.02f;
@@ -371,7 +369,7 @@ void shaderT(int NormalTex=0,int SpecularTex=0)//bool UseBloom=false
 		g_CGpixel_NOBloom=g_CGpixel_NONormalMap;
 
 		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "ShadowMapTexture");
-		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, img );
+		cgGLSetTextureParameter( g_CGparam_ShadowMapTexture, ShadowMapTexID );
 		g_CGparam_AmbientReflective = cgGetNamedParameter(g_CGpixel_NOBloom, "AmbientReflectiveTexture");
 		cgGLSetTextureParameter( g_CGparam_AmbientReflective, AmbientReflectiveTexture );
 		g_CGparam_NormalMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "NormalMapTexture");
