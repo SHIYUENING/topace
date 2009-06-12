@@ -349,40 +349,208 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="UI"
+			>
+			<File
+				RelativePath=".\HUDUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HUDUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MyFont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MyFont.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Print.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Redar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Textures.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Textures.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tga.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TGALoader.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="UNITS"
+			>
+			<File
+				RelativePath=".\missle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\missle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MissleList.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MissleList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Shell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Shell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Smoke.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Smoke.h"
+				>
+			</File>
+			<File
+				RelativePath=".\unitdata.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\unitdata.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Effect"
+			>
+			<File
+				RelativePath=".\Bloom.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BomsSet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BomsSet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BomTeams.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BomTeams.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Cloud.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Cloud.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EffectImpact.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EffectImpact.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkyBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkyBox.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Mathematics"
+			>
+			<File
+				RelativePath=".\Mathematics.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Mathematics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Physics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TBN.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TBN.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Transform.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Transform.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Res"
+			>
+			<File
+				RelativePath=".\DDS.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DDS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Models.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VBMD.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\VBMD.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ARB_Multisample.cpp"
 			>
 		</File>
 		<File
 			RelativePath=".\ARB_Multisample.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Bloom.h"
-			>
-		</File>
-		<File
-			RelativePath=".\BomsSet.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\BomsSet.h"
-			>
-		</File>
-		<File
-			RelativePath=".\BomTeams.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\BomTeams.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Cloud.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Cloud.h"
 			>
 		</File>
 		<File
@@ -394,23 +562,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\DDS.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\DDS.h"
-			>
-		</File>
-		<File
 			RelativePath=".\DefinesFile.h"
-			>
-		</File>
-		<File
-			RelativePath=".\EffectImpact.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\EffectImpact.h"
 			>
 		</File>
 		<File
@@ -419,14 +571,6 @@
 		</File>
 		<File
 			RelativePath=".\FBO.h"
-			>
-		</File>
-		<File
-			RelativePath=".\HUDUI.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\HUDUI.h"
 			>
 		</File>
 		<File
@@ -446,42 +590,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\Mathematics.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Mathematics.h"
-			>
-		</File>
-		<File
-			RelativePath=".\missle.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\missle.h"
-			>
-		</File>
-		<File
-			RelativePath=".\MissleList.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\MissleList.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Models.h"
-			>
-		</File>
-		<File
-			RelativePath=".\MyFont.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\MyFont.h"
-			>
-		</File>
-		<File
 			RelativePath=".\NeHeGL.cpp"
 			>
 		</File>
@@ -490,55 +598,11 @@
 			>
 		</File>
 		<File
-			RelativePath=".\Physics.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Print.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Prints.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Redar.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\redar.h"
-			>
-		</File>
-		<File
 			RelativePath=".\resource.h"
 			>
 		</File>
 		<File
 			RelativePath=".\shaders.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Shell.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Shell.h"
-			>
-		</File>
-		<File
-			RelativePath=".\SkyBox.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\SkyBox.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Smoke.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Smoke.h"
 			>
 		</File>
 		<File
@@ -554,35 +618,7 @@
 			>
 		</File>
 		<File
-			RelativePath=".\TBN.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\TBN.h"
-			>
-		</File>
-		<File
 			RelativePath=".\testNum.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Texture.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Textures.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Textures.h"
-			>
-		</File>
-		<File
-			RelativePath=".\Tga.h"
-			>
-		</File>
-		<File
-			RelativePath=".\TGALoader.cpp"
 			>
 		</File>
 		<File
@@ -595,34 +631,6 @@
 		</File>
 		<File
 			RelativePath=".\TOP_ACE.rc"
-			>
-		</File>
-		<File
-			RelativePath=".\Transform.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Transform.h"
-			>
-		</File>
-		<File
-			RelativePath=".\UI.h"
-			>
-		</File>
-		<File
-			RelativePath=".\unitdata.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\unitdata.h"
-			>
-		</File>
-		<File
-			RelativePath=".\VBMD.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\VBMD.h"
 			>
 		</File>
 		<File
