@@ -410,6 +410,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\FBO.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\FBO.h"
+			>
+		</File>
+		<File
 			RelativePath=".\image.c"
 			>
 		</File>
@@ -543,6 +551,10 @@
 		</File>
 		<File
 			RelativePath=".\Smoke.h"
+			>
+		</File>
+		<File
+			RelativePath=".\sound.cpp"
 			>
 		</File>
 		<File
