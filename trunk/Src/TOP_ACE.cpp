@@ -287,7 +287,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	if(GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)
 		ShaderBloom=false;
-
+	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
+	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
+	pixelfogColor[2]=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255.0f;
 	
 	lockX=winwidth/2;
 	lockY=winheight/2;
@@ -2469,12 +2471,12 @@ void DrawPlayer(void)
 					glDepthMask(GL_TRUE);
 
 
-					cgGLDisableProfile( g_CGprofile_pixel );
-					cgGLDisableProfile( g_CGprofile_vertex );
-					cgGLDisableTextureParameter( g_CGparam_ShadowMapTexture );
-					cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
-					cgGLDisableTextureParameter( g_CGparam_NormalMapTexture );
-					cgGLDisableTextureParameter( g_CGparam_SpecularMapTexture );
+					CGDisableProfilePixel();
+					CGDisableProfileVertex();
+					CGDisableTextureParameterShadowMap();
+					CGDisableTextureParameterAmbientReflective();
+					CGDisableTextureParameterNormalMap();
+					CGDisableTextureParameterSpecularMap();
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2814,8 +2816,8 @@ void DrawShadowMap(void)
 							md5_jinyiL.render();
 							md5_jinyiR.render();
 							md5_MissleBox.render();
-							cgGLDisableProfile( g_CGprofile_pixel );
-							cgGLDisableProfile( g_CGprofile_vertex );					// Select The Projection Matrix
+							CGDisableProfilePixel();
+							CGDisableProfileVertex();
 						glPopMatrix();
 			//			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 			//		glPopMatrix();										// Restore The Old Projection Matrix
@@ -2963,9 +2965,9 @@ void DrawGround(void)
 				}
 		
 		glPopMatrix();
-		cgGLDisableProfile( g_CGprofile_pixel );
-		cgGLDisableProfile( g_CGprofile_vertex );
-		cgGLDisableTextureParameter( g_CGparam_AmbientReflectiveSea );
+		CGDisableProfilePixel();
+		CGDisableProfileVertex();
+		CGDisableTextureParameterAmbientReflectiveSea();
 	}
 	else
 	{
@@ -3249,8 +3251,8 @@ void stage0(void)
 			DrawMissle();
 			if(ShaderBloom)
 			{
-				glBindTexture(GL_TEXTURE_2D, bloomTexId2);
-				glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, -(bloomTexSize-winwidth)/2, -(bloomTexSize-winheight)/2, bloomTexSize, bloomTexSize, 0);
+				GetBloomTex(winwidth,winheight);
+
 			}
 			PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			Drawlocksign();

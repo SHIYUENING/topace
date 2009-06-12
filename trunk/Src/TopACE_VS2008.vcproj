@@ -396,6 +396,14 @@
 				RelativePath=".\TGALoader.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Video.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Video.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="UNITS"
@@ -444,6 +452,10 @@
 		<Filter
 			Name="Effect"
 			>
+			<File
+				RelativePath=".\Bloom.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\Bloom.h"
 				>
@@ -545,14 +557,34 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\ARB_Multisample.cpp"
+		<Filter
+			Name="Tech"
 			>
-		</File>
-		<File
-			RelativePath=".\ARB_Multisample.h"
-			>
-		</File>
+			<File
+				RelativePath=".\ARB_Multisample.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ARB_Multisample.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FBO.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FBO.h"
+				>
+			</File>
+			<File
+				RelativePath=".\shaders.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\shaders.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\Cpuid.cpp"
 			>
@@ -563,14 +595,6 @@
 		</File>
 		<File
 			RelativePath=".\DefinesFile.h"
-			>
-		</File>
-		<File
-			RelativePath=".\FBO.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\FBO.h"
 			>
 		</File>
 		<File
@@ -602,10 +626,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\shaders.h"
-			>
-		</File>
-		<File
 			RelativePath=".\sound.cpp"
 			>
 		</File>
@@ -631,14 +651,6 @@
 		</File>
 		<File
 			RelativePath=".\TOP_ACE.rc"
-			>
-		</File>
-		<File
-			RelativePath=".\Video.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\Video.h"
 			>
 		</File>
 	</Files>
