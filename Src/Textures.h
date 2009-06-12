@@ -2,13 +2,10 @@
 #pragma once
 #include "DDS.h"										
 #include "texture.h"
-//#include "VBMD.h"
 #include "shaders.h"
 #include "BomTeams.h"
-#include "Mathematics.h"	
-//#include "BomsSet.h"
+#include "Mathematics.h"
 #define MAXSMOKE 30
-//#define MAXBOMS 40
 
 int gpuType=0;//0δ֪ 1NV 2ATI
 bool LoadTGA(Texture *, char *);
