@@ -1,10 +1,14 @@
-#pragma once
-#include "Prints.h"
-#include "shaders.h"
+#include "HUDUI.h"
+#include "DDS.h"
 #include "VBMD.h"
-#include "testNum.h"
-//CLoadVBMD *m_VBMD = NULL;//VBMD模型对象
-GLuint		UItexture1,UItexture2,UItexture3;//用于渲染到纹理的纹理编号
+GLuint UItexture1,UItexture2,UItexture3;
+extern CLoadVBMD *m_VBMD;//VBMD模型对象
+extern tModelID ModelID[100];
+extern int winwidth,winheight;
+extern bool PlayerLocked;
+extern int hited;
+extern int ModelID_hud;
+extern GLuint UItexture4;
 void DrawUI1totexture(double latitude)
 {
 	char line[128]={0};
@@ -74,9 +78,6 @@ void DrawUI1(double rotation)
 		glColor4f(1.0f,0.0f,0.0f,1.0f);
 	else
 		glColor4f(0.0f,1.0f,0.0f,1.0f);
-	UIalpha[0]=0.0f;
-	UIalpha[1]=1.0f;
-	UIalpha[2]=0.0f;
 	glEnable(GL_BLEND);
 	glScaled(0.7, 0.7, 1.0);
 	glRotated(-rotation,0.0f,0.0f,1.0f);
@@ -116,25 +117,11 @@ void DrawUI2()
 		glColor3f(1.0f,0.0f,0.0f);
 	else
 		glColor3f(0.0f,1.0f,0.0f);
-	UIalpha[0]=0.0f;
-	UIalpha[1]=1.0f;
-	UIalpha[2]=0.0f;
 	glEnable(GL_BLEND);
-	glBindTexture(GL_TEXTURE_2D, UItexture2);	
-	/*
-		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0,0.0);glVertex2i(-(DRY*2/5),-(DRY*2/5));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(1.0,0.0);glVertex2i( (DRY*2/5),-(DRY*2/5));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(1.0,1.0);glVertex2i( (DRY*2/5), (DRY*2/5));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0,1.0);glVertex2i(-(DRY*2/5), (DRY*2/5));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-		glEnd();*/
-
-	
+	glBindTexture(GL_TEXTURE_2D, UItexture2);
 	glTranslated(320,-7.0,0.0);
-		//glScaled(0.1, 0.1*testNum, 0.1*testNum);
 	glScaled(1.4, 1.4, 1.4);
 	glRotated(30.0,0.0f,1.0f,0.0f);
-	//glRotated(-90,1.0f,0.0f,0.0f);
 	if(hited>0)
 		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 	m_VBMD->ShowVBMD(ModelID_hud,false);
@@ -165,24 +152,12 @@ void DrawUI3()
 		glColor3f(1.0f,0.0f,0.0f);
 	else
 		glColor3f(0.0f,1.0f,0.0f);
-	UIalpha[0]=0.0f;
-	UIalpha[1]=1.0f;
-	UIalpha[2]=0.0f;
 	glEnable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, UItexture3);	
-	//glTranslated(0.0,0.0,testNum);
-	/*
-		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0,0.0);glVertex2i(-(DRY*2/5),-(DRY*2/5));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(1.0,0.0);glVertex2i( (DRY*2/5),-(DRY*2/5));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(1.0,1.0);glVertex2i( (DRY*2/5), (DRY*2/5));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0,1.0);glVertex2i(-(DRY*2/5), (DRY*2/5));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-		glEnd();
-	*/
+
 	glTranslated(-308,-7.0,0.0);
 	glScaled(1.4, 1.4, 1.4);
 	glRotated(-30,0.0f,1.0f,0.0f);
-	//glRotated(-90,1.0f,0.0f,0.0f);
 	if(hited>0)
 		glTranslated(float(rand()%10-5),float(rand()%10-5),0);
 	m_VBMD->ShowVBMD(ModelID_hud,false);
@@ -196,7 +171,7 @@ void DrawUI3()
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 
 }
-void DrawUI4(float turnX=0.0f,float turnY=0.0f,float turnZ=0.0f)
+void DrawUI4(float turnX,float turnY,float turnZ)
 {
 	int DRY=30;
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
@@ -245,39 +220,9 @@ void DrawUI4(float turnX=0.0f,float turnY=0.0f,float turnZ=0.0f)
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);							
 }
-void DrawMissleView(int ViewPortX,int ViewPortY,Transform& Missle,Transform& MissleTGT,Transform& tfWorld)
+void DrawTex(unsigned int PTexID,int posx,int posy,int SizeW,int SizeH,int winW,int winH,float colorR,float colorG,float ColorB,float ColorA)
 {
-}
-void DrawTex(GLuint PTexID,int posx,int posy,int SizeW,int SizeH,int winW,int winH,float colorR,float colorG,float ColorB,float ColorA)
-{
-	/*
-	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPushMatrix();										// Store The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-	glOrtho(0,0,winW,winH,-10,20);							// Set Up An Ortho Screen
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPushMatrix();										// Store The Modelview Matrix
-	glLoadIdentity();
-	glEnable(GL_BLEND);
-	glBindTexture(GL_TEXTURE_2D, PTexID);	
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(colorR,colorG,ColorB,ColorA);
 
-		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0f,0.0f);glVertex2i(posx,posy);	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(1.0f,0.0f);glVertex2i(posx+SizeW,posy);	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(1.0f,1.0f);glVertex2i(posx+SizeW,posy-SizeH);	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0f,1.0f);glVertex2i(posx,posy-SizeH);	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-		glEnd();
-
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPopMatrix();										// Restore The Old Projection Matrix
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPopMatrix();										// Restore The Old Projection Matrix
-	glEnable(GL_DEPTH_TEST);	
-	*/
 
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix

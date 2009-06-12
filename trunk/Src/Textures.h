@@ -1,28 +1,13 @@
 //Textures.h
 #pragma once
-#include "DDS.h"										
-#include "texture.h"
-#include "shaders.h"
-#include "BomTeams.h"
-#include "Mathematics.h"
-#define MAXSMOKE 30
+#include "DDS.h"
 
-int gpuType=0;//0未知 1NV 2ATI
-bool LoadTGA(Texture *, char *);
-Texture textureAlphaFont[1],textureLock[1];	//,textureBoms[MAXBOMS]
-//GLuint	texture[2];	//gui相关纹理编号
-GLuint textureRedar,UItexture4,Maptexture,CompassTexID;
-GLuint fbo;					// Our handle to the FBO
-GLuint depthBuffer;			// Our handle to the depth render buffer
-GLuint img=0;
-GLuint dtex=0;//,fboBloomImg					// Our handle to a texture
+
+GLuint textureRedar,ShowHPTexID,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
+
 //GLuint blurtexture2;
-GLuint PlayerSign;
-GLuint ShowHPTexID;
-GLuint SeaTexID;
-GLuint SmallWinTexID=0;
-GLint SmallWinSize=128;
-bool IsSupportFBO=false;
+
+
 //int SmokeNumber=0;//读取的尾烟图片总数
 //int BomsNumber=0;//读取的爆炸相关设定总数
 //int BomPsNumber=0;//读取的爆炸相关图片总数
@@ -62,7 +47,7 @@ struct BomTeamsSet
 };*/
 //CBomsSet BomsSets[MAXBOMS];
 //用于创建渲染到纹理的空纹理
-GLuint EmptyTexture(int wh=256)							// 创建一个空的纹理
+GLuint EmptyTexture(int wh=256,bool isGL_LINEAR=true)							// 创建一个空的纹理
 {
 	GLuint txtnumber;							// 纹理ID
 	unsigned int* data;						// 存储数据
@@ -75,7 +60,7 @@ GLuint EmptyTexture(int wh=256)							// 创建一个空的纹理
 	glBindTexture(GL_TEXTURE_2D, txtnumber);			// 构造纹理
 
 	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, wh, wh, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	if(IsSupportFBO)
+	if(isGL_LINEAR)
 				{
 					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -91,7 +76,7 @@ GLuint EmptyTexture(int wh=256)							// 创建一个空的纹理
 	return txtnumber;						// 返回纹理ID
 }
 
-
+/*
 //处理BMP
 AUX_RGBImageRec *LoadBMP(char *Filename)				// Loads A Bitmap Image
 {
@@ -112,7 +97,7 @@ AUX_RGBImageRec *LoadBMP(char *Filename)				// Loads A Bitmap Image
 
 	return NULL;										// If Load Failed Return NULL
 }
-
+*/
 //读纹理
 /*
 bool LoadBoms(int BomsNum)
@@ -190,134 +175,26 @@ bool LoadSmoke(int SmokeNum)
 
 }
 */
-void initFBO()
-{
-	char szGPU[128]={0};
-	sprintf(szGPU,"%s",(char *)glGetString(GL_VENDOR));
-	if(szGPU[0]=='A')
-	{
-		gpuType=2;
-	}
-	if(szGPU[0]=='N')
-	{
-		gpuType=1;
-	}
-	if(IsSupportFBO)
-	{
-		int imagesize=1024;
 
-		glGenFramebuffersEXT(1, &fbo);
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
-
-		glGenTextures(1, &img);
-		glBindTexture(GL_TEXTURE_2D, img);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-/*
-		glGenTextures(1, &fboBloomImg);
-		glBindTexture(GL_TEXTURE_2D, fboBloomImg);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  imagesize, imagesize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);//GL_RGBA16F_ARB
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-*/
-			
-		glGenTextures(1, &dtex);
-		glBindTexture(GL_TEXTURE_2D, dtex);
-		if(gpuType==0)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		if(gpuType==2)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		if(gpuType==1)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, imagesize, imagesize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, img, 0);
-		//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, fboBloomImg, 0);
-
-		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-		switch(status) 
-		{
-			case GL_FRAMEBUFFER_COMPLETE_EXT:
-				break;
-			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			default:
-				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-	         
-		}
-
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, dtex, 0);
-
-
-		status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-		switch(status) 
-		{
-			case GL_FRAMEBUFFER_COMPLETE_EXT:
-				break;
-			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			default:
-				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-	         
-		}
-
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);	// Unbind the FBO for now
-	}
-
-
-}
 int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 {
-	
+	CDDS loadDDS;
+	textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
+	ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
+	CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
+	UItexture4=loadDDS.loadCompressedTexture("Data/UI1.dds");
+	PlayerSign=loadDDS.loadCompressedTexture("Data/PlayerSign.dds");
+	LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
+	Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
+	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
 
 
-	int Status=FALSE;									// Status Indicator
-
+	//int Status=FALSE;									// Status Indicator
+/*
 	AUX_RGBImageRec *TextureImage[6];					// Create Storage Space For The Texture
 
 	memset(TextureImage,0,sizeof(void *)*1);           	// Set The Pointer To NULL
-
+*/
 	
 	// Load The Bitmap, Check For Errors, If Bitmap's Not Found Quit
 	/*
@@ -488,7 +365,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 	
 	}
 */
-	if(LoadTGA(&textureLock[0],"Data/lock.TGA"))
+/*	if(LoadTGA(&textureLock[0],"Data/lock.TGA"))
 	{
 		glGenTextures(1,&textureLock[0].texID);
 		glBindTexture(GL_TEXTURE_2D, textureLock[0].texID);
@@ -509,7 +386,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 			}
 		//texture[1]=textureLock[0].texID;
 	
-	}
+	}*/
 		/*
 	if (TextureImage[1]=LoadBMP("Data/lock.bmp"))
 	{
@@ -542,10 +419,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		free(TextureImage[1]);								// Free The Image Structure
 	}
 */
-	CDDS loadDDS;
-	textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
-	ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
-	CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
+
 	/*
 	if (TextureImage[2]=LoadBMP("Data/redar.bmp"))
 	{
@@ -578,7 +452,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		free(TextureImage[2]);								// Free The Image Structure
 	}
 */
-
+/*
 	if (TextureImage[3]=LoadBMP("Data/UI1.bmp"))
 	{
 		Status=TRUE;									// Set The Status To TRUE
@@ -608,7 +482,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		}
 
 		free(TextureImage[3]);								// Free The Image Structure
-	}
+	}*/
 /*		
 	if (TextureImage[4]=LoadBMP("Data/map.BMP"))
 	{
@@ -641,7 +515,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		free(TextureImage[4]);								// Free The Image Structure
 	}
 */
-	if (TextureImage[5]=LoadBMP("Data/PlayerSign.BMP"))
+/*	if (TextureImage[5]=LoadBMP("Data/PlayerSign.BMP"))
 	{
 		Status=TRUE;									// Set The Status To TRUE
 
@@ -670,7 +544,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 		}
 
 		free(TextureImage[5]);								// Free The Image Structure
-	}
+	}*/
 /*
 	if (LoadTGA(&textureAlpha[0], "Data/fog.tga"))
 	{											
@@ -821,5 +695,5 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 //FBO
 //**************************************************
 
-	return Status;										// Return The Status
+	return 0;										// Return The Status
 }

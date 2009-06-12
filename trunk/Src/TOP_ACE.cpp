@@ -13,11 +13,11 @@
 #include "smoke.h"	
 #include "KeyInput.h"
 #include "shaders.h"
-#include "Textures.h"
-#include "Prints.h"
+//#include "Textures.h"
+//#include "Prints.h"
 #include "lock.h"
-#include "redar.h"
-#include "UI.h"
+//#include "redar.h"
+//#include "UI.h"
 #include "VBMD.h"
 #include "Cpuid.h"
 #include "sound.h"
@@ -26,6 +26,8 @@
 #include "SkyBox.h"
 #include "Bloom.h"
 #include "Video.h"
+#include "FBO.h"
+#include "BomTeams.h"
 //#include "Cloud.h"
 //#include "MD5Model.h"
 #include "ARB_MULTISAMPLE.h"
@@ -39,6 +41,10 @@
 #pragma comment( lib, "SDL.lib" )
 #pragma comment( lib, "SDLmain.lib" )
 
+extern GLuint fbo;					// Our handle to the FBO
+extern GLuint depthBuffer;			// Our handle to the depth render buffer
+extern GLuint img;
+extern GLuint dtex;//,fboBloomImg	
 
 LARGE_INTEGER t1,t2,feq,t3;//计算每桢运行时间相关
 GL_Window*	g_window;
@@ -166,11 +172,7 @@ void InitFogAndLight(void)
 }
 bool InitLoadfile(void)
 {
-	
 	needloadfile=0;
-
-	// TUTORIAL
-	// Load The Mesh Data
 	return true;
 }
 void InitTile(void)
@@ -224,7 +226,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		img=EmptyTexture(64);
 	}
 	else
-		initFBO();
+		initFBO(IsSupportFBO);
 /*
 	if (glewIsSupported("WGL_ARB_multisample"))
 		Multisample=GetPrivateProfileInt("Resolution","AA",0,".\\set.ini");
@@ -304,6 +306,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
 	UItexture3=EmptyTexture(512);
+
 	while(SmallWinSize<(winheight/6))
 		SmallWinSize=SmallWinSize*2;
 	SmallWinTexID=EmptyTexture(SmallWinSize);
@@ -2423,7 +2426,7 @@ void DrawPlayer(void)
 					//m_VBMD->ShowVBMD(PlayerMainModel);
 					
 
-					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
+					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img);
 					m_VBMD->ShowVBMD(PlayerMainModel);
 /*					glPushMatrix();
 						glMultMatrixd(MavePart_BackL.Matrix4());
@@ -2648,12 +2651,11 @@ void showloading(void)
 {
 	glEnable(GL_BLEND);
 	needloadfile=needloadfile+1;
-	CDDS loadDDS;
 
 	glClear (GL_COLOR_BUFFER_BIT );
 	switch (needloadfile)
 	{
-	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures();Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");break;
+	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures();break;
 	case 2:glPrint(16,16,"3/7 Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);break;
 	case 3:glPrint(16,16,"4/7 Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;break;//Cloud.Init();
 	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));break;
@@ -3146,6 +3148,71 @@ void SetPlayerTransform(void)
 	
 	}
 }
+
+void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
+{
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(-400,400,-300,300,-1000,2000);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();
+	glEnable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D, ShowHPTexID);	
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+	float colorR,colorG;
+	if(HPset>50)
+	{
+		colorR=float(100-HPset)*0.02f;
+		colorG=1.0f;
+	
+	}
+	else
+	{
+		colorG=float(HPset)*0.02f;
+		colorR=1.0f;
+	
+	}
+
+	glColor4f(colorR*0.5,colorG*0.5,0.0f,0.5f);
+
+	Missledata HPmodel;
+	Transform FModel;
+	FModel=FighterModel;
+	HPmodel.UDMplane.Translate(FModel.RefPos());
+	HPmodel.UDPstate.MaxSpeed=0.0;
+	HPmodel.UDPstate.MaxAngleSpeed=50.0;
+	HPmodel.UDPstate.VelocityResistance=0.0;
+	HPmodel.UDPstate.AngleVelocityResistance=0.1;
+	HPmodel.UDMplane.Translate(Vector3d(0.0, 50.0, 0.0));
+	HPmodel.TurnTo(FModel.RefPos());
+	HPmodel.UDPstate.NextState();
+	Transform LMView;
+	LMView = (tfWorld * HPmodel.UDMplane).Invert();
+	FModel.Rotate(Vector3d(1.0f, 0.0f, 0.0f) * CRad(90));
+	FModel.Translate(Vector3d(300.0,-150.0,0.0));
+	glLoadIdentity();
+	glLoadMatrixd(LMView.Matrix4());
+	glMultMatrixd(FModel.Matrix4());
+
+	glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	m_VBMD->ShowVBMD(ShowHPmodel);
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+
+
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
+}
+
 void stage0(void)
 {
 
@@ -3260,7 +3327,7 @@ void stage0(void)
 	//Maptexture=bloomTexId1;
 	//Maptexture=Video.VideoTexID;
 	//Maptexture=MyFont.TXTTexID;
-	Maptexture=img;
+//	Maptexture=img;
 
 
 }

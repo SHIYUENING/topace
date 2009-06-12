@@ -1,20 +1,15 @@
 #pragma once
+#include "DefinesFile.h"
 #include "Unitdata.h"
 #include "MissleList.h"
 #include "Models.h"
 #include "sound.h"
 #include "Shell.h"
 #include "MyFont.h"
+#include "HUDUI.h"
 int lockflash=0;//¾ö¶¨Ëø¶¨¿òÊÇ·ñÉÁË¸
 unsigned int FrameSkip=0;
-#define MAXRedarlocks 100
-#define maxMissles 20
-#define maxMisslesSmoke 20000
-#define maxUnits 25
-#define maxUnitsSmoke 20000
-#define MAXweaponNUM 30
-#define MAXsmoke 200
-#define MAXBom 200
+
 bool IsSkip=false;
 bool IsHUD=false;
 float tmpredarRenge=15000.0f;//ÁÙÊ±À×´ï×·×Ù·¶Î§
@@ -111,6 +106,7 @@ bool PlayerLocked=false;
 bool PlayerLocking=false;
 bool isPlayerControl=false;
 bool isKeyDown=false;
+bool KeySPACE=false;
 int StartShowTime=-1;
 int hited=0;
 int timer[100];
@@ -240,3 +236,10 @@ extern AudioSource * soundSource[MAX_soundSource];
 extern Vector3d soundSourcePos[MAX_soundSource];
 extern AudioPlayer * BGMplayer;
 extern tSoundSourceDate SoundSourceDate[MAX_soundSource];
+extern GLuint SeaTexID,UItexture1,UItexture2,UItexture3;;
+
+GLuint SmallWinTexID=0;
+GLint SmallWinSize=128;
+bool IsSupportFBO=false;
+GLuint RedarTexture;
+float tmplockRenge=10000.0f;
