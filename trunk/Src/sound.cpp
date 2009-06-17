@@ -3,7 +3,7 @@
 #include "MyFont.h"
 extern CMyFont MyFont;
 bool isinitsound=false;
-
+float Effectvol,Voicevol;
 AudioBuffer * missleWarning[MAX_missleWarning];
 AudioBuffer * fox2voice[MAX_fox2voice];
 AudioBuffer * hitvoice[MAX_hitvoice];
@@ -23,8 +23,8 @@ tSoundSourceDate SoundSourceDate[MAX_soundSource];
 void initsound()
 {
 	float BGMvol	=(float)GetPrivateProfileInt("Sound","BGM",50,".\\set.ini")/100.0f;
-	float Effectvol	=(float)GetPrivateProfileInt("Sound","Effect",100,".\\set.ini")/100.0f;
-	float Voicevol	=(float)GetPrivateProfileInt("Sound","Voice",100,".\\set.ini")/100.0f;
+	Effectvol	=(float)GetPrivateProfileInt("Sound","Effect",100,".\\set.ini")/100.0f;
+	Voicevol	=(float)GetPrivateProfileInt("Sound","Voice",100,".\\set.ini")/100.0f;
 	openal::InitOpenALEE();
 	BGMplayer= new AudioPlayer;
 	BGMplayer->Load(L"Data/bgm.ogg");
@@ -167,6 +167,7 @@ bool AddSound(int Num,const Vector3d& pos)
 	soundSourcePos[i]=pos;
 	soundSource[i]->Unlink();
 	soundSource[i]->Link(sounds[Num]);
+	soundSource[i]->Gain=Voicevol;
 	soundSource[i]->Play();
 	return true;
 
@@ -203,6 +204,7 @@ void PlaymissleWarning(int Num)
 		return;
 	voiceSource->Unlink();
 	voiceSource->Link(missleWarning[Num]);
+	voiceSource->Gain=Voicevol;
 	voiceSource->Play();
 
 
@@ -219,6 +221,7 @@ void Playfox2voice(int Num)
 		return;
 	voiceSourceAWACS->Unlink();
 	voiceSourceAWACS->Link(fox2voice[Num]);
+	voiceSourceAWACS->Gain=Voicevol;
 	voiceSourceAWACS->Play();
 	if(Num==0)
 		MyFont.inputTxt("《ＦＯＸ２！》");
@@ -240,6 +243,7 @@ void Playhitvoice(int Num)
 		return;
 	voiceSourceAWACS->Unlink();
 	voiceSourceAWACS->Link(hitvoice[Num]);
+	voiceSourceAWACS->Gain=Voicevol;
 	voiceSourceAWACS->Play();
 	if(Num==0)
 		MyFont.inputTxt("《导弹命中！》");
@@ -262,6 +266,7 @@ void Playkillvoice(int Num)
 		return;
 	voiceSource->Unlink();
 	voiceSource->Link(killvoice[Num]);
+	voiceSource->Gain=Voicevol;
 	voiceSource->Play();
 
 
@@ -277,6 +282,7 @@ void Playmissvoice(int Num)
 		return;
 	voiceSourceAWACS->Unlink();
 	voiceSourceAWACS->Link(missvoice[Num]);
+	voiceSourceAWACS->Gain=Voicevol;
 	voiceSourceAWACS->Play();
 	if(Num==0)
 		MyFont.inputTxt("《没有命中，被躲开了》");
