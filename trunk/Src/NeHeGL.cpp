@@ -73,7 +73,8 @@ BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change 
 BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL Window
 {
 	//DWORD windowStyle = WS_OVERLAPPEDWINDOW;							// Define Our Window Style
-	DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;
+	//DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;
+	DWORD windowStyle =WS_POPUP;
 	DWORD windowExtendedStyle = WS_EX_APPWINDOW;						// Define The Window's Extended Style
 
 	PIXELFORMATDESCRIPTOR pfd =											// pfd Tells Windows How We Want Things To Be
@@ -113,7 +114,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		else															// Otherwise (If Fullscreen Mode Was Successful)
 		{
 			ShowCursor (FALSE);											// Turn Off The Cursor
-			windowStyle = WS_POPUP;										// Set The WindowStyle To WS_POPUP (Popup Window)
+			//windowStyle = WS_POPUP;										// Set The WindowStyle To WS_POPUP (Popup Window)
 			windowExtendedStyle |= WS_EX_TOPMOST;						// Set The Extended Window Style To WS_EX_TOPMOST
 		}																// (Top Window Covering Everything Else)
 	}
