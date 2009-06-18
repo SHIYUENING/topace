@@ -2350,6 +2350,32 @@ void UnitMove(void)
 }
 
 
+float GetSunHDlight(float x,float y,float z,int winwidth,int winheight)
+{
+	if(!isDraw)
+		return 1.0f;
+
+	glPushMatrix();	
+	glLoadIdentity();
+	GLint viewport[4];
+	GLdouble mvmatrix[16],projmatrix[16];
+	GLdouble SUFwinX,SUFwinY,SUFwinZ;
+	glGetIntegerv(GL_VIEWPORT,viewport);
+	glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
+	glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
+	gluProject(x,y,z,mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
+	glPopMatrix();	
+
+	if(SUFwinZ>1.0001)
+		return 1.0f;
+	SUFwinX=SUFwinX-winwidth/2;
+	SUFwinY=SUFwinY-winheight/2;
+	float SunWinPos_2=float(SUFwinX*SUFwinX+SUFwinY*SUFwinY);
+	float winheight_2=float(winheight*winheight);
+
+	return min(1.0f,(SunWinPos_2/winheight_2)*0.5f+0.5f);
+
+}
 void DrawPlayer(void)
 {
 	glGetFloatv(GL_MODELVIEW_MATRIX,Worldmatrix);
@@ -2421,7 +2447,7 @@ void DrawPlayer(void)
 					//m_VBMD->ShowVBMD(PlayerMainModel);
 					
 
-					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img);
+					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
 					m_VBMD->ShowVBMD(PlayerMainModel);
 /*					glPushMatrix();
 						glMultMatrixd(MavePart_BackL.Matrix4());
