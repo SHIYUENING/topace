@@ -58,7 +58,7 @@ float eyePosition[3]={0.0f, 150.0f, 30.0f};
 float eyePositionSea[3]={0.0f, 150.0f, 30.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 float lightPositionSea[]= { 0.0f, 0.0f, 2.0f };
-
+float HDglobalAmbient[3]={1.0f,1.0f,1.0f};
 float Ppos1=30.0f;
 float Ppos2=150.0f;
 float pixelfogColor[3];
@@ -301,7 +301,7 @@ void RenderShadowMap()
 	cgGLEnableProfile( g_CGprofile_pixel );
 
 }
-void shaderT(int NormalTex,int SpecularTex,int ShadowMapTexID)//bool UseBloom=false
+void shaderT(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)//bool UseBloom=false
 {/*
 	if(Keb[0])
 	Ke[0]=Ke[0]+0.02f;
@@ -374,10 +374,17 @@ void shaderT(int NormalTex,int SpecularTex,int ShadowMapTexID)//bool UseBloom=fa
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapmvmatrix" ),ShadowMapmvmatrix);
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapprojmatrix" ),ShadowMapprojmatrix);
 
+		if(HDlight<0.0f)
+			HDlight=0.0f;
+		if(HDlight>1.0f)
+			HDlight=1.0f;
+		HDglobalAmbient[0]=globalAmbient[0]*HDlight;
+		HDglobalAmbient[1]=globalAmbient[1]*HDlight;
+		HDglobalAmbient[2]=globalAmbient[2]*HDlight;
 		cgSetMatrixParameterfc(cgGetNamedParameter( g_CGvertex_t, "ShadowMapMVPmatrix" ),ShadowMapMVPmatrix);
 		cgSetParameter4fv(cgGetNamedParameter( g_CGvertex_t, "MissleLightDirection" ),MissleLightDirection);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGvertex_t, "paraLightColor" ),MissleLightColor);
-		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "globalAmbient" ), globalAmbient);
+		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "globalAmbient" ), HDglobalAmbient);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightColor" ), paraLightColor);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "paraLightDirection" ), paraLightDirection);
 		cgSetParameter3fv(cgGetNamedParameter( g_CGpixel_NOBloom, "eyePosition"), eyePosition);
