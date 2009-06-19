@@ -724,12 +724,12 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.65f),winheight/2-16,szshowSpeed,0,true);
 	glPrint((GLint)(winwidth*0.29f),winheight/2-16,szshowHigh,0,true);
 	glPrint((GLint)(winwidth*0.85f),winheight/5-16,PlayerHP,0,true);
-	if(voiceSourceAWACS->State!=AL_PLAYING)
+	/*if(voiceSourceAWACS->State!=AL_PLAYING)
 	{
 		glPrint(0,winheight-16,szTitle,0);
 		glPrint(0,winheight-32,szVERSION,0);
 		glPrint(0,winheight-48,cpubrand,0);
-	}
+	}*/
 	glPrint(winwidth/4,0,test,0);
 	glColor3f(1.0f,1.0f,1.0f);
 
@@ -2214,7 +2214,7 @@ void UnitMove(void)
 				float tmpD=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
 				if((tmpD<8000000)&&(!UDfighers[PMissleList.Missles[i].TGTnum].waringde))
 				{
-					PlaymissleWarning(rand()%MAX_missleWarning);
+					PlaymissleWarning(rand()%(MAX_missleWarning*3));
 					//if(PMissleList.Missles[i].onwer==0)
 //						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, missleWarning[rand()%10], 0, &missleWarningchannel);
 					UDfighers[PMissleList.Missles[i].TGTnum].waringde=true;
