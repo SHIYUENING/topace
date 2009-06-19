@@ -167,7 +167,7 @@ bool AddSound(int Num,const Vector3d& pos)
 	soundSourcePos[i]=pos;
 	soundSource[i]->Unlink();
 	soundSource[i]->Link(sounds[Num]);
-	soundSource[i]->Gain=Voicevol;
+	soundSource[i]->Gain=Effectvol;
 	soundSource[i]->Play();
 	return true;
 
