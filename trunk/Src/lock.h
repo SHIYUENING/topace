@@ -34,7 +34,7 @@ void fireMissle()
 			{
 				AddSound(0,UDfighers[0].UDMplane.RefPos());
 				//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, sound2, 0, &channel2);
-				Playfox2voice(rand()%3);
+				Playfox2voice(rand()%6);
 				//FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, fox2voice[rand()%3], 0, &fox2voicechannel);
 /*
 				UDfighers[lockUnits[i].locksTGT].attackedMissleNum=missle_index;
