@@ -8,6 +8,7 @@
 *       by Jeff Molofee ( NeHe )      *
 *                                     *
 **************************************/
+#include "Mathematics.h"
 #include "VBMD.h"	
 #include <windows.h>											// Header File For Windows
 #include <gl\gl.h>												// Header File For The OpenGL32 Library
@@ -42,6 +43,7 @@ int * pModelID=NULL;
 int ModelNum=1;
 int ModelNumLoaded=0;
 float angle= 0.75f;
+float angle2=0.0f;
 double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
 double oneframetimeT=0.0;
 double oneframetimelimit=1.0/60.0;//每桢最大时间
@@ -50,6 +52,9 @@ GLuint AsciiFontTexId;
 GLuint base;
 extern int winwidth,winheight;
 float posX,posY,posZ;
+Transform MView(Vector3d(0, 0, -40));//观察矩阵
+Transform MWorld;//世界矩阵
+Transform MFighter;//玩家
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -116,7 +121,7 @@ void DrawFPS()
 	}
 	
 	g_nFrames++;											
-	sprintf( szTitle, "%4.8f time,%2.0d FPS %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,angle,posX,posY,posZ);
+	sprintf( szTitle, "%4.8f time,%2.0d FPS %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2));
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
 }
 void Delay(__int64 Us)
@@ -178,9 +183,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	m_VBMD = new CLoadVBMD;
 	m_VBMD->m_IsSupportFBO=true;
 
-	angle=-90.0f;
+	//angle=-90.0f;
 	posX=posY=posZ=0;
-	posY=-500.0f;
+	//posY=-500.0f;
 
 	ModelNum=GetPrivateProfileInt("Set","ModelNum",50,".\\Model.ini");
 	pModelID=new int[ModelNum];
@@ -244,7 +249,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glViewport(0 , 0,window->init.width ,window->init.height);	// Set Up A Viewport
 	glMatrixMode(GL_PROJECTION);								// Select The Projection Matrix
 	glLoadIdentity();											// Reset The Projection Matrix
-	gluPerspective(50, (float)window->init.width/(float)window->init.height, 10,  100000); // Set Our Perspective
+	gluPerspective(50, (float)window->init.width/(float)window->init.height, 1,  10000); // Set Our Perspective
 	glMatrixMode(GL_MODELVIEW);									// Select The Modelview Matrix
 	glLoadIdentity();											// Reset The Modelview Matrix
 
@@ -266,18 +271,27 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
+	angle=angle2=posX=posY=posZ=0.0f;
 	if(g_keys->keyDown ['A'] == TRUE)
-		posX=posX-10.0f;
+		posX=-5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown ['D'] == TRUE)
-		posX=posX+10.0f;
+		posX=+5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown ['W'] == TRUE)
-		posY=posY-10.0f;
+		posZ=-5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown ['S'] == TRUE)
-		posY=posY+10.0f;
-	if(g_keys->keyDown ['Z'] == TRUE)
-		posZ=posZ-10.0f;
+		posZ=+5.0f*(1.0f*doangle+0.05f);
+	if(g_keys->keyDown [VK_LEFT] == TRUE)
+		angle=-1.0f;
+	if(g_keys->keyDown [VK_RIGHT] == TRUE)
+		angle=+1.0f;
+	if(g_keys->keyDown [VK_UP] == TRUE)
+		posY=-5.0f*(1.0f*doangle+0.05f);
+	if(g_keys->keyDown [VK_DOWN] == TRUE)
+		posY=+5.0f*(1.0f*doangle+0.05f);
+	/*if(g_keys->keyDown ['Z'] == TRUE)
+		posZ=-10.0f;
 	if(g_keys->keyDown ['X'] == TRUE)
-		posZ=posZ+10.0f;
+		posZ=+10.0f;*/
 	// ROACH
 	if(g_keys->keyDown [VK_SPACE] == TRUE)
 		domulti=!domulti;
@@ -309,11 +323,15 @@ void Draw (void)												// Draw The Scene
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The View	
 	
-	
-	
+	//MFighter.Reset();
+	MFighter.RotateInternal(Vector3d(CRad(angle2), 0.0f, 0.0f));
+	MFighter.RotateInternal(Vector3d(0.0f, -CRad(angle), 0.0f));
+	MFighter.TranslateInternal(Vector3d(posX,-posY,posZ));
 	//glRotatef(angle,1.f,0.f,0.f);
-	glTranslatef(posX,posY,posZ);
-	glRotatef(angle,0.f,1.f,0.f);
+	//glTranslatef(posX,posY,posZ);
+	//glRotatef(angle,0.f,1.f,0.f);
+    MView = (MWorld * MFighter).Invert();
+	glLoadMatrixd(MView.Matrix4());
 	for(int i=0;i<ModelNumLoaded;i++)
 	m_VBMD->ShowVBMD(pModelID[i]);
 /*
