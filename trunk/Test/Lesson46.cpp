@@ -16,7 +16,7 @@
 #include <gl\glaux.h>											// Header File For The GLaux Library
 #include "NeHeGL.h"												// Header File For NeHeGL
 #include <math.h>												// We'll Need Some Math
-
+#include "SkyBox.h"
 
 // ROACH
 #include "arb_multisample.h"
@@ -55,6 +55,8 @@ float posX,posY,posZ;
 Transform MView(Vector3d(0, 0, -40));//观察矩阵
 Transform MWorld;//世界矩阵
 Transform MFighter;//玩家
+Transform Msky;
+CSkyBox SkyBox;
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -227,6 +229,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	}
 
 
+	SkyBox.Init();
 
 /*
 	modelID[0]=m_VBMD->Init("Data/Model/ddm_2");
@@ -311,7 +314,28 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	}
 	LockFPS();
 }
-
+void DrawSky(Transform viewSky,float ne=0.0)
+{
+	glDisable(GL_BLEND);
+	glPushMatrix();
+	double fogbackY;
+	if(viewSky.RefPos()(1)>50000.0)
+		fogbackY=viewSky.RefPos()(1);
+	else
+	{
+		fogbackY=50000.0;
+	}
+	Msky.Translate( Vector3d( viewSky.RefPos()(0) ,viewSky.RefPos()(1), viewSky.RefPos()(2) ) );
+	glMultMatrixd(Msky.Matrix4());	
+	glScaled(5000.0,5000.0,5000.0);
+	glDisable(GL_DEPTH_TEST);
+	SkyBox.Draw();
+	glEnable(GL_DEPTH_TEST);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glPopMatrix();
+	Msky.Translate( Vector3d( -viewSky.RefPos()(0) ,  -viewSky.RefPos()(1) , -viewSky.RefPos()(2) ) );
+	glEnable(GL_BLEND);
+}
 void Draw (void)												// Draw The Scene
 {
 	// ROACH
@@ -320,7 +344,7 @@ void Draw (void)												// Draw The Scene
 	// ENDROACH
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
+	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The View	
 	
 	//MFighter.Reset();
@@ -332,6 +356,7 @@ void Draw (void)												// Draw The Scene
 	//glRotatef(angle,0.f,1.f,0.f);
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
+	DrawSky(MFighter);
 	for(int i=0;i<ModelNumLoaded;i++)
 	m_VBMD->ShowVBMD(pModelID[i]);
 /*
