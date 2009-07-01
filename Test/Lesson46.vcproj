@@ -283,6 +283,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SkyBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Transform.cpp"
 				>
 			</File>
@@ -317,6 +321,10 @@
 			</File>
 			<File
 				RelativePath=".\Physics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkyBox.h"
 				>
 			</File>
 			<File
