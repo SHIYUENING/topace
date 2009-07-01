@@ -264,6 +264,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glEnable(GL_TEXTURE_2D);
 
 	glEnable(GL_BLEND);
+	
+	
+	MFighter.TranslateInternal(Vector3d(-1650,500,290));
+	MFighter.RotateInternal(Vector3d(0.0f, CRad(45), 0.0f));
 	QueryPerformanceCounter(&t1);
 	return TRUE;												// Return TRUE (Initialization Successful)
 }
