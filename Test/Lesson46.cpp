@@ -189,7 +189,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	posX=posY=posZ=0;
 	//posY=-500.0f;
 
-	ModelNum=GetPrivateProfileInt("Set","ModelNum",50,".\\Model.ini");
+	ModelNum=GetPrivateProfileInt("Set","ModelNum",290,".\\Model.ini");
 	pModelID=new int[ModelNum];
 	WIN32_FIND_DATA FindFileData = {0};
     char sTmp[256] = {0};

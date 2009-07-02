@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const unsigned int MAX_VBMD = 100;								// 最大模型数量
+const unsigned int MAX_VBMD = 300;								// 最大模型数量
 tVBMD	VBMD[MAX_VBMD];								// VBMD模型数据
 
 // VBMD构造器
