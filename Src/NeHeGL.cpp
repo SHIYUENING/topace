@@ -26,7 +26,7 @@ int windowswidth=800;
 int windowsheight=600;
 int windowsbits=16;
 bool BisFullScreen=FALSE;
-int ACver=34;
+int ACver=35;
 int (__stdcall *hglSwapBuffers)(void *);
 HMODULE gl_dll=false;
 
@@ -73,8 +73,8 @@ BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change 
 BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL Window
 {
 	//DWORD windowStyle = WS_OVERLAPPEDWINDOW;							// Define Our Window Style
-	//DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;
-	DWORD windowStyle =WS_POPUP;
+	DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;
+	//DWORD windowStyle =WS_POPUP;
 	DWORD windowExtendedStyle = WS_EX_APPWINDOW;						// Define The Window's Extended Style
 
 	PIXELFORMATDESCRIPTOR pfd =											// pfd Tells Windows How We Want Things To Be
