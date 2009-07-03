@@ -272,7 +272,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	InitFogAndLight();
 	InitTile();
 
-	if((GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)&&(!GraphicsLOW))
+	if((GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)&&IsSupportFBO)
 		InitCG();
 	else
 	{
@@ -724,12 +724,12 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.65f),winheight/2-16,szshowSpeed,0,true);
 	glPrint((GLint)(winwidth*0.29f),winheight/2-16,szshowHigh,0,true);
 	glPrint((GLint)(winwidth*0.85f),winheight/5-16,PlayerHP,0,true);
-	/*if(voiceSourceAWACS->State!=AL_PLAYING)
+	if(voiceSourceAWACS->State!=AL_PLAYING)
 	{
 		glPrint(0,winheight-16,szTitle,0);
 		glPrint(0,winheight-32,szVERSION,0);
 		glPrint(0,winheight-48,cpubrand,0);
-	}*/
+	}
 	glPrint(winwidth/4,0,test,0);
 	glColor3f(1.0f,1.0f,1.0f);
 
