@@ -175,7 +175,7 @@ bool LoadSmoke(int SmokeNum)
 
 }
 */
-
+/*
 int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 {
 	CDDS loadDDS;
@@ -187,7 +187,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 	LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
 	Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
 	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
-
+*/
 
 	//int Status=FALSE;									// Status Indicator
 /*
@@ -694,6 +694,7 @@ int LoadGLTextures()									// Load Bitmaps And Convert To Textures
 //**************************************************
 //FBO
 //**************************************************
-
+/*
 	return 0;										// Return The Status
 }
+*/
