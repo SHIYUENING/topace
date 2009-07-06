@@ -17,7 +17,7 @@
 #include "NeHeGL.h"												// Header File For NeHeGL
 #include <math.h>												// We'll Need Some Math
 #include "SkyBox.h"
-
+#include "Shader.h"
 // ROACH
 #include "arb_multisample.h"
 bool domulti = true;
@@ -27,6 +27,8 @@ bool doangle = true;
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
+#pragma comment( lib, "cg.lib" )	
+#pragma comment( lib, "cgGL.lib" )	
 #pragma comment( lib, "glew32.lib" )	
 #pragma comment( lib, "glew32d.lib" )
 #ifndef CDS_FULLSCREEN											// CDS_FULLSCREEN Is Not Defined By Some
@@ -57,6 +59,10 @@ Transform MWorld;//世界矩阵
 Transform MFighter;//玩家
 Transform Msky;
 CSkyBox SkyBox;
+extern float eyePositionSea[3];
+extern GLuint AmbientReflectiveTexture;
+extern bool ShaderWater;//是否使用shader
+GLuint SeaTexID=0;
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -228,8 +234,12 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	
 	}
 
+	InitCG();
 
 	SkyBox.Init();
+	AmbientReflectiveTexture=SkyBox.SunCubeID;
+	CDDS loadDDS;
+	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
 
 /*
 	modelID[0]=m_VBMD->Init("Data/Model/ddm_2");
@@ -340,6 +350,69 @@ void DrawSky(Transform viewSky,float ne=0.0)
 	Msky.Translate( Vector3d( -viewSky.RefPos()(0) ,  -viewSky.RefPos()(1) , -viewSky.RefPos()(2) ) );
 	glEnable(GL_BLEND);
 }
+void DrawGround(void)
+{
+
+	eyePositionSea[0]=(float)MFighter.RefPos()(0);
+	eyePositionSea[1]=(float)MFighter.RefPos()(1);
+	eyePositionSea[2]=(float)MFighter.RefPos()(2);
+
+
+	if(ShaderWater)
+	{
+		DrawSea();
+		glPushMatrix();
+			
+			glScaled(100.0,50.0,100.0);
+			glDisable(GL_BLEND);
+			//m_VBMD->ShowVBMD(ModelID_SHAN);
+			int mapx,mapz;
+			mapx=int(MFighter.RefPos()(0))/40000;
+			mapz=int(MFighter.RefPos()(2))/40000;
+			glBindTexture(GL_TEXTURE_2D,SeaTexID);
+			for(int i=-3;i<4;i++)
+				for(int j=-3;j<4;j++)
+				{
+					glBegin(GL_QUADS);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,0.0f,-25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f,-25.0f+(j+mapz)*50.0f);
+						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
+					glEnd();
+				}
+		
+		glPopMatrix();
+		CGDisableProfilePixel();
+		CGDisableProfileVertex();
+		CGDisableTextureParameterAmbientReflectiveSea();
+	}
+	else
+	{
+		glPushMatrix();
+			glEnable(GL_FOG);
+			glScaled(100.0,50.0,100.0);
+			glDisable(GL_BLEND);
+			//m_VBMD->ShowVBMD(ModelID_SHAN);
+			int mapx,mapz;
+			mapx=int(MFighter.RefPos()(0))/40000;
+			mapz=int(MFighter.RefPos()(2))/40000;
+			glBindTexture(GL_TEXTURE_2D,SeaTexID);
+			glColor4f(0.0f,0.2f,0.6f,1.0f);
+			for(int i=-3;i<4;i++)
+				for(int j=-3;j<4;j++)
+				{
+					glBegin(GL_QUADS);
+						glTexCoord2f( 0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
+						glTexCoord2f( 0.0f, 0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f, 0.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
+						glTexCoord2f(10.0f,10.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
+					glEnd();
+				}
+			glColor4f(1.0f,1.0f,1.0f,1.0f);
+			glDisable(GL_FOG);
+		glPopMatrix();	
+	}
+}
 void Draw (void)												// Draw The Scene
 {
 	// ROACH
@@ -379,6 +452,7 @@ void Draw (void)												// Draw The Scene
 			glPopMatrix();
 		}
 */
+	DrawGround();
 	if(!doangle)
 		angle-=0.5f;
 
