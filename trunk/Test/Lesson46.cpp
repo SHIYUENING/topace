@@ -121,6 +121,7 @@ void glPrints(int x, int y, int winW,int winH,char *string)	// Where The Printin
 }
 void DrawFPS()
 {
+	glEnable(GL_BLEND);
 	if( GetTickCount() - g_dwLastFPS >= 1000 )					// When A Second Has Passed...
 	{
 		g_dwLastFPS = GetTickCount();							// Update Our Time Variable
@@ -239,7 +240,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	SkyBox.Init();
 	AmbientReflectiveTexture=SkyBox.SunCubeID;
 	CDDS loadDDS;
-	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
+	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
 
 /*
 	modelID[0]=m_VBMD->Init("Data/Model/ddm_2");
