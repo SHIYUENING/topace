@@ -119,7 +119,7 @@ DDS_IMAGE_DATA* CDDS::loadDDSTextureFile( const char *filename )
 // Name: loadCompressedTexture()
 // Desc: 
 //-----------------------------------------------------------------------------
-unsigned int CDDS::loadCompressedTexture( const char *filename )
+unsigned int CDDS::loadCompressedTexture( const char *filename ,GLint TexParameter)
 {
     // NOTE: Unlike "lena.bmp", "lena.dds" actually contains its own mip-map 
     // levels, which are also compressed.
@@ -142,7 +142,7 @@ unsigned int CDDS::loadCompressedTexture( const char *filename )
         glGenTextures( 1, &g_compressedTextureID );
         glBindTexture( GL_TEXTURE_2D, g_compressedTextureID ); 
 
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TexParameter );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); 
 
         int nSize;

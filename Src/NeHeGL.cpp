@@ -123,7 +123,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		// Adjust Window, Account For Window Borders
 		AdjustWindowRectEx (&windowRect, windowStyle, 0, windowExtendedStyle);
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","AdjustWindowRectEx","OK",".\\Log.ini");
+#endif
 	// Create The OpenGL Window
 	if(BisFullScreen)
 	{
@@ -154,7 +156,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 									   window->init.application->hInstance, // Pass The Window Instance
 									   window);
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","CreateWindowEx","OK",".\\Log.ini");
+#endif
 	if (window->hWnd == 0)												// Was Window Creation A Success?
 	{
 		return FALSE;													// If Not Return False
@@ -168,7 +172,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		window->hWnd = 0;												// Zero The Window Handle
 		return FALSE;													// Return False
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","GetDC","OK",".\\Log.ini");
+#endif
 //ROACH
 	/*
 	Our first pass, Multisampling hasn't been created yet, so we create a window normally
@@ -194,6 +200,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 	{
 		PixelFormat = arbMultisampleFormat;
 	}
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","arbMultisampleSupported","OK",".\\Log.ini");
+#endif
 //ENDROACH
 	if (SetPixelFormat (window->hDC, PixelFormat, &pfd) == FALSE)		// Try To Set The Pixel Format
 	{
@@ -204,7 +213,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		window->hWnd = 0;												// Zero The Window Handle
 		return FALSE;													// Return False
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","SetPixelFormat","OK",".\\Log.ini");
+#endif
 	window->hRC = wglCreateContext (window->hDC);						// Try To Get A Rendering Context
 	if (window->hRC == 0)												// Did We Get A Rendering Context?
 	{
@@ -215,7 +226,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		window->hWnd = 0;												// Zero The Window Handle
 		return FALSE;													// Return False
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","wglCreateContext","OK",".\\Log.ini");
+#endif
 	// Make The Rendering Context Our Current Rendering Context
 	if (wglMakeCurrent (window->hDC, window->hRC) == FALSE)
 	{
@@ -228,6 +241,9 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		window->hWnd = 0;												// Zero The Window Handle
 		return FALSE;													// Return False
 	}
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","wglMakeCurrent","OK",".\\Log.ini");
+#endif
 //ROACH
 	/*
 	Now that our window is created, we want to queary what samples are available
@@ -245,13 +261,19 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 			return CreateWindowGL(window);
 		}
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","InitMultisample","OK",".\\Log.ini");
+#endif
 //ENDROACH
 	ShowWindow (window->hWnd, SW_NORMAL);								// Make The Window Visible
 	window->isVisible = TRUE;											// Set isVisible To True
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","ShowWindow","OK",".\\Log.ini");
+#endif
 	ReshapeGL (window->init.width, window->init.height);				// Reshape Our GL Window
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("CreateWindowGL","ReshapeGL","OK",".\\Log.ini");
+#endif
 	ZeroMemory (window->keys, sizeof (Keys));							// Clear All Keys
 
 	window->lastTickCount = GetTickCount ();							// Get Tick Count
@@ -462,17 +484,25 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	{
 		// Create A Window
 		window.init.isFullScreen = g_createFullScreen;					// Set Init Param Of Window Creation To Fullscreen?
+#ifdef _RELEASELOG 
+				WritePrivateProfileString("CreateWindowGL","Begin","OK",".\\Log.ini");
+#endif
 		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
 		{
 			// At This Point We Should Have A Window That Is Setup To Render OpenGL
 			if (Initialize (&window, &keys) == FALSE)					// Call User Intialization
 			{
+#ifdef _RELEASELOG 
+				WritePrivateProfileString("Initialize","Initialize","False",".\\Log.ini");
+#endif
 				// Failure
 				TerminateApplication (&window);							// Close Window, This Will Handle The Shutdown
 			}
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
-
+#ifdef _RELEASELOG 
+				WritePrivateProfileString("ALLInit","ALLInit","OK",".\\Log.ini");
+#endif
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{

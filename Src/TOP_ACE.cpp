@@ -191,14 +191,25 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 {
 	g_window	= window;
 	g_keys		= keys;
-	
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","Begin","OK",".\\Log.ini");
+#endif
 	glewInit();
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","glewInit","OK",".\\Log.ini");
+#endif
 	BuildFont();
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","BuildFont","OK",".\\Log.ini");
+#endif
 	KeyInput.initJoyStick();
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","initJoyStick","OK",".\\Log.ini");
+#endif
 	Video.InitVideo();
-	
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","InitVideo","OK",".\\Log.ini");
+#endif	
 
 	strcpy( cpubrand, cpu.GetBrand().c_str() );
 	while(cpubrand[0]==' ')
@@ -206,7 +217,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	{
 		cpubrand[i]=cpubrand[i+1];
 	}
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","getcpubrand","OK",".\\Log.ini");
+#endif
 
 	//GL_ARB_vertex_program
     if ((glewIsSupported(
@@ -226,6 +239,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	}
 	else
 		initFBO(IsSupportFBO);
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","GetglewSupported","OK",".\\Log.ini");
+#endif
 /*
 	if (glewIsSupported("WGL_ARB_multisample"))
 		Multisample=GetPrivateProfileInt("Resolution","AA",0,".\\set.ini");
@@ -268,12 +284,19 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 //	BuildSmoke();
 	if(!InitLoadfile())
 		return false;
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","InitLoadfile","OK",".\\Log.ini");
+#endif
 	InitFogAndLight();
 	InitTile();
 
 	if((GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)&&IsSupportFBO)
+	{
 		InitCG();
+#ifdef _RELEASELOG 
+		WritePrivateProfileString("Initialize","InitCG","OK",".\\Log.ini");
+#endif
+	}
 	else
 	{
 		ShaderWater=false;
@@ -296,7 +319,12 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 
 	if(ShaderBloom)
+	{
 		InitBloom(winwidth,winheight);
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","InitBloom","OK",".\\Log.ini");
+#endif
+	}
 	RedarTexture=EmptyTexture();
 	UItexture1=EmptyTexture();
 	UItexture2=EmptyTexture(512);
@@ -305,11 +333,18 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	while(SmallWinSize<(winheight/6))
 		SmallWinSize=SmallWinSize*2;
 	SmallWinTexID=EmptyTexture(SmallWinSize);
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","InitUItextures","OK",".\\Log.ini");
+#endif
 	initlocks();
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","initlocks","OK",".\\Log.ini");
+#endif
 	initUnitdata(0);
 	    
-
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","initUnitdata","OK",".\\Log.ini");
+#endif
 	
 	//glEnable(GL_LINE_SMOOTH);
 	//glHint(GL_LINE_SMOOTH_HINT,GL_LINE_SMOOTH_HINT);
@@ -318,7 +353,12 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	EffectImpact.winH=winheight;
 	EffectImpact.IsSupportFBO=IsSupportFBO;
 	if(UseEffectImpact)
-	EffectImpact.Init();
+	{
+		EffectImpact.Init();
+#ifdef _RELEASELOG 
+	WritePrivateProfileString("Initialize","initEffectImpact","OK",".\\Log.ini");
+#endif
+	}
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
 
