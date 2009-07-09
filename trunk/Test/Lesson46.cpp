@@ -44,6 +44,7 @@ int modelID[16];
 int * pModelID=NULL;
 int ModelNum=1;
 int ModelNumLoaded=0;
+int ModelAlphaNumLoaded=0;
 float angle= 0.75f;
 float angle2=0.0f;
 double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
@@ -200,6 +201,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	pModelID=new int[ModelNum];
 	WIN32_FIND_DATA FindFileData = {0};
     char sTmp[256] = {0};
+
+
 	sprintf(sTmp,"Data/Model/*.dds");
 	HANDLE hFind = ::FindFirstFile(sTmp, &FindFileData);
 	if(INVALID_HANDLE_VALUE == hFind)
@@ -233,6 +236,39 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		}
 		FindClose(hFind);
 	
+	}
+
+	sprintf(sTmp,"Data/Model/Alpha/*.dds");
+	hFind = ::FindFirstFile(sTmp, &FindFileData);
+	if(INVALID_HANDLE_VALUE != hFind)
+	{		
+		while(ModelNumLoaded<ModelNum)
+		{
+			if (FindFileData.cFileName[0] != '.')
+			{
+				pModelID[ModelNumLoaded]=0;
+				char sTmp2[256] = {0};
+				char loadModelpathName[256] = {0};
+				int tmpi=0;
+				for(int i=0;i<strlen(FindFileData.cFileName);i++)
+				{
+					if(i<256)
+					{
+						if(FindFileData.cFileName[i]=='.')
+							sTmp2[i]=0;
+						else
+							sTmp2[i]=FindFileData.cFileName[i];
+					}
+				}
+				sprintf(loadModelpathName,"Data/Model/Alpha/%s",sTmp2);
+				pModelID[ModelNumLoaded]=m_VBMD->Init(loadModelpathName);
+				ModelNumLoaded=ModelNumLoaded+1;
+				ModelAlphaNumLoaded=ModelAlphaNumLoaded+1;
+			}
+			if(!FindNextFile(hFind, &FindFileData))
+				break;
+		}
+		FindClose(hFind);
 	}
 
 	InitCG();
@@ -435,8 +471,19 @@ void Draw (void)												// Draw The Scene
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
 	DrawSky(MFighter);
+	
+	DrawGround();
+	glEnable(GL_BLEND);
 	for(int i=0;i<ModelNumLoaded;i++)
-	m_VBMD->ShowVBMD(pModelID[i]);
+	{
+		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
+		{
+			glDepthMask(GL_FALSE);
+		}
+
+		m_VBMD->ShowVBMD(pModelID[i]);
+	}
+	glDepthMask(GL_TRUE);
 /*
 	for(float i=-10;i<10;i++)
 		for(float j=-10;j<10;j++)
@@ -453,7 +500,7 @@ void Draw (void)												// Draw The Scene
 			glPopMatrix();
 		}
 */
-	DrawGround();
+	
 	if(!doangle)
 		angle-=0.5f;
 
