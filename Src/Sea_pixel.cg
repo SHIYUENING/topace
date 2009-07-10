@@ -52,7 +52,7 @@ pixel main(
 	objpos.y=IN.objectPos2.y/IN.objectPos2.w*500;
 	objpos.z=IN.objectPos2.z/IN.objectPos2.w*1000;
 	float3 V=normalize(eyePosition-objpos);
-
+	V.y=-V.y;
 	float Fresnel2=min(IN.objectPos.z,100000);
 	Fresnel2=(100000-Fresnel2)/100000;
 	float eDotN = dot(V, N);
