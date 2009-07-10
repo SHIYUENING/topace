@@ -42,8 +42,11 @@ DWORD		g_dwLastFPS = 0;
 char szTitle[256]={0};
 int modelID[16];
 int * pModelID=NULL;
+int * pModelIDWater=NULL;
 int ModelNum=1;
+int ModelNumWater=1;
 int ModelNumLoaded=0;
+int ModelNumLoadedWater=0;
 int ModelAlphaNumLoaded=0;
 float angle= 0.75f;
 float angle2=0.0f;
@@ -196,15 +199,50 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	//angle=-90.0f;
 	posX=posY=posZ=0;
 	//posY=-500.0f;
-
-	ModelNum=GetPrivateProfileInt("Set","ModelNum",290,".\\Model.ini");
-	pModelID=new int[ModelNum];
 	WIN32_FIND_DATA FindFileData = {0};
     char sTmp[256] = {0};
 
+	ModelNumWater=GetPrivateProfileInt("Set","ModelNumWater",10,".\\Model.ini");
+	pModelIDWater=new int[ModelNumWater];
+	sprintf(sTmp,"Data/Model/Waters/*.dds");
+	HANDLE hFind = ::FindFirstFile(sTmp, &FindFileData);
+	if(INVALID_HANDLE_VALUE != hFind)
+	{		
+		while(ModelNumLoadedWater<ModelNumWater)
+		{
+			if (FindFileData.cFileName[0] != '.')
+			{
+				pModelIDWater[ModelNumLoadedWater]=0;
+				char sTmp2[256] = {0};
+				char loadModelpathName[256] = {0};
+				int tmpi=0;
+				for(int i=0;i<strlen(FindFileData.cFileName);i++)
+				{
+					if(i<256)
+					{
+						if(FindFileData.cFileName[i]=='.')
+							sTmp2[i]=0;
+						else
+							sTmp2[i]=FindFileData.cFileName[i];
+					}
+				}
+				sprintf(loadModelpathName,"Data/Model/Waters/%s",sTmp2);
+				pModelIDWater[ModelNumLoadedWater]=m_VBMD->Init(loadModelpathName);
+				ModelNumLoadedWater=ModelNumLoadedWater+1;
+			}
+			if(!FindNextFile(hFind, &FindFileData))
+				break;
+		}
+		FindClose(hFind);
+	}
+
+
+
+	ModelNum=GetPrivateProfileInt("Set","ModelNum",290,".\\Model.ini");
+	pModelID=new int[ModelNum];
 
 	sprintf(sTmp,"Data/Model/*.dds");
-	HANDLE hFind = ::FindFirstFile(sTmp, &FindFileData);
+	hFind = ::FindFirstFile(sTmp, &FindFileData);
 	if(INVALID_HANDLE_VALUE == hFind)
 		MessageBox( NULL, "FindNoFile", "ERROR", MB_OK|MB_ICONEXCLAMATION );
 	else
@@ -400,14 +438,16 @@ void DrawGround(void)
 		DrawSea();
 		glPushMatrix();
 			
-			glScaled(100.0,50.0,100.0);
+			//glScaled(100.0,50.0,100.0);
 			glDisable(GL_BLEND);
 			//m_VBMD->ShowVBMD(ModelID_SHAN);
-			int mapx,mapz;
-			mapx=int(MFighter.RefPos()(0))/40000;
-			mapz=int(MFighter.RefPos()(2))/40000;
+			//int mapx,mapz;
+			//mapx=int(MFighter.RefPos()(0))/40000;
+			//mapz=int(MFighter.RefPos()(2))/40000;
 			glBindTexture(GL_TEXTURE_2D,SeaTexID);
-			for(int i=-3;i<4;i++)
+			for(int i=0;i<ModelNumLoadedWater;i++)
+				m_VBMD->ShowVBMD(pModelIDWater[i],false);
+		/*	for(int i=-3;i<4;i++)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
@@ -417,7 +457,7 @@ void DrawGround(void)
 						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
 					glEnd();
 				}
-		
+		*/
 		glPopMatrix();
 		CGDisableProfilePixel();
 		CGDisableProfileVertex();
@@ -427,15 +467,18 @@ void DrawGround(void)
 	{
 		glPushMatrix();
 			glEnable(GL_FOG);
-			glScaled(100.0,50.0,100.0);
+			//glScaled(100.0,50.0,100.0);
 			glDisable(GL_BLEND);
 			//m_VBMD->ShowVBMD(ModelID_SHAN);
-			int mapx,mapz;
-			mapx=int(MFighter.RefPos()(0))/40000;
-			mapz=int(MFighter.RefPos()(2))/40000;
+			//int mapx,mapz;
+			//mapx=int(MFighter.RefPos()(0))/40000;
+			//mapz=int(MFighter.RefPos()(2))/40000;
 			glBindTexture(GL_TEXTURE_2D,SeaTexID);
 			glColor4f(0.0f,0.2f,0.6f,1.0f);
-			for(int i=-3;i<4;i++)
+			for(int i=0;i<ModelNumLoadedWater;i++)
+				m_VBMD->ShowVBMD(pModelIDWater[i],false);
+			
+			/*for(int i=-3;i<4;i++)
 				for(int j=-3;j<4;j++)
 				{
 					glBegin(GL_QUADS);
@@ -444,7 +487,7 @@ void DrawGround(void)
 						glTexCoord2f(10.0f, 0.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
 						glTexCoord2f(10.0f,10.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
 					glEnd();
-				}
+				}*/
 			glColor4f(1.0f,1.0f,1.0f,1.0f);
 			glDisable(GL_FOG);
 		glPopMatrix();	

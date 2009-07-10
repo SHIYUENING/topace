@@ -31,7 +31,7 @@ pixel main(
 )
 {
 
-    float3 NN =tex2D( testTexture, IN.texcoord0*12)*0.5+tex2D( testTexture, IN.texcoord0*10)*0.5;
+    float3 NN =tex2D( testTexture, IN.texcoord0*3)*0.5+tex2D( testTexture, IN.texcoord0*2)*0.5;
 	float3 N;
 	N.x=(NN.x-0.5)*2.0;
 	N.y=(NN.z-0.5)*1.0;
@@ -48,11 +48,11 @@ pixel main(
 	Ocolor2.xyz=(1-fogb)*FogColor;
 	Ocolor2.w=(1-fogb);
 	float3 objpos;
-	objpos.x=IN.objectPos2.x/IN.objectPos2.w*100;
-	objpos.y=IN.objectPos2.y/IN.objectPos2.w*50;
-	objpos.z=IN.objectPos2.z/IN.objectPos2.w*100;
+	objpos.x=IN.objectPos2.x/IN.objectPos2.w;
+	objpos.y=IN.objectPos2.y/IN.objectPos2.w;
+	objpos.z=IN.objectPos2.z/IN.objectPos2.w;
 	float3 V=normalize(eyePosition-objpos);
-
+	V.y=-V.y;
 	float Fresnel2=min(IN.objectPos.z,10000);
 	Fresnel2=(10000-Fresnel2)/10000;
 	float eDotN = dot(V, N);
