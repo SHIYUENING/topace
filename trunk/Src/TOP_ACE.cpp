@@ -557,7 +557,7 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 		{
 			glColor3f(1.0f,0.0f,0.0f);
 			sprintf(flag,"   TGT");
-			glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)) ,   (int)(DFDY   + 2.0f*((float)winheight/600.0f)),  flag   , 0 ,true);
+			glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)) ,   (int)(DFDY   + 2.0f*((float)winheight/600.0f)),  flag   , 0 );
 			glColor3f(0.0f,1.0f,0.0f);
 			if(DFDlockselect)
 			{
@@ -572,14 +572,14 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 		{
 			glColor3f(0.0f,0.5f,1.0f);
 			sprintf(flag,"Friend");
-			glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)) ,  (int)(DFDY   + 2.0f*((float)winheight/600.0f)) ,  flag   , 0 ,true);
-			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)),   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 ,true);
+			glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)) ,  (int)(DFDY   + 2.0f*((float)winheight/600.0f)) ,  flag   , 0 );
+			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)),   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 );
 		}
 		if(DFDflag==3)
 		{
 			glColor3f(1.0f,1.0f,0.0f);
 			sprintf(flag,"NOdata");
-			glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)),   (int)(DFDY   + 2.0f*((float)winheight/600.0f)) ,  flag   , 0 ,true);
+			glPrint( (int)(DFDX  - 68.0f*((float)winheight/600.0f)),   (int)(DFDY   + 2.0f*((float)winheight/600.0f)) ,  flag   , 0 );
 			if(DFDlockselect)
 			{
 				if(lockflash>15)
@@ -596,10 +596,10 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 	sprintf(DFDDistance,"%d",(int)(sqrt(DFDL)*0.10f-10.0f));
 	if( DFDZ < 1.0f )		
 	{
-		glPrint( (int)(DFDX  - 40.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  strSpeed   , 0 ,true);
-		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  DFDDistance   , 0 ,true);
+		glPrint( (int)(DFDX  - 40.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  strSpeed   , 0 );
+		glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  - 18.0f*((float)winheight/600.0f)) ,  DFDDistance   , 0 );
 		if(DFDlockselect)
-			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 ,true);
+			glPrint( (int)(DFDX  + 8.0f*((float)winheight/600.0f)) ,   (int)(DFDY  + 2.0f*((float)winheight/600.0f)) ,   DFDname , 0 );
 	}
 	glColor3f(1.0f,1.0f,1.0f);
 
@@ -3180,8 +3180,8 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPushMatrix();										// Store The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-	glOrtho(-400,400,-300,300,-1000,2000);							// Set Up An Ortho Screen
+	glLoadIdentity();									// Reset The Projection Matrix winwidth,winheight
+	glOrtho(-400,400,-400*winheight/winwidth,400*winheight/winwidth,-1000,2000);							// Set Up An Ortho Screen
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();
@@ -3220,7 +3220,7 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 	Transform LMView;
 	LMView = (tfWorld * HPmodel.UDMplane).Invert();
 	FModel.Rotate(Vector3d(1.0f, 0.0f, 0.0f) * CRad(90));
-	FModel.Translate(Vector3d(300.0,-150.0,0.0));
+	FModel.Translate(Vector3d(300.0,-150.0*winheight/winwidth,0.0));
 	glLoadIdentity();
 	glLoadMatrixd(LMView.Matrix4());
 	glMultMatrixd(FModel.Matrix4());
