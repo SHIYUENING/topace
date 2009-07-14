@@ -1,6 +1,13 @@
-#include "HUDUI.h"
 #include "DDS.h"
+#include "texture.h"
+#include "HUDUI.h"
+
+
 GLuint textureRedar,ShowHPTexID,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
+bool LoadTGA(Texture *, char *);
+unsigned int LoadTGAFile(const char *filename)
+{
+}
 
 unsigned int EmptyTexture(int wh,bool isGL_LINEAR)							// 创建一个空的纹理
 {
@@ -14,7 +21,7 @@ unsigned int EmptyTexture(int wh,bool isGL_LINEAR)							// 创建一个空的纹理
 	glGenTextures(1, &txtnumber);				// 创建一个纹理
 	glBindTexture(GL_TEXTURE_2D, txtnumber);			// 构造纹理
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, wh, wh, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, wh, wh,0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	if(isGL_LINEAR)
 				{
 					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
@@ -31,16 +38,19 @@ unsigned int EmptyTexture(int wh,bool isGL_LINEAR)							// 创建一个空的纹理
 	return txtnumber;						// 返回纹理ID
 }
 
-void LoadGLTextures()
+void LoadGLTextures(bool UseDDS)
 {
 
-	CDDS loadDDS;
-	textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
-	ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
-	CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
-	UItexture4=loadDDS.loadCompressedTexture("Data/UI1.dds");
-	PlayerSign=loadDDS.loadCompressedTexture("Data/PlayerSign.dds");
-	LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
-	Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
-	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
+	if(UseDDS)
+	{
+		CDDS loadDDS;
+		textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
+		ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
+		CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
+		UItexture4=loadDDS.loadCompressedTexture("Data/UI1.dds");
+		PlayerSign=loadDDS.loadCompressedTexture("Data/PlayerSign.dds");
+		LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
+		Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
+		SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
+	}
 }

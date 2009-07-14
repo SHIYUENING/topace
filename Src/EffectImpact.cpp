@@ -30,7 +30,7 @@ unsigned int CEffectImpact::EmptyTexture(int wh)
 	glGenTextures(1, &txtnumber);				// 创建一个纹理
 	glBindTexture(GL_TEXTURE_2D, txtnumber);			// 构造纹理
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, wh, wh, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, wh, wh,0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	if(IsSupportFBO)
 				{
 					glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);

@@ -232,7 +232,7 @@ unsigned int CVideo::EmptyTextureRGB(unsigned int VideoSize)
 
 	glGenTextures(1, &VideoTexID);				// 创建一个纹理
 	glBindTexture(GL_TEXTURE_2D, VideoTexID);			// 构造纹理
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, VideoTexSize, VideoTexSize, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D,0, GL_RGB, VideoTexSize, VideoTexSize, 0,GL_RGB, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	delete [] data;						// 释放数据

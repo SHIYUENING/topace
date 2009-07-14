@@ -20,7 +20,7 @@ unsigned int EmptyTexture(int wh)							// 创建一个空的纹理
 	glGenTextures(1, &txtnumber);				// 创建一个纹理
 	glBindTexture(GL_TEXTURE_2D, txtnumber);			// 构造纹理
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, wh, wh, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, wh, wh,0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
