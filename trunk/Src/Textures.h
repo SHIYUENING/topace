@@ -3,7 +3,7 @@
 #include "DDS.h"
 
 
-GLuint textureRedar,ShowHPTexID,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
+GLuint textureRedar,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
 
 //GLuint blurtexture2;
 

@@ -29,7 +29,7 @@ bool CMyFont::LoadFont(const char *filename)
 	ZeroMemory(data,256*256*4);	// 清除存储区
 	glGenTextures(1, &TXTTexID);				// 创建一个纹理
 	glBindTexture(GL_TEXTURE_2D, TXTTexID);			// 构造纹理
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, 256, 256, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D,0, GL_RGBA, 256, 256,0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	delete [] data;
