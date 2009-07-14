@@ -42,5 +42,5 @@ void LoadGLTextures()
 	PlayerSign=loadDDS.loadCompressedTexture("Data/PlayerSign.dds");
 	LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
 	Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
-	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds");
+	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
 }
