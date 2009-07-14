@@ -3,10 +3,11 @@
 #include "HUDUI.h"
 
 
-GLuint textureRedar,ShowHPTexID,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
+GLuint textureRedar,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
 bool LoadTGA(Texture *, char *);
 unsigned int LoadTGAFile(const char *filename)
 {
+	Texture LoadTexture;
 }
 
 unsigned int EmptyTexture(int wh,bool isGL_LINEAR)							// 创建一个空的纹理
@@ -45,12 +46,22 @@ void LoadGLTextures(bool UseDDS)
 	{
 		CDDS loadDDS;
 		textureRedar=loadDDS.loadCompressedTexture("Data/redar.dds");
-		ShowHPTexID=loadDDS.loadCompressedTexture("Data/showHP.dds");
 		CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
 		UItexture4=loadDDS.loadCompressedTexture("Data/UI1.dds");
 		PlayerSign=loadDDS.loadCompressedTexture("Data/PlayerSign.dds");
 		LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
 		Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
 		SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
+	}
+	else
+	{
+		textureRedar=LoadTGAFile("Data/redar.tga");
+		CompassTexID=LoadTGAFile("Data/Compass.tga");
+		UItexture4=LoadTGAFile("Data/UI1.tga");
+		PlayerSign=LoadTGAFile("Data/PlayerSign.tga");
+		LockTexID=LoadTGAFile("Data/lock.tga");
+		Maptexture=LoadTGAFile("Data/map.tga");
+		SeaTexID=LoadTGAFile("Data/sea.tga");
+		
 	}
 }
