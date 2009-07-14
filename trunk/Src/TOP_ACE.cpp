@@ -191,6 +191,11 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 {
 	g_window	= window;
 	g_keys		= keys;
+	if(GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0)
+		GraphicsLOW=true;
+	else
+		GraphicsLOW=false;
+
 #ifdef _RELEASELOG 
 	WritePrivateProfileString("Initialize","Begin","OK",".\\Log.ini");
 #endif
@@ -198,7 +203,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 #ifdef _RELEASELOG 
 	WritePrivateProfileString("Initialize","glewInit","OK",".\\Log.ini");
 #endif
-	BuildFont();
+	BuildFont(!GraphicsLOW);
 #ifdef _RELEASELOG 
 	WritePrivateProfileString("Initialize","BuildFont","OK",".\\Log.ini");
 #endif
@@ -253,13 +258,6 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
 	g_fVBOSupported=true;
 
-	
-		if(GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0)
-			GraphicsLOW=true;
-		else
-			GraphicsLOW=false;
-
-
 	FrameSkip=GetPrivateProfileInt("Resolution","FrameSkip",0,".\\set.ini")+1;
 	oneframetimelimit=(double)FrameSkip/60.0;
 	SmallWindowType=GetPrivateProfileInt("UI","SmallWindowSet",0,".\\set.ini");
@@ -273,7 +271,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	TurnRateY=GetPrivateProfileInt("FlySet","TurnRateY",500,".\\set.ini")*0.0001f;
 	TurnRateZ=GetPrivateProfileInt("FlySet","TurnRateZ",50,".\\set.ini")*0.0001f;
 
-	if(GetPrivateProfileInt("Effect","MoveBlur",0,".\\set.ini")==0)
+	if((GetPrivateProfileInt("Effect","MoveBlur",0,".\\set.ini")==0)||(!IsSupportFBO))
 		UseEffectImpact=false;
 	else
 		UseEffectImpact=true;
@@ -305,10 +303,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
 	}
-	if(GetPrivateProfileInt("Light","ShaderWater",0,".\\set.ini")==0)
+	if((GetPrivateProfileInt("Light","ShaderWater",0,".\\set.ini")==0)||(!IsSupportFBO))
 		ShaderWater=false;
 
-	if(GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)
+	if((GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)||(!IsSupportFBO))
 		ShaderBloom=false;
 	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
 	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
@@ -3320,7 +3318,8 @@ void stage0(void)
 				GetBloomTex(winwidth,winheight);
 
 			}
-			PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
+			if(!GraphicsLOW)
+				PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
 			Drawlocksign();
 		}
 	glPopMatrix();
@@ -3413,7 +3412,8 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 				
 				Shell.DrawShell( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				//PMissleList.DrawMissle( MSmallWindow.RefPos() ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
-				PSmokes.DrawSmoke( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
+				if(!GraphicsLOW)
+					PSmokes.DrawSmoke( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glDisable(GL_CULL_FACE);
 			}
 			

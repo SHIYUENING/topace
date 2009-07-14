@@ -1,6 +1,7 @@
 #pragma once
 
 unsigned int EmptyTexture(int wh=256,bool isGL_LINEAR=true)	;
+unsigned int LoadTGAFile(char *filename);
 void LoadGLTextures(bool UseDDS=true);
 void DrawUI1totexture(double latitude);
 void DrawUI2totexture(double speed);
@@ -20,4 +21,4 @@ void glPrints(int x, int y, int winW,int winH,char *string);
 void glPrintW(float HUDx=0.0,float HUDy=0.0, bool locked=false);
 void glPrintRedar(float Rx=0.0,float Ry=0.0, int TGTflag=0,float Renge=10000.0f);
 void glPrintAREARedar(float Rx=0.0,float Ry=0.0, int TGTflag=0,float Renge=100000.0f,float turn=0.0f);
-void BuildFont();
+void BuildFont(bool UseDDS=true);
