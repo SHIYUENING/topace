@@ -5,9 +5,26 @@
 
 GLuint textureRedar,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
 bool LoadTGA(Texture *, char *);
-unsigned int LoadTGAFile(const char *filename)
+unsigned int LoadTGAFile(char *filename)
 {
 	Texture LoadTexture;
+
+	if(LoadTGA(&LoadTexture,filename))
+	{
+		glGenTextures(1, &LoadTexture.texID);
+		glBindTexture(GL_TEXTURE_2D, LoadTexture.texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, LoadTexture.bpp / 8, LoadTexture.width, LoadTexture.height, 0, LoadTexture.type, GL_UNSIGNED_BYTE, LoadTexture.imageData);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		if (LoadTexture.imageData)						// If Texture Image Exists ( CHANGE )
+		{
+			free(LoadTexture.imageData);					// Free The Texture Image Memory ( CHANGE )
+		}
+		return LoadTexture.texID;
+	}
+
+	else
+		return 0;
 }
 
 unsigned int EmptyTexture(int wh,bool isGL_LINEAR)							// 创建一个空的纹理

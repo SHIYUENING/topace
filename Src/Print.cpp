@@ -4,7 +4,7 @@ GLuint AsciiFontTexId;
 GLuint base;
 extern int winwidth,winheight;
 extern GLuint LockTexID,PlayerSign;
-void BuildFont()								// Build Our Font Display List
+void BuildFont(bool UseDDS)								// Build Our Font Display List
 {
 	/*
 	if (LoadTGA(&textureAlphaFont[0], "Data/font.tga"))
@@ -33,8 +33,15 @@ void BuildFont()								// Build Our Font Display List
 
 	}
 */
-	CDDS loadDDS;
-	AsciiFontTexId=loadDDS.loadCompressedTexture("Data/Font.dds");
+	if(UseDDS)
+	{
+		CDDS loadDDS;
+		AsciiFontTexId=loadDDS.loadCompressedTexture("Data/Font.dds");
+	}
+	else
+	{
+		AsciiFontTexId=LoadTGAFile("Data/Font.tga");
+	}
 
 	float	cx;											// Holds Our X Character Coord
 	float	cy;											// Holds Our Y Character Coord
