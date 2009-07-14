@@ -47,6 +47,7 @@ struct BomTeamsSet
 };*/
 //CBomsSet BomsSets[MAXBOMS];
 //用于创建渲染到纹理的空纹理
+/*
 GLuint EmptyTexture(int wh=256,bool isGL_LINEAR=true)							// 创建一个空的纹理
 {
 	GLuint txtnumber;							// 纹理ID
@@ -75,7 +76,7 @@ GLuint EmptyTexture(int wh=256,bool isGL_LINEAR=true)							// 创建一个空的纹理
 
 	return txtnumber;						// 返回纹理ID
 }
-
+*/
 /*
 //处理BMP
 AUX_RGBImageRec *LoadBMP(char *Filename)				// Loads A Bitmap Image

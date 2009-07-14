@@ -1,7 +1,7 @@
 #pragma once
 
 unsigned int EmptyTexture(int wh=256,bool isGL_LINEAR=true)	;
-void LoadGLTextures();
+void LoadGLTextures(bool UseDDS=true);
 void DrawUI1totexture(double latitude);
 void DrawUI2totexture(double speed);
 void DrawUI3totexture(double ATL);
