@@ -9,9 +9,40 @@ CSkyBox::CSkyBox(void)
 CSkyBox::~CSkyBox(void)
 {
 }
+unsigned int CSkyBox::LoadTGAFile(char *filename)
+{
+	Texture LoadTexture;
 
+	if(LoadTGA(&LoadTexture,filename))
+	{
+		glGenTextures(1, &LoadTexture.texID);
+		glBindTexture(GL_TEXTURE_2D, LoadTexture.texID);
+		glTexImage2D(GL_TEXTURE_2D, 0, LoadTexture.bpp / 8, LoadTexture.width, LoadTexture.height, 0, LoadTexture.type, GL_UNSIGNED_BYTE, LoadTexture.imageData);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		if (LoadTexture.imageData)						// If Texture Image Exists ( CHANGE )
+		{
+			free(LoadTexture.imageData);					// Free The Texture Image Memory ( CHANGE )
+		}
+		return LoadTexture.texID;
+	}
+
+	else
+		return 0;
+}
 bool CSkyBox::Init(void)
 {
+	if(!IsSupportFBO)
+	{
+		SunTexID=LoadTGAFile("Data/sky/sun.tga");
+		SkyTexID[0]=LoadTGAFile("Data/sky/BK.tga");
+		SkyTexID[1]=LoadTGAFile("Data/sky/DN.tga");
+		SkyTexID[2]=LoadTGAFile("Data/sky/FR.tga");
+		SkyTexID[3]=LoadTGAFile("Data/sky/LF.tga");
+		SkyTexID[4]=LoadTGAFile("Data/sky/RT.tga");
+		SkyTexID[5]=LoadTGAFile("Data/sky/UP.tga");
+		return true;
+	}
 	CDDS loadDDS;
 	SunTexID=loadDDS.loadCompressedTexture("Data/sky/sun.dds");
 	SkyTexID[0]=loadDDS.loadCompressedTexture("Data/sky/BK.dds");

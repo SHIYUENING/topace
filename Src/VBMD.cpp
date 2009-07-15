@@ -177,7 +177,9 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 		CDDS ddsload;
 		char TextureDDSFileName[256] = {0};
 		sprintf(&TextureDDSFileName[0], "%s.dds", filename);
-		int ddsTexId=ddsload.loadCompressedTexture(TextureDDSFileName);
+		int ddsTexId=0;
+		if(m_IsSupportFBO)
+			ddsTexId=ddsload.loadCompressedTexture(TextureDDSFileName);
 
 
 		if(ddsTexId>0)
@@ -200,7 +202,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 			if(VBOSupported&&m_IsSupportFBO)
 			{
 				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 			}
 			else
 			{

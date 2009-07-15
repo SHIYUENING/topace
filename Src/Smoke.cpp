@@ -365,8 +365,10 @@ void CSmoke::Init(int setGraphicLevel,int useCloud)
 		SmokeTexsNum=SmokeTexsNum+1;
 	if(SmokeTexsNum>0)
 		BuildSmoke(textureSmoke[0].texID);
-	BuildCloud();
+	
 	if(useCloud>0)
+	{
+		BuildCloud();
 		for(int i=0;i<10;i++)
 		{
 			for(int j=0;j<10;j++)
@@ -375,6 +377,7 @@ void CSmoke::Init(int setGraphicLevel,int useCloud)
 				AddCloud(float((i-5)*20000+rand()%1000),float(40000+rand()%10000),float((j-5)*20000+rand()%1000));
 			}
 		}
+	}
 }
 
 bool CSmoke::LoadSmoke(int SmokeNum)
@@ -421,6 +424,8 @@ bool CSmoke::LoadSmoke(int SmokeNum)
 
 void CSmoke::DeleteCloud(void)
 {
+	if(CloudTexID==0)
+		return;
 	glDeleteLists(base,16);
 	glDeleteTextures(1,&CloudTexID);
 }
