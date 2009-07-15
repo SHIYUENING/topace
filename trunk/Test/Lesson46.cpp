@@ -529,8 +529,8 @@ void Draw (void)												// Draw The Scene
 	
 	DrawGround();
 	
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT1);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT1);
 	for(int i=0;i<ModelNumLoaded;i++)
 	{
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))

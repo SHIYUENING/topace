@@ -21,5 +21,6 @@ public:
 	bool IsSupportFBO;
 	void Draw(void);
 	void DrawSun(float x,float y,float z,int winwidth,int winheight);
+	unsigned int LoadTGAFile(char *filename);
 };
 #endif

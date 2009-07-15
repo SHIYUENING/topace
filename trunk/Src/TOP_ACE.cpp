@@ -2714,7 +2714,7 @@ void showloading(void)
 	glClear (GL_COLOR_BUFFER_BIT );
 	switch (needloadfile)
 	{
-	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures();break;
+	case 1:glPrint(16,16,"2/7 Loading Texture",0);LoadGLTextures(IsSupportFBO);break;
 	case 2:glPrint(16,16,"3/7 Loading Bom",0);PlaneBom[0].m_IsSupportFBO=IsSupportFBO;PlaneBom[0].InitBomType(0);break;
 	case 3:glPrint(16,16,"4/7 Loading Sky",0);SkyBox.IsSupportFBO=IsSupportFBO;SkyBox.Init();AmbientReflectiveTexture=SkyBox.SunCubeID;break;//Cloud.Init();
 	case 4:glPrint(16,16,"5/7 Loading Smoke",0);PSmokes.Init(1,GetPrivateProfileInt("Effect","Cloud",1,".\\set.ini"));break;

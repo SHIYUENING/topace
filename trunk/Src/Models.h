@@ -74,6 +74,10 @@ void LoadVBMDModels(bool IsSupportFBO)
 	ModelID_redarUI		=	m_VBMD ->Init("Data/redarUI",false);
 	ModelID_smoke		=	m_VBMD ->Init("Data/smoke",false);
 	ShowHPmodel			=	ModelID[2].Normal;
+	ModelID_Stage1Ship_Normal = m_VBMD ->Init("Data/models/Stage1/Ship");
+	ModelID_MavePart_Normal = ModelID[2].Normal;
+	if(!IsSupportFBO)
+		return;
 
 	sprintf(ModelFileName,"Data/models/%s/%s",ModelName,"Main");	ModelID_MavePart_Main	= m_VBMD ->Init(ModelFileName,true,0,true);
 	//sprintf(ModelFileName,"Data/models/%s/%s",ModelName,"BackL");	ModelID_MavePart_BackL	= m_VBMD ->Init(ModelFileName,false,0,true);
@@ -131,7 +135,7 @@ void LoadVBMDModels(bool IsSupportFBO)
 	ShowHPmodel=ModelID_MavePart_Normal;
 	PlayerMainModel=ModelID_MavePart_Main;
 
-	ModelID_Stage1Ship_Normal = m_VBMD ->Init("Data/models/Stage1/Ship");
+	
 	//ModelID_MavePart_Low	= m_VBMD ->Init("Data/models/mave/Low");
 
 
