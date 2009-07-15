@@ -20,7 +20,7 @@
 #include "Shader.h"
 // ROACH
 #include "arb_multisample.h"
-bool domulti = true;
+bool domulti = false;
 bool doangle = true;
 // ENDROACH
 
@@ -67,6 +67,9 @@ extern float eyePositionSea[3];
 extern GLuint AmbientReflectiveTexture;
 extern bool ShaderWater;// «∑Ò π”√shader
 GLuint SeaTexID=0;
+float globalAmbientGL[4]={0.3f,0.3f,0.3f,1.0f};
+float lightColor[4]={0.7f,0.7f,0.7f,1.0f};
+float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -349,8 +352,11 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glEnable(GL_TEXTURE_2D);
 
 	glEnable(GL_BLEND);
-	
-	
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,globalAmbientGL);
+	glLightfv(GL_LIGHT1,GL_DIFFUSE,lightColor);
+	glLightfv(GL_LIGHT1,GL_SPECULAR,lightColor);
 	MFighter.TranslateInternal(Vector3d(-1650,500,290));
 	MFighter.RotateInternal(Vector3d(0.0f, CRad(45), 0.0f));
 	QueryPerformanceCounter(&t1);
@@ -495,6 +501,12 @@ void DrawGround(void)
 }
 void Draw (void)												// Draw The Scene
 {
+	Vector3d tmp3d;
+	tmp3d=MView.Matrix() * Vector3d(0.0,100000.0,0.0) + MView.RefPos();
+	lightPosition[0]=(float)tmp3d(0);
+	lightPosition[1]=(float)tmp3d(1);
+	lightPosition[2]=(float)tmp3d(2);
+	glLightfv(GL_LIGHT1,GL_POSITION,lightPosition);
 	// ROACH
 	if(domulti)
 		glEnable(GL_MULTISAMPLE_ARB);							// Enable Our Multisampling
@@ -516,17 +528,23 @@ void Draw (void)												// Draw The Scene
 	DrawSky(MFighter);
 	
 	DrawGround();
-	glEnable(GL_BLEND);
+	
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT1);
 	for(int i=0;i<ModelNumLoaded;i++)
 	{
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
 		{
 			glDepthMask(GL_FALSE);
+			glEnable(GL_BLEND);
+			glDisable(GL_LIGHT1);
+			glDisable(GL_LIGHTING);
 		}
 
 		m_VBMD->ShowVBMD(pModelID[i]);
 	}
 	glDepthMask(GL_TRUE);
+	glEnable(GL_BLEND);
 /*
 	for(float i=-10;i<10;i++)
 		for(float j=-10;j<10;j++)

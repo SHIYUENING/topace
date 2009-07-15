@@ -103,7 +103,7 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 		WGL_STENCIL_BITS_ARB,0,
 		WGL_DOUBLE_BUFFER_ARB,GL_TRUE,
 		WGL_SAMPLE_BUFFERS_ARB,GL_TRUE,
-		WGL_SAMPLES_ARB,4,
+		WGL_SAMPLES_ARB,0,
 		0,0
 	};
 
@@ -119,7 +119,7 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 	}
 
 	// Our Pixel Format With 4 Samples Failed, Test For 2 Samples
-	iAttributes[19] = 2;
+	iAttributes[19] = 0;
 	valid = wglChoosePixelFormatARB(hDC,iAttributes,fAttributes,1,&pixelFormat,&numFormats);
 	if (valid && numFormats >= 1)
 	{
