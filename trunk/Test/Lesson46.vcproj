@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Md5Camera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\missle.cpp"
 				>
 			</File>
@@ -319,6 +323,10 @@
 			</File>
 			<File
 				RelativePath=".\Mathematics.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Md5Camera.h"
 				>
 			</File>
 			<File
