@@ -198,7 +198,7 @@ void glPrintW(float HUDx,float HUDy, bool locked)	// Where The Printing Happens
 void glPrintRedar(float Rx,float Ry, int TGTflag,float Renge)	// Where The Printing Happens
 {
 	
-	glBindTexture(GL_TEXTURE_2D, LockTexID);	
+	//glBindTexture(GL_TEXTURE_2D, LockTexID);	
 	
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
