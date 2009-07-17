@@ -424,10 +424,11 @@ bool CSmoke::LoadSmoke(int SmokeNum)
 
 void CSmoke::DeleteCloud(void)
 {
-	if(CloudTexID==0)
-		return;
-	glDeleteLists(base,16);
-	glDeleteTextures(1,&CloudTexID);
+
+	if(base!=0)
+		glDeleteLists(base,16);
+	if(CloudTexID!=0)
+		glDeleteTextures(1,&CloudTexID);
 }
 
 void CSmoke::DeleteSmoke(void)
