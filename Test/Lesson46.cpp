@@ -20,6 +20,7 @@
 #include "Shader.h"
 // ROACH
 #include "arb_multisample.h"
+#include "Md5Camera.h"
 bool domulti = false;
 bool doangle = true;
 // ENDROACH
@@ -70,6 +71,7 @@ GLuint SeaTexID=0;
 float globalAmbientGL[4]={0.3f,0.3f,0.3f,1.0f};
 float lightColor[4]={0.7f,0.7f,0.7f,1.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
+CMd5Camera CMd5CameraTest;
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -193,15 +195,8 @@ void LockFPS (void)
 	QueryPerformanceCounter(&t1);//测前跳动次数
 }
 
-BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
+void loadmodels()
 {
-	glewInit();
-	m_VBMD = new CLoadVBMD;
-	m_VBMD->m_IsSupportFBO=true;
-
-	//angle=-90.0f;
-	posX=posY=posZ=0;
-	//posY=-500.0f;
 	WIN32_FIND_DATA FindFileData = {0};
     char sTmp[256] = {0};
 
@@ -312,12 +307,26 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		FindClose(hFind);
 	}
 
+}
+BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
+{
+	glewInit();
+	m_VBMD = new CLoadVBMD;
+	m_VBMD->m_IsSupportFBO=true;
+
+	loadmodels();
+	//angle=-90.0f;
+	posX=posY=posZ=0;
+	//posY=-500.0f;
+	
 	InitCG();
 
 	SkyBox.Init();
 	AmbientReflectiveTexture=SkyBox.SunCubeID;
 	CDDS loadDDS;
 	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
+
+	CMd5CameraTest.LoadCamera("Data/123.md5camera");
 
 /*
 	modelID[0]=m_VBMD->Init("Data/Model/ddm_2");
