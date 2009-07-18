@@ -286,10 +286,6 @@ void CMd5Camera::readElements(std::ifstream &fin) {
       getNextToken(fin);
     else if ( str == "camera" )
       ReadFrames(fin);
-    else {
-      // invalid element
-      return;
-    }
   } // while ( not EOF )
 }
 
@@ -319,11 +315,27 @@ void CMd5Camera::ReadFrames(std::ifstream &fin)
 }
 
 
-void CMd5Camera::Play(float timeNow)
+void CMd5Camera::Play(double timeNow)
 {
-	float PlayTime=(timeNow-StartTime)*float(frameRate);
+	if(numFrames==0)
+		return;
+	float PlayTime=float(timeNow-StartTime)*float(frameRate);
 	if(PlayTime<0.0f)
 		return;
 	while(PlayTime>(numFrames-1))
 		PlayTime=PlayTime-(numFrames-1);
+
+	int FrameNum=int(PlayTime);
+	float FrameIn= PlayTime-FrameNum;
+	CameraPos[0]=ReadOneFrameUnit(FrameNum,0,FrameIn);
+	CameraPos[1]=ReadOneFrameUnit(FrameNum,1,FrameIn);
+	CameraPos[2]=ReadOneFrameUnit(FrameNum,2,FrameIn);
+	CameraView[0]=ReadOneFrameUnit(FrameNum,3,FrameIn);
+	CameraView[1]=ReadOneFrameUnit(FrameNum,4,FrameIn);
+	CameraView[2]=ReadOneFrameUnit(FrameNum,5,FrameIn);
+	CameraFOV=ReadOneFrameUnit(FrameNum,6,FrameIn);
+}
+float CMd5Camera::ReadOneFrameUnit(int FrameNum,int UnitNum,float FrameIn)
+{
+	return cameraFrames[FrameNum*7+UnitNum]+(cameraFrames[(FrameNum+1)*7+UnitNum]-cameraFrames[FrameNum*7+UnitNum])*FrameIn;
 }

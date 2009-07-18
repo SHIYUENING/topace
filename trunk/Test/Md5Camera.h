@@ -38,9 +38,13 @@ protected:
 	TOKEN getNextToken(std::ifstream &fin, std::string *tokStr=NULL);
 public:
 	void ReadFrames(std::ifstream &fin);
+	float ReadOneFrameUnit(int FrameNum,int UnitNum,float FrameIn);
 	float* cameraFrames;
 	void Reset(void);
-	void Play(float timeNow);
-	float StartTime;
+	void Play(double timeNow);
+	double StartTime;
+	float CameraPos[3];
+	float CameraView[3];
+	float CameraFOV;
 };
 #endif
