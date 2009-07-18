@@ -31,7 +31,7 @@ void Missledata::TurnTo(const Vector3d& Position){
 
     double rotateAngle = acos_s(dot(current, target));
 
-    UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
+    UDPstate.State.Rotate(rotateAxis * rotateAngle - UDPstate.AngleVelocity);
 	//UDPstate.Acceleration = UDMplane.Matrix() * Vector3d(0, 0, 1) * 35;
 	
 }

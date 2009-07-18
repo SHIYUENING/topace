@@ -9,6 +9,7 @@
 *                                     *
 **************************************/
 #include "Mathematics.h"
+#include "missle.h"
 #include "VBMD.h"	
 #include <windows.h>											// Header File For Windows
 #include <gl\gl.h>												// Header File For The OpenGL32 Library
@@ -49,6 +50,7 @@ int ModelNumWater=1;
 int ModelNumLoaded=0;
 int ModelNumLoadedWater=0;
 int ModelAlphaNumLoaded=0;
+int ballModelID=0;
 float angle= 0.75f;
 float angle2=0.0f;
 double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
@@ -72,6 +74,8 @@ float globalAmbientGL[4]={0.3f,0.3f,0.3f,1.0f};
 float lightColor[4]={0.7f,0.7f,0.7f,1.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 CMd5Camera CMd5CameraTest;
+Missledata ViewPos;
+Transform ViewTo;
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -139,7 +143,7 @@ void DrawFPS()
 	}
 	
 	g_nFrames++;											
-	sprintf( szTitle, "%4.8f time,%2.0d FPS %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2));
+	sprintf( szTitle, "%4.8f time,%2.0d FPS %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,angle,(float)ViewTo.RefPos()(0),(float)ViewTo.RefPos()(1),(float)ViewTo.RefPos()(2));
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
 }
 void Delay(__int64 Us)
@@ -214,7 +218,7 @@ void loadmodels()
 				char sTmp2[256] = {0};
 				char loadModelpathName[256] = {0};
 				int tmpi=0;
-				for(int i=0;i<strlen(FindFileData.cFileName);i++)
+				for(unsigned int i=0;i<strlen(FindFileData.cFileName);i++)
 				{
 					if(i<256)
 					{
@@ -253,7 +257,7 @@ void loadmodels()
 				char sTmp2[256] = {0};
 				char loadModelpathName[256] = {0};
 				int tmpi=0;
-				for(int i=0;i<strlen(FindFileData.cFileName);i++)
+				for(unsigned int i=0;i<strlen(FindFileData.cFileName);i++)
 				{
 					if(i<256)
 					{
@@ -286,7 +290,7 @@ void loadmodels()
 				char sTmp2[256] = {0};
 				char loadModelpathName[256] = {0};
 				int tmpi=0;
-				for(int i=0;i<strlen(FindFileData.cFileName);i++)
+				for(unsigned int i=0;i<strlen(FindFileData.cFileName);i++)
 				{
 					if(i<256)
 					{
@@ -307,6 +311,7 @@ void loadmodels()
 		FindClose(hFind);
 	}
 
+	ballModelID=m_VBMD->Init("Data/ball");
 }
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
 {
@@ -369,6 +374,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	MFighter.TranslateInternal(Vector3d(-1650,500,290));
 	MFighter.RotateInternal(Vector3d(0.0f, CRad(45), 0.0f));
 	QueryPerformanceCounter(&t1);
+	QueryPerformanceFrequency(&feq);
+	CMd5CameraTest.StartTime=double(t1.QuadPart)/double(feq.QuadPart);
 	return TRUE;												// Return TRUE (Initialization Successful)
 }
 
@@ -517,6 +524,8 @@ void Draw (void)												// Draw The Scene
 	lightPosition[2]=(float)tmp3d(2);
 	glLightfv(GL_LIGHT1,GL_POSITION,lightPosition);
 	// ROACH
+	QueryPerformanceCounter(&t3);
+	CMd5CameraTest.Play(double(t3.QuadPart)/double(feq.QuadPart));
 	if(domulti)
 		glEnable(GL_MULTISAMPLE_ARB);							// Enable Our Multisampling
 	// ENDROACH
@@ -526,14 +535,50 @@ void Draw (void)												// Draw The Scene
 	glLoadIdentity();											// Reset The View	
 	
 	//MFighter.Reset();
+	
+	ViewPos.UDMplane.Reset();
+	ViewPos.UDMplane.Translate(Vector3d(CMd5CameraTest.CameraPos[0],CMd5CameraTest.CameraPos[2],-CMd5CameraTest.CameraPos[1]));
+	//ViewTo=ViewPos.UDMplane;
+	//ViewTo.Reset();
+	//ViewTo.Translate(Vector3d(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]));
+	//ViewPos.UDPstate.MaxSpeed=0.0;
+	//ViewPos.UDPstate.MaxAngleSpeed=100.0;
+	//ViewPos.UDPstate.VelocityResistance=0.0;
+	//ViewPos.UDPstate.AngleVelocityResistance=0.1;
+	ViewPos.TurnTo(Vector3d(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]));
+	ViewPos.UDPstate.NextState();
+	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
+
+		Vector3d pos;
+	pos = ViewPos.UDMplane.RefPos();
+    Vector3d dir;
+    dir = ViewPos.UDMplane.Matrix() * Vector3d(0, 0, -1);
+    Vector3d dir2;
+    dir2 = ViewPos.UDMplane.Matrix() * Vector3d(1, 0, 0);
+    // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
+    double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
+    if (abs(r)>1){ r = 1.0f; }
+    double latitude = acos_s(r) * 180.0f / PI;
+    // longitude is the rotation angle against y-axis. longitude = ArcCos[dir[2] / Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[0]]
+    double longitude = acos_s(dir(2) / r) * 180.0f / PI;
+    if (dir(0) < 0){ longitude = -longitude; }
+    // rotation is the rotation angle against the fighter velocity. rotation = ArcCos[dir2 * xOz.FindIntersect[dir].Normalize] * Sign[dir2[1]]
+    double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
+    double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
+    if (dir2(1) < 0){ rotation = -rotation; }
+	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f,0.0f ,- CRad(rotation)));
+
+
 	MFighter.RotateInternal(Vector3d(CRad(angle2), 0.0f, 0.0f));
 	MFighter.RotateInternal(Vector3d(0.0f, -CRad(angle), 0.0f));
 	MFighter.TranslateInternal(Vector3d(posX,-posY,posZ));
+	MFighter=ViewPos.UDMplane;
 	//glRotatef(angle,1.f,0.f,0.f);
 	//glTranslatef(posX,posY,posZ);
 	//glRotatef(angle,0.f,1.f,0.f);
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
+	//glTranslated(CMd5CameraTest.CameraPos[0],CMd5CameraTest.CameraPos[1],CMd5CameraTest.CameraPos[2]);
 	DrawSky(MFighter);
 	
 	DrawGround();
@@ -544,16 +589,28 @@ void Draw (void)												// Draw The Scene
 	{
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
 		{
-			glDepthMask(GL_FALSE);
+			
 			glEnable(GL_BLEND);
-			glDisable(GL_LIGHT1);
-			glDisable(GL_LIGHTING);
+			glEnable(GL_ALPHA_TEST);
+			glAlphaFunc(GL_EQUAL, 1.0f);
+			//glDisable(GL_LIGHT1);
+			//glDisable(GL_LIGHTING);
 		}
 
 		m_VBMD->ShowVBMD(pModelID[i]);
 	}
+	glDepthMask(GL_FALSE);
+	glAlphaFunc(GL_NOTEQUAL, 1.0f);
+	for(int i=(ModelNumLoaded-ModelAlphaNumLoaded);i<ModelNumLoaded;i++)
+		m_VBMD->ShowVBMD(pModelID[i]);
+	
 	glDepthMask(GL_TRUE);
 	glEnable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
+	glPushMatrix();	
+	glTranslated(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]);
+	m_VBMD->ShowVBMD(ballModelID);
+	glPopMatrix();
 /*
 	for(float i=-10;i<10;i++)
 		for(float j=-10;j<10;j++)
