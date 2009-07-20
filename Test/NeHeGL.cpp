@@ -25,6 +25,7 @@ int	mouse_x, mouse_y;
 static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScreen/Windowed Toggle																		// Between Fullscreen / Windowed Mode
 static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
 int winwidth,winheight; 
+char * LoadCameraName=NULL;
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -382,6 +383,8 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	if(strlen(lpCmdLine)>0)
+		LoadCameraName=lpCmdLine;
 	Application			application;									// Application Structure
 	GL_Window			window;											// Window Structure
 	Keys				keys;											// Key Structure
