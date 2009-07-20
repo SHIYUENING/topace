@@ -41,6 +41,7 @@ GL_Window*	g_window;
 Keys*		g_keys;
 int			g_nFPS = 0, g_nFrames = 0;							// FPS and FPS Counter
 DWORD		g_dwLastFPS = 0;
+float movespeed=1.0f;
 char szTitle[256]={0};
 int modelID[16];
 int * pModelID=NULL;
@@ -52,6 +53,7 @@ int ModelNumLoadedWater=0;
 int ModelAlphaNumLoaded=0;
 int ballModelID=0;
 float angle= 0.75f;
+float Updown= 0.0f;
 float angle2=0.0f;
 double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
 double oneframetimeT=0.0;
@@ -60,6 +62,7 @@ CLoadVBMD *m_VBMD = NULL;//VBMD模型对象
 GLuint AsciiFontTexId;
 GLuint base;
 extern int winwidth,winheight;
+extern char * LoadCameraName;
 float posX,posY,posZ;
 Transform MView(Vector3d(0, 0, -40));//观察矩阵
 Transform MWorld;//世界矩阵
@@ -145,6 +148,10 @@ void DrawFPS()
 	g_nFrames++;											
 	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%3.0d MY%3.0d %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)ViewTo.RefPos()(0),(float)ViewTo.RefPos()(1),(float)ViewTo.RefPos()(2));
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
+	char ShowMoveSpeed[32]={0};
+	sprintf(ShowMoveSpeed,"Move Speed:%4.2f",movespeed);
+	glPrints(0,winheight-32,winwidth,winheight,ShowMoveSpeed);
+	
 }
 void Delay(__int64 Us)
 {
@@ -331,7 +338,9 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	CDDS loadDDS;
 	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
 
-	CMd5CameraTest.LoadCamera("Data/123.md5camera");
+	//CMd5CameraTest.LoadCamera("Data/123.md5camera");
+	CMd5CameraTest.LoadCamera(LoadCameraName);
+	
 
 	g_window	= window;
 	g_keys		= keys;
@@ -371,27 +380,37 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
-	angle=angle2=posX=posY=posZ=0.0f;
+	Updown=angle=angle2=posX=posY=posZ=0.0f;
 	if(g_keys->keyDown ['A'] == TRUE)
 		posX=-5.0f*(1.0f*doangle+0.05f);
+		//angle=-1.0f;
 	if(g_keys->keyDown ['D'] == TRUE)
+		//angle=+1.0f;
 		posX=+5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown ['W'] == TRUE)
-		posZ=-5.0f*(1.0f*doangle+0.05f);
+		posZ=-movespeed;
 	if(g_keys->keyDown ['S'] == TRUE)
-		posZ=+5.0f*(1.0f*doangle+0.05f);
+		posZ=+movespeed;
 	if(g_keys->keyDown [VK_LEFT] == TRUE)
 		angle=-1.0f;
 	if(g_keys->keyDown [VK_RIGHT] == TRUE)
 		angle=+1.0f;
 	if(g_keys->keyDown [VK_UP] == TRUE)
-		posY=-5.0f*(1.0f*doangle+0.05f);
+		Updown=-1.0f;
+		//posY=-5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown [VK_DOWN] == TRUE)
-		posY=+5.0f*(1.0f*doangle+0.05f);
+		Updown=+1.0f;
+		//posY=+5.0f*(1.0f*doangle+0.05f);
 	/*if(g_keys->keyDown ['Z'] == TRUE)
 		posZ=-10.0f;
 	if(g_keys->keyDown ['X'] == TRUE)
 		posZ=+10.0f;*/
+	if(g_keys->keyDown [VK_SUBTRACT] == TRUE)
+		movespeed=movespeed-0.025f;
+	if(g_keys->keyDown [VK_ADD] == TRUE)
+		movespeed=movespeed+0.025f;
+	if(movespeed<0.0f)
+		movespeed=0.0f;
 	// ROACH
 	if(g_keys->keyDown [VK_SPACE] == TRUE)
 		domulti=!domulti;
@@ -468,6 +487,24 @@ void DrawGround(void)
 		glPopMatrix();	
 	}
 }
+double Getrotation(Transform& Input)
+{
+	Vector3d pos;
+	pos = Input.RefPos();
+    Vector3d dir;
+    dir = Input.Matrix() * Vector3d(0, 0, -1);
+    Vector3d dir2;
+    dir2 = Input.Matrix() * Vector3d(1, 0, 0);
+    double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
+    if (abs(r)>1){ r = 1.0f; }
+    double latitude = acos_s(r) * 180.0f / PI;
+    double longitude = acos_s(dir(2) / r) * 180.0f / PI;
+    if (dir(0) < 0){ longitude = -longitude; }
+    double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
+    double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
+    if (dir2(1) < 0){ rotation = -rotation; }
+	return rotation;
+}
 void Draw (void)												// Draw The Scene
 {
 	Vector3d tmp3d;
@@ -496,7 +533,7 @@ void Draw (void)												// Draw The Scene
 	ViewPos.UDPstate.NextState();
 	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
 
-		Vector3d pos;
+	/*	Vector3d pos;
 	pos = ViewPos.UDMplane.RefPos();
     Vector3d dir;
     dir = ViewPos.UDMplane.Matrix() * Vector3d(0, 0, -1);
@@ -509,14 +546,16 @@ void Draw (void)												// Draw The Scene
     if (dir(0) < 0){ longitude = -longitude; }
     double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
-    if (dir2(1) < 0){ rotation = -rotation; }
-	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f,0.0f ,- CRad(rotation)));
+    if (dir2(1) < 0){ rotation = -rotation; }*/
+	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f,0.0f ,- CRad(Getrotation(ViewPos.UDMplane))));
 
 
-	MFighter.RotateInternal(Vector3d(CRad(angle2), 0.0f, 0.0f));
+	MFighter.RotateInternal(Vector3d(0.0f,0.0f ,- CRad(Getrotation(MFighter))));
+	MFighter.RotateInternal(Vector3d(CRad(Updown), 0.0f, 0.0f));
 	MFighter.RotateInternal(Vector3d(0.0f, -CRad(angle), 0.0f));
 	MFighter.TranslateInternal(Vector3d(posX,-posY,posZ));
-	//MFighter=ViewPos.UDMplane;
+	if(CMd5CameraTest.numFrames>0)
+		MFighter=ViewPos.UDMplane;
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
 	DrawSky(MFighter);
