@@ -143,7 +143,7 @@ void DrawFPS()
 	}
 	
 	g_nFrames++;											
-	sprintf( szTitle, "%4.8f time,%2.0d FPS %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,angle,(float)ViewTo.RefPos()(0),(float)ViewTo.RefPos()(1),(float)ViewTo.RefPos()(2));
+	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%3.0d MY%3.0d %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)ViewTo.RefPos()(0),(float)ViewTo.RefPos()(1),(float)ViewTo.RefPos()(2));
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
 }
 void Delay(__int64 Us)
@@ -333,20 +333,6 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	CMd5CameraTest.LoadCamera("Data/123.md5camera");
 
-/*
-	modelID[0]=m_VBMD->Init("Data/Model/ddm_2");
-	modelID[1]=m_VBMD->Init("Data/Model/model03_2");
-	modelID[2]=m_VBMD->Init("Data/Model/model03_12");
-	modelID[3]=m_VBMD->Init("Data/Model/model03_23");
-	modelID[4]=m_VBMD->Init("Data/Model/model03_52");
-	modelID[5]=m_VBMD->Init("Data/Model/model03_53");
-	modelID[6]=m_VBMD->Init("Data/Model/model03_54bbbbb");
-	modelID[7]=m_VBMD->Init("Data/Model/model03_55");
-	modelID[8]=m_VBMD->Init("Data/Model/model03_56");
-	modelID[9]=m_VBMD->Init("Data/Model/model03_57");
-	modelID[10]=m_VBMD->Init("Data/Model/model03_58");
-	modelID[11]=m_VBMD->Init("Data/Model/hill2");
-	modelID[12]=m_VBMD->Init("Data/Model/hill");*/
 	g_window	= window;
 	g_keys		= keys;
 
@@ -459,27 +445,10 @@ void DrawGround(void)
 	{
 		DrawSea();
 		glPushMatrix();
-			
-			//glScaled(100.0,50.0,100.0);
 			glDisable(GL_BLEND);
-			//m_VBMD->ShowVBMD(ModelID_SHAN);
-			//int mapx,mapz;
-			//mapx=int(MFighter.RefPos()(0))/40000;
-			//mapz=int(MFighter.RefPos()(2))/40000;
 			glBindTexture(GL_TEXTURE_2D,SeaTexID);
 			for(int i=0;i<ModelNumLoadedWater;i++)
 				m_VBMD->ShowVBMD(pModelIDWater[i],false);
-		/*	for(int i=-3;i<4;i++)
-				for(int j=-3;j<4;j++)
-				{
-					glBegin(GL_QUADS);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,1.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(0.0f,0.0f);glVertex3f(-25.0f+(i+mapx)*50.0f,0.0f,-25.0f+(j+mapz)*50.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,0.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f,-25.0f+(j+mapz)*50.0f);
-						glNormal3f(0.0f,1.0f,0.0f);glTexCoord2f(1.0f,1.0f);glVertex3f( 25.0f+(i+mapx)*50.0f,0.0f, 25.0f+(j+mapz)*50.0f);
-					glEnd();
-				}
-		*/
 		glPopMatrix();
 		CGDisableProfilePixel();
 		CGDisableProfileVertex();
@@ -489,27 +458,11 @@ void DrawGround(void)
 	{
 		glPushMatrix();
 			glEnable(GL_FOG);
-			//glScaled(100.0,50.0,100.0);
 			glDisable(GL_BLEND);
-			//m_VBMD->ShowVBMD(ModelID_SHAN);
-			//int mapx,mapz;
-			//mapx=int(MFighter.RefPos()(0))/40000;
-			//mapz=int(MFighter.RefPos()(2))/40000;
 			glBindTexture(GL_TEXTURE_2D,SeaTexID);
 			glColor4f(0.0f,0.2f,0.6f,1.0f);
 			for(int i=0;i<ModelNumLoadedWater;i++)
 				m_VBMD->ShowVBMD(pModelIDWater[i],false);
-			
-			/*for(int i=-3;i<4;i++)
-				for(int j=-3;j<4;j++)
-				{
-					glBegin(GL_QUADS);
-						glTexCoord2f( 0.0f,10.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
-						glTexCoord2f( 0.0f, 0.0f);glVertex3f(-20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(10.0f, 0.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f,-20.0f+(j+mapz)*40.0f);
-						glTexCoord2f(10.0f,10.0f);glVertex3f( 20.0f+(i+mapx)*40.0f,0.0f, 20.0f+(j+mapz)*40.0f);
-					glEnd();
-				}*/
 			glColor4f(1.0f,1.0f,1.0f,1.0f);
 			glDisable(GL_FOG);
 		glPopMatrix();	
@@ -538,13 +491,7 @@ void Draw (void)												// Draw The Scene
 	
 	ViewPos.UDMplane.Reset();
 	ViewPos.UDMplane.Translate(Vector3d(CMd5CameraTest.CameraPos[0],CMd5CameraTest.CameraPos[2],-CMd5CameraTest.CameraPos[1]));
-	//ViewTo=ViewPos.UDMplane;
-	//ViewTo.Reset();
-	//ViewTo.Translate(Vector3d(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]));
-	//ViewPos.UDPstate.MaxSpeed=0.0;
-	//ViewPos.UDPstate.MaxAngleSpeed=100.0;
-	//ViewPos.UDPstate.VelocityResistance=0.0;
-	//ViewPos.UDPstate.AngleVelocityResistance=0.1;
+
 	ViewPos.TurnTo(Vector3d(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]));
 	ViewPos.UDPstate.NextState();
 	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
@@ -555,14 +502,11 @@ void Draw (void)												// Draw The Scene
     dir = ViewPos.UDMplane.Matrix() * Vector3d(0, 0, -1);
     Vector3d dir2;
     dir2 = ViewPos.UDMplane.Matrix() * Vector3d(1, 0, 0);
-    // latitude is the angle between the fighter velocity and the ground (xOz). latitude = ArcCos[Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[1]]
     double r = sqrt(pow(dir(0), 2) + pow(dir(2), 2));
     if (abs(r)>1){ r = 1.0f; }
     double latitude = acos_s(r) * 180.0f / PI;
-    // longitude is the rotation angle against y-axis. longitude = ArcCos[dir[2] / Sqrt[dir[0] ^ 2 + dir[2] ^ 2]] * Sign[dir[0]]
     double longitude = acos_s(dir(2) / r) * 180.0f / PI;
     if (dir(0) < 0){ longitude = -longitude; }
-    // rotation is the rotation angle against the fighter velocity. rotation = ArcCos[dir2 * xOz.FindIntersect[dir].Normalize] * Sign[dir2[1]]
     double intersect[3] = {-dir(2) / r, 0, dir(0) / r};
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
@@ -572,13 +516,9 @@ void Draw (void)												// Draw The Scene
 	MFighter.RotateInternal(Vector3d(CRad(angle2), 0.0f, 0.0f));
 	MFighter.RotateInternal(Vector3d(0.0f, -CRad(angle), 0.0f));
 	MFighter.TranslateInternal(Vector3d(posX,-posY,posZ));
-	MFighter=ViewPos.UDMplane;
-	//glRotatef(angle,1.f,0.f,0.f);
-	//glTranslatef(posX,posY,posZ);
-	//glRotatef(angle,0.f,1.f,0.f);
+	//MFighter=ViewPos.UDMplane;
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
-	//glTranslated(CMd5CameraTest.CameraPos[0],CMd5CameraTest.CameraPos[1],CMd5CameraTest.CameraPos[2]);
 	DrawSky(MFighter);
 	
 	DrawGround();
@@ -611,22 +551,7 @@ void Draw (void)												// Draw The Scene
 	glTranslated(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]);
 	m_VBMD->ShowVBMD(ballModelID);
 	glPopMatrix();
-/*
-	for(float i=-10;i<10;i++)
-		for(float j=-10;j<10;j++)
-		{
-			glPushMatrix();
-			glTranslatef(i*2.0f,j*2.0f,-5.0f);
-			
-				glBegin(GL_QUADS);
-				glColor3f(1.0f,0.0f,0.0f);glVertex3f(i,j,0.0f);
-				glColor3f(0.0f,1.0f,0.0f);glVertex3f(i + 2.0f,j,0.0f);
-				glColor3f(0.0f,0.0f,1.0f);glVertex3f(i + 2.0f,j + 2.0f,0.0f);
-				glColor3f(1.0f,1.0f,1.0f);glVertex3f(i,j + 2.0f,0.0f);
-				glEnd();
-			glPopMatrix();
-		}
-*/
+
 	
 	if(!doangle)
 		angle-=0.5f;

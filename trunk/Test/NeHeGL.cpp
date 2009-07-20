@@ -21,7 +21,7 @@ BOOL CreateWindowGL (GL_Window* window);
 //ENDROACH
 
 #define WM_TOGGLEFULLSCREEN (WM_USER+1)									// Application Define Message For Toggling
-
+int	mouse_x, mouse_y;	
 static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScreen/Windowed Toggle																		// Between Fullscreen / Windowed Mode
 static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
 int winwidth,winheight; 
@@ -333,7 +333,22 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				return 0;												// Return
 			}
 		break;															// Break
-
+		case WM_LBUTTONDOWN:
+			{
+	            mouse_x = LOWORD(lParam);          
+				mouse_y = HIWORD(lParam);
+				RECT windowRECT;												// Storage For Window Dimensions
+				GetWindowRect (window->hWnd,&windowRECT);						// Get Window Dimensions
+				
+				SetCursorPos(windowRECT.left+winwidth/2, windowRECT.top+winheight/2);
+			}
+		break;
+		case WM_MOUSEMOVE:
+			{
+	            mouse_x = LOWORD(lParam);          
+				mouse_y = HIWORD(lParam);
+			}
+		break;
 		case WM_TOGGLEFULLSCREEN:										// Toggle FullScreen Mode On/Off
 			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessage (hWnd, WM_QUIT, 0, 0);
@@ -382,7 +397,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	ZeroMemory (&window, sizeof (GL_Window));							// Make Sure Memory Is Zeroed
 	window.keys					= &keys;								// Window Key Structure
 	window.init.application		= &application;							// Window Application
-	window.init.title			= "Lesson 46: NeHe & MainRoach's FSAA Tutorial)";	// Window Title
+	window.init.title			= "±¦ÈªÓªµØÐéÄâ";	// Window Title
 	window.init.width			= 800;									// Window Width
 	window.init.height			= 600;									// Window Height
 	window.init.bitsPerPixel	= 32;									// Bits Per Pixel

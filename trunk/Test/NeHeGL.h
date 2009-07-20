@@ -70,5 +70,7 @@ void Deinitialize (void);							// Performs All Your DeInitialization
 void Update (DWORD milliseconds);					// Perform Motion Updates
 
 void Draw (void);									// Perform All Your Scene Drawing
+extern int mouse_x;
+extern int mouse_y;
 
 #endif												// GL_FRAMEWORK__INCLUDED
