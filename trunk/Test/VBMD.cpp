@@ -363,8 +363,10 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 				glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
 				if(VBMD[MID].UseTangentArray)
 				{
+					glEnableClientState( GL_COLOR_ARRAY );
 					glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );
 					glColorPointer( 3, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
+					
 				}
 			}
 			else
@@ -376,6 +378,7 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 			// Render
 			glDrawArrays( GL_TRIANGLES, 0, VBMD[MID].VertexCount );	// Draw All Of The Triangles At Once
 
+			glDisableClientState( GL_COLOR_ARRAY );
 			// Disable Pointers
 			glDisableClientState( GL_VERTEX_ARRAY );					// Disable Vertex Arrays
 			glDisableClientState( GL_NORMAL_ARRAY );
