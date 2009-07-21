@@ -79,6 +79,7 @@ float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 CMd5Camera CMd5CameraTest;
 Missledata ViewPos;
 Transform ViewTo;
+double Getrotation(Transform& Input);
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -146,7 +147,7 @@ void DrawFPS()
 	}
 	
 	g_nFrames++;											
-	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%3.0d MY%3.0d %4.6f %4.6f %4.6f %4.6f" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)ViewTo.RefPos()(0),(float)ViewTo.RefPos()(1),(float)ViewTo.RefPos()(2));
+	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%4.0d MY%4.0d %4.2f %4.2f %4.2f %4.2f" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2));
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
 	char ShowMoveSpeed[32]={0};
 	sprintf(ShowMoveSpeed,"Move Speed:%4.2f",movespeed);
@@ -366,8 +367,14 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,globalAmbientGL);
 	glLightfv(GL_LIGHT1,GL_DIFFUSE,lightColor);
 	glLightfv(GL_LIGHT1,GL_SPECULAR,lightColor);
-	MFighter.TranslateInternal(Vector3d(-1650,500,290));
-	MFighter.RotateInternal(Vector3d(0.0f, CRad(45), 0.0f));
+	ViewPos.UDMplane.Reset();
+	ViewPos.UDMplane.TranslateInternal(Vector3d(1979.6632,-583.7316,-1310.2708));
+	ViewPos.TurnTo(Vector3d(1849.3800,-580.2999,-1313.8549));
+	ViewPos.UDPstate.NextState();
+	MFighter=ViewPos.UDMplane;
+	MFighter.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
+	MFighter.RotateInternal(Vector3d(0.0f,0.0f ,- CRad(Getrotation(MFighter))));
+	//MFighter.RotateInternal(Vector3d(0.0f, CRad(45), 0.0f));
 	QueryPerformanceCounter(&t1);
 	QueryPerformanceFrequency(&feq);
 	CMd5CameraTest.StartTime=double(t1.QuadPart)/double(feq.QuadPart);
@@ -382,11 +389,11 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
 	Updown=angle=angle2=posX=posY=posZ=0.0f;
 	if(g_keys->keyDown ['A'] == TRUE)
-		posX=-5.0f*(1.0f*doangle+0.05f);
+		posX=-movespeed;
 		//angle=-1.0f;
 	if(g_keys->keyDown ['D'] == TRUE)
 		//angle=+1.0f;
-		posX=+5.0f*(1.0f*doangle+0.05f);
+		posX=+movespeed;
 	if(g_keys->keyDown ['W'] == TRUE)
 		posZ=-movespeed;
 	if(g_keys->keyDown ['S'] == TRUE)

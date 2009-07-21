@@ -290,6 +290,8 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 		//*/
 	}
 
+	if(tangent)
+		VBMD[MID].UseTangentArray=true;
 	TotalMid=TotalMid+1;
 	BuildVBO(MID);
 	VBMD[MID].Islife=true;
