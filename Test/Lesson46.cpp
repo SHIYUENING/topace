@@ -568,7 +568,7 @@ void Draw (void)												// Draw The Scene
 	DrawSky(MFighter);
 	
 	DrawGround();
-	
+	//glDisable(GL_TEXTURE_2D);
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_LIGHT1);
 	for(int i=0;i<ModelNumLoaded;i++)
@@ -589,7 +589,7 @@ void Draw (void)												// Draw The Scene
 	glAlphaFunc(GL_NOTEQUAL, 1.0f);
 	for(int i=(ModelNumLoaded-ModelAlphaNumLoaded);i<ModelNumLoaded;i++)
 		m_VBMD->ShowVBMD(pModelID[i]);
-	
+	glColor3f(1.0f,1.0f,1.0f);
 	glDepthMask(GL_TRUE);
 	glEnable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
@@ -607,6 +607,7 @@ void Draw (void)												// Draw The Scene
 	// ROACH
 	if(domulti)
 		glDisable(GL_MULTISAMPLE_ARB);
+	glColor3f(1.0f,1.0f,1.0f);
 	DrawFPS();
 	// ENDROACH
 }
