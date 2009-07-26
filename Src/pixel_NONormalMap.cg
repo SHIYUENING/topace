@@ -63,7 +63,6 @@ pixel main(
 	float posz=colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0+0.70;
 	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient+IN.Light2color;
 
-
 	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
 	OUT.color.w=0.5;
 
