@@ -9,7 +9,7 @@ struct fragment
     float4 color0	:	COLOR0;
     float2 texcoord0	:	TEXCOORD0;
     float3 normal	:	TEXCOORD1;
-    float3 objectPos	:	TEXCOORD2;
+    float4 objectPos	:	TEXCOORD2;
 	float4 objectPos2	:	TEXCOORD3;
 };
 
@@ -51,8 +51,8 @@ pixel main(
 	objpos.x=IN.objectPos2.x/IN.objectPos2.w*1000;
 	objpos.y=IN.objectPos2.y/IN.objectPos2.w*500;
 	objpos.z=IN.objectPos2.z/IN.objectPos2.w*1000;
-	float3 V=normalize(eyePosition-objpos);
-	V=-V;
+	float3 V=normalize(objpos-eyePosition);
+	//V=-V;
 	float Fresnel2=min(IN.objectPos.z,100000);
 	Fresnel2=(100000-Fresnel2)/100000;
 	float eDotN = dot(V, N);
@@ -61,5 +61,6 @@ pixel main(
 	float Fresnel = (1 - eDotN);
 	Ocolor.xyz=Fresnel*reflection.xyz*0.3*Fresnel2+(1-fogb*0.9)*(1-Fresnel*0.7)*diffuse*globalAmbient+(1-fogb)*diffuse;
 	OUT.color = Ocolor*fogb+Ocolor2;
+	//OUT.color.xyz=V;
     return OUT;
 }

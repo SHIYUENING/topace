@@ -13,7 +13,7 @@ float4 position	:	POSITION;
 float3 oNormal	:	TEXCOORD1;
 float4 color0	:	COLOR0;
 float2 texcoord0	:	TEXCOORD0;
-float3 objectPos	:	TEXCOORD2;
+float4 objectPos	:	TEXCOORD2;
 float4 objectPos2	:	TEXCOORD3;
 };
 
