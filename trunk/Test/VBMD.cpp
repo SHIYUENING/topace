@@ -158,7 +158,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	fread(VBMD[MID].pNormals, 4*3, VBMD[MID].VertexCount, m_FilePointer);
 	fread(VBMD[MID].pVertices, 4*3, VBMD[MID].VertexCount, m_FilePointer);
 
-	bool tangent; //模型切线信息	
+	bool tangent=false; //模型切线信息	
 	if(filesize==16+Header.VertexCount*(4*3*2+4*2+4*3)) //读取切线信息	
 	{
 	fread(VBMD[MID].pTangent,4*3,VBMD[MID].VertexCount, m_FilePointer);
