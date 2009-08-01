@@ -214,7 +214,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 		}
 		char NormalTexDDSFileName[256] = {0};
 		sprintf(&NormalTexDDSFileName[0], "%s_N.dds", filename);
-		VBMD[MID].NormalTexID=ddsload.loadCompressedTexture(NormalTexDDSFileName);
+		VBMD[MID].NormalTexID=ddsload.loadCompressedTexture(NormalTexDDSFileName,GL_LINEAR);
 		if(VBMD[MID].NormalTexID>0)
 		{
 			VBMD[MID].UseTangentArray=true;

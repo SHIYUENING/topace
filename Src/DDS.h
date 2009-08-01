@@ -178,7 +178,7 @@ public:
 	CDDS(void);
 	~CDDS(void);
 	DDS_IMAGE_DATA* loadDDSTextureFile( const char *filename );
-	unsigned int loadCompressedTexture( const char *filename,GLint TexParameter=GL_LINEAR );
+	unsigned int loadCompressedTexture( const char *filename,GLint TexParameter=0 );
 	unsigned int g_compressedTextureID;
 };
 #endif
