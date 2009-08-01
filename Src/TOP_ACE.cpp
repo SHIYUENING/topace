@@ -116,7 +116,7 @@ void InitFogAndLight(void)
 
 	glCullFace(GL_BACK);
 	glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);						// Black Background
-	glClearDepth (10.0f);										// Depth Buffer Setup
+	glClearDepth (1.0f);										// Depth Buffer Setup
 	glDepthFunc (GL_LEQUAL);									// The Type Of Depth Testing (Less Or Equal)
 	glEnable (GL_DEPTH_TEST);									// Enable Depth Testing
 	glShadeModel (GL_SMOOTH);									// Select Smooth Shading
@@ -2484,8 +2484,11 @@ void DrawPlayer(void)
 					
 					//m_VBMD->ShowVBMD(PlayerMainModel);
 					
+					glBindTexture(GL_TEXTURE_2D, dtex);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 
-					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
 					m_VBMD->ShowVBMD(PlayerMainModel);
 /*					glPushMatrix();
 						glMultMatrixd(MavePart_BackL.Matrix4());
@@ -2541,6 +2544,9 @@ void DrawPlayer(void)
 					CGDisableTextureParameterAmbientReflective();
 					CGDisableTextureParameterNormalMap();
 					CGDisableTextureParameterSpecularMap();
+					glBindTexture(GL_TEXTURE_2D, dtex);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2783,6 +2789,9 @@ void DrawShadowMap(void)
 	}
 	if(IsSupportFBO)
 	{
+		//glBindTexture(GL_TEXTURE_2D, dtex);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
 		glClearColor (1.0f, 1.0f, 1.0f, 1.0f);	
 
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
@@ -2790,14 +2799,14 @@ void DrawShadowMap(void)
 		glPushAttrib(GL_VIEWPORT_BIT);
 		glViewport(0,0,1024, 1024);
 		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				//glPushMatrix();										
-					//glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-					//glPushMatrix();	
-					//	glLoadIdentity();									// Reset The Modelview Matrix
-					//	gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-					//		60.0f,315.0f);	
+				glPushMatrix();										
+					glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+					glPushMatrix();	
+						glLoadIdentity();									// Reset The Modelview Matrix
+						gluPerspective (60.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
+							60.0f,315.0f);	
 						//glOrtho(-50.0,50.0,-50.0,50.0,10,1000);	
-					//	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+						glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 						glPushMatrix();										// Store The Modelview Matrix
 																// Reset The Modelview Matrix
 							//glRotatef(-135.0f,0.0f,1.0f,0.0f);
@@ -2830,11 +2839,16 @@ void DrawShadowMap(void)
 							RenderShadowMap();
 							
 							GLfloat MVmatrix[16],Projmatrix[16];
+							GLfloat Biasmatrix[16]={0.5f, 0.0f, 0.0f, 0.0f,
+													0.0f, 0.5f, 0.0f, 0.0f,
+													0.0f, 0.0f, 0.5f, 0.0f,
+													0.5f, 0.5f, 0.5f, 1.0f};
 							glGetFloatv(GL_MODELVIEW_MATRIX,MVmatrix);
 							glGetFloatv(GL_PROJECTION_MATRIX,Projmatrix);
 							glPushMatrix();
 								glLoadIdentity();	
-								glLoadMatrixf(Projmatrix);
+								glLoadMatrixf(Biasmatrix);
+								glMultMatrixf(Projmatrix);
 								glMultMatrixf(MVmatrix);
 								glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapMVPmatrix);
 
@@ -2883,11 +2897,11 @@ void DrawShadowMap(void)
 							CGDisableProfilePixel();
 							CGDisableProfileVertex();
 						glPopMatrix();
-			//			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-			//		glPopMatrix();										// Restore The Old Projection Matrix
-			//		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+						glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+					glPopMatrix();										// Restore The Old Projection Matrix
+					glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 
-			//	glPopMatrix();										
+				glPopMatrix();										
 
 		glEnable(GL_BLEND);
 		/*

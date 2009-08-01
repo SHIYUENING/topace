@@ -36,8 +36,8 @@ fragment main(
 {
 	fragment OUT;
 	float4 objectPosShadowMap=mul( ShadowMapMVPmatrix, IN.position );
-	OUT.texcoord3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2)+0.5;
-	OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
+	//OUT.texcoord3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2)+0.5;
+	//OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
 	OUT.objectPos2 = objectPosShadowMap;
 
 	
