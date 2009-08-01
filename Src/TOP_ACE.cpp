@@ -2792,13 +2792,14 @@ void DrawShadowMap(void)
 		//glBindTexture(GL_TEXTURE_2D, dtex);
 		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
-		glClearColor (1.0f, 1.0f, 1.0f, 1.0f);	
+		//glClearColor (1.0f, 1.0f, 1.0f, 1.0f);	
 
+		glDisable(GL_TEXTURE_2D);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
 		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 		glPushAttrib(GL_VIEWPORT_BIT);
 		glViewport(0,0,1024, 1024);
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear (GL_DEPTH_BUFFER_BIT);
 				glPushMatrix();										
 					glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 					glPushMatrix();	
@@ -2836,7 +2837,7 @@ void DrawShadowMap(void)
 							//glRotatef(90.0f,1.0f,0.0f,0.0f);
 							//glRotatef(40.0f*2.05f+40.0f,0.0f,1.0f,0.0f);
 							glDisable(GL_BLEND);
-							RenderShadowMap();
+							//RenderShadowMap();
 							
 							GLfloat MVmatrix[16],Projmatrix[16];
 							GLfloat Biasmatrix[16]={0.5f, 0.0f, 0.0f, 0.0f,
@@ -2894,8 +2895,8 @@ void DrawShadowMap(void)
 							md5_jinyiL.render();
 							md5_jinyiR.render();
 							md5_MissleBox.render();
-							CGDisableProfilePixel();
-							CGDisableProfileVertex();
+							//CGDisableProfilePixel();
+							//CGDisableProfileVertex();
 						glPopMatrix();
 						glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 					glPopMatrix();										// Restore The Old Projection Matrix
@@ -2942,7 +2943,8 @@ void DrawShadowMap(void)
 		*/
 		glPopAttrib();
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
+		glEnable(GL_TEXTURE_2D);
+		//glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
 	}
 }
 /*
