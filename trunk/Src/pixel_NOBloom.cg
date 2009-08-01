@@ -53,7 +53,7 @@ pixel main(
 	NN2.x=(NN.x-0.5)*2.0;
 	NN2.y=(NN.y-0.5)*2.0;
 	NN2.z=(NN.z-0.5)*2.0;
-    float3 P = IN.position.xyz;
+    float3 P = IN.position.xyz/IN.position.w;
     float3 N = mul(NN2,TBN);
 
     float3 L = normalize(paraLightDirection-P);

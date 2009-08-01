@@ -142,7 +142,18 @@ unsigned int CDDS::loadCompressedTexture( const char *filename ,GLint TexParamet
         glGenTextures( 1, &g_compressedTextureID );
         glBindTexture( GL_TEXTURE_2D, g_compressedTextureID ); 
 
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TexParameter );
+		if(TexParameter!=0)
+		{
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TexParameter );
+		}
+		else
+		{
+			if(nNumMipMaps>1)
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+			else
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+
+		}
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); 
 
         int nSize;
