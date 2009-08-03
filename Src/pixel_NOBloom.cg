@@ -6,7 +6,7 @@
 struct fragment
 {
     float4 position	:	POSITION;
-    float3 color0	:	COLOR0;
+    float4 color0	:	COLOR0;
     float2 texcoord0	:	TEXCOORD0;
     float3 normal	:	TEXCOORD1;
     float4 objectPos	:	TEXCOORD2;
@@ -75,13 +75,14 @@ pixel main(
 
 
     if(diffuseLight<=0) specularLight=0;
-    
-    pixel OUT;
-	IN.objectPos2.z=IN.objectPos2.z-0.4;
-	float colorposZ=tex2Dproj( ShadowMapTexture, IN.objectPos2 ).r;
-	float4 Ocolor;
-    Ocolor.xyz = globalAmbient  +IN.Light2color+ (diffuse+specularLight*8*SpecularMapcolor.xyz)*colorposZ;
+    float4 Ocolor;
+    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8*SpecularMapcolor.xyz;
     Ocolor.w = 1.0;
+    pixel OUT;
+	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
+	float posz=colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0+0.70;
+	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient +IN.Light2color;
+
 	float4 R2;
 	R2.xyz= reflect((eyePosition-IN.objectPos.xyz/IN.objectPos.w), N);
 	R2.w=0;
@@ -90,5 +91,6 @@ pixel main(
 	//OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor*0.3;
 	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*(texCUBE( AmbientReflectiveTexture, R2)+1.0);
 	OUT.color.w=0.5;
+
     return OUT;
 }

@@ -2484,11 +2484,17 @@ void DrawPlayer(void)
 					
 					//m_VBMD->ShowVBMD(PlayerMainModel);
 					
-					glBindTexture(GL_TEXTURE_2D, dtex);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
-
-					shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+					if(UseHighShadow)
+					{
+						glBindTexture(GL_TEXTURE_2D, dtex);
+						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
+					}
+					if(UseHighShadow)
+						shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+					else
+						shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+					
 					m_VBMD->ShowVBMD(PlayerMainModel);
 /*					glPushMatrix();
 						glMultMatrixd(MavePart_BackL.Matrix4());
@@ -2544,9 +2550,12 @@ void DrawPlayer(void)
 					CGDisableTextureParameterAmbientReflective();
 					CGDisableTextureParameterNormalMap();
 					CGDisableTextureParameterSpecularMap();
-					glBindTexture(GL_TEXTURE_2D, dtex);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
-					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+					if(UseHighShadow)
+					{
+						glBindTexture(GL_TEXTURE_2D, dtex);
+						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+					}
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2837,8 +2846,6 @@ void DrawShadowMap(void)
 							//glRotatef(90.0f,1.0f,0.0f,0.0f);
 							//glRotatef(40.0f*2.05f+40.0f,0.0f,1.0f,0.0f);
 							glDisable(GL_BLEND);
-							//RenderShadowMap();
-							
 							GLfloat MVmatrix[16],Projmatrix[16];
 							GLfloat Biasmatrix[16]={0.5f, 0.0f, 0.0f, 0.0f,
 													0.0f, 0.5f, 0.0f, 0.0f,
@@ -2846,14 +2853,28 @@ void DrawShadowMap(void)
 													0.5f, 0.5f, 0.5f, 1.0f};
 							glGetFloatv(GL_MODELVIEW_MATRIX,MVmatrix);
 							glGetFloatv(GL_PROJECTION_MATRIX,Projmatrix);
-							glPushMatrix();
-								glLoadIdentity();	
-								glLoadMatrixf(Biasmatrix);
-								glMultMatrixf(Projmatrix);
-								glMultMatrixf(MVmatrix);
-								glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapMVPmatrix);
+							if(UseHighShadow)
+							{
+								glPushMatrix();
+									glLoadIdentity();	
+									glLoadMatrixf(Biasmatrix);
+									glMultMatrixf(Projmatrix);
+									glMultMatrixf(MVmatrix);
+									glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapMVPmatrix);
+								glPopMatrix();
+							}
+							else
+							{
+								glPushMatrix();
+									glLoadIdentity();	
+									glLoadMatrixf(Projmatrix);
+									glMultMatrixf(MVmatrix);
+									glGetFloatv(GL_MODELVIEW_MATRIX,ShadowMapMVPmatrix);
+								glPopMatrix();
+								RenderShadowMap();
+							}
 
-							glPopMatrix();
+							
 							//m_VBMD->ShowVBMD(PlayerMainModel);
 							m_VBMD->ShowVBMD(PlayerMainModel);
 	/*						glPushMatrix();
@@ -2895,8 +2916,11 @@ void DrawShadowMap(void)
 							md5_jinyiL.render();
 							md5_jinyiR.render();
 							md5_MissleBox.render();
-							//CGDisableProfilePixel();
-							//CGDisableProfileVertex();
+							if(!UseHighShadow)
+							{
+								CGDisableProfilePixel();
+								CGDisableProfileVertex();
+							}
 						glPopMatrix();
 						glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 					glPopMatrix();										// Restore The Old Projection Matrix
