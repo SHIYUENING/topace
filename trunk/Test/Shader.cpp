@@ -16,7 +16,7 @@ CGparameter cg_globalAmbient;
 CGparameter cg_lightColor;
 CGparameter cg_lightPosition;
 CGparameter cg_eyePosition;
-
+float seatime=0.0f;
 
 float LightSunPos[3];
 float globalAmbient[4]={0.5f,0.5f,0.5f,1.0f};
@@ -70,6 +70,9 @@ void InitCG()
 void DrawSea()
 {
 	
+	seatime=seatime+1.0f/240.0f;
+	if(seatime>1.0f)
+		seatime=seatime-1.0f;
 		g_CGparam_AmbientReflectiveSea = cgGetNamedParameter(g_Sea_pixel, "AmbientReflectiveTexturSea");
 		cgGLSetTextureParameter( g_CGparam_AmbientReflectiveSea, AmbientReflectiveTexture );
 
@@ -78,7 +81,7 @@ void DrawSea()
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightDirection" ), LightSunPos);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "eyePosition"), eyePositionSea);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "FogColor"), pixelfogColor);
-		//cgSetParameter1f(cgGetNamedParameter( g_Sea_pixel, "time"), seatime);
+		cgSetParameter1f(cgGetNamedParameter( g_Sea_pixel, "time"), seatime);
 		cgGLBindProgram( g_Sea_vertex );
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_Sea_pixel );
