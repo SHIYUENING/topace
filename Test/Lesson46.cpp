@@ -581,18 +581,19 @@ void Draw (void)												// Draw The Scene
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
 		{
 			
-			glEnable(GL_BLEND);
+			
 			glEnable(GL_ALPHA_TEST);
-			glAlphaFunc(GL_EQUAL, 1.0f);
+			glAlphaFunc(GL_GEQUAL, 0.9f);
 			//glDisable(GL_LIGHT1);
 			//glDisable(GL_LIGHTING);
 		}
 
 		m_VBMD->ShowVBMD(pModelID[i]);
 	}
+	glEnable(GL_BLEND);
 	glDepthMask(GL_FALSE);
 	DrawGround();
-	glAlphaFunc(GL_NOTEQUAL, 1.0f);
+	glAlphaFunc(GL_LESS, 0.9f);
 	for(int i=(ModelNumLoaded-ModelAlphaNumLoaded);i<ModelNumLoaded;i++)
 		m_VBMD->ShowVBMD(pModelID[i]);
 	glColor3f(1.0f,1.0f,1.0f);
