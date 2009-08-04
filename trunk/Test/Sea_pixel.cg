@@ -7,10 +7,11 @@ struct fragment
 {
     float4 position	:	POSITION;
     float4 color0	:	COLOR0;
-    float2 texcoord0	:	TEXCOORD0;
-    float3 normal	:	TEXCOORD1;
-    float3 objectPos	:	TEXCOORD2;
-	float4 objectPos2	:	TEXCOORD3;
+    float4 objectPos2	:	TEXCOORD0;
+	float2 TexCoord1	:	TEXCOORD1;
+	float2 TexCoord2	:	TEXCOORD2;
+	float2 TexCoord3	:	TEXCOORD3;
+	float2 TexCoord4	:	TEXCOORD4;
 };
 
 struct pixel
@@ -25,45 +26,49 @@ pixel main(
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
 	uniform float3	FogColor,
-	uniform float	time,
+	//uniform float	time,
     uniform sampler2D	testTexture,
 	uniform samplerCUBE	AmbientReflectiveTexturSea
 )
 {
 
-	float2 TT;
-	TT.x=0;
-	TT.y=time;
-    float3 NN =tex2D( testTexture, IN.texcoord0*7+TT)*0.5+tex2D( testTexture, IN.texcoord0*5+TT)*0.5;
-	float3 N;
-	N.x=(NN.x-0.5)*2.0;
-	N.y=(NN.z-0.5)*1.0;
-	N.z=(NN.y-0.5)*2.0;
+float3 vBumpTexA = tex2D(testTexture, IN.TexCoord1).xyz;
+float3 vBumpTexB = tex2D(testTexture, IN.TexCoord2).xyz;
+float3 vBumpTexC = tex2D(testTexture, IN.TexCoord3).xyz;
+float3 vBumpTexD = tex2D(testTexture, IN.TexCoord4).xyz;
+
+// Average bump layers
+float3 N = normalize(2.0 * (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)-4.0);
+float3 vReflBump = N * float3(0.9, 0.9, 1.0);
+
+
     float3 diffuse;
-	diffuse.r=0.25;
-	diffuse.g=1.0;
-	diffuse.b=0.5;
-	float fogb=min((10000-IN.objectPos.z)/7000,1.0);
+	diffuse.r=0.0;
+	diffuse.g=0.0;
+	diffuse.b=1.0;
+
     float4 Ocolor;
     Ocolor.w = 1.0;
     pixel OUT;
-	float4 Ocolor2;
-	Ocolor2.xyz=(1-fogb)*FogColor;
-	Ocolor2.w=(1-fogb);
+
 	float3 objpos;
-	objpos.x=IN.objectPos2.x/IN.objectPos2.w;
-	objpos.y=IN.objectPos2.y/IN.objectPos2.w;
-	objpos.z=IN.objectPos2.z/IN.objectPos2.w;
+	objpos.x=IN.objectPos2.x;
+	objpos.y=IN.objectPos2.y;
+	objpos.z=IN.objectPos2.z;
 	float3 V=normalize(eyePosition-objpos);
 	V=-V;
-	float Fresnel2=min(IN.objectPos.z,10000);
-	Fresnel2=(10000-Fresnel2)/10000;
-	float eDotN = dot(V, N);
-	float3 vEyeReflected = reflect(V, N);
+
+	float eDotN = max(dot(V, vReflBump),0.0);
+	float3 vEyeReflected = reflect(V, vReflBump);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
-	float Fresnel = (1 - eDotN);
+	//float Fresnel = (1 - eDotN);
+
+	// Compute Fresnel term
+float NdotL = max( dot(V, vReflBump), 0.0);
+float facing = (1.0 - NdotL);
+float Fresnel = max( 0.2 + 0.8 * pow(facing, 5.0), 0.0 );
 	Ocolor.xyz=Fresnel*reflection.xyz*(1-globalAmbient)+(1-Fresnel)*diffuse*globalAmbient;
-	OUT.color = Ocolor*fogb+Ocolor2;
+	OUT.color = Ocolor;
 	float tmpG=OUT.color.g;
 	float tmpB=OUT.color.b;
 	OUT.color.g=tmpB;

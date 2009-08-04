@@ -2,6 +2,7 @@
 #include <Cg/cgGL.h>
 #include "Shader.h"
 #include <stdio.h>	
+#include <windows.h>
 GLuint AmbientReflectiveTexture;
 bool ShaderWater=true;
 CGprofile   g_CGprofile_vertex;
@@ -57,22 +58,30 @@ void InitCG()
 												g_CGprofile_vertex,
 												NULL,
 												NULL );
+	cgGLLoadProgram(g_Sea_vertex);
+	CGerror GetCGerror=cgGetError();
+	if(GetCGerror!=CG_NO_ERROR)
+		MessageBox (HWND_DESKTOP, "vertex shader Error!", "Error", MB_OK | MB_ICONEXCLAMATION);
 	g_Sea_pixel = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"Sea_pixel.cg",
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
-	cgGLLoadProgram(g_Sea_vertex);
+
 	cgGLLoadProgram(g_Sea_pixel);
+	GetCGerror=cgGetError();
+	if(GetCGerror!=CG_NO_ERROR)
+		MessageBox (HWND_DESKTOP, "pixel shader Error!", "Error", MB_OK | MB_ICONEXCLAMATION);
 } 
 
 void DrawSea()
 {
 	
-	seatime=seatime+1.0f/240.0f;
+	seatime=seatime+1.0f/2400.0f;
 	if(seatime>1.0f)
 		seatime=seatime-1.0f;
+		cgSetParameter1f(cgGetNamedParameter( g_Sea_vertex, "time"), seatime);
 		g_CGparam_AmbientReflectiveSea = cgGetNamedParameter(g_Sea_pixel, "AmbientReflectiveTexturSea");
 		cgGLSetTextureParameter( g_CGparam_AmbientReflectiveSea, AmbientReflectiveTexture );
 
@@ -81,7 +90,7 @@ void DrawSea()
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "paraLightDirection" ), LightSunPos);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "eyePosition"), eyePositionSea);
 		cgSetParameter3fv(cgGetNamedParameter( g_Sea_pixel, "FogColor"), pixelfogColor);
-		cgSetParameter1f(cgGetNamedParameter( g_Sea_pixel, "time"), seatime);
+		//cgSetParameter1f(cgGetNamedParameter( g_Sea_pixel, "time"), seatime);
 		cgGLBindProgram( g_Sea_vertex );
 		cgGLEnableProfile( g_CGprofile_vertex );
 		cgGLBindProgram( g_Sea_pixel );
