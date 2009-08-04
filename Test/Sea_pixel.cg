@@ -25,13 +25,16 @@ pixel main(
     uniform float3	paraLightDirection,
     uniform float3	eyePosition,
 	uniform float3	FogColor,
-	//uniform float	time,
+	uniform float	time,
     uniform sampler2D	testTexture,
 	uniform samplerCUBE	AmbientReflectiveTexturSea
 )
 {
 
-    float3 NN =tex2D( testTexture, IN.texcoord0*3)*0.5+tex2D( testTexture, IN.texcoord0*2)*0.5;
+	float2 TT;
+	TT.x=0;
+	TT.y=time;
+    float3 NN =tex2D( testTexture, IN.texcoord0*7+TT)*0.5+tex2D( testTexture, IN.texcoord0*5+TT)*0.5;
 	float3 N;
 	N.x=(NN.x-0.5)*2.0;
 	N.y=(NN.z-0.5)*1.0;
@@ -59,11 +62,12 @@ pixel main(
 	float3 vEyeReflected = reflect(V, N);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
 	float Fresnel = (1 - eDotN);
-	Ocolor.xyz=Fresnel*reflection.xyz*(1-globalAmbient)+(1-fogb)*(1-Fresnel)*diffuse*globalAmbient;
+	Ocolor.xyz=Fresnel*reflection.xyz*(1-globalAmbient)+(1-Fresnel)*diffuse*globalAmbient;
 	OUT.color = Ocolor*fogb+Ocolor2;
 	float tmpG=OUT.color.g;
 	float tmpB=OUT.color.b;
 	OUT.color.g=tmpB;
 	OUT.color.b=tmpG;
+	OUT.color.a=(tmpG+tmpB+OUT.color.r)*4.0;
     return OUT;
 }

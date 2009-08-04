@@ -469,9 +469,12 @@ void DrawGround(void)
 
 	if(ShaderWater)
 	{
+		glDisable(GL_ALPHA_TEST);
+		glEnable(GL_BLEND);
+		glColor4f(1.0f,1.0f,1.0f,1.0f);
 		DrawSea();
 		glPushMatrix();
-			glDisable(GL_BLEND);
+			//glDisable(GL_BLEND);
 			glBindTexture(GL_TEXTURE_2D,SeaTexID);
 			for(int i=0;i<ModelNumLoadedWater;i++)
 				m_VBMD->ShowVBMD(pModelIDWater[i],false);
@@ -479,6 +482,7 @@ void DrawGround(void)
 		CGDisableProfilePixel();
 		CGDisableProfileVertex();
 		CGDisableTextureParameterAmbientReflectiveSea();
+		glEnable(GL_ALPHA_TEST);
 	}
 	else
 	{
@@ -567,10 +571,11 @@ void Draw (void)												// Draw The Scene
 	glLoadMatrixd(MView.Matrix4());
 	DrawSky(MFighter);
 	
-	DrawGround();
+	
 	//glDisable(GL_TEXTURE_2D);
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_LIGHT1);
+	glDisable(GL_BLEND);
 	for(int i=0;i<ModelNumLoaded;i++)
 	{
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
@@ -586,6 +591,7 @@ void Draw (void)												// Draw The Scene
 		m_VBMD->ShowVBMD(pModelID[i]);
 	}
 	glDepthMask(GL_FALSE);
+	DrawGround();
 	glAlphaFunc(GL_NOTEQUAL, 1.0f);
 	for(int i=(ModelNumLoaded-ModelAlphaNumLoaded);i<ModelNumLoaded;i++)
 		m_VBMD->ShowVBMD(pModelID[i]);
@@ -593,10 +599,10 @@ void Draw (void)												// Draw The Scene
 	glDepthMask(GL_TRUE);
 	glEnable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
-	glPushMatrix();	
-	glTranslated(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]);
-	m_VBMD->ShowVBMD(ballModelID);
-	glPopMatrix();
+	//glPushMatrix();	
+	//glTranslated(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]);
+	//m_VBMD->ShowVBMD(ballModelID);
+	//glPopMatrix();
 
 	
 	if(!doangle)
