@@ -52,6 +52,7 @@ int ModelNumLoaded=0;
 int ModelNumLoadedWater=0;
 int ModelAlphaNumLoaded=0;
 int ballModelID=0;
+int UImodelTest=0;
 float angle= 0.75f;
 float Updown= 0.0f;
 float angle2=0.0f;
@@ -320,6 +321,7 @@ void loadmodels()
 	}
 
 	ballModelID=m_VBMD->Init("Data/ball");
+	UImodelTest=m_VBMD->Init("Data/ta1");
 }
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
 {
@@ -361,6 +363,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
 	glEnable(GL_TEXTURE_2D);
 
+
+	glCullFace(GL_BACK);
 	glEnable(GL_BLEND);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
@@ -516,6 +520,32 @@ double Getrotation(Transform& Input)
     if (dir2(1) < 0){ rotation = -rotation; }
 	return rotation;
 }
+void DrawUI(void)
+{
+	GLint DRX=(GLint)(winwidth/2.0f);
+	GLint DRY=(GLint)(winheight/2.0f);
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(-DRX,DRX,-DRY,DRY,-1000,1000);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	glEnable(GL_BLEND);
+	//glScaled(0.7, 0.7, 1.0);
+	//glRotated(-rotation,0.0f,0.0f,1.0f);
+
+	m_VBMD->ShowVBMD(UImodelTest);
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+
+
+}
 void Draw (void)												// Draw The Scene
 {
 	Vector3d tmp3d;
@@ -576,12 +606,13 @@ void Draw (void)												// Draw The Scene
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_LIGHT1);
 	glDisable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
 	for(int i=0;i<ModelNumLoaded;i++)
 	{
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
 		{
 			
-			
+			glDisable(GL_CULL_FACE);
 			glEnable(GL_ALPHA_TEST);
 			glAlphaFunc(GL_GEQUAL, 0.9f);
 			//glDisable(GL_LIGHT1);
@@ -605,7 +636,7 @@ void Draw (void)												// Draw The Scene
 	//m_VBMD->ShowVBMD(ballModelID);
 	//glPopMatrix();
 
-	
+	DrawUI();
 	if(!doangle)
 		angle-=0.5f;
 
