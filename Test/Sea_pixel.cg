@@ -38,8 +38,8 @@ pixel main(
 	N.z=(NN.y-0.5)*2.0;
     float3 diffuse;
 	diffuse.r=0.25;
-	diffuse.g=0.5;
-	diffuse.b=1.0;
+	diffuse.g=1.0;
+	diffuse.b=0.5;
 	float fogb=min((10000-IN.objectPos.z)/7000,1.0);
     float4 Ocolor;
     Ocolor.w = 1.0;
@@ -59,7 +59,11 @@ pixel main(
 	float3 vEyeReflected = reflect(V, N);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
 	float Fresnel = (1 - eDotN);
-	Ocolor.xyz=Fresnel*reflection.xyz*0.3*Fresnel2+(1-fogb*0.9)*(1-Fresnel*0.7)*diffuse*globalAmbient+(1-fogb)*diffuse;
+	Ocolor.xyz=Fresnel*reflection.xyz*(1-globalAmbient)+(1-fogb)*(1-Fresnel)*diffuse*globalAmbient;
 	OUT.color = Ocolor*fogb+Ocolor2;
+	float tmpG=OUT.color.g;
+	float tmpB=OUT.color.b;
+	OUT.color.g=tmpB;
+	OUT.color.b=tmpG;
     return OUT;
 }
