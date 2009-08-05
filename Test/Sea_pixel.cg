@@ -40,7 +40,7 @@ pixel main(
 	// Average bump layers
 	float3 N = (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)/4;
 	float3 vReflBump = float3((N.x-0.5)*2.0,(N.z-0.5)*2.0,(N.y-0.5)*2.0);
-    float3 diffuse=float3(0.0,0.1,0.75);
+    float3 diffuse=float3(0.0,0.75,0.1);
 	float3 V=-normalize(IN.objectPos2-eyePosition);
 	float3 vEyeReflected = reflect(V, vReflBump);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
