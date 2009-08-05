@@ -3050,7 +3050,7 @@ void DrawGround(void)
 		DrawSea();
 		glPushMatrix();
 			
-			glScaled(1000.0,500.0,1000.0);
+			glScaled(1000.0,1000.0,1000.0);
 			glDisable(GL_BLEND);
 			//m_VBMD->ShowVBMD(ModelID_SHAN);
 			int mapx,mapz;
