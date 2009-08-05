@@ -55,7 +55,7 @@ pixel main(
 	float tmpB=OUT.color.b;
 	OUT.color.g=tmpB;
 	OUT.color.b=tmpG;*/
-	OUT.color.a=1.0;
+	OUT.color.a=Fresnel*7;
 	//OUT.color.xyz=light;
     return OUT;
 }
