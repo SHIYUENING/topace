@@ -3047,7 +3047,7 @@ void DrawGround(void)
 	glDisable(GL_FOG);
 	if(ShaderWater)
 	{
-		DrawSea();
+		DrawSea(oneframetimelimit);
 		glPushMatrix();
 			
 			glScaled(1000.0,1000.0,1000.0);
