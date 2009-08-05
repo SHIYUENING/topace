@@ -6,7 +6,7 @@ void InitCG();
 // π”√shader
 void RenderShadowMap();
 void shaderT(int NormalTex=0,int SpecularTex=0,int ShadowMapTexID=0,float HDlight=1.0f);
-void DrawSea();
+void DrawSea(float seaframe=1.0f);
 void DrawBloomMap(int WinW,int WinH);
 void DrawBloomW(int WinW);
 void DrawBloomH(int WinH);

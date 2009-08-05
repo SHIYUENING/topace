@@ -445,9 +445,9 @@ void BasicLight()
 	//cgGLDisableProfile( g_CGprofile_vertex );
 }
 */
-void DrawSea()
+void DrawSea(float seaframe)
 {
-	seatime=seatime+1.0f/2400.0f;
+	seatime=seatime+1.0f*seaframe/100.0f;
 	if(seatime>1.0f)
 		seatime=seatime-1.0f;
 	cgSetParameter1f(cgGetNamedParameter( g_Sea_vertex, "time"), seatime);
