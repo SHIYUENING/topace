@@ -261,7 +261,7 @@ void InitCG()
 		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	cgGLLoadProgram( g_CGpixel_NOBloom  );
 	CGerror GetCGerror=cgGetError();
-	if(GetCGerror==CG_PROGRAM_LOAD_ERROR)
+	if(GetCGerror!=CG_NO_ERROR)
 	{
 		UseHighShadow=false;
 		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
@@ -447,7 +447,10 @@ void BasicLight()
 */
 void DrawSea()
 {
-	
+	seatime=seatime+1.0f/2400.0f;
+	if(seatime>1.0f)
+		seatime=seatime-1.0f;
+	cgSetParameter1f(cgGetNamedParameter( g_Sea_vertex, "time"), seatime);
 		g_CGparam_AmbientReflectiveSea = cgGetNamedParameter(g_Sea_pixel, "AmbientReflectiveTexturSea");
 		cgGLSetTextureParameter( g_CGparam_AmbientReflectiveSea, AmbientReflectiveTexture );
 
