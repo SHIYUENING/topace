@@ -22,7 +22,7 @@ float seatime=0.0f;
 float LightSunPos[3];
 float globalAmbient[4]={0.5f,0.5f,0.5f,1.0f};
 float paraLightColor[4]={0.5f,0.5f,0.5f,1.0f};
-float paraLightDirection[3]={0.5f,1000000.0f,0.5f};
+float paraLightDirection[3]={1000000.0f,1000000.0f,1000000.0f};
 float eyePositionSea[3]={0.0f, 150.0f, 30.0f};
 float pixelfogColor[3]={0.5f,0.5f,0.5f};
 void InitCG()
