@@ -33,10 +33,10 @@ pixel main(
 )
 {
 
-	float3 vBumpTexA = tex2D(testTexture, IN.TexCoord1*4).xyz;
-	float3 vBumpTexB = tex2D(testTexture, IN.TexCoord2*4).xyz;
-	float3 vBumpTexC = tex2D(testTexture, IN.TexCoord3*4).xyz;
-	float3 vBumpTexD = tex2D(testTexture, IN.TexCoord4*4).xyz;
+	float3 vBumpTexA = tex2D(testTexture, IN.TexCoord1).xyz;
+	float3 vBumpTexB = tex2D(testTexture, IN.TexCoord2).xyz;
+	float3 vBumpTexC = tex2D(testTexture, IN.TexCoord3).xyz;
+	float3 vBumpTexD = tex2D(testTexture, IN.TexCoord4).xyz;
 
 	// Average bump layers
 	float3 N = (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)/4;
@@ -54,7 +54,7 @@ pixel main(
 	float3 H = normalize(L + V);
 	float specularLight = pow(max(dot(normalize(vReflBump), H), 0), 1000.0);
 	pixel OUT;
-	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor;
+	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor*4;
 	float fogb=min((100000-IN.objectPos.z)/70000,1.0);
 	OUT.color.xyz=OUT.color.xyz*fogb+(1-fogb)*FogColor;
 
