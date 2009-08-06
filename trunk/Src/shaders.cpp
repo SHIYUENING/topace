@@ -447,7 +447,7 @@ void BasicLight()
 */
 void DrawSea(float seaframe)
 {
-	seatime=seatime+1.0f*seaframe/100.0f;
+	seatime=seatime+seaframe/200.0f;
 	if(seatime>1.0f)
 		seatime=seatime-1.0f;
 	cgSetParameter1f(cgGetNamedParameter( g_Sea_vertex, "time"), seatime);
