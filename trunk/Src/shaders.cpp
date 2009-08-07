@@ -11,9 +11,9 @@ bool UseShadow=true;
 CGprofile   g_CGprofile_vertex;
 CGprofile   g_CGprofile_pixel;
 CGcontext   g_CGcontext;
-CGprogram   g_CGbasicLight_vertex;
-CGprogram   g_CGHighLight_vertex;
-CGprogram   g_CGHighLight_pixel;
+//CGprogram   g_CGbasicLight_vertex;
+//CGprogram   g_CGHighLight_vertex;
+//CGprogram   g_CGHighLight_pixel;
 CGprogram   g_CGvertex_t;
 //CGprogram   g_CGpixel_t;
 CGprogram   g_CGpixel_NOBloom;
@@ -22,9 +22,9 @@ CGprogram   g_CGpixel_NONormalMap;
 //CGprogram   g_CGpixel_NOBloom_HighShadow;
 CGprogram   g_CGRenderShadowMap_vertex;
 CGprogram   g_CGRenderShadowMap_pixel;
-CGprogram	g_BloomL1_pixel;
-CGprogram	g_BloomL2_pixel;
-CGprogram	g_BloomL3_pixel;
+//CGprogram	g_BloomL1_pixel;
+//CGprogram	g_BloomL2_pixel;
+//CGprogram	g_BloomL3_pixel;
 CGprogram	g_Sea_vertex;
 CGprogram	g_Sea_pixel;
 CGprogram	g_BloomW_pixel;
@@ -77,10 +77,15 @@ void InitCG()
     // CG_PROFILE_VP40   - GL_ARB_vertex_program + GL_NV_vertex_program3
     //
 
-    if( cgGLIsProfileSupported(CG_PROFILE_ARBVP1) )
-        g_CGprofile_vertex = CG_PROFILE_ARBVP1;
-    else if( cgGLIsProfileSupported(CG_PROFILE_VP40) )
+    
+    if( cgGLIsProfileSupported(CG_PROFILE_VP40) )
         g_CGprofile_vertex = CG_PROFILE_VP40;
+	else if( cgGLIsProfileSupported(CG_PROFILE_VP30) )
+        g_CGprofile_vertex = CG_PROFILE_VP30;
+	else if( cgGLIsProfileSupported(CG_PROFILE_VP20) )
+        g_CGprofile_vertex = CG_PROFILE_VP20;
+	else if( cgGLIsProfileSupported(CG_PROFILE_ARBVP1) )
+        g_CGprofile_vertex = CG_PROFILE_ARBVP1;
     else
     {
 		ShaderWater=false;
@@ -97,12 +102,15 @@ void InitCG()
 	// CG_PROFILE_FP20   - NV_texture_shader & NV_register_combiners
 	//
 	
-	if( cgGLIsProfileSupported(CG_PROFILE_ARBFP1) )
-        g_CGprofile_pixel = CG_PROFILE_ARBFP1;
+
+	if( cgGLIsProfileSupported(CG_PROFILE_FP40) )
+        g_CGprofile_pixel = CG_PROFILE_FP40;
     else if( cgGLIsProfileSupported(CG_PROFILE_FP30) )
         g_CGprofile_pixel = CG_PROFILE_FP30;
 	else if( cgGLIsProfileSupported(CG_PROFILE_FP20) )
         g_CGprofile_pixel = CG_PROFILE_FP20;
+	else if( cgGLIsProfileSupported(CG_PROFILE_ARBFP1) )
+		g_CGprofile_pixel = CG_PROFILE_ARBFP1;
     else
     {
 		ShaderWater=false;
@@ -117,7 +125,7 @@ void InitCG()
 	//
 	// Create the vertex and pixel shader...
 	//
-	
+	/*
 	g_CGbasicLight_vertex = cgCreateProgramFromFile( g_CGcontext,
 										          CG_SOURCE,
 										         "vertex_basicLight.cg",
@@ -136,7 +144,7 @@ void InitCG()
 												"pixel_HighLight.cg",
 												g_CGprofile_pixel,
 												NULL,
-												NULL );
+												NULL );*/
 	g_CGvertex_t = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"vertex_t.cg",
@@ -186,7 +194,7 @@ void InitCG()
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
-
+/*
 	g_BloomL1_pixel = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"g_BloomL1_pixel.cg",
@@ -206,7 +214,7 @@ void InitCG()
 												"g_BloomL3_pixel.cg",
 												g_CGprofile_pixel,
 												NULL,
-												NULL );
+												NULL );*/
 	g_Sea_vertex = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"Sea_vertex.cg",
@@ -249,19 +257,19 @@ void InitCG()
 	// Load the programs using Cg's expanded interface...
 	//
 
-	cgGLLoadProgram(g_BloomL1_pixel);
-	cgGLLoadProgram(g_BloomL2_pixel);
-	cgGLLoadProgram(g_BloomL3_pixel);
-	cgGLLoadProgram( g_CGbasicLight_vertex );
-	cgGLLoadProgram( g_CGHighLight_vertex );
-	cgGLLoadProgram( g_CGHighLight_pixel  );
+	//cgGLLoadProgram(g_BloomL1_pixel);
+	//cgGLLoadProgram(g_BloomL2_pixel);
+	//cgGLLoadProgram(g_BloomL3_pixel);
+	//cgGLLoadProgram( g_CGbasicLight_vertex );
+	//cgGLLoadProgram( g_CGHighLight_vertex );
+	//cgGLLoadProgram( g_CGHighLight_pixel  );
 	cgGLLoadProgram( g_CGvertex_t );
 	//cgGLLoadProgram( g_CGpixel_t  );
-	if(!UseHighShadow)
-		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
-	cgGLLoadProgram( g_CGpixel_NOBloom  );
-	CGerror GetCGerror=cgGetError();
-	if(GetCGerror!=CG_NO_ERROR)
+	//if(!UseHighShadow)
+	//	g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
+	//cgGLLoadProgram( g_CGpixel_NOBloom  );
+	//CGerror GetCGerror=cgGetError();
+	if((g_CGprofile_pixel != CG_PROFILE_FP40)||!UseHighShadow)
 	{
 		UseHighShadow=false;
 		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
