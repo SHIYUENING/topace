@@ -263,7 +263,7 @@ void InitCG()
 	//cgGLLoadProgram( g_CGbasicLight_vertex );
 	//cgGLLoadProgram( g_CGHighLight_vertex );
 	//cgGLLoadProgram( g_CGHighLight_pixel  );
-	cgGLLoadProgram( g_CGvertex_t );
+	
 	//cgGLLoadProgram( g_CGpixel_t  );
 	//if(!UseHighShadow)
 	//	g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
@@ -273,9 +273,9 @@ void InitCG()
 	{
 		UseHighShadow=false;
 		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
-		cgGLLoadProgram( g_CGpixel_NOBloom  );
 	}
-
+	cgGLLoadProgram( g_CGvertex_t );
+	cgGLLoadProgram( g_CGpixel_NOBloom  );
 	cgGLLoadProgram( g_CGpixel_NONormalMap  );
 	cgGLLoadProgram( g_CGRenderShadowMap_vertex  );
 	cgGLLoadProgram( g_CGRenderShadowMap_pixel  );
