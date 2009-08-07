@@ -2813,9 +2813,8 @@ void DrawShadowMap(void)
 					glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 					glPushMatrix();	
 						glLoadIdentity();									// Reset The Modelview Matrix
-						gluPerspective (60.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-							60.0f,315.0f);	
-						//glOrtho(-50.0,50.0,-50.0,50.0,10,1000);	
+						gluPerspective (60.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),60.0f,315.0f);	
+						//glOrtho(-90.0,90.0,-90.0,90.0,10.0,500.0);		
 						glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 						glPushMatrix();										// Store The Modelview Matrix
 																// Reset The Modelview Matrix
