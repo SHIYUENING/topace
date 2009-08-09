@@ -10,6 +10,7 @@ bool UseHighShadow=true;
 bool UseShadow=true;
 CGprofile   g_CGprofile_vertex;
 CGprofile   g_CGprofile_pixel;
+CGprofile   g_CGprofile_pixel_GlSL;
 CGcontext   g_CGcontext;
 //CGprogram   g_CGbasicLight_vertex;
 //CGprogram   g_CGHighLight_vertex;
@@ -80,12 +81,12 @@ void InitCG()
     
     if( cgGLIsProfileSupported(CG_PROFILE_VP40) )
         g_CGprofile_vertex = CG_PROFILE_VP40;
+	else if( cgGLIsProfileSupported(CG_PROFILE_ARBVP1) )
+        g_CGprofile_vertex = CG_PROFILE_ARBVP1;
 	else if( cgGLIsProfileSupported(CG_PROFILE_VP30) )
         g_CGprofile_vertex = CG_PROFILE_VP30;
 	else if( cgGLIsProfileSupported(CG_PROFILE_VP20) )
         g_CGprofile_vertex = CG_PROFILE_VP20;
-	else if( cgGLIsProfileSupported(CG_PROFILE_ARBVP1) )
-        g_CGprofile_vertex = CG_PROFILE_ARBVP1;
     else
     {
 		ShaderWater=false;
@@ -105,12 +106,12 @@ void InitCG()
 
 	if( cgGLIsProfileSupported(CG_PROFILE_FP40) )
         g_CGprofile_pixel = CG_PROFILE_FP40;
+	else if( cgGLIsProfileSupported(CG_PROFILE_ARBFP1) )
+		g_CGprofile_pixel = CG_PROFILE_ARBFP1;
     else if( cgGLIsProfileSupported(CG_PROFILE_FP30) )
         g_CGprofile_pixel = CG_PROFILE_FP30;
 	else if( cgGLIsProfileSupported(CG_PROFILE_FP20) )
         g_CGprofile_pixel = CG_PROFILE_FP20;
-	else if( cgGLIsProfileSupported(CG_PROFILE_ARBFP1) )
-		g_CGprofile_pixel = CG_PROFILE_ARBFP1;
     else
     {
 		ShaderWater=false;
@@ -119,6 +120,10 @@ void InitCG()
 		return;
     }
 
+	if(( !cgGLIsProfileSupported(CG_PROFILE_FP40) )&&(cgGLIsProfileSupported(CG_PROFILE_GLSLF)))
+		g_CGprofile_pixel_GlSL=CG_PROFILE_GLSLF;
+	else
+		g_CGprofile_pixel_GlSL=g_CGprofile_pixel;
 	// Create the context...
 	g_CGcontext = cgCreateContext();
 
@@ -163,7 +168,7 @@ void InitCG()
 	g_CGpixel_NOBloom = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
 												"pixel_NOBloom_HighShadow.cg",
-												g_CGprofile_pixel,
+												g_CGprofile_pixel_GlSL,
 												NULL,
 												NULL );
 
