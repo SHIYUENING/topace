@@ -5,7 +5,6 @@
 
 struct fragment
 {
-    float4 position	:	POSITION;
     float3 color0	:	COLOR0;
     float2 texcoord0	:	TEXCOORD0;
     float3 normal	:	TEXCOORD1;
@@ -42,16 +41,19 @@ pixel main(
 )
 {
 
-    float3 P = IN.position.xyz;
+	float4 MainColor=tex2D( testTexture, IN.texcoord0 );
     float3 N =  normalize(IN.normal);
 
-    float3 L = normalize(paraLightDirection-P);
-    float diffuseLight = max(dot(N, L), 0);
+    float3 L = normalize(paraLightDirection);
+	float DotNaL=dot(N, L);
+    float diffuseLight = max(DotNaL, 0);
     float3 diffuse = paraLightColor * diffuseLight;
 
-    float3 V = normalize(eyePosition - P);
+    float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(N, H), 0), 50.0);
+	float DotNaH=dot(N, H);
+	float MaxNaH0=max(DotNaH,0);
+    float specularLight = pow(MaxNaH0, 50.0);
 
 
     if(diffuseLight<=0) specularLight=0;
@@ -59,11 +61,8 @@ pixel main(
     Ocolor.xyz = globalAmbient +IN.Light2color+ diffuse+specularLight*8;
     Ocolor.w = 1.0;
     pixel OUT;
-	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
-	float posz=colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0+0.70;
-	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient+IN.Light2color;
 
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor;
+	OUT.color = MainColor*Ocolor;
 	OUT.color.w=0.5;
 
     return OUT;
