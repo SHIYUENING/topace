@@ -5,7 +5,6 @@
 
 struct fragment
 {
-    float4 position	:	POSITION;
     float4 color0	:	COLOR0;
     float2 texcoord0	:	TEXCOORD0;
     float3 normal	:	TEXCOORD1;
@@ -41,7 +40,8 @@ pixel main(
 	uniform sampler2D	SpecularMapTexture
 )
 {
-	float3 T = normalize(IN.color0);
+	float4 MainColor=tex2D( testTexture, IN.texcoord0 );
+	float3 T = normalize(IN.color0.xyz);
 	float3 Nm = normalize(IN.normal);
 	float3 B = normalize(cross (T,Nm));
 	float3x3 TBN;
@@ -53,16 +53,18 @@ pixel main(
 	NN2.x=(NN.x-0.5)*2.0;
 	NN2.y=(NN.y-0.5)*2.0;
 	NN2.z=(NN.z-0.5)*2.0;
-    float3 P = IN.position.xyz;
     float3 N = mul(NN2,TBN);
 
-    float3 L = normalize(paraLightDirection-P);
-    float diffuseLight = max(dot(N, L), 0);
+    float3 L = normalize(paraLightDirection);
+	float DotNaL=dot(N, L);
+    float diffuseLight = max(DotNaL, 0);
     float3 diffuse = paraLightColor * diffuseLight;
 
-    float3 V = normalize(eyePosition - P);
+    float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
-    float specularLight = pow(max(dot(normalize(N), H), 0), 50.0);
+	float DotNaH=dot(N, H);
+	float MaxNaH0=max(DotNaH,0);
+    float specularLight = pow(MaxNaH0, 50.0);
 	float4 SpecularMapcolor;
 	SpecularMapcolor=tex2D( SpecularMapTexture, IN.texcoord0 );
 /*
@@ -89,7 +91,7 @@ pixel main(
 	R2=mul(Worldmatrix,R2);
 
 	//OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor+texCUBE( AmbientReflectiveTexture, R)*SpecularMapcolor*0.3;
-	OUT.color = tex2D( testTexture, IN.texcoord0 )*Ocolor*(texCUBE( AmbientReflectiveTexture, R2)+1.0);
+	OUT.color = MainColor*Ocolor*(texCUBE( AmbientReflectiveTexture, R2.xyz)+1.0);
 	OUT.color.w=0.5;
 
     return OUT;

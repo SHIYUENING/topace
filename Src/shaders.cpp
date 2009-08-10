@@ -107,7 +107,7 @@ void InitCG()
 	if( cgGLIsProfileSupported(CG_PROFILE_FP40) )
         g_CGprofile_pixel = CG_PROFILE_FP40;
 	else if( cgGLIsProfileSupported(CG_PROFILE_ARBFP1) )
-		g_CGprofile_pixel = CG_PROFILE_ARBFP1;
+		g_CGprofile_pixel = CG_PROFILE_GLSLF;
     else if( cgGLIsProfileSupported(CG_PROFILE_FP30) )
         g_CGprofile_pixel = CG_PROFILE_FP30;
 	else if( cgGLIsProfileSupported(CG_PROFILE_FP20) )
@@ -120,9 +120,9 @@ void InitCG()
 		return;
     }
 
-	if(( !cgGLIsProfileSupported(CG_PROFILE_FP40) )&&(cgGLIsProfileSupported(CG_PROFILE_GLSLF)))
-		g_CGprofile_pixel_GlSL=CG_PROFILE_GLSLF;
-	else
+	//if(( !cgGLIsProfileSupported(CG_PROFILE_FP40) )&&(cgGLIsProfileSupported(CG_PROFILE_GLSLF)))
+	//	g_CGprofile_pixel_GlSL=CG_PROFILE_GLSLF;
+	//else
 		g_CGprofile_pixel_GlSL=g_CGprofile_pixel;
 	// Create the context...
 	g_CGcontext = cgCreateContext();
@@ -507,6 +507,7 @@ void ToneMapping()
 void CGDisableProfilePixel()
 {
 	cgGLDisableProfile( g_CGprofile_pixel );
+	cgGLDisableProfile( g_CGprofile_pixel_GlSL );
 }
 void CGDisableProfileVertex()
 {
