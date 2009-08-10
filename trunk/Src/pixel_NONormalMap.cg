@@ -46,19 +46,19 @@ pixel main(
 
     float3 L = normalize(paraLightDirection);
 	float DotNaL=dot(N, L);
-    float diffuseLight = max(DotNaL, 0);
+    float diffuseLight = max(DotNaL, 0.0);
     float3 diffuse = paraLightColor * diffuseLight;
 
     float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
 	float DotNaH=dot(N, H);
-	float MaxNaH0=max(DotNaH,0);
+	float MaxNaH0=max(DotNaH,0.0);
     float specularLight = pow(MaxNaH0, 50.0);
 
 
-    if(diffuseLight<=0) specularLight=0;
+    if(diffuseLight<=0.0) specularLight=0.0;
     float4 Ocolor;
-    Ocolor.xyz = globalAmbient +IN.Light2color+ diffuse+specularLight*8;
+    Ocolor.xyz = globalAmbient +IN.Light2color+ diffuse+specularLight*8.0;
     Ocolor.w = 1.0;
     pixel OUT;
 

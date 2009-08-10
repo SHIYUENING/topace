@@ -36,8 +36,8 @@ fragment main(
 {
 	fragment OUT;
 	float4 objectPosShadowMap=mul( ShadowMapMVPmatrix, IN.position );
-	OUT.texcoord3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2)+0.5;
-	OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2)+0.5;
+	OUT.texcoord3.x=objectPosShadowMap.x/(objectPosShadowMap.w*2.0)+0.5;
+	OUT.texcoord3.y=objectPosShadowMap.y/(objectPosShadowMap.w*2.0)+0.5;
 	OUT.objectPos2 = objectPosShadowMap;
 
 	
@@ -51,8 +51,9 @@ fragment main(
     float3 P = IN.position.xyz;
     float3 N = normalize(IN.normal);
 	float3 L = normalize(MissleLightDirection.xyz-P);
-    float diffuseLight = max(dot(N, L), 0);
-    float3 diffuse = paraLightColor * diffuseLight*10;
+	float DotNaL=dot(N, L);
+    float diffuseLight = max(DotNaL, 0.0);
+    float3 diffuse = paraLightColor * diffuseLight*10.0;
 
 	OUT.Light2color = diffuse;
 
