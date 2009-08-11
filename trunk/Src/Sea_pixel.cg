@@ -5,8 +5,7 @@
 
 struct fragment
 {
-    float4 position	:	POSITION;
-    float4 color0	:	COLOR0;
+    float4 color0		:	COLOR0;
     float4 objectPos2	:	TEXCOORD0;
 	float2 TexCoord1	:	TEXCOORD1;
 	float2 TexCoord2	:	TEXCOORD2;
@@ -52,12 +51,12 @@ pixel main(
 	float3 L = normalize(paraLightDirection);
 	float light=max( dot(L, vReflBump), 0.0);
 	float3 H = normalize(L + V);
-	float norvReflBump=normalize(vReflBump);
+	float3 norvReflBump=normalize(vReflBump);
 	float DotMaH=dot(norvReflBump, H);
 	float MaxDotMaH0=max(DotMaH, 0.0);
 	float specularLight = pow(MaxDotMaH0, 1000.0);
 	pixel OUT;
-	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor*4.0;
+	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor;
 	float fogb=min((100000-IN.objectPos.z)/70000,1.0);
 	OUT.color.xyz=OUT.color.xyz*fogb+(1-fogb)*FogColor;
 
