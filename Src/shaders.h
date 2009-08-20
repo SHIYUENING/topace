@@ -2,22 +2,52 @@
 
 
 //初始化shader
+void InitShader();
 void InitCG();
+void InitGLSL();
 //使用shader
 void RenderShadowMap();
+void RenderShadowMapCG();
+void RenderShadowMapGLSL();
 void shaderT(int NormalTex=0,int SpecularTex=0,int ShadowMapTexID=0,float HDlight=1.0f);
+void shaderTCG(int NormalTex=0,int SpecularTex=0,int ShadowMapTexID=0,float HDlight=1.0f);
+void shaderTGLSL(int NormalTex=0,int SpecularTex=0,int ShadowMapTexID=0,float HDlight=1.0f);
 void DrawSea(float seaframe=1.0f);
+void DrawSeaCG(float seaframe=1.0f);
+void DrawSeaGLSL(float seaframe=1.0f);
 void DrawBloomMap(int WinW,int WinH);
+void DrawBloomMapCG(int WinW,int WinH);
+void DrawBloomMapGLSL(int WinW,int WinH);
 void DrawBloomW(int WinW);
+void DrawBloomWCG(int WinW);
+void DrawBloomWGLSL(int WinW);
 void DrawBloomH(int WinH);
+void DrawBloomHCG(int WinH);
+void DrawBloomHGLSL(int WinH);
 void ToneMapping();
+void ToneMappingCG();
+void ToneMappingGLSL();
 void CGDisableProfilePixel();
+void CGDisableProfilePixelCG();
+void CGDisableProfilePixelGLSL();
 void CGDisableProfileVertex();
+void CGDisableProfileVertexCG();
+void CGDisableProfileVertexGLSL();
 void CGDisableTextureParameterShadowMap();
+void CGDisableTextureParameterShadowMapCG();
+void CGDisableTextureParameterShadowMapGLSL();
 void CGDisableTextureParameterAmbientReflective();
+void CGDisableTextureParameterAmbientReflectiveCG();
+void CGDisableTextureParameterAmbientReflectiveGLSL();
 void CGDisableTextureParameterNormalMap();
+void CGDisableTextureParameterNormalMapCG();
+void CGDisableTextureParameterNormalMapGLSL();
 void CGDisableTextureParameterSpecularMap();
+void CGDisableTextureParameterSpecularMapCG();
+void CGDisableTextureParameterSpecularMapGLSL();
 void CGDisableTextureParameterAmbientReflectiveSea();
+void CGDisableTextureParameterAmbientReflectiveSeaCG();
+void CGDisableTextureParameterAmbientReflectiveSeaGLSL();
 /*
 void HighLight()
 {

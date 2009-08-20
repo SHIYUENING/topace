@@ -1,8 +1,11 @@
+#include <GL/glew.h>
 #include <Cg/Cg.h>
 #include <Cg/cgGL.h>
 #include "shaders.h"
 #include <stdio.h>	
+#include <windows.h>
 GLuint AmbientReflectiveTexture;
+bool isGLSL=false;
 bool ShaderLight=true;//是否使用shader
 bool ShaderWater=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
@@ -39,6 +42,7 @@ CGparameter   g_CGparam_NormalMapTexture;
 CGparameter   g_CGparam_SpecularMapTexture;
 CGparameter   g_CGparam_AmbientReflectiveSea;
 
+GLhandleARB	g_vertexShader;
 //CGparameter g_CGparam_testTexture;
 CGparameter cg_globalAmbient;
 CGparameter cg_lightColor;
@@ -66,8 +70,64 @@ float pixelfogColor[3];
 float seatime=0.0f;
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
 GLfloat ShadowMapMVPmatrix[16],Worldmatrix[16];
+unsigned char *readShaderFile( const char *fileName )
+{
+ FILE *file = fopen( fileName, "r" );
 
+ if( file == NULL )
+ {
+ MessageBox( NULL, "Cannot open shader file!", "ERROR",
+ MB_OK | MB_ICONEXCLAMATION );
+    return 0;
+ }
+
+	unsigned int filesize = 0;
+	while (!feof(file))
+	{
+		fgetc(file);
+		filesize++;
+	}
+	filesize--;
+	rewind(file);
+
+ if( filesize== 0 )
+ {
+ MessageBox( NULL, "Cannot get file stats for shader file!", "ERROR",
+ MB_OK | MB_ICONEXCLAMATION );
+ return 0;
+ }
+
+ unsigned char *buffer = new unsigned char[filesize];
+
+  int bytes = fread( buffer, 1, filesize, file );
+
+ buffer[bytes] = 0;
+
+  fclose( file );
+
+  return buffer;
+}
 //初始化shader
+void InitShader()
+{
+	if(glewIsSupported("GL_NV_fragment_program"))
+	{
+		isGLSL=false;
+		InitCG();
+	}
+	else
+	{
+		UseHighShadow=false;
+		isGLSL=true;
+		if(glewIsSupported("GL_ARB_shading_language_100"))
+			InitGLSL();
+		else
+		{
+			UseShadow=false;
+			ShaderLight=false;
+		}
+	}
+}
 void InitCG()
 {
 	
@@ -297,7 +357,31 @@ void InitCG()
 	//
 
 } 
+GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObject)
+{
+	GLhandleARB GLSLShaderObject=0;
+	GLSLShaderObject=glCreateShaderObjectARB(ShaderObject);
+	unsigned char *ShaderAssembly = readShaderFile( shaderfilename );
+	const char *ShaderStrings[1];
+	ShaderStrings[0] = (char*)ShaderAssembly;
+	glShaderSourceARB( GLSLShaderObject, 1, ShaderStrings, NULL );
+	glCompileShaderARB( GLSLShaderObject);
+	delete ShaderAssembly;
+	GLint bCompiled=0;
+	glGetObjectParameterivARB( g_vertexShader, GL_OBJECT_COMPILE_STATUS_ARB, &bCompiled );
+	if( bCompiled == false )
+	{
+		char str[4096];
+		glGetInfoLogARB(g_vertexShader, sizeof(str), NULL, str);
+		MessageBox( NULL, str, "Vertex Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
+	}
+	return GLSLShaderObject;
+}
+void InitGLSL()
+{
 
+
+}
 //使用shader
 void RenderShadowMap()
 {
@@ -314,6 +398,8 @@ void RenderShadowMap()
 	cgGLEnableProfile( g_CGprofile_pixel );
 
 }
+void RenderShadowMapCG(){}
+void RenderShadowMapGLSL(){}
 void shaderT(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)//bool UseBloom=false
 {/*
 	if(Keb[0])
