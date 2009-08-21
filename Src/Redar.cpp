@@ -14,6 +14,7 @@ extern float tmpAREAredarRenge;
 extern bool PlayerLocked;
 extern int hited;
 extern int ModelID_redarUI;
+extern GLuint img;
 void DrawBlackBack(int Size)
 {
 	
@@ -103,7 +104,7 @@ void DrawMAP()
 	glLoadIdentity();									// Reset The Modelview Matrix
 
 	glPushMatrix();	
-		glBindTexture(GL_TEXTURE_2D, Maptexture);	
+		glBindTexture(GL_TEXTURE_2D, img);	
 	//glBindTexture(GL_TEXTURE_2D, img);	
 				glBegin(GL_QUADS);							// Use A Quad For Each Character
 					glTexCoord2f(0.0f,0.0f);glVertex2i(-winheight/2,-winheight/2);						// Vertex Coord (Bottom Left)
