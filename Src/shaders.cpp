@@ -690,6 +690,10 @@ void DrawBloomMapCG(int WinW,int WinH)
 }
 void DrawBloomMapGLSL(int WinW,int WinH)
 {
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"AveLum"),0.23f);
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"imgW"),(float)WinW);
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"imgH"),(float)WinH);
+	glUseProgramObjectARB( GLSL_DrawBloomMap );
 }
 void DrawBloomW(int WinW)
 {
