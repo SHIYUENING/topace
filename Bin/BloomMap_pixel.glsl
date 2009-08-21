@@ -1,54 +1,36 @@
+
+uniform sampler2D texColor;
 uniform float AveLum;
 uniform float imgW;
 uniform float imgH;
-uniform sampler2D _texColor1;
-vec2 _c0007;
-vec2 _c0009;
-vec2 _c0011;
-vec2 _c0013;
-vec2 _c0015;
-vec2 _c0017;
-vec2 _c0019;
-
 void main()
 {
+	float dx = 1.0/imgW;
+	float dy = 1.0/imgH;
+	//对texColor进行采样
+	vec4 color = texture2D(texColor,gl_TexCoord[0].xy);
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,0.0));
 
-    float _dx;
-    float _dy;
-    vec4 _color;
-    vec4 _cout;
-    float _lum;
-    vec4 _p;
-    float _luml;
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(0.0,dy));
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,dy));
 
-    _dx = 1.00000000E+000/imgW;
-    _dy = 1.00000000E+000/imgH;
-    _color = texture2D(_texColor1, gl_TexCoord[0].xy);
-    _c0007 = gl_TexCoord[0].xy + vec2(_dx*3.00000000E+000, 0.00000000E+000);
-    _color = _color + texture2D(_texColor1, _c0007);
-    _c0009 = gl_TexCoord[0].xy + vec2(0.00000000E+000, _dy);
-    _color = _color + texture2D(_texColor1, _c0009);
-    _c0011 = gl_TexCoord[0].xy + vec2(_dx*3.00000000E+000, _dy);
-    _color = _color + texture2D(_texColor1, _c0011);
-    _c0013 = gl_TexCoord[0].xy + vec2(0.00000000E+000, _dy*2.00000000E+000);
-    _color = _color + texture2D(_texColor1, _c0013);
-    _c0015 = gl_TexCoord[0].xy + vec2(_dx*3.00000000E+000, _dy*2.00000000E+000);
-    _color = _color + texture2D(_texColor1, _c0015);
-    _c0017 = gl_TexCoord[0].xy + vec2(0.00000000E+000, _dy*3.00000000E+000);
-    _color = _color + texture2D(_texColor1, _c0017);
-    _c0019 = gl_TexCoord[0].xy + vec2(_dx*3.00000000E+000, _dy*3.00000000E+000);
-    _color = _color + texture2D(_texColor1, _c0019);
-    _color = _color*1.25000000E-001;
-    _cout = vec4( 0.00000000E+000, 0.00000000E+000, 0.00000000E+000, 0.00000000E+000);
-    _lum = _color.x*3.00000012E-001 + _color.y*5.89999974E-001 + _color.z*1.09999999E-001;
-    _p = _color*(_lum/AveLum);
-    _p.x = _p.x/(_p.x + 1.00000000E+000);
-    _p.y = _p.y/(_p.y + 1.00000000E+000);
-    _p.z = _p.z/(_p.z + 1.00000000E+000);
-    _luml = (_p.x + _p.y + _p.z)/3.00000000E+000;
-    if (_luml > 7.50000000E-001) { // if begin
-        _cout = _p;
-    }
-    gl_FragColor = _cout;
-    return;
-} 
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(0.0,dy*2.0));
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,dy*2.0));
+
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(0.0,dy*3.0));
+	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,dy*3.0));
+	color /= 8.0;
+	//计算该像素在Tone Mapping之后的亮度值，如果依然很大，则该像素将产生光晕
+	vec4 cout = vec4(0.0,0.0,0.0,0.0);
+	float lum = color.x * 0.3 + color.y *0.59 + color.z * 0.11;
+	vec4 p = color*(lum/0.23);
+	p.x = p.x/(p.x+1.0);
+	p.y = p.y/(p.y+1.0);
+	p.z = p.z/(p.z+1.0);
+	float luml = (p.x+p.y+p.z)/3.0;
+	if (luml > 0.75)
+	{
+		cout = p;
+	}
+	gl_FragColor = cout;	
+}

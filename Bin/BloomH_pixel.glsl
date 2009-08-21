@@ -1,23 +1,3 @@
-// glslf output by Cg compiler
-// cgc version 2.2.0006, build date Mar 31 2009
-// command line args: -profile glslf -oglsl
-// source file: BloomH_pixel.cg
-//vendor NVIDIA Corporation
-//version 2.2.0.6
-//profile glslf
-//program main
-//semantic main.imgH
-//semantic main.texSrc
-//var float imgH :  : _imgH1 : 1 : 1
-//var sampler2D texSrc :  : _texSrc1 : 2 : 1
-//var float2 oPosition : $vin.TEXCOORD0 : TEXCOORD0 : 0 : 1
-//var float4 main.colorout : $vout.COLOR : COLOR : -1 : 1
-
-struct pixel {
-    vec4 _colorout;
-};
-
-pixel _ret_0;
 uniform float _imgH1;
 uniform sampler2D _texSrc1;
 vec2 _c0003;
@@ -31,7 +11,6 @@ vec2 _c0019;
 vec2 _c0021;
 vec2 _c0023;
 
- // main procedure, the original name was main
 void main()
 {
 
@@ -66,7 +45,6 @@ void main()
     _color = _color + texture2D(_texSrc1, _c0023)*1.00000001E-001;
     _color = _color/5.00000000E+000;
     _color.w = 1.00000000E+000;
-    _ret_0._colorout = _color;
     gl_FragColor = _color;
     return;
-} // main end
+}
