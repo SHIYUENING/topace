@@ -13,20 +13,20 @@ pixel main(
 	float2 Tpos;
 	Tpos.x=-1.0*d;
 	Tpos.y=0.0;
-	float4 color;
+	float4 color=float4(0.0,0.0,0.0,0.0);
 	
-    color += tex2D(texSrc,oPosition+Tpos*5) * 0.1;
-    color += tex2D(texSrc,oPosition+Tpos*4) * 0.22;
-    color += tex2D(texSrc,oPosition+Tpos*3) * 0.358;
-    color += tex2D(texSrc,oPosition+Tpos*2) * 0.523;
+    color += tex2D(texSrc,oPosition+Tpos*5.0) * 0.1;
+    color += tex2D(texSrc,oPosition+Tpos*4.0) * 0.22;
+    color += tex2D(texSrc,oPosition+Tpos*3.0) * 0.358;
+    color += tex2D(texSrc,oPosition+Tpos*2.0) * 0.523;
     color += tex2D(texSrc,oPosition+Tpos) * 0.843;
     color += tex2D(texSrc,oPosition ) * 1.0;
 	Tpos.x=1.0*d;
     color += tex2D(texSrc,oPosition+Tpos) * 0.843;
-    color += tex2D(texSrc,oPosition+Tpos*2) * 0.523;
-    color += tex2D(texSrc,oPosition+Tpos*3) * 0.358;
-    color += tex2D(texSrc,oPosition+Tpos*4) * 0.22;
-    color += tex2D(texSrc,oPosition+Tpos*5) * 0.1;
+    color += tex2D(texSrc,oPosition+Tpos*2.0) * 0.523;
+    color += tex2D(texSrc,oPosition+Tpos*3.0) * 0.358;
+    color += tex2D(texSrc,oPosition+Tpos*4.0) * 0.22;
+    color += tex2D(texSrc,oPosition+Tpos*5.0) * 0.1;
     color /= 5.0; 
 
 	color.w=1.0;

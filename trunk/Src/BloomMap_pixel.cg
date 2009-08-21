@@ -33,9 +33,9 @@ pixel main(
 	float4 p = color*(lum/AveLum);
 	//float4 p2=float4(1.0,1.0,1.0,0.0)+p;
 	//p2=p2+p;
-	p.x = p.x/(p.x+1);
-	p.y = p.y/(p.y+1);
-	p.z = p.z/(p.z+1);
+	p.x = p.x/(p.x+1.0);
+	p.y = p.y/(p.y+1.0);
+	p.z = p.z/(p.z+1.0);
 	float luml = (p.x+p.y+p.z)/3.0;
 	if (luml > 0.75) cout = p;
 	

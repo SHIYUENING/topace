@@ -41,7 +41,7 @@ pixel main(
 	float3 N = (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)/4.0;
 	float3 vReflBump = float3((N.x-0.5)*2.0,(N.z-0.5)*2.0,(N.y-0.5)*2.0);
     float3 diffuse=float3(0.1,0.5,1.0);
-	float3 V=-normalize(IN.objectPos2.xyz*1000-eyePosition);
+	float3 V=-normalize(IN.objectPos2.xyz*1000.0-eyePosition);
 	float3 vEyeReflected = reflect(V, vReflBump);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
 	// Compute Fresnel term
@@ -57,8 +57,8 @@ pixel main(
 	float specularLight = pow(MaxDotMaH0, 1000.0);
 	pixel OUT;
 	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor;
-	float fogb=min((100000-IN.objectPos.z)/70000,1.0);
-	OUT.color.xyz=OUT.color.xyz*fogb+(1-fogb)*FogColor;
+	float fogb=min((100000.0-IN.objectPos.z)/70000.0,1.0);
+	OUT.color.xyz=OUT.color.xyz*fogb+(1.0-fogb)*FogColor;
 
 	OUT.color.a=1.0;
 	//OUT.color.xyz=light;
