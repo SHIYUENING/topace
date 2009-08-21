@@ -290,7 +290,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	if((GetPrivateProfileInt("Light","Use_openGL_Light",0,".\\set.ini")==0)&&IsSupportFBO)
 	{
-		InitCG();
+		InitShader();
 #ifdef _RELEASELOG 
 		WritePrivateProfileString("Initialize","InitCG","OK",".\\Log.ini");
 #endif
