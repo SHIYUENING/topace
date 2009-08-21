@@ -57,6 +57,7 @@ GLhandleARB	g_GLSLRenderShadowMap_vertex;
 GLhandleARB	g_GLSLRenderShadowMap_pixel;
 GLhandleARB	g_GLSLSea_vertex;
 GLhandleARB	g_GLSLSea_pixel;
+//GLhandleARB	g_GLSLBloom_vertex;
 GLhandleARB	g_GLSLBloomW_pixel;
 GLhandleARB	g_GLSLBloomH_pixel;
 GLhandleARB	g_GLSLBloomMap_pixel;
@@ -127,6 +128,8 @@ unsigned char *readShaderFile( const char *fileName )
 //≥ı ºªØshader
 void InitShader()
 {
+	isGLSL=true;
+	ShaderBloom=true;
 	if(glewIsSupported("GL_NV_fragment_program")&&!isGLSL)
 	{
 		isGLSL=false;
@@ -142,6 +145,7 @@ void InitShader()
 		{
 			UseShadow=false;
 			ShaderLight=false;
+			ShaderBloom=false;
 		}
 	}
 }
@@ -423,6 +427,7 @@ void InitGLSL()
 	g_GLSLRenderShadowMap_pixel = GLSL_CompileShader("RenderShadowMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLSea_vertex = GLSL_CompileShader("Sea_vertex.glsl",GL_VERTEX_SHADER_ARB);
 	g_GLSLSea_pixel = GLSL_CompileShader("Sea_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+//	g_GLSLBloom_vertex = GLSL_CompileShader("Bloom_vertex.glsl",GL_VERTEX_SHADER_ARB);
 	g_GLSLBloomW_pixel = GLSL_CompileShader("BloomW_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLBloomH_pixel = GLSL_CompileShader("BloomH_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLBloomMap_pixel = GLSL_CompileShader("BloomMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
@@ -442,9 +447,13 @@ void InitGLSL()
 	glAttachObjectARB( GLSL_shaderT, g_GLSLpixel );
 	glAttachObjectARB( GLSL_DrawSea, g_GLSLSea_vertex );
 	glAttachObjectARB( GLSL_DrawSea, g_GLSLSea_pixel );
+	//glAttachObjectARB( GLSL_DrawBloomW, g_GLSLBloom_vertex );
 	glAttachObjectARB( GLSL_DrawBloomW, g_GLSLBloomW_pixel );
+	//glAttachObjectARB( GLSL_DrawBloomH, g_GLSLBloom_vertex );
 	glAttachObjectARB( GLSL_DrawBloomH, g_GLSLBloomH_pixel );
+	//glAttachObjectARB( GLSL_DrawBloomMap, g_GLSLBloom_vertex );
 	glAttachObjectARB( GLSL_DrawBloomMap, g_GLSLBloomMap_pixel );
+	//glAttachObjectARB( GLSL_ToneMapping, g_GLSLBloom_vertex );
 	glAttachObjectARB( GLSL_ToneMapping, g_GLSLToneMapping_pixel );
 	GetGLSLLinkSTATUS( GLSL_RenderShadowMap);
 	GetGLSLLinkSTATUS( GLSL_shaderT);
@@ -690,10 +699,11 @@ void DrawBloomMapCG(int WinW,int WinH)
 }
 void DrawBloomMapGLSL(int WinW,int WinH)
 {
+	glUseProgramObjectARB( GLSL_DrawBloomMap );
+	glUniform1i(glGetUniformLocation(GLSL_DrawBloomMap,"texColor"),0);
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"AveLum"),0.23f);
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"imgW"),(float)WinW);
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"imgH"),(float)WinH);
-	glUseProgramObjectARB( GLSL_DrawBloomMap );
 }
 void DrawBloomW(int WinW)
 {
@@ -708,7 +718,12 @@ void DrawBloomWCG(int WinW)
 	cgGLBindProgram( g_BloomW_pixel );
 	cgGLEnableProfile( g_CGprofile_pixel );
 }
-void DrawBloomWGLSL(int WinW){}
+void DrawBloomWGLSL(int WinW)
+{
+	glUseProgramObjectARB( GLSL_DrawBloomW );
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomW,"_imgW1"),(float)WinW);
+	glUniform1i(glGetUniformLocation(GLSL_DrawBloomW,"_texSrc1"),0);
+}
 void DrawBloomH(int WinH)
 {
 	if(isGLSL)
@@ -722,7 +737,12 @@ void DrawBloomHCG(int WinH)
 	cgGLBindProgram( g_BloomH_pixel );
 	cgGLEnableProfile( g_CGprofile_pixel );
 }
-void DrawBloomHGLSL(int WinH){}
+void DrawBloomHGLSL(int WinH)
+{
+	glUseProgramObjectARB( GLSL_DrawBloomH );
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomH,"_imgH1"),(float)WinH);
+	glUniform1i(glGetUniformLocation(GLSL_DrawBloomH,"_texSrc1"),0);
+}
 void ToneMapping()
 {
 	if(isGLSL)
@@ -735,7 +755,11 @@ void ToneMappingCG()
 	cgGLBindProgram( g_ToneMapping_pixel );
 	cgGLEnableProfile( g_CGprofile_pixel );
 }
-void ToneMappingGLSL(){}
+void ToneMappingGLSL()
+{
+	glUseProgramObjectARB( GLSL_ToneMapping );
+	glUniform1i(glGetUniformLocation(GLSL_ToneMapping,"_texSrc1"),0);
+}
 void CGDisableProfilePixel()
 {
 	if(isGLSL)
