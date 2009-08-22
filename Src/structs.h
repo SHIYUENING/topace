@@ -250,6 +250,7 @@ extern bool ShaderWater;//是否使用shader
 extern bool ShaderBloom;//是否使用Bloom
 extern bool UseHighShadow;
 extern bool UseShadow;
+extern unsigned int ShadowLevel;
 
 extern float globalAmbient[4];
 extern float paraLightColor[4];
