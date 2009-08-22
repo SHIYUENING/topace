@@ -2491,9 +2491,9 @@ void DrawPlayer(void)
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 					}
 					if(UseHighShadow)
-						shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+						shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
 					else
-						shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+						shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
 					
 					m_VBMD->ShowVBMD(PlayerMainModel);
 /*					glPushMatrix();
@@ -3046,6 +3046,7 @@ void DrawGround(void)
 	glDisable(GL_FOG);
 	if(ShaderWater)
 	{
+		glBindTexture(GL_TEXTURE_2D,SeaTexID);
 		DrawSea(oneframetimelimit);
 		glPushMatrix();
 			
@@ -3055,7 +3056,7 @@ void DrawGround(void)
 			int mapx,mapz;
 			mapx=int(MFighter.RefPos()(0))/40000;
 			mapz=int(MFighter.RefPos()(2))/40000;
-			glBindTexture(GL_TEXTURE_2D,SeaTexID);
+			
 			for(int i=-3;i<4;i++)
 				for(int j=-3;j<4;j++)
 				{
