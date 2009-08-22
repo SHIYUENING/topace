@@ -4,7 +4,7 @@ uniform vec3 paraLightDirection;
 uniform vec3 eyePosition;
 uniform mat4 Worldmatrix;
 uniform sampler2D testTexture;
-uniform sampler2D ShadowMapTexture;
+uniform sampler2DShadow ShadowMapTexture;
 uniform samplerCube AmbientReflectiveTexture;
 uniform sampler2D NormalMapTexture;
 uniform sampler2D SpecularMapTexture;
@@ -52,36 +52,27 @@ void main()
     mat3 TBN = mat3(Tangent,Binormal,NormalIn);
     vec3 Normal = TBN*NN2;
     _r0036=Normal;
-    _x0048 = dot(paraLightDirection, paraLightDirection);
-    _TMP43 = inversesqrt(_x0048)*paraLightDirection;
-    DotNaL = dot(_r0036, _TMP43);
-    diffuseLight = max(DotNaL, 0.00000000E+000);
+    _TMP43 = normalize(paraLightDirection);
+    DotNaL = dot(Normal, _TMP43);
+    diffuseLight = max(DotNaL, 0.0);
     diffuse = paraLightColor*diffuseLight;
-    _x0058 = dot(eyePosition, eyePosition);
-    _TMP53 = inversesqrt(_x0058)*eyePosition;
-    _v0060 = _TMP43 + _TMP53;
-    _x0064 = dot(_v0060, _v0060);
-    _TMP59 = inversesqrt(_x0064)*_v0060;
+    _TMP53 = normalize(eyePosition);
+    _TMP59 = normalize(_TMP43 + _TMP53);
     DotNaH = dot(_r0036, _TMP59);
-    MaxNaH0 = max(DotNaH, 0.00000000E+000);
-    specularLight = pow(MaxNaH0, 5.00000000E+001);
+    MaxNaH0 = max(DotNaH, 0.0);
+    specularLight = pow(MaxNaH0, 50.0);
     SpecularMapcolor = texture2D(SpecularMapTexture, gl_TexCoord[0].xy);
-    if (diffuseLight <= 0.00000000E+000) { // if begin
-        specularLight = 0.00000000E+000;
-    } // end if
-    Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz + diffuse + (specularLight*8.00000000E+000)*SpecularMapcolor.xyz;
-    Ocolor.w = 1.00000000E+000;
-    colorposZ = texture2D(ShadowMapTexture, gl_TexCoord[3].xy);
-    posz = colorposZ.x*2.55000000E+002 + colorposZ.y + colorposZ.z/2.55000000E+002 + 6.99999988E-001;
-    if (gl_TexCoord[4].z > posz) { // if begin
-        Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz;
-    } // end if
+    if (diffuseLight <= 0.0) { 
+        specularLight = 0.0;
+    }
+    posz=shadow2DProj(ShadowMapTexture, gl_TexCoord[4]-vec4(0.0,0.0,0.4,0.0)).x;
+    Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.xyz)*posz;
+    Ocolor.w = 1.0;
     _i0076 = eyePosition - gl_TexCoord[2].xyz/gl_TexCoord[2].w;
-    _TMP75 = _i0076 - (2.00000000E+000*_r0036)*dot(_r0036, _i0076);
+    _TMP75 = _i0076 - (2.0*_r0036)*dot(_r0036, _i0076);
     _r0080 = Worldmatrix*vec4(_TMP75,0.0);
-    _OUT_color = MainColor*Ocolor*(textureCube(AmbientReflectiveTexture, _r0080.xyz) + 1.00000000E+000);
-    _OUT_color.w = 5.00000000E-001;
-
+    _OUT_color = MainColor*Ocolor*(textureCube(AmbientReflectiveTexture, _r0080.xyz) + 1.0);
+    _OUT_color.w = 0.5;
     gl_FragColor = _OUT_color;
     return;
 } 

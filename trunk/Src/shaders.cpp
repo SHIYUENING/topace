@@ -11,6 +11,7 @@ bool ShaderWater=true;//是否使用shader
 bool ShaderBloom=true;//是否使用Bloom
 bool UseHighShadow=true;
 bool UseShadow=true;
+unsigned int ShadowLevel=4;
 CGprofile   g_CGprofile_vertex;
 CGprofile   g_CGprofile_pixel;
 //CGprofile   g_CGprofile_pixel_GlSL;
@@ -128,7 +129,11 @@ unsigned char *readShaderFile( const char *fileName )
 //初始化shader
 void InitShader()
 {
-	isGLSL=true;
+	if((ShadowLevel==2)||(ShadowLevel==3))
+		isGLSL=true;
+	else
+		isGLSL=false;
+
 	ShaderBloom=true;
 	if(glewIsSupported("GL_NV_fragment_program")&&!isGLSL)
 	{
@@ -137,12 +142,15 @@ void InitShader()
 	}
 	else
 	{
+		if(ShadowLevel==4)
+			ShadowLevel=3;
 		UseHighShadow=false;
 		isGLSL=true;
 		if(glewIsSupported("GL_ARB_shading_language_100"))
 			InitGLSL();
 		else
 		{
+			ShadowLevel=0;
 			UseShadow=false;
 			ShaderLight=false;
 			ShaderBloom=false;
@@ -355,8 +363,9 @@ void InitCG()
 	//	g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	//cgGLLoadProgram( g_CGpixel_NOBloom  );
 	//CGerror GetCGerror=cgGetError();
-	if((g_CGprofile_pixel != CG_PROFILE_FP40)||!UseHighShadow)
+	if((g_CGprofile_pixel != CG_PROFILE_FP40)||(ShadowLevel==1))
 	{
+		ShadowLevel=1;
 		UseHighShadow=false;
 		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	}
@@ -394,7 +403,8 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 	{
 		char str[4096];
 		glGetInfoLogARB(GLSLShaderObject, sizeof(str), NULL, str);
-		MessageBox( NULL, str, "Vertex Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
+		MessageBox( NULL, str, "Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
+		MessageBox( NULL, "请尝试降低阴影设置，否则程序无法正常运行", "注意", MB_OK|MB_ICONEXCLAMATION );
 	}
 	return GLSLShaderObject;
 }
@@ -419,10 +429,11 @@ void InitGLSL()
 {
 
 	g_GLSLvertex = GLSL_CompileShader("vertex_t.glsl",GL_VERTEX_SHADER_ARB);
-	if(UseShadow)
-		g_GLSLpixel = GLSL_CompileShader("pixel_NOBloom.glsl",GL_FRAGMENT_SHADER_ARB);
+	if(ShadowLevel>=3)
+		g_GLSLpixel = GLSL_CompileShader("pixel_NOBloom_HighShadow.glsl",GL_FRAGMENT_SHADER_ARB);
+		//g_GLSLpixel = GLSL_CompileShader("pixel_NONormalMap.glsl",GL_FRAGMENT_SHADER_ARB);
 	else
-		g_GLSLpixel = GLSL_CompileShader("pixel_NONormalMap.glsl",GL_FRAGMENT_SHADER_ARB);
+		g_GLSLpixel = GLSL_CompileShader("pixel_NOBloom.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLRenderShadowMap_vertex = GLSL_CompileShader("RenderShadowMap_vertex.glsl",GL_VERTEX_SHADER_ARB);
 	g_GLSLRenderShadowMap_pixel = GLSL_CompileShader("RenderShadowMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLSea_vertex = GLSL_CompileShader("Sea_vertex.glsl",GL_VERTEX_SHADER_ARB);
@@ -551,7 +562,7 @@ void shaderTCG(int MainTex,int NormalTex,int SpecularTex,int ShadowMapTexID,floa
 	{
 		
 */
-	if(NormalTex==0)
+	if((NormalTex==0)||(ShadowLevel<1))
 		g_CGpixel_NOBloom=g_CGpixel_NONormalMap;
 
 		g_CGparam_ShadowMapTexture = cgGetNamedParameter(g_CGpixel_NOBloom, "ShadowMapTexture");

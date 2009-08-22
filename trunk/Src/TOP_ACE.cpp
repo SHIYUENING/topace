@@ -234,10 +234,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
         "GL_ARB_fragment_program "
         ))&&(!GraphicsLOW))
 		IsSupportFBO=true;
-	int ShadowSet=GetPrivateProfileInt("Light","Shadow",2,".\\set.ini");
-	if(ShadowSet<2)
+	ShadowLevel=GetPrivateProfileInt("Light","Shadow",4,".\\set.ini");
+	if(ShadowLevel<2)
 		UseHighShadow=false;
-	if(ShadowSet<1)
+	if(ShadowLevel<1)
 	{
 		UseShadow=false;
 		img=EmptyTexture(64);
@@ -369,7 +369,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
 	DeleteFont();
-	if(UseShadow)
+	if(ShadowLevel>0)
 	{
 		glDeleteFramebuffersEXT(1, &fbo);
 		glDeleteRenderbuffersEXT(1, &depthBuffer);
@@ -2484,13 +2484,13 @@ void DrawPlayer(void)
 					
 					//m_VBMD->ShowVBMD(PlayerMainModel);
 					
-					if(UseHighShadow)
+					if(ShadowLevel>1)
 					{
 						glBindTexture(GL_TEXTURE_2D, dtex);
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 					}
-					if(UseHighShadow)
+					if(ShadowLevel>1)
 						shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
 					else
 						shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
@@ -2550,7 +2550,7 @@ void DrawPlayer(void)
 					CGDisableTextureParameterAmbientReflective();
 					CGDisableTextureParameterNormalMap();
 					CGDisableTextureParameterSpecularMap();
-					if(UseHighShadow)
+					if(ShadowLevel>1)
 					{
 						glBindTexture(GL_TEXTURE_2D, dtex);
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
@@ -2792,7 +2792,7 @@ void showloading(void)
 }
 void DrawShadowMap(void)
 {
-	if(!UseShadow)
+	if(ShadowLevel==0)
 	{
 		return;
 	}
@@ -2852,7 +2852,7 @@ void DrawShadowMap(void)
 													0.5f, 0.5f, 0.5f, 1.0f};
 							glGetFloatv(GL_MODELVIEW_MATRIX,MVmatrix);
 							glGetFloatv(GL_PROJECTION_MATRIX,Projmatrix);
-							if(UseHighShadow)
+							if(ShadowLevel>1)
 							{
 								glPushMatrix();
 									glLoadIdentity();	
@@ -2915,7 +2915,7 @@ void DrawShadowMap(void)
 							md5_jinyiL.render();
 							md5_jinyiR.render();
 							md5_MissleBox.render();
-							if(!UseHighShadow)
+							if(!(ShadowLevel>1))
 							{
 								CGDisableProfilePixel();
 								CGDisableProfileVertex();
