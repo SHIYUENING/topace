@@ -490,14 +490,14 @@ void RenderShadowMapGLSL()
 {
 	glUseProgramObjectARB( GLSL_RenderShadowMap );
 }
-void shaderT(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)
+void shaderT(int MainTex,int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)
 {
 	if(isGLSL)
-		shaderTGLSL(NormalTex,SpecularTex,ShadowMapTexID,HDlight);
+		shaderTGLSL(MainTex,NormalTex,SpecularTex,ShadowMapTexID,HDlight);
 	else
-		shaderTCG(NormalTex,SpecularTex,ShadowMapTexID,HDlight);
+		shaderTCG(MainTex,NormalTex,SpecularTex,ShadowMapTexID,HDlight);
 }
-void shaderTCG(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)//bool UseBloom=false
+void shaderTCG(int MainTex,int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)//bool UseBloom=false
 {/*
 	if(Keb[0])
 	Ke[0]=Ke[0]+0.02f;
@@ -604,7 +604,7 @@ void shaderTCG(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)//
 	
 	//}
 }
-void shaderTGLSL(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)
+void shaderTGLSL(int MainTex,int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)
 {
 	if(HDlight<0.0f)
 		HDlight=0.0f;
@@ -614,6 +614,20 @@ void shaderTGLSL(int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)
 	HDglobalAmbient[1]=globalAmbient[1]*HDlight;
 	HDglobalAmbient[2]=globalAmbient[2]*HDlight;
 	glUseProgramObjectARB( GLSL_shaderT );
+	glActiveTexture(GL_TEXTURE0);	glBindTexture(GL_TEXTURE_2D,MainTex);			glUniform1i(glGetUniformLocation(GLSL_shaderT,"testTexture"),0);
+	glActiveTexture(GL_TEXTURE1);	glBindTexture(GL_TEXTURE_2D,ShadowMapTexID);	glUniform1i(glGetUniformLocation(GLSL_shaderT,"ShadowMapTexture"),1);
+	glActiveTexture(GL_TEXTURE2);	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,AmbientReflectiveTexture);	glUniform1i(glGetUniformLocation(GLSL_shaderT,"AmbientReflectiveTexture"),2);
+	glActiveTexture(GL_TEXTURE3);	glBindTexture(GL_TEXTURE_2D,NormalTex);	glUniform1i(glGetUniformLocation(GLSL_shaderT,"NormalMapTexture"),3);
+	glActiveTexture(GL_TEXTURE4);	glBindTexture(GL_TEXTURE_2D,SpecularTex);	glUniform1i(glGetUniformLocation(GLSL_shaderT,"SpecularMapTexture"),4);
+	glActiveTexture(GL_TEXTURE0);
+	glUniformMatrix4fv(glGetUniformLocation(GLSL_shaderT,"ShadowMapMVPmatrix"),1,GL_FALSE,ShadowMapMVPmatrix);
+	glUniformMatrix4fv(glGetUniformLocation(GLSL_shaderT,"Worldmatrix"),1,GL_FALSE,Worldmatrix);
+	glUniform4fv(glGetUniformLocation(GLSL_shaderT,"MissleLightDirection"),1,MissleLightDirection);
+	glUniform3fv(glGetUniformLocation(GLSL_shaderT,"MissleLightColor"),1,MissleLightColor);
+	glUniform3fv(glGetUniformLocation(GLSL_shaderT,"globalAmbient"),1,HDglobalAmbient);
+	glUniform3fv(glGetUniformLocation(GLSL_shaderT,"paraLightColor"),1,paraLightColor);
+	glUniform3fv(glGetUniformLocation(GLSL_shaderT,"paraLightDirection"),1,paraLightDirection);
+	glUniform3fv(glGetUniformLocation(GLSL_shaderT,"eyePosition"),1,eyePosition);
 }
 /*
 void HighLight()
@@ -681,7 +695,22 @@ void DrawSeaCG(float seaframe)
 		cgGLEnableTextureParameter( g_CGparam_AmbientReflectiveSea );
 }
 void DrawSeaGLSL(float seaframe)
-{}
+{
+	seatime=seatime+seaframe/200.0f;
+	if(seatime>1.0f)
+		seatime=seatime-1.0f;
+	glUseProgramObjectARB( GLSL_DrawSea );
+	glUniform1f(glGetUniformLocation(GLSL_DrawSea,"time"),seatime);
+	glUniform1i(glGetUniformLocation(GLSL_DrawSea,"testTexture"),0);
+	glActiveTexture(GL_TEXTURE2);              
+    glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,AmbientReflectiveTexture);  
+	glUniform1i(glGetUniformLocation(GLSL_DrawSea,"AmbientReflectiveTexturSea"),2); 
+	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"globalAmbient"),1,globalAmbient);
+	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"paraLightColor"),1,paraLightColor);
+	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"paraLightDirection"),1,LightSunPos);
+	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"eyePosition"),1,eyePositionSea);
+	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"FogColor"),1,pixelfogColor);
+}
 void DrawBloomMap(int WinW,int WinH)
 {
 	if(isGLSL)
@@ -778,25 +807,35 @@ void CGDisableTextureParameterShadowMap()
 {
 	if(!isGLSL)
 	cgGLDisableTextureParameter( g_CGparam_ShadowMapTexture );
+	else
+		glActiveTexture(GL_TEXTURE0);
 }
 void CGDisableTextureParameterAmbientReflective()
 {
 	if(!isGLSL)
 	cgGLDisableTextureParameter( g_CGparam_AmbientReflective );
+	else
+		glActiveTexture(GL_TEXTURE0);
 }
 void CGDisableTextureParameterNormalMap()
 {
 	if(!isGLSL)
 	cgGLDisableTextureParameter( g_CGparam_NormalMapTexture );
+	else
+		glActiveTexture(GL_TEXTURE0);
 }
 void CGDisableTextureParameterSpecularMap()
 {
 	if(!isGLSL)
 	cgGLDisableTextureParameter( g_CGparam_SpecularMapTexture );
+	else
+		glActiveTexture(GL_TEXTURE0);
 }
 void CGDisableTextureParameterAmbientReflectiveSea()
 {
 	if(!isGLSL)
 	cgGLDisableTextureParameter( g_CGparam_AmbientReflectiveSea );
+	else
+		glActiveTexture(GL_TEXTURE0);
 }
 
