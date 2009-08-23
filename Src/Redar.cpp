@@ -105,8 +105,8 @@ void DrawMAP()
 	glLoadIdentity();									// Reset The Modelview Matrix
 
 	glPushMatrix();	
-		glBindTexture(GL_TEXTURE_2D, bloomTexId1);	
-	//glBindTexture(GL_TEXTURE_2D, Maptexture);	
+		//glBindTexture(GL_TEXTURE_2D, bloomTexId1);	
+	glBindTexture(GL_TEXTURE_2D, Maptexture);	
 				glBegin(GL_QUADS);							// Use A Quad For Each Character
 					glTexCoord2f(0.0f,0.0f);glVertex2i(-winheight/2,-winheight/2);						// Vertex Coord (Bottom Left)
 					glTexCoord2f(1.0f,0.0f);glVertex2i( winheight/2,-winheight/2);						// Vertex Coord (Bottom Right)
