@@ -17,8 +17,6 @@ void main()
     vec2 _OUT_texcoord3;
 
     _r0008 = ShadowMapMVPmatrix * gl_Vertex;
-    _OUT_texcoord3.x = _r0008.x/(_r0008.w*2.0) + 0.5;
-    _OUT_texcoord3.y = _r0008.y/(_r0008.w*2.0) + 0.5;
     _r0010 = gl_ModelViewProjectionMatrix * gl_Vertex;
     _TMP11 = normalize(gl_Normal);
     _v0018 = MissleLightDirection.xyz - gl_Vertex.xyz;
