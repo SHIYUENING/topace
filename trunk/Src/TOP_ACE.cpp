@@ -2416,7 +2416,9 @@ float GetSunHDlight(float x,float y,float z,int winwidth,int winheight)
 }
 void DrawPlayer(void)
 {
-	glGetFloatv(GL_MODELVIEW_MATRIX,Worldmatrix);
+	//glGetFloatv(GL_MODELVIEW_MATRIX,Worldmatrix);
+	for(int i=0;i<16;i++)
+	Worldmatrix[i]=UDfighers[0].UDMplane.Matrix4()[i];
 	glEnable(GL_CULL_FACE);
 	glPushMatrix();
     glLoadIdentity();
