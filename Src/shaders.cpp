@@ -365,7 +365,7 @@ void InitCG()
 	//	g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	//cgGLLoadProgram( g_CGpixel_NOBloom  );
 	//CGerror GetCGerror=cgGetError();
-	if(g_CGprofile_pixel != CG_PROFILE_FP40)
+	if((g_CGprofile_pixel != CG_PROFILE_FP40)||(ShadowLevel==1))
 	{
 		if(ShadowLevel>1)
 			ShadowLevel=1;

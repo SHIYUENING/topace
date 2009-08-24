@@ -15,7 +15,7 @@ extern bool PlayerLocked;
 extern int hited;
 extern int ModelID_redarUI;
 //extern GLuint img;
-extern GLuint bloomTexId1,bloomTexId2;
+//extern GLuint bloomTexId1,bloomTexId2;
 void DrawBlackBack(int Size)
 {
 	
