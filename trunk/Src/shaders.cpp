@@ -116,7 +116,7 @@ unsigned char *readShaderFile( const char *fileName )
  return 0;
  }
 
- unsigned char *buffer = new unsigned char[filesize];
+ unsigned char *buffer = new unsigned char[filesize+1];
 
   int bytes = fread( buffer, 1, filesize, file );
 
