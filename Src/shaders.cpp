@@ -134,8 +134,10 @@ void InitShader()
 	else
 		isGLSL=false;
 
+	if((!glewIsSupported("GL_NV_fragment_program"))&&(ShadowLevel==4))
+		isGLSL=true;
 	ShaderBloom=true;
-	if(glewIsSupported("GL_NV_fragment_program")&&!isGLSL)
+	if(!isGLSL)
 	{
 		isGLSL=false;
 		InitCG();
@@ -363,9 +365,10 @@ void InitCG()
 	//	g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	//cgGLLoadProgram( g_CGpixel_NOBloom  );
 	//CGerror GetCGerror=cgGetError();
-	if((g_CGprofile_pixel != CG_PROFILE_FP40)||(ShadowLevel==1))
+	if(g_CGprofile_pixel != CG_PROFILE_FP40)
 	{
-		ShadowLevel=1;
+		if(ShadowLevel>1)
+			ShadowLevel=1;
 		UseHighShadow=false;
 		g_CGpixel_NOBloom=g_CGpixel_NOBloom_Low_shadow;
 	}
