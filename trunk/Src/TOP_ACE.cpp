@@ -2420,8 +2420,8 @@ void DrawPlayer(void)
 	for(int i=0;i<16;i++)
 	Worldmatrix[i]=UDfighers[0].UDMplane.Matrix4()[i];
 	glEnable(GL_CULL_FACE);
-	glPushMatrix();
-    glLoadIdentity();
+	//glPushMatrix();
+    //glLoadIdentity();
 	
 
     //paraLightDirection = MView * d
@@ -2567,22 +2567,27 @@ void DrawPlayer(void)
 	}
 	else
 	{
+		glPushMatrix();	
+		glLoadIdentity();	
+		glLoadMatrixd(MView.Matrix4());
+		glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT1);
 		if(hited>0)
 			glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
-		glTranslatef(0, -Ppos1, -Ppos2);
+		//glTranslatef(0, -Ppos1, -Ppos2);
 		glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 		glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
 		m_VBMD->ShowVBMD(ModelID_MavePart_Normal);
 
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHTING);
+		glPopMatrix();	
 	}
 
 
 
-    glPopMatrix();
+   // glPopMatrix();
 
 	glDisable(GL_CULL_FACE);
 
