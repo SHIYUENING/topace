@@ -407,7 +407,7 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 		char str[4096];
 		glGetInfoLogARB(GLSLShaderObject, sizeof(str), NULL, str);
 		MessageBox( NULL, str, "Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
-		MessageBox( NULL, "请尝试降低阴影设置，否则程序无法正常运行", "注意", MB_OK|MB_ICONEXCLAMATION );
+		//MessageBox( NULL, "请尝试降低阴影设置，否则程序无法正常运行", "注意", MB_OK|MB_ICONEXCLAMATION );
 	}
 	return GLSLShaderObject;
 }
@@ -430,6 +430,15 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 }
 void InitGLSL()
 {
+	GLint glMaxVERTEX_UNIFORM_COMPONENTS=0;
+	glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS,&glMaxVERTEX_UNIFORM_COMPONENTS);
+
+	if(glMaxVERTEX_UNIFORM_COMPONENTS==0)
+		ShadowLevel=2;
+
+	char MaxVERTEX_UNIFORM_COMPONENTS[32]={0};
+	itoa(glMaxVERTEX_UNIFORM_COMPONENTS,MaxVERTEX_UNIFORM_COMPONENTS,10);
+	MessageBox( NULL, MaxVERTEX_UNIFORM_COMPONENTS, "!", MB_OK|MB_ICONEXCLAMATION );
 
 	g_GLSLvertex = GLSL_CompileShader("vertex_t.glsl",GL_VERTEX_SHADER_ARB);
 	if(ShadowLevel>=3)

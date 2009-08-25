@@ -512,7 +512,7 @@ void DrawDataLine1 (void)
 		strcat( szTitle, ", Light:glLight" );
 	if((IsSupportFBO)&&(ShaderLight)&&UseShadow)
 	{
-		if(UseHighShadow)
+		if(ShadowLevel>2)
 			strcat( szTitle, ", Shadow:High" );
 		else
 			strcat( szTitle, ", Shadow:Low" );
