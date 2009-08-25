@@ -503,8 +503,8 @@ void DrawDataLine1 (void)
 									// Build The Title String
 	sprintf( szTitle, "%4.8f time,%2.0d FPS",oneframetime,g_nFPS);
 	
-	if( g_fVBOSupported )									// Include A Notice About VBOs
-	strcat( szTitle, ", VBO" );
+	//if( g_fVBOSupported )									// Include A Notice About VBOs
+	//strcat( szTitle, ", VBO" );
 
 	if(ShaderLight)
 		strcat( szTitle, ", Light:Shader" );
