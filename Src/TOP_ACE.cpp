@@ -3463,7 +3463,7 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 					PSmokes.DrawSmoke( MSmallWindow.RefPos() ,MSmallWindowView ,SmallWindowW ,SmallWindowH ,SmallWindowLookRenge );
 				glDisable(GL_CULL_FACE);
 			}
-			
+			glEnable(GL_BLEND);
 			if(locking)
 			{
 				glColor3f(0.0f,1.0f,0.0f);
