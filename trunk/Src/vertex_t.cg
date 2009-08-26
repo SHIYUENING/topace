@@ -48,12 +48,12 @@ fragment main(
 	OUT.objectPos = IN.position.xyz;
 	
 
-    float3 P = IN.position.xyz;
-    float3 N = normalize(IN.normal);
-	float3 L = normalize(MissleLightDirection.xyz-P);
-	float DotNaL=dot(N, L);
-    float diffuseLight = max(DotNaL, 0.0);
-    float3 diffuse = paraLightColor * diffuseLight*10.0;
+    half3 P = IN.position.xyz;
+    half3 N = normalize(IN.normal);
+	half3 L = normalize(MissleLightDirection.xyz-P);
+	half DotNaL=dot(N, L);
+    half diffuseLight = max(DotNaL, 0.0);
+    half3 diffuse = paraLightColor * diffuseLight*10.0;
 
 	OUT.Light2color = diffuse;
 

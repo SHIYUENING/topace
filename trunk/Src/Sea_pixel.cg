@@ -32,15 +32,15 @@ pixel main(
 )
 {
 
-	float3 vBumpTexA = tex2D(testTexture, IN.TexCoord1).xyz;
-	float3 vBumpTexB = tex2D(testTexture, IN.TexCoord2).xyz;
-	float3 vBumpTexC = tex2D(testTexture, IN.TexCoord3).xyz;
-	float3 vBumpTexD = tex2D(testTexture, IN.TexCoord4).xyz;
+	half3 vBumpTexA = tex2D(testTexture, IN.TexCoord1).xyz;
+	half3 vBumpTexB = tex2D(testTexture, IN.TexCoord2).xyz;
+	half3 vBumpTexC = tex2D(testTexture, IN.TexCoord3).xyz;
+	half3 vBumpTexD = tex2D(testTexture, IN.TexCoord4).xyz;
 
 	// Average bump layers
-	float3 N = (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)/4.0;
-	float3 vReflBump = float3((N.x-0.5)*2.0,(N.z-0.5)*2.0,(N.y-0.5)*2.0);
-    float3 diffuse=float3(0.1,0.5,1.0);
+	half3 N = (vBumpTexA.xyz + vBumpTexB.xyz + vBumpTexC.xyz + vBumpTexD.xyz)/4.0;
+	half3 vReflBump = float3((N.x-0.5)*2.0,(N.z-0.5)*2.0,(N.y-0.5)*2.0);
+    half3 diffuse=float3(0.1,0.5,1.0);
 	float3 V=-normalize(IN.objectPos2.xyz*1000.0-eyePosition);
 	float3 vEyeReflected = reflect(V, vReflBump);
 	float4 reflection = texCUBE(AmbientReflectiveTexturSea, vEyeReflected);
@@ -49,12 +49,12 @@ pixel main(
 	float Fresnel = (1.0 - NdotL)*0.5;
 	//float Fresnel = max( 0.2 + 0.8 * pow(facing, 5.0), 0.0 );
 	float3 L = normalize(paraLightDirection);
-	float light=max( dot(L, vReflBump), 0.0);
+	half light=max( dot(L, vReflBump), 0.0);
 	float3 H = normalize(L + V);
 	float3 norvReflBump=normalize(vReflBump);
-	float DotMaH=dot(norvReflBump, H);
-	float MaxDotMaH0=max(DotMaH, 0.0);
-	float specularLight = pow(MaxDotMaH0, 1000.0);
+	half DotMaH=dot(norvReflBump, H);
+	half MaxDotMaH0=max(DotMaH, 0.0);
+	half specularLight = pow(MaxDotMaH0, 1000.0);
 	pixel OUT;
 	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor;
 	float fogb=min((100000.0-IN.objectPos.z)/70000.0,1.0);

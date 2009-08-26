@@ -40,7 +40,7 @@ pixel main(
 	uniform sampler2D	SpecularMapTexture
 )
 {
-	float4 MainColor=tex2D( testTexture, IN.texcoord0 );
+	half4 MainColor=tex2D( testTexture, IN.texcoord0 );
 	float3 T = normalize(IN.color0.xyz);
 	float3 Nm = normalize(IN.normal);
 	float3 B = normalize(cross (T,Nm));
@@ -56,16 +56,16 @@ pixel main(
     float3 N = mul(NN2,TBN);
 
     float3 L = normalize(paraLightDirection);
-	float DotNaL=dot(N, L);
-    float diffuseLight = max(DotNaL, 0.0);
-    float3 diffuse = paraLightColor * diffuseLight;
+	half DotNaL=dot(N, L);
+    half diffuseLight = max(DotNaL, 0.0);
+    half3 diffuse = paraLightColor * diffuseLight;
 
     float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
-	float DotNaH=dot(N, H);
-	float MaxNaH0=max(DotNaH,0.0);
-    float specularLight = pow(MaxNaH0, 50.0);
-	float4 SpecularMapcolor;
+	half DotNaH=dot(N, H);
+	half MaxNaH0=max(DotNaH,0.0);
+    half specularLight = pow(MaxNaH0, 50.0);
+	half4 SpecularMapcolor;
 	SpecularMapcolor=tex2D( SpecularMapTexture, IN.texcoord0 );
 /*
 	float lightA=(diffuse.x+diffuse.y+diffuse.z)/3.0;
@@ -77,7 +77,7 @@ pixel main(
 
 
     if(diffuseLight<=0.0) specularLight=0.0;
-    float4 Ocolor;
+    half4 Ocolor;
     Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8.0*SpecularMapcolor.xyz;
     Ocolor.w = 1.0;
     pixel OUT;
@@ -85,7 +85,7 @@ pixel main(
 	float posz=colorposZ.r*255.0+colorposZ.g+colorposZ.b/255.0+0.70;
 	if(IN.objectPos2.z>posz) Ocolor.xyz=globalAmbient +IN.Light2color;
 
-	float4 R2;
+	half4 R2;
 	R2.xyz= reflect((eyePosition-IN.objectPos.xyz/IN.objectPos.w), N);
 	R2.w=0.0;
 	R2=mul(Worldmatrix,R2);
