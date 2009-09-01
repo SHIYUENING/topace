@@ -36,6 +36,8 @@ MD5Model md5_chuiweiL;//¥πŒ≤
 MD5Model md5_chuiweiR;
 MD5Model md5_jinyiL;//ΩÛ“Ì
 MD5Model md5_jinyiR;
+MD5Model md5_weiyanL;//Œ≤—Ê
+MD5Model md5_weiyanR;
 MD5Model md5_MissleBox;//µºµØµØ≤÷
 MD5Model md5_Other1;
 MD5Model md5_Other2;
@@ -101,6 +103,8 @@ void LoadVBMDModels(bool IsSupportFBO)
 	sprintf(ModelFileName,"Data/models/%s/chuiweiR.md5mesh",ModelName);	md5_chuiweiR.loadMesh(ModelFileName);
 	sprintf(ModelFileName,"Data/models/%s/jinyiL.md5mesh",ModelName);	md5_jinyiL.loadMesh(ModelFileName);
 	sprintf(ModelFileName,"Data/models/%s/jinyiR.md5mesh",ModelName);	md5_jinyiR.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/weiyanL.md5mesh",ModelName);	md5_weiyanL.loadMesh(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/weiyanR.md5mesh",ModelName);	md5_weiyanR.loadMesh(ModelFileName);
 	sprintf(ModelFileName,"Data/models/%s/MissleBox.md5mesh",ModelName);	md5_MissleBox.loadMesh(ModelFileName);
 
 	sprintf(ModelFileName,"Data/models/%s/weiyiL.md5anim",ModelName);	md5_weiyiL.loadAnim(ModelFileName);
@@ -115,6 +119,8 @@ void LoadVBMDModels(bool IsSupportFBO)
 	sprintf(ModelFileName,"Data/models/%s/chuiweiR.md5anim",ModelName);	md5_chuiweiR.loadAnim(ModelFileName);
 	sprintf(ModelFileName,"Data/models/%s/jinyiL.md5anim",ModelName);	md5_jinyiL.loadAnim(ModelFileName);
 	sprintf(ModelFileName,"Data/models/%s/jinyiR.md5anim",ModelName);	md5_jinyiR.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/weiyanL.md5anim",ModelName);	md5_weiyanL.loadAnim(ModelFileName);
+	sprintf(ModelFileName,"Data/models/%s/weiyanR.md5anim",ModelName);	md5_weiyanR.loadAnim(ModelFileName);
 	sprintf(ModelFileName,"Data/models/%s/MissleBox.md5anim",ModelName);	md5_MissleBox.loadAnim(ModelFileName);
 
 
@@ -130,6 +136,8 @@ void LoadVBMDModels(bool IsSupportFBO)
 	md5_chuiweiR.setAnim(0);
 	md5_jinyiL.setAnim(0);
 	md5_jinyiR.setAnim(0);
+	md5_weiyanL.setAnim(0);
+	md5_weiyanR.setAnim(0);
 	md5_MissleBox.setAnim(0);
 
 	ShowHPmodel=ModelID_MavePart_Normal;

@@ -2558,6 +2558,8 @@ void DrawPlayer(void)
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
 					}
+					md5_weiyanL.render();
+					md5_weiyanR.render();
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -3140,6 +3142,8 @@ void SetPlayerTransform(void)
 	md5_chuiweiR.setFrame(-int(InertiaX*6.0/5.0)+30);
 	md5_jinyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
 	md5_jinyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+	md5_weiyanL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+	md5_weiyanR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
 	md5_MissleBox.setFrame(MissleBoxFrame);
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
