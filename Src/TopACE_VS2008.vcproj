@@ -578,6 +578,14 @@
 				Name="GLSL"
 				>
 				<File
+					RelativePath="..\Bin\BackFire_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\BackFire_vertex.glsl"
+					>
+				</File>
+				<File
 					RelativePath="..\Bin\BloomH_pixel.glsl"
 					>
 				</File>
