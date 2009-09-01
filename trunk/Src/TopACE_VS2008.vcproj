@@ -104,7 +104,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
+				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -186,7 +186,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
+				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -268,109 +268,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)*.cg&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Sound\fmodex.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
+				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)Graphics\lib\*.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;copy &quot;$(SolutionDir)Controls\SDL.dll&quot; &quot;$(OutDir)&quot; /Y&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="CG"
-			>
-			<File
-				RelativePath=".\BloomH_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\BloomMap_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\BloomW_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\g_BloomL1_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\g_BloomL2_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\g_BloomL3_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\pixel_HighLight.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\pixel_NOBloom.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\pixel_NOBloom_HighShadow.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\pixel_NONormalMap.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\pixel_phongLight.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\pixel_t.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderShadowMap_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderShadowMap_vertex.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\Sea_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\Sea_vertex.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\ToneMapping_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\UIalpha_pixel.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\UIalpha_vertex.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\vertex_basicLight.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\vertex_HighLight.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\vertex_phongLight.cg"
-				>
-			</File>
-			<File
-				RelativePath=".\vertex_t.cg"
-				>
-			</File>
-		</Filter>
 		<Filter
 			Name="ms3d"
 			>
@@ -666,6 +570,114 @@
 				RelativePath=".\shaders.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Shaders"
+			>
+			<Filter
+				Name="GLSL"
+				>
+				<File
+					RelativePath="..\Bin\BloomH_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\BloomMap_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\BloomW_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\pixel_NOBloom.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\pixel_NOBloom_HighShadow.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\pixel_NONormalMap.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\RenderShadowMap_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\RenderShadowMap_vertex.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\Sea_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\Sea_vertex.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\ToneMapping_pixel.glsl"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\vertex_t.glsl"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="CG"
+				>
+				<File
+					RelativePath="..\Bin\BloomH_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\BloomMap_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\BloomW_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\pixel_NOBloom.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\pixel_NOBloom_HighShadow.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\pixel_NONormalMap.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\RenderShadowMap_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\RenderShadowMap_vertex.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\Sea_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\Sea_vertex.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\ToneMapping_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\vertex_t.cg"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\Cpuid.cpp"
