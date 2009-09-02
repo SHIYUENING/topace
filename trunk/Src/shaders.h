@@ -27,6 +27,9 @@ void DrawBloomHGLSL(int WinH);
 void ToneMapping();
 void ToneMappingCG();
 void ToneMappingGLSL();
+void BackFire();
+void BackFireCG();
+void BackFireGLSL();
 void CGDisableProfilePixel();
 //void CGDisableProfilePixelCG();
 //void CGDisableProfilePixelGLSL();
@@ -46,6 +49,7 @@ void CGDisableTextureParameterSpecularMap();
 //void CGDisableTextureParameterSpecularMapCG();
 //void CGDisableTextureParameterSpecularMapGLSL();
 void CGDisableTextureParameterAmbientReflectiveSea();
+void CGDisableBackFire();
 //void CGDisableTextureParameterAmbientReflectiveSeaCG();
 //void CGDisableTextureParameterAmbientReflectiveSeaGLSL();
 /*
