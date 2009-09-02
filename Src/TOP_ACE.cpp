@@ -2546,7 +2546,7 @@ void DrawPlayer(void)
 					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
 					glColor4f(1.0f,1.0f,1.0f,1.0f);
 					glDepthMask(GL_TRUE);
-					glEnable(GL_CULL_FACE);
+					//glEnable(GL_CULL_FACE);
 
 					CGDisableProfilePixel();
 					CGDisableProfileVertex();
@@ -2570,7 +2570,7 @@ void DrawPlayer(void)
 					glEnable(GL_TEXTURE_2D);
 					glDepthMask(GL_TRUE);
 					glCullFace(GL_BACK);
-					glDisable(GL_CULL_FACE);
+					//glDisable(GL_CULL_FACE);
 					glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
@@ -3201,10 +3201,11 @@ void SetPlayerTransform(void)
 	eyePosition[0] = (float)EyePos3d(0);
     eyePosition[1] = (float)EyePos3d(1);
     eyePosition[2] = (float)EyePos3d(2);
-	Vector3d eyeNormal=cross(Vector3d(0.0,0.0,1.0),EyePos3d);
-	BackFireEyeDir[0]=(float)EyePos3d(0);
-	BackFireEyeDir[1]=(float)EyePos3d(1);
-	BackFireEyeDir[2]=(float)EyePos3d(2);
+	Vector3d eyeNormal=Vector3d(normalize(cross(Vector3d(0.0,0.0,1.0),Vector3d(normalize(EyePos3d)))));
+	BackFireEyeDir[0]=(float)eyeNormal(0);
+	BackFireEyeDir[1]=(float)eyeNormal(1);
+	BackFireEyeDir[2]=(float)eyeNormal(2);
+	testNum=BackFireEyeDir[3]=abs(dot(Vector3d(0.0,0.0,1.0),Vector3d(normalize(EyePos3d))));
 	
 	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 

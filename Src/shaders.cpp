@@ -75,7 +75,7 @@ GLhandleARB GLSL_ToneMapping;
 GLhandleARB GLSL_BackFire;
 
 extern float LightSunPos[3];
-float BackFireEyeDir[3]={0.0f,1.0f,1.0f};
+float BackFireEyeDir[4]={0.0f,1.0f,1.0f,0.0f};
 float BackFireColor[4]={1.0f,0.2f,0.2f,1.0f};
 float globalAmbient[4];
 float paraLightColor[4];
@@ -835,7 +835,7 @@ void BackFireCG()
 void BackFireGLSL()
 {
 	glUseProgramObjectARB( GLSL_BackFire );
-	glUniform3fv(glGetUniformLocation(GLSL_BackFire,"BackFireEyeDir"),1,BackFireEyeDir);
+	glUniform4fv(glGetUniformLocation(GLSL_BackFire,"BackFireEyeDir"),1,BackFireEyeDir);
 	glUniform4fv(glGetUniformLocation(GLSL_BackFire,"BackFireColor"),1,BackFireColor);
 }
 void CGDisableProfilePixel()

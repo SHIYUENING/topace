@@ -251,7 +251,7 @@ extern bool ShaderBloom;// «∑Ò π”√Bloom
 extern bool UseHighShadow;
 extern bool UseShadow;
 extern unsigned int ShadowLevel;
-extern float BackFireEyeDir[3];
+extern float BackFireEyeDir[4];
 extern float globalAmbient[4];
 extern float paraLightColor[4];
 extern float paraLightDirection[3];
