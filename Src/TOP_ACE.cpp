@@ -2433,6 +2433,7 @@ void DrawPlayer(void)
 	lightPosition[1]=(float)tmp3d(1);
 	lightPosition[2]=(float)tmp3d(2);
 	glLightfv(GL_LIGHT1,GL_POSITION,lightPosition);
+
 		
 	//BasicLight();
 	//cgGLDisableProfile( g_CGprofile_vertex );
@@ -2524,7 +2525,7 @@ void DrawPlayer(void)
 					glPopMatrix();
 */
 
-					glDisable(GL_CULL_FACE);
+					glCullFace(GL_FRONT);
 					md5_weiyiL.render();
 					md5_weiyiR.render();
 					md5_wingL.render();
@@ -2538,13 +2539,14 @@ void DrawPlayer(void)
 					md5_jinyiL.render();
 					md5_jinyiR.render();
 					md5_MissleBox.render();
+					glDisable(GL_CULL_FACE);
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
 					glColor4f(1.0f,1.0f,1.0f,0.0f);
 					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
 					glColor4f(1.0f,1.0f,1.0f,1.0f);
 					glDepthMask(GL_TRUE);
-
+					glEnable(GL_CULL_FACE);
 
 					CGDisableProfilePixel();
 					CGDisableProfileVertex();
@@ -2558,8 +2560,18 @@ void DrawPlayer(void)
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
 					}
+					glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+					glDepthMask(GL_FALSE);
+					glDisable(GL_TEXTURE_2D);
+					BackFire();
 					md5_weiyanL.render();
 					md5_weiyanR.render();
+					CGDisableBackFire();
+					glEnable(GL_TEXTURE_2D);
+					glDepthMask(GL_TRUE);
+					glCullFace(GL_BACK);
+					glDisable(GL_CULL_FACE);
+					glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -3189,7 +3201,10 @@ void SetPlayerTransform(void)
 	eyePosition[0] = (float)EyePos3d(0);
     eyePosition[1] = (float)EyePos3d(1);
     eyePosition[2] = (float)EyePos3d(2);
-
+	Vector3d eyeNormal=cross(Vector3d(0.0,0.0,1.0),EyePos3d);
+	BackFireEyeDir[0]=(float)EyePos3d(0);
+	BackFireEyeDir[1]=(float)EyePos3d(1);
+	BackFireEyeDir[2]=(float)EyePos3d(2);
 	
 	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 

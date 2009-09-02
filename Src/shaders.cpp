@@ -58,6 +58,8 @@ GLhandleARB	g_GLSLRenderShadowMap_vertex;
 GLhandleARB	g_GLSLRenderShadowMap_pixel;
 GLhandleARB	g_GLSLSea_vertex;
 GLhandleARB	g_GLSLSea_pixel;
+GLhandleARB g_GLSLBackFire_vertex;
+GLhandleARB g_GLSLBackFire_pixel;
 //GLhandleARB	g_GLSLBloom_vertex;
 GLhandleARB	g_GLSLBloomW_pixel;
 GLhandleARB	g_GLSLBloomH_pixel;
@@ -70,8 +72,11 @@ GLhandleARB GLSL_DrawBloomMap;
 GLhandleARB GLSL_DrawBloomW;
 GLhandleARB GLSL_DrawBloomH;
 GLhandleARB GLSL_ToneMapping;
+GLhandleARB GLSL_BackFire;
 
 extern float LightSunPos[3];
+float BackFireEyeDir[3]={0.0f,1.0f,1.0f};
+float BackFireColor[4]={1.0f,0.2f,0.2f,1.0f};
 float globalAmbient[4];
 float paraLightColor[4];
 float paraLightDirection[3];
@@ -450,6 +455,8 @@ void InitGLSL()
 	g_GLSLRenderShadowMap_pixel = GLSL_CompileShader("RenderShadowMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLSea_vertex = GLSL_CompileShader("Sea_vertex.glsl",GL_VERTEX_SHADER_ARB);
 	g_GLSLSea_pixel = GLSL_CompileShader("Sea_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLBackFire_vertex = GLSL_CompileShader("BackFire_vertex.glsl",GL_VERTEX_SHADER_ARB);
+	g_GLSLBackFire_pixel = GLSL_CompileShader("BackFire_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 //	g_GLSLBloom_vertex = GLSL_CompileShader("Bloom_vertex.glsl",GL_VERTEX_SHADER_ARB);
 	g_GLSLBloomW_pixel = GLSL_CompileShader("BloomW_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 	g_GLSLBloomH_pixel = GLSL_CompileShader("BloomH_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
@@ -459,7 +466,7 @@ void InitGLSL()
 	GLSL_RenderShadowMap = glCreateProgramObjectARB();
 	GLSL_shaderT = glCreateProgramObjectARB();
 	GLSL_DrawSea = glCreateProgramObjectARB();
-	
+	GLSL_BackFire = glCreateProgramObjectARB();
 	GLSL_DrawBloomW = glCreateProgramObjectARB();
 	GLSL_DrawBloomH = glCreateProgramObjectARB();
 	GLSL_DrawBloomMap = glCreateProgramObjectARB();
@@ -470,6 +477,8 @@ void InitGLSL()
 	glAttachObjectARB( GLSL_shaderT, g_GLSLpixel );
 	glAttachObjectARB( GLSL_DrawSea, g_GLSLSea_vertex );
 	glAttachObjectARB( GLSL_DrawSea, g_GLSLSea_pixel );
+	glAttachObjectARB( GLSL_BackFire, g_GLSLBackFire_vertex );
+	glAttachObjectARB( GLSL_BackFire, g_GLSLBackFire_pixel );
 	//glAttachObjectARB( GLSL_DrawBloomW, g_GLSLBloom_vertex );
 	glAttachObjectARB( GLSL_DrawBloomW, g_GLSLBloomW_pixel );
 	//glAttachObjectARB( GLSL_DrawBloomH, g_GLSLBloom_vertex );
@@ -481,6 +490,7 @@ void InitGLSL()
 	GetGLSLLinkSTATUS( GLSL_RenderShadowMap);
 	GetGLSLLinkSTATUS( GLSL_shaderT);
 	GetGLSLLinkSTATUS( GLSL_DrawSea);
+	GetGLSLLinkSTATUS( GLSL_BackFire);
 	GetGLSLLinkSTATUS( GLSL_DrawBloomW);
 	GetGLSLLinkSTATUS( GLSL_DrawBloomH);
 	GetGLSLLinkSTATUS( GLSL_DrawBloomMap);
@@ -812,6 +822,22 @@ void ToneMappingGLSL()
 	glUseProgramObjectARB( GLSL_ToneMapping );
 	glUniform1i(glGetUniformLocation(GLSL_ToneMapping,"_texSrc1"),0);
 }
+void BackFire()
+{
+	if(isGLSL)
+		BackFireGLSL();
+	else
+		BackFireCG();
+}
+void BackFireCG()
+{
+}
+void BackFireGLSL()
+{
+	glUseProgramObjectARB( GLSL_BackFire );
+	glUniform3fv(glGetUniformLocation(GLSL_BackFire,"BackFireEyeDir"),1,BackFireEyeDir);
+	glUniform4fv(glGetUniformLocation(GLSL_BackFire,"BackFireColor"),1,BackFireColor);
+}
 void CGDisableProfilePixel()
 {
 	if(isGLSL)
@@ -862,3 +888,10 @@ void CGDisableTextureParameterAmbientReflectiveSea()
 		glActiveTexture(GL_TEXTURE0);
 }
 
+
+void CGDisableBackFire()
+{
+	if(isGLSL)
+		glUseProgramObjectARB( NULL );
+
+}
