@@ -2640,7 +2640,8 @@ void DrawPlayerTranslucent(void)
 			BackFire();
 			md5_weiyanL.render();
 			md5_weiyanR.render();
-			CGDisableBackFire();
+			CGDisableProfilePixel();
+			CGDisableProfileVertex();
 			glEnable(GL_TEXTURE_2D);
 			glDepthMask(GL_TRUE);
 			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
