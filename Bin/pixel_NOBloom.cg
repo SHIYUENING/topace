@@ -78,7 +78,7 @@ pixel main(
 
     if(diffuseLight<=0.0) specularLight=0.0;
     half4 Ocolor;
-    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8.0*SpecularMapcolor.xyz;
+    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8.0*SpecularMapcolor.x;
     Ocolor.w = 1.0;
     pixel OUT;
 	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
