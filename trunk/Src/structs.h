@@ -218,7 +218,7 @@ int MissleBoxFrame=0;
 int SmallWindowType=0;
 float moveSpeedT=0.0f;
 float changeInertia=0.0f;
-
+float EnginePower=0.5f;
 extern bool isinitsound;
 extern AudioBuffer * missleWarning[MAX_missleWarning];
 extern AudioBuffer * fox2voice[MAX_fox2voice];

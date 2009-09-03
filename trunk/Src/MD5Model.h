@@ -19,7 +19,7 @@ public:
   void loadMesh(const char *filename);
   int  loadAnim(const char *filename);
   void setAnim(int animIndex, int frameIndex = 0);
-  void setFrame(int frameIndex);
+  void setFrame(int frameIndex,float ScaleX=1.0f,float ScaleY=1.0f,float ScaleZ=1.0f);
   void animate(float dt);
   void render();
   bool LoadOK;
@@ -138,7 +138,7 @@ protected:
   Quat buildQuat(float x, float y, float z) const;
 
   void buildVerts();
-  void buildVerts(Frame &frame);
+  void buildVerts(Frame &frame,float ScaleX=1.0f,float ScaleY=1.0f,float ScaleZ=1.0f);
   void buildNormals();
   void buildFrames(Anim &anim);
   void buildTBNs();

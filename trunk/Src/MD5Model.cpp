@@ -120,7 +120,7 @@ void MD5Model::setAnim(int animIndex, int frameIndex) {
 }
 
 
-void MD5Model::setFrame(int frameIndex) {
+void MD5Model::setFrame(int frameIndex,float ScaleX,float ScaleY,float ScaleZ) {
   // sanity check #1
 	if(!LoadOK)
 		return;
@@ -133,7 +133,7 @@ void MD5Model::setFrame(int frameIndex) {
        anims[currAnim]->numFrames <= frameIndex )
     throw Exception("MD5Model::setFrame(): frame index is invalid");
 
-  buildVerts(anims[currAnim]->frames[frameIndex]);
+  buildVerts(anims[currAnim]->frames[frameIndex],ScaleX,ScaleY,ScaleZ);
   buildNormals();
   currFrame = frameIndex;
   animTime = 0.0f;
@@ -977,7 +977,7 @@ void MD5Model::buildVerts() {
 }
 
 
-void MD5Model::buildVerts(Frame &frame) {
+void MD5Model::buildVerts(Frame &frame,float ScaleX,float ScaleY,float ScaleZ) {
   for ( size_t i=0; i < meshes.size(); i++ ) {
     for ( size_t j=0; j < meshes[i]->verts.size(); j++ ) {
       Vertex &v = meshes[i]->verts[j];
@@ -989,9 +989,9 @@ void MD5Model::buildVerts(Frame &frame) {
         
         Quat q(w.pos[0], w.pos[1], w.pos[2], 0.0f);
         Quat result = joint.quat*q*joint.quat.conjugate();
-        v.pos[0] += (joint.pos[0] + result[0])*w.w;
-        v.pos[1] += (joint.pos[1] + result[1])*w.w;
-        v.pos[2] += (joint.pos[2] + result[2])*w.w;
+        v.pos[0] += (joint.pos[0] + result[0]*ScaleX)*w.w;
+        v.pos[1] += (joint.pos[1] + result[1]*ScaleY)*w.w;
+        v.pos[2] += (joint.pos[2] + result[2]*ScaleZ)*w.w;
       } // for (weights)
     } // for (mesh vertices)
   } // for (meshes)
