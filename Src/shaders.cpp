@@ -73,7 +73,7 @@ GLhandleARB GLSL_DrawBloomW;
 GLhandleARB GLSL_DrawBloomH;
 GLhandleARB GLSL_ToneMapping;
 GLhandleARB GLSL_BackFire;
-
+extern float EnginePower;
 extern float LightSunPos[3];
 float BackFireEyeDir[4]={0.0f,1.0f,1.0f,0.0f};
 float BackFireColor[4]={0.8f,0.8f,2.0f,1.0f};
@@ -838,6 +838,7 @@ void BackFireGLSL()
 	glUseProgramObjectARB( GLSL_BackFire );
 	glUniform4fv(glGetUniformLocation(GLSL_BackFire,"BackFireEyeDir"),1,BackFireEyeDir);
 	glUniform4fv(glGetUniformLocation(GLSL_BackFire,"BackFireColor"),1,BackFireColor);
+	glUniform1f(glGetUniformLocation(GLSL_BackFire,"EnginePower"),EnginePower);
 }
 void CGDisableProfilePixel()
 {

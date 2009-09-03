@@ -3153,6 +3153,8 @@ void SetPlayerTransform(void)
 	MavePart_WL.RotateInternal(Vector3d(InertiaX/128.0f+InertiaZ/128.0f, 0.0f, 0.0f) );
 	MavePart_WR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
 */
+
+	EnginePower=(InertiaSpeed+50.0f)*0.01f;
 	md5_weiyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
 	md5_weiyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
 	md5_wingL.setFrame(wingFrame);
@@ -3165,8 +3167,8 @@ void SetPlayerTransform(void)
 	md5_chuiweiR.setFrame(-int(InertiaX*6.0/5.0)+30);
 	md5_jinyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
 	md5_jinyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
-	md5_weiyanL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
-	md5_weiyanR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+	md5_weiyanL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
+	md5_weiyanR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
 	md5_MissleBox.setFrame(MissleBoxFrame);
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
