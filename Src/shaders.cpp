@@ -32,6 +32,8 @@ CGprogram   g_CGRenderShadowMap_pixel;
 //CGprogram	g_BloomL3_pixel;
 CGprogram	g_Sea_vertex;
 CGprogram	g_Sea_pixel;
+CGprogram	g_BackFire_vertex;
+CGprogram	g_BackFire_pixel;
 CGprogram	g_BloomW_pixel;
 CGprogram	g_BloomH_pixel;
 CGprogram	g_BloomMap_pixel;
@@ -329,6 +331,18 @@ void InitCG()
 												g_CGprofile_pixel,
 												NULL,
 												NULL );
+	g_BackFire_vertex = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"BackFire_vertex.cg",
+												g_CGprofile_vertex,
+												NULL,
+												NULL );
+	g_BackFire_pixel = cgCreateProgramFromFile( g_CGcontext,
+												CG_SOURCE,
+												"BackFire_pixel.cg",
+												g_CGprofile_pixel,
+												NULL,
+												NULL );
 
 	g_BloomW_pixel = cgCreateProgramFromFile( g_CGcontext,
 												CG_SOURCE,
@@ -385,6 +399,8 @@ void InitCG()
 	cgGLLoadProgram( g_CGRenderShadowMap_pixel  );
 	cgGLLoadProgram(g_Sea_vertex);
 	cgGLLoadProgram(g_Sea_pixel);
+	cgGLLoadProgram(g_BackFire_vertex);
+	cgGLLoadProgram(g_BackFire_pixel);
 	cgGLLoadProgram(g_BloomW_pixel);
 	cgGLLoadProgram(g_BloomH_pixel);
 	cgGLLoadProgram(g_BloomMap_pixel);
@@ -832,6 +848,13 @@ void BackFire()
 }
 void BackFireCG()
 {
+	cgSetParameter4fv(cgGetNamedParameter( g_BackFire_vertex, "BackFireEyeDir" ), BackFireEyeDir);
+	cgSetParameter4fv(cgGetNamedParameter( g_BackFire_vertex, "BackFireColor"), BackFireColor);
+	cgSetParameter1f(cgGetNamedParameter( g_BackFire_vertex, "EnginePower"), EnginePower);
+	cgGLBindProgram( g_BackFire_vertex );
+	cgGLEnableProfile( g_CGprofile_vertex );
+	//cgGLBindProgram( g_BackFire_pixel );
+	//cgGLEnableProfile( g_CGprofile_pixel );
 }
 void BackFireGLSL()
 {
@@ -888,12 +911,4 @@ void CGDisableTextureParameterAmbientReflectiveSea()
 	cgGLDisableTextureParameter( g_CGparam_AmbientReflectiveSea );
 	else
 		glActiveTexture(GL_TEXTURE0);
-}
-
-
-void CGDisableBackFire()
-{
-	if(isGLSL)
-		glUseProgramObjectARB( NULL );
-
 }

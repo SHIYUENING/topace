@@ -638,6 +638,14 @@
 				Name="CG"
 				>
 				<File
+					RelativePath="..\Bin\BackFire_pixel.cg"
+					>
+				</File>
+				<File
+					RelativePath="..\Bin\BackFire_vertex.cg"
+					>
+				</File>
+				<File
 					RelativePath="..\Bin\BloomH_pixel.cg"
 					>
 				</File>

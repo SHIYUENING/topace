@@ -49,7 +49,6 @@ void CGDisableTextureParameterSpecularMap();
 //void CGDisableTextureParameterSpecularMapCG();
 //void CGDisableTextureParameterSpecularMapGLSL();
 void CGDisableTextureParameterAmbientReflectiveSea();
-void CGDisableBackFire();
 //void CGDisableTextureParameterAmbientReflectiveSeaCG();
 //void CGDisableTextureParameterAmbientReflectiveSeaGLSL();
 /*
