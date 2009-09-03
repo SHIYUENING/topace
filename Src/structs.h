@@ -266,4 +266,6 @@ extern float lightPositionSea[];
 extern float Ppos1;
 extern float Ppos2;
 extern float pixelfogColor[3];
-extern GLfloat ShadowMapMVPmatrix[16],Worldmatrix[16];
+extern GLfloat ShadowMapMVPmatrix[16];
+extern GLfloat Worldmatrix[16];
+extern GLdouble DrawPlayermatrix[16]={0};

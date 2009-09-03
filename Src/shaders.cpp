@@ -76,7 +76,7 @@ GLhandleARB GLSL_BackFire;
 
 extern float LightSunPos[3];
 float BackFireEyeDir[4]={0.0f,1.0f,1.0f,0.0f};
-float BackFireColor[4]={1.0f,0.2f,0.2f,1.0f};
+float BackFireColor[4]={0.8f,0.8f,2.0f,1.0f};
 float globalAmbient[4];
 float paraLightColor[4];
 float paraLightDirection[3];
@@ -93,7 +93,8 @@ float Ppos2=150.0f;
 float pixelfogColor[3];
 float seatime=0.0f;
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
-GLfloat ShadowMapMVPmatrix[16],Worldmatrix[16];
+GLfloat ShadowMapMVPmatrix[16]={0};
+GLfloat Worldmatrix[16]={0};
 unsigned char *readShaderFile( const char *fileName )
 {
  FILE *file = fopen( fileName, "r" );

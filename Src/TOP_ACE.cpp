@@ -2539,6 +2539,7 @@ void DrawPlayer(void)
 					md5_jinyiL.render();
 					md5_jinyiR.render();
 					md5_MissleBox.render();
+					glGetDoublev(GL_MODELVIEW_MATRIX,DrawPlayermatrix);
 					glDisable(GL_CULL_FACE);
 					glEnable(GL_BLEND);
 					glDepthMask(GL_FALSE);
@@ -2546,7 +2547,7 @@ void DrawPlayer(void)
 					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
 					glColor4f(1.0f,1.0f,1.0f,1.0f);
 					glDepthMask(GL_TRUE);
-					//glEnable(GL_CULL_FACE);
+					glCullFace(GL_BACK);
 
 					CGDisableProfilePixel();
 					CGDisableProfileVertex();
@@ -2560,18 +2561,7 @@ void DrawPlayer(void)
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
 					}
-					glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-					glDepthMask(GL_FALSE);
-					glDisable(GL_TEXTURE_2D);
-					BackFire();
-					md5_weiyanL.render();
-					md5_weiyanR.render();
-					CGDisableBackFire();
-					glEnable(GL_TEXTURE_2D);
-					glDepthMask(GL_TRUE);
-					glCullFace(GL_BACK);
-					//glDisable(GL_CULL_FACE);
-					glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
 		//		glPopMatrix();
 		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 		//	glPopMatrix();										// Restore The Old Projection Matrix
@@ -2635,6 +2625,27 @@ void DrawPlayer(void)
 		glPopMatrix();
 	glDisable(GL_BLEND);
 */
+}
+void DrawPlayerTranslucent(void)
+{
+	glEnable(GL_BLEND);
+	if(ShaderLight)
+	{
+		glPushMatrix();	
+			glLoadIdentity();
+			glLoadMatrixd(DrawPlayermatrix);
+			glBlendFunc(GL_SRC_ALPHA,GL_ONE);
+			glDepthMask(GL_FALSE);
+			glDisable(GL_TEXTURE_2D);
+			BackFire();
+			md5_weiyanL.render();
+			md5_weiyanR.render();
+			CGDisableBackFire();
+			glEnable(GL_TEXTURE_2D);
+			glDepthMask(GL_TRUE);
+			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		glPopMatrix();	
+	}
 }
 void DrawSky(Transform viewSky,float ne=0.0)
 {
@@ -3387,6 +3398,8 @@ void stage0(void)
 			}
 			if(!GraphicsLOW)
 				PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
+			if(!GraphicsLOW)
+				DrawPlayerTranslucent();
 			Drawlocksign();
 		}
 	glPopMatrix();
