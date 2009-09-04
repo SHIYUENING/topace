@@ -160,6 +160,10 @@ float InertiaX=0.0f;
 float InertiaY=0.0f;
 float InertiaZ=0.0f;
 float InertiaSpeed=0.0f;
+float InertiaX_Last=0.0f;
+float InertiaY_Last=0.0f;
+float InertiaZ_Last=0.0f;
+float InertiaSpeed_Last=0.0f;
 
 float ViewTurnX=0.0f;
 float ViewTurnY=0.0f;
@@ -214,11 +218,14 @@ bool KeyR=false;//按键“R”是否按下
 bool KeyT=false;
 double oneframetimelimit=1.0/60.0;//每桢最大时间
 int wingFrame=0;
+int wingFrame_Last=0;
 int MissleBoxFrame=0;
+int MissleBoxFrame_Last=0;
 int SmallWindowType=0;
 float moveSpeedT=0.0f;
 float changeInertia=0.0f;
 float EnginePower=0.5f;
+float EnginePower_Last=0.5f;
 extern bool isinitsound;
 extern AudioBuffer * missleWarning[MAX_missleWarning];
 extern AudioBuffer * fox2voice[MAX_fox2voice];
