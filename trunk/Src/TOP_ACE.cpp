@@ -786,13 +786,13 @@ void fireShell()
 
 	Transform tmp2=UDfighers[0].UDMplane;
 	//tmp2.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-	tmp2.TranslateInternal(Vector3d(5.0f, -5.8f+turnX*143.2f*testNum2, -50.0f));
+	tmp2.TranslateInternal(Vector3d(5.0f, -5.8f+turnX*143.2f*0.0f, -50.0f));
 	
 	//testNum2=turnX;
 	Transform tmp=tmp2;
 	tmp.TranslateInternal(Vector3d((float(rand()%10)-5.0f)/5.0f, (float(rand()%10)-5.0f)/5.0f+shellturn, 200.0f+moveSpeed * 2000));
 	
-	if(lockflash%5==0)
+	if(lockflash%3==0)
 	{
 		Shell.AddNewShell(float(tmp2.RefPos()(0)),float(tmp2.RefPos()(1)),float(tmp2.RefPos()(2)),float(tmp2.RefPos()(0) - tmp.RefPos()(0)),float(tmp2.RefPos()(1) - tmp.RefPos()(1)),float(tmp2.RefPos()(2) - tmp.RefPos()(2)),0,0);
 		for(int i=0;i<locklists_index;i++)
@@ -3133,6 +3133,43 @@ void DrawGround(void)
 		glPopMatrix();	
 	}
 }
+void SetMD5Frame(void)
+{
+	EnginePower=(InertiaSpeed+50.0f)*0.01f;
+	if((InertiaX_Last!=InertiaX)||(InertiaZ_Last!=InertiaZ))
+	{
+		md5_weiyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+		md5_weiyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+		md5_yinqingL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+		md5_yinqingR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+		md5_jinyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+		md5_jinyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+	}
+	if(wingFrame_Last!=wingFrame)
+	{
+		md5_wingL.setFrame(wingFrame);
+		md5_wingR.setFrame(wingFrame);
+	}
+	if(InertiaX_Last!=InertiaX)
+	{
+		md5_yayiL.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_yayiR.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_chuiweiL.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_chuiweiR.setFrame(-int(InertiaX*6.0/5.0)+30);
+	}
+	if((InertiaX_Last!=InertiaX)||(InertiaZ_Last!=InertiaZ)||(EnginePower_Last!=EnginePower))
+	{
+		md5_weiyanL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
+		md5_weiyanR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
+	}
+	if(MissleBoxFrame_Last!=MissleBoxFrame)
+		md5_MissleBox.setFrame(MissleBoxFrame);
+	InertiaX_Last=InertiaX;
+	InertiaZ_Last=InertiaZ;
+	wingFrame_Last=wingFrame;
+	EnginePower_Last=EnginePower;
+	MissleBoxFrame_Last=MissleBoxFrame;
+}
 void SetPlayerTransform(void)
 {/*
 	MavePart_BackL.Reset();
@@ -3155,22 +3192,8 @@ void SetPlayerTransform(void)
 	MavePart_WR.RotateInternal(Vector3d(InertiaX/128.0f-InertiaZ/128.0f, 0.0f, 0.0f) );
 */
 
-	EnginePower=(InertiaSpeed+50.0f)*0.01f;
-	md5_weiyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
-	md5_weiyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
-	md5_wingL.setFrame(wingFrame);
-	md5_wingR.setFrame(wingFrame);
-	md5_yayiL.setFrame(-int(InertiaX*6.0/5.0)+30);
-	md5_yayiR.setFrame(-int(InertiaX*6.0/5.0)+30);
-	md5_yinqingL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
-	md5_yinqingR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
-	md5_chuiweiL.setFrame(-int(InertiaX*6.0/5.0)+30);
-	md5_chuiweiR.setFrame(-int(InertiaX*6.0/5.0)+30);
-	md5_jinyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
-	md5_jinyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
-	md5_weiyanL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
-	md5_weiyanR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
-	md5_MissleBox.setFrame(MissleBoxFrame);
+
+	SetMD5Frame();
 
 	ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	if(!IsHUD)
@@ -3219,7 +3242,7 @@ void SetPlayerTransform(void)
 	BackFireEyeDir[0]=(float)eyeNormal(0);
 	BackFireEyeDir[1]=(float)eyeNormal(1);
 	BackFireEyeDir[2]=(float)eyeNormal(2);
-	testNum=BackFireEyeDir[3]=abs(dot(Vector3d(0.0,0.0,1.0),Vector3d(normalize(EyePos3d))));
+	BackFireEyeDir[3]=abs(dot(Vector3d(0.0,0.0,1.0),Vector3d(normalize(EyePos3d))));
 	
 	SunPos3d=MView.Matrix() * Vector3d(LightSunPos[0],LightSunPos[1],LightSunPos[2]) + MView.RefPos();
 
@@ -3660,6 +3683,21 @@ void WaitKeyToStart(void)
 		globalAmbient[2] = LightAmbientB;
 		globalAmbient[3] = LightAmbientA;
 		ViewTurnX=0.0f;
+		md5_weiyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+		md5_weiyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+		md5_yinqingL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+		md5_yinqingR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+		md5_jinyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
+		md5_jinyiR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30);
+		md5_wingL.setFrame(wingFrame);
+		md5_wingR.setFrame(wingFrame);
+		md5_yayiL.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_yayiR.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_chuiweiL.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_chuiweiR.setFrame(-int(InertiaX*6.0/5.0)+30);
+		md5_weiyanL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
+		md5_weiyanR.setFrame(int((-InertiaX+InertiaZ)*3.0/5.0)+30,EnginePower,EnginePower,EnginePower);
+		md5_MissleBox.setFrame(MissleBoxFrame);
 //		Video.LoadVideo("Data/video/AFI_Panic01.avi",true);
 	
 	}
