@@ -3136,6 +3136,7 @@ void DrawGround(void)
 void SetMD5Frame(void)
 {
 	EnginePower=(InertiaSpeed+50.0f)*0.01f;
+	EnginePower=1.0-(1.0-EnginePower)*(1.0-EnginePower);
 	if((InertiaX_Last!=InertiaX)||(InertiaZ_Last!=InertiaZ))
 	{
 		md5_weiyiL.setFrame(int((-InertiaX-InertiaZ)*3.0/5.0)+30);
