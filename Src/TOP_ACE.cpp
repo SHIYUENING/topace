@@ -308,8 +308,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	if((GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)||(!IsSupportFBO))
 		ShaderBloom=false;
-	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",184,".\\set.ini")/255.0f;
-	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",187,".\\set.ini")/255.0f;
+	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",201,".\\set.ini")/255.0f;
+	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",207,".\\set.ini")/255.0f;
 	pixelfogColor[2]=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255.0f;
 	
 	lockX=winwidth/2;
@@ -2659,11 +2659,11 @@ void DrawSky(Transform viewSky,float ne=0.0)
 	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(ne));
 	double fogbackY;
 	//double skybackY;
-	if(viewSky.RefPos()(1)>50000.0)
+	if(viewSky.RefPos()(1)>20000.0)
 		fogbackY=viewSky.RefPos()(1);
 	else
 	{
-		fogbackY=50000.0;
+		fogbackY=20000.0;
 		//skybackY=(10000.0-MFighter.RefPos()(1))/10.0;
 	}
 	Msky.Translate( Vector3d( viewSky.RefPos()(0) ,viewSky.RefPos()(1), viewSky.RefPos()(2) ) );
