@@ -56,7 +56,7 @@ void main()
 	posz=posz/21.0;
 	
 	vec4 Ocolor;
-    Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.xyz)*posz;
+    Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
     Ocolor.w = 1.0;
     vec3 Reflective=reflect(ViewDir,Normal);
     vec4 ReflectiveWorld = Worldmatrix*vec4(Reflective,0.0);
