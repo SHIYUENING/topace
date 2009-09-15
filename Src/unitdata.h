@@ -15,6 +15,7 @@
 #define AIact_Avoid 3//闪避
 #define AIact_assemble 4//向队长集中
 
+#define MAXTrack 75
 #define MAXweapon 4
 #define MAXUNITSMOKE 150
 //extern CLoadACMD *m_nj;//ACMD模型对象
@@ -53,6 +54,9 @@ public:
 	int smokeNum[MAXUNITSMOKE];//尾烟纹理编号
 	*/
 
+	int Track_index; 
+	float Tracks[2][MAXTrack*9];
+	float TracksColor[MAXTrack][3][4];
 	int weapon[MAXweapon];//武器编号<0时表示没有武器
 	int smokeTime;//被消灭后烟雾残留时间
 	
@@ -78,6 +82,9 @@ public:
 	int SelfNormalModelID;
 	int SelfLowModelID;
 
+	float WingWidth;
+	float TrackWidth;
+	int AddTrack_index;
 
 	//AudioSource * SoundSourceGun;
 	
@@ -102,6 +109,8 @@ public:
 	void ResetData(void);
 	void m_Sound(Transform& would,float LookRenge);
 	bool isPlayer;
+	void addTrack();
+	void DrawTrack();
 };
 
 
