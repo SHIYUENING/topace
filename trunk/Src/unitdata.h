@@ -15,7 +15,7 @@
 #define AIact_Avoid 3//闪避
 #define AIact_assemble 4//向队长集中
 
-#define MAXTrack 75
+#define MAXTrack 100
 #define MAXweapon 4
 #define MAXUNITSMOKE 150
 //extern CLoadACMD *m_nj;//ACMD模型对象
@@ -55,8 +55,9 @@ public:
 	*/
 
 	int Track_index; 
-	float Tracks[2][MAXTrack*9];
-	float TracksColor[MAXTrack][3][4];
+	float Tracks[MAXTrack*12];
+	float TracksColor[MAXTrack*4];
+	float TrackAlpha;
 	int weapon[MAXweapon];//武器编号<0时表示没有武器
 	int smokeTime;//被消灭后烟雾残留时间
 	
