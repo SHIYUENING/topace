@@ -28,19 +28,16 @@ Unitdata::Unitdata(void)
 , isPlayer(false)
 ,AIType(0)
 ,Track_index(0)
-,WingWidth(50.0f)
-,TrackWidth(2.5f)
+,WingWidth(60.0f)
+,TrackWidth(8.0f)
 ,AddTrack_index(0)
+,TrackAlpha(0)
 {
 	for(int i=0;i<MAXTrack;i++)
 	{
-		TracksColor[MAXTrack][0][3]=0.0f;
-		TracksColor[MAXTrack][1][3]=0.0f;
-		TracksColor[MAXTrack][2][3]=0.0f;
+		TracksColor[i*4+3]=0.0f;
 		for(int j=0;j<3;j++)
-			for(int k=0;k<3;k++)
-				TracksColor[MAXTrack][j][k]=1.0f;
-
+			TracksColor[i*4+j]=1.0f;
 	}
 }
 
@@ -267,6 +264,9 @@ void Unitdata::TurnTo(const Vector3d& Position){
 		if(isRSpeed)
 			rotateAngle=0.0;
 
+		if(rotateAngle>0.0)
+			TrackAlpha=1.2f;
+
 		if((UDflag!=2)&&(AIType=0))
 			mSpeed=mSpeed-0.002f*float(rotateAngle*rotateAngle);
 		UDPstate.AngleAcceleration = rotateAxis * rotateAngle - UDPstate.AngleVelocity;
@@ -475,12 +475,73 @@ void Unitdata::m_Sound(Transform& would,float LookRenge)
 }
 void Unitdata::addTrack(void)
 {
-	for(int i=0;i<MAXTrack;i++)
+	for(int i=0;i<(MAXTrack/2);i++)
 	{
-		TracksColor[MAXTrack][1][3]=TracksColor[MAXTrack][1][3]-0.011f;
+		TracksColor[i*2*4+3]=TracksColor[i*2*4+3]-0.01275f;
 	}
-	TracksColor[Track_index][1][3]=1.2f;
+	/*
+	TracksColor[Track_index*4+3]=0.0f;
+	if((Track_index%2)==0)
+	{
+		int Track_indexf=Track_index-3;
+		if(Track_indexf<0)
+			Track_indexf=Track_indexf+MAXTrack;
+		TracksColor[Track_indexf*4+3]=TrackAlpha;
+		TrackAlpha=0.0f;
+	}
+	*/
 	Transform TrackPos;
+	if((Track_index%2)==0)
+	{
+
+		TracksColor[Track_index*4+3]=TrackAlpha;
+		TrackPos=UDMplane.RefPos();
+		TrackPos.TranslateInternal(Vector3d(-WingWidth,0.0,0.0));
+		Tracks[Track_index*3+0]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2]=TrackPos.RefPos()(2);
+		Tracks[Track_index*3+0+MAXTrack*3]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1+MAXTrack*3]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2+MAXTrack*3]=TrackPos.RefPos()(2);
+
+		TrackPos=UDMplane.RefPos();
+		TrackPos.TranslateInternal(Vector3d(WingWidth,0.0,0.0));
+		Tracks[Track_index*3+0+MAXTrack*6]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1+MAXTrack*6]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2+MAXTrack*6]=TrackPos.RefPos()(2);
+		Tracks[Track_index*3+0+MAXTrack*9]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1+MAXTrack*9]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2+MAXTrack*9]=TrackPos.RefPos()(2);
+	
+	}
+	if((Track_index%2)==1)
+	{
+		TrackPos=UDMplane.RefPos();
+		TrackPos.TranslateInternal(Vector3d(-WingWidth-TrackWidth,0.0,0.0));
+		Tracks[Track_index*3+0]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2]=TrackPos.RefPos()(2);
+
+		TrackPos=UDMplane.RefPos();
+		TrackPos.TranslateInternal(Vector3d(-WingWidth+TrackWidth,0.0,0.0));
+		Tracks[Track_index*3+0+MAXTrack*3]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1+MAXTrack*3]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2+MAXTrack*3]=TrackPos.RefPos()(2);
+
+		TrackPos=UDMplane.RefPos();
+		TrackPos.TranslateInternal(Vector3d(WingWidth+TrackWidth,0.0,0.0));
+		Tracks[Track_index*3+0+MAXTrack*6]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1+MAXTrack*6]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2+MAXTrack*6]=TrackPos.RefPos()(2);
+
+		TrackPos=UDMplane.RefPos();
+		TrackPos.TranslateInternal(Vector3d(WingWidth-TrackWidth,0.0,0.0));
+		Tracks[Track_index*3+0+MAXTrack*9]=TrackPos.RefPos()(0);
+		Tracks[Track_index*3+1+MAXTrack*9]=TrackPos.RefPos()(1);
+		Tracks[Track_index*3+2+MAXTrack*9]=TrackPos.RefPos()(2);
+	
+	}
+/*	Transform TrackPos;
 	TrackPos=UDMplane.RefPos();
 	TrackPos.TranslateInternal(Vector3d(-WingWidth-TrackWidth,0.0,0.0));
 	Tracks[0][Track_index*9+0]=TrackPos.RefPos()(0);
@@ -512,7 +573,7 @@ void Unitdata::addTrack(void)
 	Tracks[1][Track_index*9+6]=TrackPos.RefPos()(0);
 	Tracks[1][Track_index*9+7]=TrackPos.RefPos()(1);
 	Tracks[1][Track_index*9+8]=TrackPos.RefPos()(2);
-
+*/
 	Track_index=Track_index+1;
 	if(Track_index>=MAXTrack)
 		Track_index=0;
@@ -521,31 +582,86 @@ void Unitdata::DrawTrack(void)
 {
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glDisable(GL_TEXTURE_2D);
-	/*
+/*	
 	glEnableClientState( GL_VERTEX_ARRAY );	
 	//glEnableClientState( GL_COLOR_ARRAY );	
-	glVertexPointer( 3, GL_FLOAT, 0, Tracks[0] );
+	glVertexPointer( 3, GL_FLOAT, 0, Tracks );
 	//glColorPointer( 4, GL_FLOAT, 0, TracksColor );
-	glDrawArrays( GL_TRIANGLE_STRIP, 0, MAXTrack );
-	glVertexPointer( 3, GL_FLOAT, 0, Tracks[1] );
-	//glColorPointer( 4, GL_FLOAT, 0, TracksColor );
+	glDrawArrays( GL_LINE_STRIP, 0, MAXTrack );
+
+	glVertexPointer( 3, GL_FLOAT, 0, Tracks+sizeof(float)*MAXTrack*3 );
+	glColorPointer( 4, GL_FLOAT, 0, TracksColor );
 	glDrawArrays( GL_TRIANGLE_STRIP, 0, MAXTrack );
 
-	//glDisableClientState( GL_COLOR_ARRAY );
+	glVertexPointer( 3, GL_FLOAT, 0, Tracks+sizeof(float)*MAXTrack*6 );
+	glColorPointer( 4, GL_FLOAT, 0, TracksColor );
+	glDrawArrays( GL_TRIANGLE_STRIP, 0, MAXTrack );
+
+	glVertexPointer( 3, GL_FLOAT, 0, Tracks+sizeof(float)*MAXTrack*9 );
+	glColorPointer( 4, GL_FLOAT, 0, TracksColor );
+	glDrawArrays( GL_TRIANGLE_STRIP, 0, MAXTrack );
+	
 	glDisableClientState( GL_VERTEX_ARRAY );
+//	glDisableClientState( GL_COLOR_ARRAY );
 	*/
 	glBegin(GL_TRIANGLE_STRIP);
-	for(int i=0;i<MAXTrack*3;i++)
+	for(int i=Track_index;i<MAXTrack;i++)
 	{
-		glVertex3f(Tracks[0][i*3+0],Tracks[0][i*3+1],Tracks[0][i*3+2]);
+		glVertex3f(Tracks[i*3],Tracks[i*3+1],Tracks[i*3+2]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
 	}
 	glEnd();
 	glBegin(GL_TRIANGLE_STRIP);
-	for(int i=0;i<MAXTrack*3;i++)
+	for(int i=Track_index;i<MAXTrack;i++)
 	{
-		glVertex3f(Tracks[1][i*3+0],Tracks[1][i*3+1],Tracks[1][i*3+2]);
+		glVertex3f(Tracks[i*3+MAXTrack*3],Tracks[i*3+1+MAXTrack*3],Tracks[i*3+2+MAXTrack*3]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
 	}
 	glEnd();
+	glBegin(GL_TRIANGLE_STRIP);
+	for(int i=Track_index;i<MAXTrack;i++)
+	{
+		glVertex3f(Tracks[i*3+MAXTrack*6],Tracks[i*3+1+MAXTrack*6],Tracks[i*3+2+MAXTrack*6]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
+	}
+	glEnd();
+	glBegin(GL_TRIANGLE_STRIP);
+	for(int i=Track_index;i<MAXTrack;i++)
+	{
+		glVertex3f(Tracks[i*3+MAXTrack*9],Tracks[i*3+1+MAXTrack*9],Tracks[i*3+2+MAXTrack*9]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLE_STRIP);
+	for(int i=0;i<Track_index;i++)
+	{
+		glVertex3f(Tracks[i*3],Tracks[i*3+1],Tracks[i*3+2]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
+	}
+	glEnd();
+	glBegin(GL_TRIANGLE_STRIP);
+	for(int i=0;i<Track_index;i++)
+	{
+		glVertex3f(Tracks[i*3+MAXTrack*3],Tracks[i*3+1+MAXTrack*3],Tracks[i*3+2+MAXTrack*3]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
+	}
+	glEnd();
+	glBegin(GL_TRIANGLE_STRIP);
+	for(int i=0;i<Track_index;i++)
+	{
+		glVertex3f(Tracks[i*3+MAXTrack*6],Tracks[i*3+1+MAXTrack*6],Tracks[i*3+2+MAXTrack*6]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
+	}
+	glEnd();
+	glBegin(GL_TRIANGLE_STRIP);
+	for(int i=0;i<Track_index;i++)
+	{
+		glVertex3f(Tracks[i*3+MAXTrack*9],Tracks[i*3+1+MAXTrack*9],Tracks[i*3+2+MAXTrack*9]);
+		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
+	}
+	glEnd();
+
 	glEnable(GL_TEXTURE_2D);
 
 }

@@ -3428,9 +3428,9 @@ void stage0(void)
 			if(!GraphicsLOW)
 				DrawPlayerTranslucent();
 			Drawlocksign();
+			glDisable(GL_CULL_FACE);
 			for(int i=1;i<maxUnits;i++)
 			{
-				glDisable(GL_CULL_FACE);
 				UDfighers[i].DrawTrack();
 			}
 		}
