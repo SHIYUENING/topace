@@ -264,7 +264,8 @@ void Unitdata::TurnTo(const Vector3d& Position){
 		if(isRSpeed)
 			rotateAngle=0.0;
 
-		if(rotateAngle>0.0)
+		TrackAlpha=0.0f;
+		if(rotateAngle>pi / 3)
 			TrackAlpha=1.2f;
 
 		if((UDflag!=2)&&(AIType=0))
@@ -477,7 +478,7 @@ void Unitdata::addTrack(void)
 {
 	for(int i=0;i<(MAXTrack/2);i++)
 	{
-		TracksColor[i*2*4+3]=TracksColor[i*2*4+3]-0.01275f;
+		TracksColor[i*2*4+7]=TracksColor[i*2*4+7]-0.01275f;
 	}
 	/*
 	TracksColor[Track_index*4+3]=0.0f;
@@ -494,8 +495,8 @@ void Unitdata::addTrack(void)
 	if((Track_index%2)==0)
 	{
 
-		TracksColor[Track_index*4+3]=TrackAlpha;
-		TrackPos=UDMplane.RefPos();
+		
+		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(-WingWidth,0.0,0.0));
 		Tracks[Track_index*3+0]=TrackPos.RefPos()(0);
 		Tracks[Track_index*3+1]=TrackPos.RefPos()(1);
@@ -504,7 +505,7 @@ void Unitdata::addTrack(void)
 		Tracks[Track_index*3+1+MAXTrack*3]=TrackPos.RefPos()(1);
 		Tracks[Track_index*3+2+MAXTrack*3]=TrackPos.RefPos()(2);
 
-		TrackPos=UDMplane.RefPos();
+		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(WingWidth,0.0,0.0));
 		Tracks[Track_index*3+0+MAXTrack*6]=TrackPos.RefPos()(0);
 		Tracks[Track_index*3+1+MAXTrack*6]=TrackPos.RefPos()(1);
@@ -516,25 +517,27 @@ void Unitdata::addTrack(void)
 	}
 	if((Track_index%2)==1)
 	{
-		TrackPos=UDMplane.RefPos();
+		TracksColor[Track_index*4+3]=TrackAlpha;
+		TrackAlpha=0.0f;
+		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(-WingWidth-TrackWidth,0.0,0.0));
 		Tracks[Track_index*3+0]=TrackPos.RefPos()(0);
 		Tracks[Track_index*3+1]=TrackPos.RefPos()(1);
 		Tracks[Track_index*3+2]=TrackPos.RefPos()(2);
 
-		TrackPos=UDMplane.RefPos();
+		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(-WingWidth+TrackWidth,0.0,0.0));
 		Tracks[Track_index*3+0+MAXTrack*3]=TrackPos.RefPos()(0);
 		Tracks[Track_index*3+1+MAXTrack*3]=TrackPos.RefPos()(1);
 		Tracks[Track_index*3+2+MAXTrack*3]=TrackPos.RefPos()(2);
 
-		TrackPos=UDMplane.RefPos();
+		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(WingWidth+TrackWidth,0.0,0.0));
 		Tracks[Track_index*3+0+MAXTrack*6]=TrackPos.RefPos()(0);
 		Tracks[Track_index*3+1+MAXTrack*6]=TrackPos.RefPos()(1);
 		Tracks[Track_index*3+2+MAXTrack*6]=TrackPos.RefPos()(2);
 
-		TrackPos=UDMplane.RefPos();
+		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(WingWidth-TrackWidth,0.0,0.0));
 		Tracks[Track_index*3+0+MAXTrack*9]=TrackPos.RefPos()(0);
 		Tracks[Track_index*3+1+MAXTrack*9]=TrackPos.RefPos()(1);
