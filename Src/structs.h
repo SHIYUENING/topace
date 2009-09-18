@@ -1,4 +1,5 @@
 #pragma once
+#include "chars.h"
 #include "DefinesFile.h"
 #include "Unitdata.h"
 #include "MissleList.h"
@@ -250,7 +251,7 @@ GLint SmallWinSize=128;
 bool IsSupportFBO=false;
 GLuint RedarTexture;
 float tmplockRenge=10000.0f;
-
+extern bool VBOSupported;
 extern GLuint AmbientReflectiveTexture;
 extern bool ShaderLight;//是否使用shader
 extern bool ShaderWater;//是否使用shader

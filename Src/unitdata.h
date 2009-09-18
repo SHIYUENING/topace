@@ -86,6 +86,8 @@ public:
 	float WingWidth;
 	float TrackWidth;
 	int AddTrack_index;
+	unsigned int VBOVertices[8];
+	unsigned int VBOColor[2];	
 
 	//AudioSource * SoundSourceGun;
 	
