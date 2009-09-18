@@ -696,6 +696,10 @@
 			</Filter>
 		</Filter>
 		<File
+			RelativePath=".\chars.h"
+			>
+		</File>
+		<File
 			RelativePath=".\Cpuid.cpp"
 			>
 		</File>

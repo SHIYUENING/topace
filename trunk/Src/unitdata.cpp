@@ -1,5 +1,6 @@
 #include "Unitdata.h"
 
+bool VBOSupported=false;
 Unitdata::Unitdata(void)
 : UDPstate(UDMplane, 5, CRad(2.0), 0.1, 0.7)
 ,UDlife(-1)
@@ -39,10 +40,19 @@ Unitdata::Unitdata(void)
 		for(int j=0;j<3;j++)
 			TracksColor[i*4+j]=1.0f;
 	}
+	for(int i=0;i<8;i++)
+		VBOVertices[i]=0;
+	
+	for(int i=0;i<2;i++)
+		VBOColor[i]=0;
 }
 
 Unitdata::~Unitdata(void)
 {
+	if(VBOVertices[0])
+		glDeleteBuffersARB(8,VBOVertices);
+	if(VBOColor[0])
+		glDeleteBuffersARB(2,VBOColor);
 }
 /*
 void Unitdata::setLinePos(void)//Transform& MView
@@ -446,6 +456,7 @@ void Unitdata::MoveSpeed(void)
 }
 void Unitdata::ResetData(void)
 {
+	
 	UDlockselect=false;
 	UDlockde=false;
 	waringde=false;
@@ -469,6 +480,14 @@ void Unitdata::ResetData(void)
 	AIactTimer1=0;
 	AIactTimer2=0;
 	inGunRange=false;
+	if(!VBOSupported)
+		return;
+	if(VBOVertices[0])
+		glDeleteBuffersARB(8,VBOVertices);
+	if(VBOColor[0])
+		glDeleteBuffersARB(2,VBOColor);
+	glGenBuffersARB( 8, VBOVertices);
+	glGenBuffersARB( 2, VBOColor);
 }
 void Unitdata::m_Sound(Transform& would,float LookRenge)
 {
@@ -476,6 +495,8 @@ void Unitdata::m_Sound(Transform& would,float LookRenge)
 }
 void Unitdata::addTrack(void)
 {
+	if(!VBOSupported)
+		return;
 	for(int i=0;i<(MAXTrack/2);i++)
 	{
 		TracksColor[i*2*4+7]=TracksColor[i*2*4+7]-0.01275f;
@@ -544,52 +565,75 @@ void Unitdata::addTrack(void)
 		Tracks[Track_index*3+2+MAXTrack*9]=TrackPos.RefPos()(2);
 	
 	}
-/*	Transform TrackPos;
-	TrackPos=UDMplane.RefPos();
-	TrackPos.TranslateInternal(Vector3d(-WingWidth-TrackWidth,0.0,0.0));
-	Tracks[0][Track_index*9+0]=TrackPos.RefPos()(0);
-	Tracks[0][Track_index*9+1]=TrackPos.RefPos()(1);
-	Tracks[0][Track_index*9+2]=TrackPos.RefPos()(2);
-	TrackPos=UDMplane.RefPos();
-	TrackPos.TranslateInternal(Vector3d(-WingWidth,0.0,0.0));
-	Tracks[0][Track_index*9+3]=TrackPos.RefPos()(0);
-	Tracks[0][Track_index*9+4]=TrackPos.RefPos()(1);
-	Tracks[0][Track_index*9+5]=TrackPos.RefPos()(2);
-	TrackPos=UDMplane.RefPos();
-	TrackPos.TranslateInternal(Vector3d(-WingWidth+TrackWidth,0.0,0.0));
-	Tracks[0][Track_index*9+6]=TrackPos.RefPos()(0);
-	Tracks[0][Track_index*9+7]=TrackPos.RefPos()(1);
-	Tracks[0][Track_index*9+8]=TrackPos.RefPos()(2);
 
-	TrackPos=UDMplane.RefPos();
-	TrackPos.TranslateInternal(Vector3d(WingWidth+TrackWidth,0.0,0.0));
-	Tracks[1][Track_index*9+0]=TrackPos.RefPos()(0);
-	Tracks[1][Track_index*9+1]=TrackPos.RefPos()(1);
-	Tracks[1][Track_index*9+2]=TrackPos.RefPos()(2);
-	TrackPos=UDMplane.RefPos();
-	TrackPos.TranslateInternal(Vector3d(WingWidth,0.0,0.0));
-	Tracks[1][Track_index*9+3]=TrackPos.RefPos()(0);
-	Tracks[1][Track_index*9+4]=TrackPos.RefPos()(1);
-	Tracks[1][Track_index*9+5]=TrackPos.RefPos()(2);
-	TrackPos=UDMplane.RefPos();
-	TrackPos.TranslateInternal(Vector3d(WingWidth-TrackWidth,0.0,0.0));
-	Tracks[1][Track_index*9+6]=TrackPos.RefPos()(0);
-	Tracks[1][Track_index*9+7]=TrackPos.RefPos()(1);
-	Tracks[1][Track_index*9+8]=TrackPos.RefPos()(2);
-*/
+	
 	Track_index=Track_index+1;
 	if(Track_index>=MAXTrack)
 		Track_index=0;
+
+	
+
 }
 void Unitdata::DrawTrack(void)
 {
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glDisable(GL_TEXTURE_2D);
-/*	
+	if(Track_index>0)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
+		glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*4*sizeof(float), TracksColor, GL_DYNAMIC_DRAW_ARB );
+		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[0] );
+		//glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*3*sizeof(float), &Tracks[MAXTrack*3*1], GL_DYNAMIC_DRAW_ARB );
+		for(int i=0;i<4;i++)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2] );
+			glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*3*sizeof(float), &Tracks[MAXTrack*3*i], GL_DYNAMIC_DRAW_ARB );
+		}
+	}
+
+	if(Track_index<MAXTrack)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[1] );
+		glBufferDataARB( GL_ARRAY_BUFFER_ARB, (MAXTrack-Track_index)*4*sizeof(float), &TracksColor[Track_index*4], GL_DYNAMIC_DRAW_ARB );
+		for(int i=0;i<4;i++)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2+1] );
+			glBufferDataARB( GL_ARRAY_BUFFER_ARB, (MAXTrack-Track_index)*3*sizeof(float), &Tracks[MAXTrack*3*i+Track_index*3], GL_DYNAMIC_DRAW_ARB );
+		}
+	}
+
+	if(Track_index>0)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
+		glColorPointer( 4, GL_FLOAT, 0, (char *) NULL );
+		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[0] );
+		//glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
+		//glDrawArrays( GL_TRIANGLE_STRIP, 0, Track_index );
+		for(int i=0;i<4;i++)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2] );
+			glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
+			glDrawArrays( GL_TRIANGLE_STRIP, 0, Track_index );
+		}
+	}
+
+	if(Track_index<MAXTrack)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[1] );
+		glColorPointer( 4, GL_FLOAT, 0, (char *) NULL );
+		for(int i=0;i<4;i++)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2+1] );
+			glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
+			glDrawArrays( GL_TRIANGLE_STRIP, 0, MAXTrack-Track_index );
+		}
+	}
+
+
+	
+	/*
 	glEnableClientState( GL_VERTEX_ARRAY );	
-	//glEnableClientState( GL_COLOR_ARRAY );	
+	glEnableClientState( GL_COLOR_ARRAY );	
 	glVertexPointer( 3, GL_FLOAT, 0, Tracks );
-	//glColorPointer( 4, GL_FLOAT, 0, TracksColor );
+	glColorPointer( 4, GL_FLOAT, 0, TracksColor );
 	glDrawArrays( GL_LINE_STRIP, 0, MAXTrack );
 
 	glVertexPointer( 3, GL_FLOAT, 0, Tracks+sizeof(float)*MAXTrack*3 );
@@ -605,9 +649,10 @@ void Unitdata::DrawTrack(void)
 	glDrawArrays( GL_TRIANGLE_STRIP, 0, MAXTrack );
 	
 	glDisableClientState( GL_VERTEX_ARRAY );
-//	glDisableClientState( GL_COLOR_ARRAY );
+	glDisableClientState( GL_COLOR_ARRAY );
 	*/
-	glBegin(GL_TRIANGLE_STRIP);
+	
+/*	glBegin(GL_TRIANGLE_STRIP);
 	for(int i=Track_index;i<MAXTrack;i++)
 	{
 		glVertex3f(Tracks[i*3],Tracks[i*3+1],Tracks[i*3+2]);
@@ -664,7 +709,7 @@ void Unitdata::DrawTrack(void)
 		glColor4f(1.0f,1.0f,1.0f,TracksColor[i*4+3]);
 	}
 	glEnd();
-
-	glEnable(GL_TEXTURE_2D);
+*/
+	
 
 }

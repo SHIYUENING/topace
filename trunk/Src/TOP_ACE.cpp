@@ -256,7 +256,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
-	g_fVBOSupported=true;
+	VBOSupported=true;
 
 	FrameSkip=GetPrivateProfileInt("Resolution","FrameSkip",0,".\\set.ini")+1;
 	oneframetimelimit=(double)FrameSkip/60.0;
@@ -2754,6 +2754,21 @@ void DrawSky(Transform viewSky,float ne=0.0)
 	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-ne));
 	glEnable(GL_BLEND);
 }
+void DrawUnitTrack(void)
+{
+	if(!VBOSupported)
+		return;
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
+	glEnableClientState( GL_VERTEX_ARRAY );	
+	glEnableClientState( GL_COLOR_ARRAY );
+	for(int i=1;i<maxUnits;i++)
+		UDfighers[i].DrawTrack();
+	glDisableClientState( GL_VERTEX_ARRAY );
+	glDisableClientState( GL_COLOR_ARRAY );
+	glEnable(GL_TEXTURE_2D);
+}
 void showloading(void)
 {
 	glEnable(GL_BLEND);
@@ -2781,7 +2796,7 @@ void showloading(void)
 	break;
 	
 	}
-	MyFont.inputTxt("£Ô£Ï£Ð¡¡£Á£Ã£Å");
+	MyFont.inputTxt(C_TITLE);
 
 	//MyFont.inputTxt("²âÊÔµ¥ÎÆÀí×Ö¿â¡£²âÊÔµ¥ÎÆÀí×Ö¿â¡£²âÊÔµ¥ÎÆÀí×Ö¿â¡£²âÊÔµ¥ÎÆÀí×Ö¿â¡£²âÊÔµ¥ÎÆÀí×Ö¿â¡£²âÊÔµ¥ÎÆÀí×Ö¿â¡£");
 	/*
@@ -3428,11 +3443,8 @@ void stage0(void)
 			if(!GraphicsLOW)
 				DrawPlayerTranslucent();
 			Drawlocksign();
-			glDisable(GL_CULL_FACE);
-			for(int i=1;i<maxUnits;i++)
-			{
-				UDfighers[i].DrawTrack();
-			}
+			DrawUnitTrack();
+			
 		}
 	glPopMatrix();
 	glEnable(GL_BLEND);
