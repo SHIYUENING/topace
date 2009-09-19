@@ -243,7 +243,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 			
 			}
 		//*
-		if(tangent==false)	//模型不含切线信息	
+		//if(tangent==false)	//模型不含切线信息	
 
 		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
 		{
@@ -347,6 +347,8 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 			glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
 			glEnableClientState( GL_NORMAL_ARRAY );						// 开启法线数组
 			glEnableClientState( GL_TEXTURE_COORD_ARRAY );				// 开启纹理坐标数组
+			if(VBMD[MID].UseTangentArray)
+				glEnableClientState( GL_COLOR_ARRAY );
 			// 设置数据指针
 			if( VBMD[MID].VBOVertices && VBOSupported ) 
 			{
@@ -375,6 +377,8 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 			glDisableClientState( GL_VERTEX_ARRAY );					// Disable Vertex Arrays
 			glDisableClientState( GL_NORMAL_ARRAY );
 			glDisableClientState( GL_TEXTURE_COORD_ARRAY );				// Disable Texture Coord Arrays
+			if(VBMD[MID].UseTangentArray)
+				glDisableClientState( GL_COLOR_ARRAY );	
 		}
 		return true;
 	}
