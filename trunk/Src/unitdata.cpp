@@ -30,7 +30,7 @@ Unitdata::Unitdata(void)
 ,AIType(0)
 ,Track_index(0)
 ,WingWidth(60.0f)
-,TrackWidth(8.0f)
+,TrackWidth(10.0f)
 ,AddTrack_index(0)
 ,TrackAlpha(0)
 {
