@@ -2096,6 +2096,8 @@ void UnitMove(void)
 
 		if(UDfighers[i].UDlife>0)
 		{
+			if((i%4)==(playTime%4))
+				UDfighers[i].addTrack();
 			UDfighers[i].MoveSpeed();
 			if(UDfighers[i].fireTimer>0)
 				UDfighers[i].fireTimer--;
@@ -2761,12 +2763,14 @@ void DrawUnitTrack(void)
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
+	glDepthMask(GL_FALSE);
 	glEnableClientState( GL_VERTEX_ARRAY );	
 	glEnableClientState( GL_COLOR_ARRAY );
 	for(int i=1;i<maxUnits;i++)
 		UDfighers[i].DrawTrack();
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_COLOR_ARRAY );
+	glDepthMask(GL_TRUE);
 	glEnable(GL_TEXTURE_2D);
 }
 void showloading(void)
@@ -3443,7 +3447,9 @@ void stage0(void)
 			if(!GraphicsLOW)
 				DrawPlayerTranslucent();
 			Drawlocksign();
+			glEnable(GL_MULTISAMPLE_ARB);
 			DrawUnitTrack();
+			glDisable(GL_MULTISAMPLE_ARB);
 			
 		}
 	glPopMatrix();
