@@ -244,7 +244,9 @@ void Unitdata::TurnTo(const Vector3d& Position){
         if (all_elements(rotateAxis == 0)){ return; }
         rotateAxis = normalize(rotateAxis);
         double rotateAngle = theta;
-
+		TrackAlpha=0.0f;
+		if(rotateAngle>pi / 32)
+			TrackAlpha=1.2f;
 		if(isRSpeed)
 			rotateAngle=0.0;
 		if(UDflag!=2)
@@ -275,7 +277,7 @@ void Unitdata::TurnTo(const Vector3d& Position){
 			rotateAngle=0.0;
 
 		TrackAlpha=0.0f;
-		if(rotateAngle>pi / 3)
+		if(rotateAngle>pi / 2)
 			TrackAlpha=1.2f;
 
 		if((UDflag!=2)&&(AIType=0))
@@ -450,7 +452,7 @@ void Unitdata::MoveSpeed(void)
 	if(mSpeed>30.0f)
 		isRSpeed=false;
 
-	addTrack();
+	//addTrack();
 
 
 }
@@ -499,7 +501,7 @@ void Unitdata::addTrack(void)
 		return;
 	for(int i=0;i<(MAXTrack/2);i++)
 	{
-		TracksColor[i*2*4+7]=TracksColor[i*2*4+7]-0.01275f;
+		TracksColor[i*2*4+3]=TracksColor[i*2*4+3]-0.012f;
 	}
 	/*
 	TracksColor[Track_index*4+3]=0.0f;
@@ -516,7 +518,7 @@ void Unitdata::addTrack(void)
 	if((Track_index%2)==0)
 	{
 
-		
+		TracksColor[Track_index*4+3]=TrackAlpha;
 		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(-WingWidth,0.0,0.0));
 		Tracks[Track_index*3+0]=TrackPos.RefPos()(0);
@@ -538,7 +540,7 @@ void Unitdata::addTrack(void)
 	}
 	if((Track_index%2)==1)
 	{
-		TracksColor[Track_index*4+3]=TrackAlpha;
+		
 		TrackAlpha=0.0f;
 		TrackPos=UDMplane;
 		TrackPos.TranslateInternal(Vector3d(-WingWidth-TrackWidth,0.0,0.0));
