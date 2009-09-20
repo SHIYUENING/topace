@@ -261,6 +261,18 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 				VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
 				VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
 
+				NormalsInToTBN[0][0]=VBMD[MID].pNormals[i*3+0];
+				NormalsInToTBN[0][1]=VBMD[MID].pNormals[i*3+1];
+				NormalsInToTBN[0][2]=VBMD[MID].pNormals[i*3+2];
+
+				NormalsInToTBN[1][0]=VBMD[MID].pNormals[(i+1)*3+0];
+				NormalsInToTBN[1][1]=VBMD[MID].pNormals[(i+1)*3+1];
+				NormalsInToTBN[1][2]=VBMD[MID].pNormals[(i+1)*3+2];
+
+				NormalsInToTBN[2][0]=VBMD[MID].pNormals[(i+2)*3+0];
+				NormalsInToTBN[2][1]=VBMD[MID].pNormals[(i+2)*3+1];
+				NormalsInToTBN[2][2]=VBMD[MID].pNormals[(i+2)*3+2];
+
 				TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
 				TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
 
@@ -270,17 +282,17 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 				TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
 				TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
 				TBN();
-				VBMD[MID].pTangent[i*3+0]=TBNout[0];
-				VBMD[MID].pTangent[i*3+1]=TBNout[1];
-				VBMD[MID].pTangent[i*3+2]=TBNout[2];
+				VBMD[MID].pTangent[i*3+0]=TBNout[0][0];
+				VBMD[MID].pTangent[i*3+1]=TBNout[0][1];
+				VBMD[MID].pTangent[i*3+2]=TBNout[0][2];
 
-				VBMD[MID].pTangent[(i+1)*3+0]=TBNout[0];
-				VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1];
-				VBMD[MID].pTangent[(i+1)*3+2]=TBNout[2];
+				VBMD[MID].pTangent[(i+1)*3+0]=TBNout[1][0];
+				VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1][1];
+				VBMD[MID].pTangent[(i+1)*3+2]=TBNout[1][2];
 
-				VBMD[MID].pTangent[(i+2)*3+0]=TBNout[0];
-				VBMD[MID].pTangent[(i+2)*3+1]=TBNout[1];
-				VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2];
+				VBMD[MID].pTangent[(i+2)*3+0]=TBNout[2][0];
+				VBMD[MID].pTangent[(i+2)*3+1]=TBNout[2][1];
+				VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2][2];
 			}
 		
 		}
@@ -425,10 +437,18 @@ void CLoadVBMD::TBN(void)
 
     Vector4d T;
     T = M * TInTex;
+	Vector3d TOut,ONormal[3];
+	TOut=Vector3d(T(0),T(1),T(2));
 
-    TBNout[0] = (float)T(0);
-    TBNout[1] = (float)T(1);
-    TBNout[2] = (float)T(2);
+	for(int i=0;i<3;i++)
+	{
+		ONormal[i]=normalize(Vector3d(NormalsInToTBN[i][0],NormalsInToTBN[i][1],NormalsInToTBN[i][2]));
+		TOut = TOut - ONormal[i] * dot(ONormal[i], TOut);
+
+		TBNout[i][0] = (float)TOut(0);
+		TBNout[i][1] = (float)TOut(1);
+		TBNout[i][2] = (float)TOut(2);
+	}
 }
 
 unsigned int CLoadVBMD::GetTextureID(int MID)

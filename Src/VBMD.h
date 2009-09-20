@@ -58,8 +58,9 @@ public:
 	int TotalMid;
 	int ModelId;
 	float VerticesInToTBN[3][3];
+	float NormalsInToTBN[3][3];
 	float TexCoordsInToTBN[3][2];
-	float TBNout[3];
+	float TBNout[3][3];
 
 private:
 	FILE	*m_FilePointer;								// ÎÄ¼þÖ¸Õë
