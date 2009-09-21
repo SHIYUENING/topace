@@ -583,12 +583,15 @@ void Unitdata::DrawTrack(void)
 		{
 			TracksColor[i*2*4+3]=TracksColor[i*2*4+3]-0.03f;
 		}
+	else
+	{
+		if(UDlife<1)
+			return;
+	}
 	if(Track_index>0)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*4*sizeof(float), TracksColor, GL_DYNAMIC_DRAW_ARB );
-		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[0] );
-		//glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*3*sizeof(float), &Tracks[MAXTrack*3*1], GL_DYNAMIC_DRAW_ARB );
 		for(int i=0;i<4;i++)
 		{
 			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2] );
@@ -611,9 +614,6 @@ void Unitdata::DrawTrack(void)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
 		glColorPointer( 4, GL_FLOAT, 0, (char *) NULL );
-		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[0] );
-		//glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
-		//glDrawArrays( GL_TRIANGLE_STRIP, 0, Track_index );
 		for(int i=0;i<4;i++)
 		{
 			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2] );
