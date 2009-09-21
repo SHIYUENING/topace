@@ -54,11 +54,11 @@ bool CKeyInput::initJoyStick(void)
 			m_keyViewDown		= GetPrivateProfileInt( "JoyStick" , "ViewDown"	 , 106 , ".\\set.ini" );
 			m_keyViewLeft		= GetPrivateProfileInt( "JoyStick" , "ViewLeft"	 , 105 , ".\\set.ini" );
 			m_keyViewRight		= GetPrivateProfileInt( "JoyStick" , "ViewRight" , 104 , ".\\set.ini" );
-			m_keyViewReset		= GetPrivateProfileInt( "JoyStick" , "ViewReset" , 0 , ".\\set.ini" );
+			m_keyViewReset		= GetPrivateProfileInt( "JoyStick" , "ViewReset" , 10 , ".\\set.ini" );
 			m_keySetHUD		= GetPrivateProfileInt( "JoyStick" , "SetHUD" , 11 , ".\\set.ini" );
 			m_keyStart		= GetPrivateProfileInt( "JoyStick" , "Start" , 12 , ".\\set.ini" );
 			m_keySelect		= GetPrivateProfileInt( "JoyStick" , "Select" , 9 , ".\\set.ini" );
-			m_keyOther		= GetPrivateProfileInt( "JoyStick" , "Other" , 10 , ".\\set.ini" );
+			m_keyOther		= GetPrivateProfileInt( "JoyStick" , "Other" , 8 , ".\\set.ini" );
 			m_IsUseJoyStick	= true;
 		}
 		return true;
@@ -577,7 +577,7 @@ void CKeyInput::initKeyboard(void)
 			m_keyboardViewDown		= GetPrivateProfileInt( "keyboard" , "ViewDown"	 , 10100 , ".\\set.ini" )-10000;
 			m_keyboardViewLeft		= GetPrivateProfileInt( "keyboard" , "ViewLeft"	 , 10102 , ".\\set.ini" )-10000;
 			m_keyboardViewRight		= GetPrivateProfileInt( "keyboard" , "ViewRight" , 10098 , ".\\set.ini" )-10000;
-			m_keyboardViewReset		= GetPrivateProfileInt( "keyboard" , "ViewReset" , 10103 , ".\\set.ini" )-10000;
+			m_keyboardViewReset		= GetPrivateProfileInt( "keyboard" , "ViewReset" , 10101 , ".\\set.ini" )-10000;
 			m_keyboardSetHUD		= GetPrivateProfileInt( "keyboard" , "SetHUD"	 , 10090 , ".\\set.ini" )-10000;
 			m_keyboardStart		= GetPrivateProfileInt( "keyboard" , "Start"	 , 10032 , ".\\set.ini" )-10000;
 			m_keyboardSelect		= GetPrivateProfileInt( "keyboard" , "Select"	 , 10017 , ".\\set.ini" )-10000;

@@ -244,7 +244,7 @@ extern AudioSource * soundSource[MAX_soundSource];
 extern Vector3d soundSourcePos[MAX_soundSource];
 extern AudioPlayer * BGMplayer;
 extern tSoundSourceDate SoundSourceDate[MAX_soundSource];
-extern GLuint SeaTexID,UItexture1,UItexture2,UItexture3;;
+extern GLuint SeaTexID,UItexture1,UItexture2,UItexture3,TrackTexID;
 
 GLuint SmallWinTexID=0;
 GLint SmallWinSize=128;

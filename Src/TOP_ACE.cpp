@@ -2760,16 +2760,19 @@ void DrawUnitTrack(void)
 {
 	if(!VBOSupported)
 		return;
+	glBindTexture(GL_TEXTURE_2D, TrackTexID);	
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
 	glDepthMask(GL_FALSE);
 	glEnableClientState( GL_VERTEX_ARRAY );	
 	glEnableClientState( GL_COLOR_ARRAY );
+	//glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 	for(int i=1;i<maxUnits;i++)
 		UDfighers[i].DrawTrack();
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_COLOR_ARRAY );
+	//glDisableClientState( GL_TEXTURE_COORD_ARRAY );
 	glDepthMask(GL_TRUE);
 	glEnable(GL_TEXTURE_2D);
 }

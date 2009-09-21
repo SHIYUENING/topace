@@ -3,7 +3,7 @@
 #include "HUDUI.h"
 
 
-GLuint textureRedar,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID;
+GLuint textureRedar,CompassTexID,UItexture4,PlayerSign,LockTexID,Maptexture,SeaTexID,TrackTexID;
 bool LoadTGA(Texture *, char *);
 unsigned int LoadTGAFile(char *filename)
 {
@@ -69,6 +69,7 @@ void LoadGLTextures(bool UseDDS)
 		LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
 		Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
 		SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
+		TrackTexID=loadDDS.loadCompressedTexture("Data/track.dds");
 	}
 	else
 	{
@@ -79,6 +80,7 @@ void LoadGLTextures(bool UseDDS)
 		LockTexID=LoadTGAFile("Data/lock.tga");
 		Maptexture=LoadTGAFile("Data/map.tga");
 		SeaTexID=LoadTGAFile("Data/sea.tga");
+		TrackTexID=0;
 		
 	}
 }
