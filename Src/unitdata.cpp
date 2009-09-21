@@ -578,6 +578,11 @@ void Unitdata::addTrack(void)
 }
 void Unitdata::DrawTrack(void)
 {
+	if(smokeTime>0)
+		for(int i=0;i<(MAXTrack/2);i++)
+		{
+			TracksColor[i*2*4+3]=TracksColor[i*2*4+3]-0.03f;
+		}
 	if(Track_index>0)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
