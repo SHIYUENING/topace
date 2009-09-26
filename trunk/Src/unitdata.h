@@ -57,7 +57,7 @@ public:
 	int Track_index; 
 	float Tracks[MAXTrack*12];
 	float TracksColor[MAXTrack*4];
-	float TracksTexCoord[MAXTrack*2];
+	//float TracksTexCoord[MAXTrack*2];
 	float TrackAlpha;
 	int weapon[MAXweapon];//武器编号<0时表示没有武器
 	int smokeTime;//被消灭后烟雾残留时间
@@ -89,7 +89,7 @@ public:
 	int AddTrack_index;
 	unsigned int VBOVertices[8];
 	unsigned int VBOColor[2];	
-	unsigned int VBOTexCoord[2];
+	//unsigned int VBOTexCoord[2];
 
 	//AudioSource * SoundSourceGun;
 	
