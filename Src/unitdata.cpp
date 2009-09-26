@@ -33,6 +33,8 @@ Unitdata::Unitdata(void)
 ,TrackWidth(10.0f)
 ,AddTrack_index(0)
 ,TrackAlpha(0)
+,isAttacking(false)
+,isAttackReady(false)
 {
 	for(int i=0;i<MAXTrack;i++)
 	{

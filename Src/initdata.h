@@ -94,6 +94,8 @@ void initUnitdata(int stage=0 )
 			UDfighers[i].UDMplane.Translate(Vector3d(500.0f*(i-maxUnits/2), 35000.0f+5000.0f*(i%4), 2000.0f*(i%20-10)));
 			UDfighers[i].MoveToPos=Vector3d(500.0f*(i-maxUnits/2), 35000.0f+5000.0f*(i%4), 2000.0f*(i%20-10));
 			UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * (i%8+2));
+			UDfighers[i].UDPstate.MaxAngleSpeed=CRad(16.5);
+			UDfighers[i].UDPstate.MaxSpeed=18.0;
 			if(UDfighers[i].UDflag==2)
 			{
 				UDfighers[i].UDfighterType=3;

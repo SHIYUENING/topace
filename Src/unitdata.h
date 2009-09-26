@@ -92,7 +92,8 @@ public:
 	//unsigned int VBOTexCoord[2];
 
 	//AudioSource * SoundSourceGun;
-	
+	bool isAttacking;
+	bool isAttackReady;
 
 
 
