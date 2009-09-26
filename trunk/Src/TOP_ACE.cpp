@@ -671,6 +671,7 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char StrWarning[128]={0};
 	
 
+	//testNum=UDfighers[0].UDMplane.RefPos()(2);
 	
 	sprintf(PlayerHP,"%d%%",UDfighers[0].UDlife);
 	sprintf(StrWarning,"WARNING");
@@ -1907,7 +1908,58 @@ void Drawlocksign(void)
 }
 bool UnitAIBefore(int i)
 {
+	if(GameMode==1)
+	{
+		testNum=UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2);
+		if(UDfighers[i].isAttacking)
+		{
 
+			if(UDfighers[i].isAttackReady)
+			{
+				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))<5000.0)
+				{
+					//UDfighers[i].UDPstate.MaxSpeed=10.0;
+					UDfighers[i].isAttacking=false;
+					UDfighers[i].isAttackReady=false;
+					PMissleList.AddMissle(UDfighers[i].UDMplane,0,i,UDfighers[i].mSpeed);
+				}
+				else
+				{
+					//UDfighers[i].UDPstate.MaxSpeed=3.0;
+					UDfighers[i].TurnTo(Vector3d(UDfighers[0].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
+					UDfighers[i].UDPstate.NextState();
+				}
+			}
+			else
+			{
+				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))>15000.0)
+				{
+					UDfighers[i].isAttackReady=true;
+					
+				}
+				else
+				{
+					UDfighers[i].TurnTo(Vector3d(UDfighers[0].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)-16000.0));
+					UDfighers[i].UDPstate.NextState();
+				}
+			}
+		}
+		else
+		{
+			if(UDfighers[i].UDMplane.RefPos()(2)>UDfighers[0].UDMplane.RefPos()(2))
+			{
+				//UDfighers[i].UDPstate.MaxSpeed=10.0;
+				UDfighers[i].isAttacking=true;
+			}
+			else
+			{
+				UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[i].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
+				UDfighers[i].UDPstate.NextState();
+			}
+		}
+	
+		return false;
+	}
 	if((UDfighers[i].attackTGTNum==0)&&(UDfighers[i].LockTimer>30)&&(UDfighers[i].AIact==2))
 	{
 		PlayerLocking=true;
@@ -1977,6 +2029,11 @@ bool UnitAIBefore(int i)
 }
 void UnitAI(int i)
 {
+	if(GameMode==1)
+	{
+	
+	//	return;
+	}
 	if(UDfighers[i].AIact==1)
 	{
 		UDfighers[i].LockTimer=0;

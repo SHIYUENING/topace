@@ -277,3 +277,5 @@ extern float pixelfogColor[3];
 extern GLfloat ShadowMapMVPmatrix[16];
 extern GLfloat Worldmatrix[16];
 extern GLdouble DrawPlayermatrix[16]={0};
+
+int GameMode=1;
