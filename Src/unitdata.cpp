@@ -36,10 +36,10 @@ Unitdata::Unitdata(void)
 {
 	for(int i=0;i<MAXTrack;i++)
 	{
-		if(i%2==0)
-			TracksTexCoord[i*2+1]=0.0f;
-		else
-			TracksTexCoord[i*2+1]=1.0f;
+		//if(i%2==0)
+		//	TracksTexCoord[i*2+1]=0.0f;
+		//else
+		//	TracksTexCoord[i*2+1]=1.0f;
 
 		TracksColor[i*4+3]=0.0f;
 		for(int j=0;j<3;j++)
@@ -51,8 +51,8 @@ Unitdata::Unitdata(void)
 	for(int i=0;i<2;i++)
 		VBOColor[i]=0;
 
-	for(int i=0;i<2;i++)
-		VBOTexCoord[i]=0;
+	//for(int i=0;i<2;i++)
+	//	VBOTexCoord[i]=0;
 }
 
 Unitdata::~Unitdata(void)
@@ -61,8 +61,8 @@ Unitdata::~Unitdata(void)
 		glDeleteBuffersARB(8,VBOVertices);
 	if(VBOColor[0])
 		glDeleteBuffersARB(2,VBOColor);
-	if(VBOTexCoord[0])
-		glDeleteBuffersARB(2,VBOTexCoord);
+	//if(VBOTexCoord[0])
+	//	glDeleteBuffersARB(2,VBOTexCoord);
 }
 /*
 void Unitdata::setLinePos(void)//Transform& MView
@@ -501,6 +501,7 @@ void Unitdata::m_Sound(Transform& would,float LookRenge)
 {
 
 }
+/*
 void Unitdata::addTrack(void)
 {
 	if(!VBOSupported)
@@ -555,7 +556,7 @@ void Unitdata::addTrack(void)
 	if(Track_index>=MAXTrack)
 		Track_index=0;
 }
-/*
+*/
 void Unitdata::addTrack(void)
 {
 	if(!VBOSupported)
@@ -627,7 +628,7 @@ void Unitdata::addTrack(void)
 	
 
 }
-*/
+
 void Unitdata::DrawTrack(void)
 {
 	if(smokeTime>0)
@@ -644,9 +645,9 @@ void Unitdata::DrawTrack(void)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*4*sizeof(float), TracksColor, GL_DYNAMIC_DRAW_ARB );
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[0] );
-		glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*2*sizeof(float), TracksTexCoord, GL_DYNAMIC_DRAW_ARB );
-		for(int i=0;i<2;i++)
+		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[0] );
+		//glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*2*sizeof(float), TracksTexCoord, GL_DYNAMIC_DRAW_ARB );
+		for(int i=0;i<4;i++)
 		{
 			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2] );
 			glBufferDataARB( GL_ARRAY_BUFFER_ARB, Track_index*3*sizeof(float), &Tracks[MAXTrack*3*i], GL_DYNAMIC_DRAW_ARB );
@@ -657,9 +658,9 @@ void Unitdata::DrawTrack(void)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[1] );
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, (MAXTrack-Track_index)*4*sizeof(float), &TracksColor[Track_index*4], GL_DYNAMIC_DRAW_ARB );
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[1] );
-		glBufferDataARB( GL_ARRAY_BUFFER_ARB, (MAXTrack-Track_index)*2*sizeof(float), &TracksTexCoord[Track_index*4], GL_DYNAMIC_DRAW_ARB );
-		for(int i=0;i<2;i++)
+		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[1] );
+		//glBufferDataARB( GL_ARRAY_BUFFER_ARB, (MAXTrack-Track_index)*2*sizeof(float), &TracksTexCoord[Track_index*4], GL_DYNAMIC_DRAW_ARB );
+		for(int i=0;i<4;i++)
 		{
 			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2+1] );
 			glBufferDataARB( GL_ARRAY_BUFFER_ARB, (MAXTrack-Track_index)*3*sizeof(float), &Tracks[MAXTrack*3*i+Track_index*3], GL_DYNAMIC_DRAW_ARB );
@@ -670,9 +671,9 @@ void Unitdata::DrawTrack(void)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[0] );
 		glColorPointer( 4, GL_FLOAT, 0, (char *) NULL );
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[0] );
-		glColorPointer( 2, GL_FLOAT, 0, (char *) NULL );
-		for(int i=0;i<2;i++)
+		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[0] );
+		//glColorPointer( 2, GL_FLOAT, 0, (char *) NULL );
+		for(int i=0;i<4;i++)
 		{
 			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2] );
 			glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
@@ -684,9 +685,9 @@ void Unitdata::DrawTrack(void)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOColor[1] );
 		glColorPointer( 4, GL_FLOAT, 0, (char *) NULL );
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[1] );
-		glColorPointer( 2, GL_FLOAT, 0, (char *) NULL );
-		for(int i=0;i<2;i++)
+		//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOTexCoord[1] );
+		//glColorPointer( 2, GL_FLOAT, 0, (char *) NULL );
+		for(int i=0;i<4;i++)
 		{
 			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOVertices[i*2+1] );
 			glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
@@ -786,9 +787,9 @@ void Unitdata::initVBO(void)
 		glDeleteBuffersARB(8,VBOVertices);
 	if(VBOColor[0])
 		glDeleteBuffersARB(2,VBOColor);
-	if(VBOTexCoord[0])
-		glDeleteBuffersARB(2,VBOTexCoord);
+	//if(VBOTexCoord[0])
+	//	glDeleteBuffersARB(2,VBOTexCoord);
 	glGenBuffersARB( 8, VBOVertices);
 	glGenBuffersARB( 2, VBOColor);
-	glGenBuffersARB( 2, VBOTexCoord);
+	//glGenBuffersARB( 2, VBOTexCoord);
 }

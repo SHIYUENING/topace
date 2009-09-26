@@ -543,9 +543,9 @@ void RenderShadowMapGLSL()
 void shaderT(int MainTex,int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)
 {
 	if(isGLSL)
-		shaderTGLSL(MainTex,NormalTex,SpecularTex,ShadowMapTexID,HDlight);
+		shaderTGLSL(MainTex,NormalTex,SpecularTex,ShadowMapTexID,1.0f);
 	else
-		shaderTCG(MainTex,NormalTex,SpecularTex,ShadowMapTexID,HDlight);
+		shaderTCG(MainTex,NormalTex,SpecularTex,ShadowMapTexID,1.0f);
 }
 void shaderTCG(int MainTex,int NormalTex,int SpecularTex,int ShadowMapTexID,float HDlight)//bool UseBloom=false
 {/*
