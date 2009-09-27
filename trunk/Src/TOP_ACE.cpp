@@ -1910,6 +1910,7 @@ bool UnitAIBefore(int i)
 {
 	if(GameMode==1)
 	{
+		UDfighers[i].mSpeed=moveSpeed * 3000.0f;
 		testNum=UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2);
 		if(UDfighers[i].isAttacking)
 		{
@@ -1932,14 +1933,14 @@ bool UnitAIBefore(int i)
 			}
 			else
 			{
-				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))>15000.0)
+				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))>10000.0)
 				{
 					UDfighers[i].isAttackReady=true;
 					
 				}
 				else
 				{
-					UDfighers[i].TurnTo(Vector3d(UDfighers[0].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)-16000.0));
+					UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[i].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)-11000.0));
 					UDfighers[i].UDPstate.NextState();
 				}
 			}
@@ -3506,6 +3507,7 @@ void stage0(void)
 			}
 			if(!GraphicsLOW)
 				PSmokes.DrawSmoke(MFighter.RefPos(),MView,winwidth,winheight,tmpLookRenge);
+			if(!IsHUD)
 			if(!GraphicsLOW)
 				DrawPlayerTranslucent();
 			Drawlocksign();
@@ -3630,11 +3632,19 @@ void DrawSmallWindow (Transform MSmallWindowIn,int winposX,int winposY,int Small
 void AfterDraw (void)
 {
 
-	 if (turnX != 0 || turnY != 0 || turnZ != 0){
+	 if (turnX != 0 || turnY != 0 || turnZ != 0)
+	 {
 		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
-        UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
+		if(GameMode==1)
+		{
+			UDfighers[0].UDMplane.Translate(Vector3d(turnZ*750.0, -turnX*750.0, 0.0f));
+		}
+		else
+		{
+			UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-turnY * 6));
+			UDfighers[0].UDMplane.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-turnX * 8));
+			UDfighers[0].UDMplane.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(-turnZ * 16+turnY*0.1));
+		}
     }
 //Acceleration
 	if(moveSpeed>(MAXSpeed/3.0f))
