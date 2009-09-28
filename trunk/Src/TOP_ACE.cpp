@@ -1910,14 +1910,14 @@ bool UnitAIBefore(int i)
 {
 	if(GameMode==1)
 	{
-		UDfighers[i].mSpeed=moveSpeed * 3000.0f;
+		
 		testNum=UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2);
 		if(UDfighers[i].isAttacking)
 		{
 
 			if(UDfighers[i].isAttackReady)
 			{
-				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))<5000.0)
+				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))<7500.0)
 				{
 					//UDfighers[i].UDPstate.MaxSpeed=10.0;
 					UDfighers[i].isAttacking=false;
@@ -1926,6 +1926,7 @@ bool UnitAIBefore(int i)
 				}
 				else
 				{
+					UDfighers[i].mSpeed=moveSpeed * 2500.0f;
 					//UDfighers[i].UDPstate.MaxSpeed=3.0;
 					UDfighers[i].TurnTo(Vector3d(UDfighers[0].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
 					UDfighers[i].UDPstate.NextState();
@@ -1940,7 +1941,8 @@ bool UnitAIBefore(int i)
 				}
 				else
 				{
-					UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[i].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)-11000.0));
+					UDfighers[i].mSpeed=moveSpeed * 4000.0f;
+					UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)-11000.0));
 					UDfighers[i].UDPstate.NextState();
 				}
 			}
@@ -1954,7 +1956,7 @@ bool UnitAIBefore(int i)
 			}
 			else
 			{
-				UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[i].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
+				UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
 				UDfighers[i].UDPstate.NextState();
 			}
 		}
