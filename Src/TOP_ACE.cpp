@@ -359,6 +359,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	}
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
+	if(GameMode==1)
+	{
+		InertiaLimit=40.0f;
+	}
 
 	//const unsigned char *Extensions = glGetString( GL_EXTENSIONS );
 	//WritePrivateProfileString("Extensions","Extensions",(char *)Extensions,".\\set.ini");
@@ -835,42 +839,42 @@ void PlayerControl()
 	if ((g_keys->keyDown [KeyInput.m_keyboardLeft] == TRUE)||KeyInput.m_IskeyLeft)					
 	{
 		if(KeyInput.m_IskeyLeft)
-			InertiaZ=InertiaZ-3.0f*KeyInput.m_Left;
+			InertiaZ=InertiaZ-InertiaDir*KeyInput.m_Left;
 		else
-			InertiaZ=InertiaZ-3.0f;
-		if(InertiaZ<-25.0f)
-			InertiaZ=-25.0f;
+			InertiaZ=InertiaZ-InertiaDir;
+		if(InertiaZ<-InertiaLimit)
+			InertiaZ=-InertiaLimit;
 	}
 	
 	if ((g_keys->keyDown [KeyInput.m_keyboardRight] == TRUE)||KeyInput.m_IskeyRight)					
 	{
 		
 		if(KeyInput.m_IskeyRight)
-			InertiaZ=InertiaZ+3.0f*KeyInput.m_Right;
+			InertiaZ=InertiaZ+InertiaDir*KeyInput.m_Right;
 		else
-			InertiaZ=InertiaZ+3.0f;
-		if(InertiaZ>25.0f)
-			InertiaZ=25.0f;
+			InertiaZ=InertiaZ+InertiaDir;
+		if(InertiaZ>InertiaLimit)
+			InertiaZ=InertiaLimit;
 	}
 	//testNum=KeyInput.m_keyboardUp;
 	if ((g_keys->keyDown [KeyInput.m_keyboardUp] == TRUE)||KeyInput.m_IskeyUp)					
 	{
 //		testNum=KeyInput.m_keyboardUp*10;
 		if(KeyInput.m_IskeyUp)
-			InertiaX=InertiaX+3.0f*KeyInput.m_Up;
+			InertiaX=InertiaX+InertiaDir*KeyInput.m_Up;
 		else
-			InertiaX=InertiaX+3.0f;
-		if(InertiaX>25.0f)
-			InertiaX=25.0f;
+			InertiaX=InertiaX+InertiaDir;
+		if(InertiaX>InertiaLimit)
+			InertiaX=InertiaLimit;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardDown] == TRUE)||KeyInput.m_IskeyDown)					
 	{
 		if(KeyInput.m_IskeyDown)
-			InertiaX=InertiaX-3.0f*KeyInput.m_Down;
+			InertiaX=InertiaX-InertiaDir*KeyInput.m_Down;
 		else
-			InertiaX=InertiaX-3.0f;
-		if(InertiaX<-25.0f)
-			InertiaX=-25.0f;
+			InertiaX=InertiaX-InertiaDir;
+		if(InertiaX<-InertiaLimit)
+			InertiaX=-InertiaLimit;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedUp] == TRUE)||KeyInput.m_IskeySpeedUp)					
 	{
@@ -879,8 +883,8 @@ void PlayerControl()
 			moveSpeed=MAXSpeed;
 		else
 			InertiaSpeed=InertiaSpeed+1.0f;
-		if(InertiaSpeed>50.0f)
-			InertiaSpeed=50.0f;
+		if(InertiaSpeed>InertiaSpeedLimit)
+			InertiaSpeed=InertiaSpeedLimit;
 		//DrawEffectImpact=true;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardSpeedDown] == TRUE)||KeyInput.m_IskeySpeedDown)					
@@ -890,8 +894,8 @@ void PlayerControl()
 			moveSpeed=MINSpeed;
 		else
 			InertiaSpeed=InertiaSpeed-1.0f;
-		if(InertiaSpeed<-50.0f)
-			InertiaSpeed=-50.0f;
+		if(InertiaSpeed<-InertiaSpeedLimit)
+			InertiaSpeed=-InertiaSpeedLimit;
 	}
 	if ((g_keys->keyDown [KeyInput.m_keyboardL] == TRUE)||KeyInput.m_IskeyL)
 	{
@@ -1911,54 +1915,62 @@ bool UnitAIBefore(int i)
 	if(GameMode==1)
 	{
 		
-		testNum=UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2);
-		if(UDfighers[i].isAttacking)
+		//testNum=UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2);
+		if(UDfighers[i].UDMplane.RefPos()(1)>1000.0)
 		{
-
-			if(UDfighers[i].isAttackReady)
+			if(UDfighers[i].isAttacking)
 			{
-				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))<7500.0)
+
+				if(UDfighers[i].isAttackReady)
 				{
-					//UDfighers[i].UDPstate.MaxSpeed=10.0;
-					UDfighers[i].isAttacking=false;
-					UDfighers[i].isAttackReady=false;
-					PMissleList.AddMissle(UDfighers[i].UDMplane,0,i,UDfighers[i].mSpeed);
+					if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))<7500.0)
+					{
+						//UDfighers[i].UDPstate.MaxSpeed=10.0;
+						UDfighers[i].isAttacking=false;
+						UDfighers[i].isAttackReady=false;
+						PMissleList.AddMissle(UDfighers[i].UDMplane,0,i,UDfighers[i].mSpeed);
+					}
+					else
+					{
+						UDfighers[i].mSpeed=moveSpeed * 2500.0f;
+						//UDfighers[i].UDPstate.MaxSpeed=3.0;
+						UDfighers[i].TurnTo(Vector3d(UDfighers[0].UDMplane.RefPos()(0),max(UDfighers[0].UDMplane.RefPos()(1),1000.0),UDfighers[0].UDMplane.RefPos()(2)));
+						UDfighers[i].UDPstate.NextState();
+					}
 				}
 				else
 				{
-					UDfighers[i].mSpeed=moveSpeed * 2500.0f;
-					//UDfighers[i].UDPstate.MaxSpeed=3.0;
-					UDfighers[i].TurnTo(Vector3d(UDfighers[0].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
-					UDfighers[i].UDPstate.NextState();
+					if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))>10000.0)
+					{
+						UDfighers[i].isAttackReady=true;
+						
+					}
+					else
+					{
+						UDfighers[i].mSpeed=moveSpeed * 4000.0f;
+						UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),max(UDfighers[0].UDMplane.RefPos()(1),1000.0),UDfighers[0].UDMplane.RefPos()(2)-11000.0));
+						UDfighers[i].UDPstate.NextState();
+					}
 				}
 			}
 			else
 			{
-				if((UDfighers[0].UDMplane.RefPos()(2)-UDfighers[i].UDMplane.RefPos()(2))>10000.0)
+				if(UDfighers[i].UDMplane.RefPos()(2)>UDfighers[0].UDMplane.RefPos()(2))
 				{
-					UDfighers[i].isAttackReady=true;
-					
+					//UDfighers[i].UDPstate.MaxSpeed=10.0;
+					UDfighers[i].isAttacking=true;
 				}
 				else
 				{
-					UDfighers[i].mSpeed=moveSpeed * 4000.0f;
-					UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)-11000.0));
+					UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),max(UDfighers[0].UDMplane.RefPos()(1),1000.0),UDfighers[0].UDMplane.RefPos()(2)));
 					UDfighers[i].UDPstate.NextState();
 				}
 			}
 		}
 		else
 		{
-			if(UDfighers[i].UDMplane.RefPos()(2)>UDfighers[0].UDMplane.RefPos()(2))
-			{
-				//UDfighers[i].UDPstate.MaxSpeed=10.0;
-				UDfighers[i].isAttacking=true;
-			}
-			else
-			{
-				UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),UDfighers[0].UDMplane.RefPos()(1),UDfighers[0].UDMplane.RefPos()(2)));
-				UDfighers[i].UDPstate.NextState();
-			}
+			UDfighers[i].TurnTo(Vector3d(UDfighers[i].UDMplane.RefPos()(0),max(UDfighers[0].UDMplane.RefPos()(1),1500.0),UDfighers[0].UDMplane.RefPos()(2)));
+			UDfighers[i].UDPstate.NextState();
 		}
 	
 		return false;
@@ -2539,7 +2551,7 @@ void DrawPlayer(void)
 					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
 					//glRotatef(180.0, 0.0, 0.0, 1.0);
 					//glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
+					glRotatef(-InertiaZ*0.75f, 0.0, 0.0, 1.0);
 					//glScaled(0.02, 0.02, 0.02);
 					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);
 					//glRotatef(40.0f*testNum2+40.0f,0.0f,1.0f,0.0f);
@@ -2643,7 +2655,7 @@ void DrawPlayer(void)
 			glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
 		//glTranslatef(0, -Ppos1, -Ppos2);
 		glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-		glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
+		glRotatef(-InertiaZ*0.75f, 0.0, 0.0, 1.0);
 		m_VBMD->ShowVBMD(ModelID_MavePart_Normal);
 
 		glDisable(GL_LIGHT1);
@@ -3287,16 +3299,20 @@ void SetPlayerTransform(void)
 	ViewPoint.UDMplane.RotateInternal(Vector3d(CRad(ViewTurnY* 180.0f), 0.0f, 0.0f));
 	ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, CRad(ViewTurnX* 180.0f), 0.0f));
 	if(!IsHUD)
-	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))
+	{
+		if(GameMode==1)
+		{
+			//ViewPoint.UDMplane.TranslateInternal(Vector3d(-turnZ*200.0, turnX*200.0, 150.0f));
+			ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0, 0.0, -150.0));
+			ViewPoint.UDMplane.RotateInternal(Vector3d(turnX*0.75, turnZ*0.75, 0.0));
+			ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0, 0.0, 400.0));
+		}
+		else
+			ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, 150.0f));//-float(max(EffectImpact.EffectTime-45,0))turnZ*750.0, -turnX*750.0
+	}
+		
 	MFighter=ViewPoint.UDMplane;
-	//UDfighers[0].UDMplane.TranslateInternal(Vector3d(0.0f, -30.0f, -290.0f));
-//	MFighter2.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
-	
-//	MFighter2.TranslateInternal(Vector3d(0.0f, 0.0f, 10));
 
-//	MFighter3.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-0.3));
-
-//	MFighter3.TranslateInternal(Vector3d(0.0f, 0.0f, 15));
 
     // Position, Velocity Direction
     
@@ -3639,7 +3655,13 @@ void AfterDraw (void)
 		//Msky.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(turnY * 6));
 		if(GameMode==1)
 		{
-			UDfighers[0].UDMplane.Translate(Vector3d(turnZ*750.0, -turnX*750.0, 0.0f));
+			Transform PlayerMoveTMP;
+			PlayerMoveTMP=UDfighers[0].UDMplane;
+			PlayerMoveTMP.Translate(Vector3d(turnZ*500.0, -turnX*500.0, 0.0f));
+			if((PlayerMoveTMP.RefPos()(1)>1500.0)&&(PlayerMoveTMP.RefPos()(1)<10000.0))
+				UDfighers[0].UDMplane.Translate(Vector3d(0.0, -turnX*500.0, 0.0f));
+			if((PlayerMoveTMP.RefPos()(0)>-10000.0)&&(PlayerMoveTMP.RefPos()(0)<10000.0))
+				UDfighers[0].UDMplane.Translate(Vector3d(turnZ*500.0, 0.0, 0.0f));
 		}
 		else
 		{

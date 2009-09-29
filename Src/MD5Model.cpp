@@ -125,17 +125,29 @@ void MD5Model::setFrame(int frameIndex,float ScaleX,float ScaleY,float ScaleZ) {
 	if(!LoadOK)
 		return;
   if ( anims.size() == 0 || currAnim < 0 )
-    throw Exception("MD5Model::setFrame(): no animation has beens set");
+	  return;
+   // throw Exception("MD5Model::setFrame(): no animation has beens set");
 
   // sanity check #2
-  if ( frameIndex < 0 || !anims[currAnim] ||
-       anims[currAnim]->numFrames <= 0 ||
-       anims[currAnim]->numFrames <= frameIndex )
-    throw Exception("MD5Model::setFrame(): frame index is invalid");
+  //if ( frameIndex < 0 || !anims[currAnim] ||
+    //   anims[currAnim]->numFrames <= 0 ||
+      // anims[currAnim]->numFrames <= frameIndex )
+    //throw Exception("MD5Model::setFrame(): frame index is invalid");
 
-  buildVerts(anims[currAnim]->frames[frameIndex],ScaleX,ScaleY,ScaleZ);
+  int frameIndexTmp=frameIndex;
+  if(frameIndex<0)
+	  frameIndexTmp=0;
+  if(!anims[currAnim])
+	  return;
+  if(anims[currAnim]->numFrames <= 0)
+	  return;
+  if(anims[currAnim]->numFrames <= frameIndex)
+	  frameIndexTmp = anims[currAnim]->numFrames - 1;
+
+
+  buildVerts(anims[currAnim]->frames[frameIndexTmp],ScaleX,ScaleY,ScaleZ);
   buildNormals();
-  currFrame = frameIndex;
+  currFrame = frameIndexTmp;
   animTime = 0.0f;
 }
 
