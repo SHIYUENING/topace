@@ -277,5 +277,7 @@ extern float pixelfogColor[3];
 extern GLfloat ShadowMapMVPmatrix[16];
 extern GLfloat Worldmatrix[16];
 extern GLdouble DrawPlayermatrix[16]={0};
-
+float InertiaLimit = 25.0f;
+float InertiaDir = 3.0f;
+float InertiaSpeedLimit = 3.0f;
 int GameMode=1;
