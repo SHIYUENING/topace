@@ -280,4 +280,4 @@ extern GLdouble DrawPlayermatrix[16]={0};
 float InertiaLimit = 25.0f;
 float InertiaDir = 3.0f;
 float InertiaSpeedLimit = 3.0f;
-int GameMode=1;
+int GameMode=0;

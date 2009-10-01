@@ -57,8 +57,10 @@ pixel main(
 
     float3 L = normalize(paraLightDirection);
 	half DotNaL=dot(N, L);
-    half diffuseLight = max(DotNaL, 0.0);
-    half3 diffuse = paraLightColor * diffuseLight;
+   // half diffuseLight = max(DotNaL, 0.0);
+   // half3 diffuse = paraLightColor * diffuseLight;
+	half3 diffuse = (DotNaL * 0.5 + 0.5) * paraLightColor;
+	diffuse = diffuse*diffuse;
 
     float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
@@ -68,15 +70,15 @@ pixel main(
 	half4 SpecularMapcolor;
 	SpecularMapcolor=tex2D( SpecularMapTexture, IN.texcoord0 );
 
-    if(diffuseLight<=0.0) specularLight=0.0;
+   // if(diffuseLight<=0.0) specularLight=0.0;
     half4 Ocolor;
 	//Ocolor.xyz = globalAmbient + diffuse+specularLight*8*SpecularMapcolor.xyz;
     Ocolor.w = 1.0;
     pixel OUT;
 	IN.objectPos2.z=IN.objectPos2.z-0.4;
 	half colorposZ;
-	half4 MX=float4 (0.15,0.0,0.0,0.0);
-	half4 MU=float4 (0.0,0.15,0.0,0.0);
+	half4 MX=half4 (0.15,0.0,0.0,0.0);
+	half4 MU=half4 (0.0,0.15,0.0,0.0);
 	colorposZ=0.0;
 	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2 ).r;
 	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX ).r;
@@ -91,23 +93,19 @@ pixel main(
 	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*2.0 ).r;
 	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MU*2.0 ).r;
 	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MU*2.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX*2.0+MU*2.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*2.0+MU*2.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX*2.0-MU*2.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*2.0-MU*2.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX*3.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*3.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MU*3.0 ).r;
-	colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MU*3.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX*2.0+MU*2.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*2.0+MU*2.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX*2.0-MU*2.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*2.0-MU*2.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MX*3.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MX*3.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2+MU*3.0 ).r;
+	//colorposZ=colorposZ+tex2Dproj( ShadowMapTexture, IN.objectPos2-MU*3.0 ).r;
 	half4 R2;
 	R2.xyz= reflect((eyePosition-IN.objectPos.xyz/IN.objectPos.w), N);
 	R2.w=0.0;
 	R2=mul(Worldmatrix,R2);
-	Ocolor.xyz=globalAmbient +IN.Light2color+(diffuse+specularLight*10.0*SpecularMapcolor.x)*colorposZ/21.0;
-
-
-
-
+	Ocolor.xyz=lerp(globalAmbient*0.5f, globalAmbient, saturate(N.y*0.5+0.5f)) +IN.Light2color+(diffuse+specularLight*10.0*SpecularMapcolor.x)*colorposZ/13.0;
 	OUT.color = MainColor*Ocolor*(texCUBE( AmbientReflectiveTexture, R2.xyz)+1.0);
 	OUT.color.w=0.5;
 

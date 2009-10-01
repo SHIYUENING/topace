@@ -2044,11 +2044,7 @@ bool UnitAIBefore(int i)
 }
 void UnitAI(int i)
 {
-	if(GameMode==1)
-	{
-	
-	//	return;
-	}
+
 	if(UDfighers[i].AIact==1)
 	{
 		UDfighers[i].LockTimer=0;

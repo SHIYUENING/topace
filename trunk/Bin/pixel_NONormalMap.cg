@@ -48,7 +48,6 @@ pixel main(
 	half DotNaL=dot(N, L);
     half diffuseLight = max(DotNaL, 0.0);
     half3 diffuse = paraLightColor * diffuseLight;
-
     float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
 	half DotNaH=dot(N, H);
@@ -56,7 +55,7 @@ pixel main(
     half specularLight = pow(MaxNaH0, 50.0);
 
 
-    if(diffuseLight<=0.0) specularLight=0.0;
+    //if(diffuseLight<=0.0) specularLight=0.0;
     half4 Ocolor;
     Ocolor.xyz = globalAmbient +IN.Light2color+ diffuse+specularLight*8.0;
     Ocolor.w = 1.0;

@@ -39,7 +39,7 @@ void initUnitdata(int stage=0 )
 	{
 		moveSpeed=0.01f;
 		UDfighers[0].UDMplane.Reset();
-		UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 4000.0f, 0.0f));
+		UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 40000.0f, 0.0f));
 		UDfighers[0].UDlife=100;
 		UDfighers[0].UDflag=2;
 		UDfighers[0].UDfighterType=3;
@@ -74,6 +74,7 @@ void initUnitdata(int stage=0 )
 		UDfighers[5].AIType=2;
 		if(GameMode==1)
 		{
+			UDfighers[0].UDMplane.Translate(Vector3d(0.0f, 4000.0f, 0.0f));
 			for(int i=(maxUnits-5);i<maxUnits;i++)
 			{
 				UDfighers[i].ResetData();
@@ -126,8 +127,8 @@ void initUnitdata(int stage=0 )
 					sprintf(UDfighers[i].UDname,"Neo1");
 				}
 				UDfighers[i].UDlockselect=false;
-				UDfighers[i].UDMplane.Translate(Vector3d(500.0f*(i-maxUnits/2), 5000.0f+5000.0f*(i%4), 2000.0f*(i%20-10)));
-				UDfighers[i].MoveToPos=Vector3d(500.0f*(i-maxUnits/2), 5000.0f+5000.0f*(i%4), 2000.0f*(i%20-10));
+				UDfighers[i].UDMplane.Translate(Vector3d(500.0f*(i-maxUnits/2), 50000.0f+5000.0f*(i%4), 2000.0f*(i%20-10)));
+				UDfighers[i].MoveToPos=Vector3d(500.0f*(i-maxUnits/2), 50000.0f+5000.0f*(i%4), 2000.0f*(i%20-10));
 				UDfighers[i].UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * (i%8+2));
 				if(UDfighers[i].UDflag==2)
 				{
