@@ -25,9 +25,9 @@ void main()
     vec3 HightLight = normalize(LightDir + ViewDir);
     float specularLight = pow(max(dot(Normal, HightLight), 0.0), 50.0);
     vec4 SpecularMapcolor = texture2D(SpecularMapTexture, gl_TexCoord[0].xy);
-    if (diffuseLight <= 0.0) { 
-        specularLight = 0.0;
-    }
+  //  if (diffuseLight <= 0.0) { 
+  //      specularLight = 0.0;
+  //  }
     vec4 shadowPos=gl_TexCoord[4]-vec4(0.0,0.0,0.4,0.0);
     vec4 MX=vec4 (0.15,0.0,0.0,0.0);
 	vec4 MU=vec4 (0.0,0.15,0.0,0.0);
@@ -45,15 +45,15 @@ void main()
 	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*2.0 ).x;
 	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MU*2.0 ).x;
 	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MU*2.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MX*2.0+MU*2.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*2.0+MU*2.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MX*2.0-MU*2.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*2.0-MU*2.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MX*3.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*3.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MU*3.0 ).x;
-	posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MU*3.0 ).x;
-	posz=posz/21.0;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MX*2.0+MU*2.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*2.0+MU*2.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MX*2.0-MU*2.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*2.0-MU*2.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MX*3.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MX*3.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos+MU*3.0 ).x;
+	//posz=posz+shadow2DProj( ShadowMapTexture, shadowPos-MU*3.0 ).x;
+	posz=posz/13.0;
 	
 	vec4 Ocolor;
     Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;

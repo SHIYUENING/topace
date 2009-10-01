@@ -57,9 +57,10 @@ pixel main(
 
     float3 L = normalize(paraLightDirection);
 	half DotNaL=dot(N, L);
-    half diffuseLight = max(DotNaL, 0.0);
-    half3 diffuse = paraLightColor * diffuseLight;
-
+   // half diffuseLight = max(DotNaL, 0.0);
+   // half3 diffuse = paraLightColor * diffuseLight;
+	half3 diffuse = (DotNaL * 0.5 + 0.5) * paraLightColor;
+	diffuse = diffuse*diffuse;
     float3 V = normalize(eyePosition);
     float3 H = normalize(L + V);
 	half DotNaH=dot(N, H);
@@ -76,9 +77,9 @@ pixel main(
 */
 
 
-    if(diffuseLight<=0.0) specularLight=0.0;
+   // if(diffuseLight<=0.0) specularLight=0.0;
     half4 Ocolor;
-    Ocolor.xyz = globalAmbient  +IN.Light2color+ diffuse+specularLight*8.0*SpecularMapcolor.x;
+    Ocolor.xyz = lerp(globalAmbient*0.5f, globalAmbient, saturate(N.y*0.5+0.5f))  +IN.Light2color+ diffuse+specularLight*8.0*SpecularMapcolor.x;
     Ocolor.w = 1.0;
     pixel OUT;
 	float4 colorposZ=tex2D( ShadowMapTexture, IN.texcoord3 );
