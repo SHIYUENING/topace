@@ -147,7 +147,10 @@ void arrow_keys ( int a_keys, int x, int y )  // Create Special Function (requir
       glutFullScreen ( ); // Go Into Full Screen Mode
       break;
     case GLUT_KEY_DOWN:               // When Down Arrow Is Pressed...
-      glutReshapeWindow ( 500, 500 ); // Go Into A 500 By 500 Window
+		glutFullScreen();
+		glutPositionWindow((GetSystemMetrics(SM_CXFULLSCREEN)-winW)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-winH)/2);
+      glutReshapeWindow ( winW, winH ); // Go Into A 500 By 500 Window
+	  
       break;
     default:
       break;
@@ -164,7 +167,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	glutInit            ( &nCmdShow, &argv ); // Erm Just Write It =)
 //	glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE ); // Display Mode
-	glutInitDisplayString("rgba double depth>=24 samples=0 alpha");
+	glutInitDisplayString("rgba double depth>=24 samples alpha");
+	glutSetOption(GLUT_MULTISAMPLE,2);
 	glutInitWindowPosition((GetSystemMetrics(SM_CXFULLSCREEN)-winW)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-winH)/2);
 	glutInitWindowSize  ( winW, winH ); // If glutFullScreen wasn't called this is the window size
 	glutCreateWindow    ( "TOP_ACE" ); // Window Title (argv[0] for current directory as title)
