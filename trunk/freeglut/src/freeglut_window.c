@@ -928,7 +928,7 @@ void fgOpenWindow( SFG_Window* window, const char* title,
         }
 #if !defined(_WIN32_WCE)
         else if( window->Parent == NULL )
-            flags |= WS_OVERLAPPEDWINDOW;
+            flags |= WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;//WS_OVERLAPPEDWINDOW
 #endif
         else
             flags |= WS_CHILD;
