@@ -794,7 +794,7 @@ extern SFG_State fgState;
  * everything inside of the freeglut
  */
 void fgDeinitialize( void );
-
+void fgGetSwap( void );
 /*
  * Those two functions are used to create/destroy the freeglut internal
  * structures. This actually happens when calling glutInit() and when
