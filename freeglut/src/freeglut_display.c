@@ -27,7 +27,22 @@
 
 #include <GL/freeglut.h>
 #include "freeglut_internal.h"
+int (__stdcall *hglSwapBuffers)(void *);
+HMODULE gl_dll=0;
+void fgGetSwap( void )
+{
+#if TARGET_HOST_MS_WINDOWS
+	if(!gl_dll)
+	{
+		gl_dll=LoadLibrary("OpenGL32.DLL");
 
+		if(!gl_dll)
+			MessageBox (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
+
+	}
+	hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
+#endif
+}
 /* -- INTERFACE FUNCTIONS -------------------------------------------------- */
 
 /*
@@ -59,7 +74,11 @@ void FGAPIENTRY glutSwapBuffers( void )
 #if TARGET_HOST_POSIX_X11
     glXSwapBuffers( fgDisplay.Display, fgStructure.CurrentWindow->Window.Handle );
 #elif TARGET_HOST_MS_WINDOWS
-    SwapBuffers( fgStructure.CurrentWindow->Window.Device );
+   // SwapBuffers( fgStructure.CurrentWindow->Window.Device );
+	if(gl_dll)
+		hglSwapBuffers( fgStructure.CurrentWindow->Window.Device );
+	else
+		SwapBuffers( fgStructure.CurrentWindow->Window.Device );
 #endif
 
     /* GLUT_FPS env var support */

@@ -828,7 +828,7 @@ void FGAPIENTRY glutInit( int* pargc, char** argv )
      * Geometry parsing deffered until here because we may need the screen
      * size.
      */
-
+	fgGetSwap();
     if (geometry )
     {
         unsigned int parsedWidth, parsedHeight;
