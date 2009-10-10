@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TOP_ACE", "TOP_ACE\TOP_ACE.vcproj", "{65D5C0E3-4D5C-49E5-BA00-ECC97E2C8C8E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TOP_ACE", "TOP_ACE.vcproj", "{65D5C0E3-4D5C-49E5-BA00-ECC97E2C8C8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
