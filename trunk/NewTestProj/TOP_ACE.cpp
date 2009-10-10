@@ -10,13 +10,28 @@ Also link glut.lib to your project once its done.
 #include <GL/glew.h>
 #include <GL/gl.h>     // The GL Header File
 #include <GL/freeglut.h>   // The GL Utility Toolkit (Glut) Header
+#include <pthread.h>
+#pragma comment( lib, "pthreadVC2.lib" )	
 #pragma comment( lib, "glew32.lib" )	
 #pragma comment( lib, "glew32d.lib" )
 float	rtri;						// Angle For The Triangle
 float	rquad;						// Angle For The Quad
 int winW=800;
 int winH=600;
-
+pthread_mutex_t mutex;
+struct timespec delay;
+void* DataFream(void* Param)
+{
+	while(true)
+	{
+	 pthread_mutex_lock( &mutex );
+   rtri+=0.2f;						// Increase The Rotation Variable For The Triangle ( NEW )
+	rquad-=0.15f;						// Decrease The Rotation Variable For The Quad     ( NEW )
+	pthread_mutex_unlock( &mutex );
+	pthread_delay_np( &delay );
+	}
+	return NULL;
+}
 void InitGL ( GLvoid )     // Create Some Everyday Functions
 {
 
@@ -31,11 +46,17 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 
 void display ( void )   // Create The Display Function
 {
+	float turn1,turn2;
+
+	pthread_mutex_lock( &mutex );
+	turn1=rtri;
+	turn2=rquad;
+	pthread_mutex_unlock( &mutex );
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
    glLoadIdentity();									// Reset The Current Modelview Matrix
    glPushMatrix();
 	glTranslatef(-1.5f,0.0f,-6.0f);						// Move Left 1.5 Units And Into The Screen 6.0
-   glRotatef(rtri,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
+   glRotatef(turn1,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
    glEnable(GL_MULTISAMPLE_ARB);
 	glBegin(GL_TRIANGLES);								// Drawing Using Triangles
 		glColor3f(1.0f,0.0f,0.0f);			// Red
@@ -66,7 +87,7 @@ void display ( void )   // Create The Display Function
 glDisable(GL_MULTISAMPLE_ARB);
 	glLoadIdentity();					// Reset The Current Modelview Matrix
     glTranslatef(1.5f,0.0f,-6.0f);				// Move Right 1.5 Units And Into The Screen 6.0
-	glRotatef(rquad,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
+	glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
 	glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
 	glBegin(GL_QUADS);									// Draw A Quad
 		glColor3f(0.0f,1.0f,0.0f);			// Set The Color To Blue
@@ -102,8 +123,8 @@ glDisable(GL_MULTISAMPLE_ARB);
 	glEnd();						// Done Drawing The Quad
   												// Done Drawing The Quad
   glPopMatrix();
-   rtri+=0.2f;						// Increase The Rotation Variable For The Triangle ( NEW )
-	rquad-=0.15f;						// Decrease The Rotation Variable For The Quad     ( NEW )
+  // rtri+=0.2f;						// Increase The Rotation Variable For The Triangle ( NEW )
+	//rquad-=0.15f;						// Decrease The Rotation Variable For The Quad     ( NEW )
 
 
   glutSwapBuffers ( );
@@ -164,7 +185,17 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	char path[_MAX_PATH];
     GetModuleFileName(hInstance, path, _MAX_PATH);
 	char* argv=(char *)path;
-
+	delay.tv_nsec=10000;
+	delay.tv_sec=0;
+     pthread_t pid;
+     pthread_attr_t attr;
+     pthread_attr_init(&attr);
+     pthread_attr_setscope(&attr, PTHREAD_SCOPE_PROCESS);
+     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	pthread_t reader;
+	pthread_mutex_init(&mutex, NULL);
+    pthread_create( &reader, &attr, DataFream,
+                    NULL);
 	glutInit            ( &nCmdShow, &argv ); // Erm Just Write It =)
 //	glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE ); // Display Mode
 	glutInitDisplayString("rgba double depth>=24 samples alpha");
