@@ -11,6 +11,11 @@ Also link glut.lib to your project once its done.
 #include <GL/gl.h>     // The GL Header File
 #include <GL/freeglut.h>   // The GL Utility Toolkit (Glut) Header
 #include <pthread.h>
+#include "dinput.h"
+#include "dinputd.h"
+#include <commctrl.h>
+#pragma comment( lib, "dinput8.lib" )	
+#pragma comment( lib, "comctl32.lib" )	
 #pragma comment( lib, "pthreadVC2.lib" )	
 #pragma comment( lib, "glew32.lib" )	
 #pragma comment( lib, "glew32d.lib" )
@@ -20,6 +25,8 @@ int winW=800;
 int winH=600;
 pthread_mutex_t mutex;
 struct timespec delay;
+IDirectInput8 *g_pDInputInterface; //dinput interface
+IDirectInputDevice8 *g_pKeyboardDevice; //keyboard device
 void* DataFream(void* Param)
 {
 	while(true)
@@ -182,10 +189,11 @@ void arrow_keys ( int a_keys, int x, int y )  // Create Special Function (requir
 //void main ( int argc, char** argv )   // Create Main Function For Bringing It All Together
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	InitCommonControls();
 	char path[_MAX_PATH];
     GetModuleFileName(hInstance, path, _MAX_PATH);
 	char* argv=(char *)path;
-	delay.tv_nsec=10000;
+	delay.tv_nsec=10000000;
 	delay.tv_sec=0;
      pthread_t pid;
      pthread_attr_t attr;
