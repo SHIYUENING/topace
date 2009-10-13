@@ -19,10 +19,10 @@ void main()
     mat3 TBN = mat3(Tangent,Binormal,NormalIn);
     vec3 Normal = TBN*NN2;
     vec3 LightDir = normalize(paraLightDirection);
-    //float diffuseLight = max(dot(Normal, LightDir), 0.0);
-    //vec3 diffuse = paraLightColor*diffuseLight;
-    vec3 diffuse = (dot(Normal, LightDir) * 0.5 + 0.5) * paraLightColor;
-	diffuse = diffuse*diffuse;
+    float diffuseLight = max(dot(Normal, LightDir), 0.0);
+    vec3 diffuse = paraLightColor*diffuseLight;
+    //vec3 diffuse = (dot(Normal, LightDir) * 0.5 + 0.5) * paraLightColor;
+	//diffuse = diffuse*diffuse;
     vec3 ViewDir = normalize(eyePosition-gl_TexCoord[2].xyz);
     vec3 HightLight = normalize(LightDir + ViewDir);
     float specularLight = pow(max(dot(Normal, HightLight), 0.0), 50.0);
@@ -34,7 +34,8 @@ void main()
 	float posz=shadow2DProj( ShadowMapTexture, shadowPos ).x;
 
 	vec4 Ocolor;
-    Ocolor.xyz = lerp(globalAmbient*0.5f, globalAmbient, saturate(Normal.y*0.5+0.5f)) + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
+   // Ocolor.xyz = lerp(globalAmbient*0.5f, globalAmbient, saturate(Normal.y*0.5+0.5f)) + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
+    Ocolor.xyz = globalAmbient + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
     Ocolor.w = 1.0;
     vec3 Reflective=reflect(ViewDir,Normal);
     vec4 ReflectiveWorld = Worldmatrix*vec4(Reflective,0.0);
