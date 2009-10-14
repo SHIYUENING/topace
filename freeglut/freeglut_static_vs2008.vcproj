@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="freeglut_static"
 	ProjectGUID="{71AF75A0-52B6-4C1B-8E56-CB31C6741A18}"
+	RootNamespace="freeglut_static"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>
@@ -163,6 +164,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="if not exist &quot;$(OutDir)&quot; md &quot;$(OutDir)&quot;&#x0D;&#x0A;copy &quot;$(OutDir)\freeglut_static.lib&quot; &quot;$(ProjectDir)\..\Src\Graphics\lib\&quot; /Y"
 			/>
 		</Configuration>
 	</Configurations>

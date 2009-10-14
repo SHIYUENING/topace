@@ -1589,7 +1589,8 @@ void* FGAPIENTRY glutGetWindowData( void )
 {
     FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutGetWindowData" );
     FREEGLUT_EXIT_IF_NO_WINDOW ( "glutGetWindowData" );
-    return fgStructure.CurrentWindow->UserData;
+	return &fgStructure.CurrentWindow->Window;
+    //return fgStructure.CurrentWindow->UserData;
 }
 
 void FGAPIENTRY glutSetWindowData(void* data)
