@@ -403,16 +403,16 @@ GLboolean fgSetupPixelFormat( SFG_Window* window, GLboolean checkOnly,
     else
     {
         pfd.iPixelType      = PFD_TYPE_RGBA;
-        pfd.cRedBits                = 8;
-        pfd.cGreenBits            = 8;
-        pfd.cBlueBits             = 8;
+  //      pfd.cRedBits                = 8;
+  //      pfd.cGreenBits            = 8;
+//        pfd.cBlueBits             = 8;
         if ( fgState.DisplayMode & GLUT_ALPHA )
             pfd.cAlphaBits            = 8;
         else
             pfd.cAlphaBits            = 0;
     }
 
-    pfd.cColorBits      = 24;
+	pfd.cColorBits      = fgState.ColorBits;
     pfd.cRedShift       = 0;
     pfd.cGreenShift     = 0;
     pfd.cBlueShift      = 0;
@@ -426,7 +426,7 @@ GLboolean fgSetupPixelFormat( SFG_Window* window, GLboolean checkOnly,
     pfd.cDepthBits      = 32;
     pfd.cStencilBits    = 0;
 #else
-    pfd.cDepthBits      = 24;
+	pfd.cDepthBits      = fgState.GameModeDepth;
     pfd.cStencilBits    = 8;
 #endif
     if( fgState.DisplayMode & GLUT_AUX4 )
