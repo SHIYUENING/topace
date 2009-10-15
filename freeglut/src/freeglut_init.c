@@ -76,9 +76,9 @@ SFG_State fgState = { { -1, -1, GL_FALSE },  /* Position */
                       0,                      /* ActiveMenus */
                       NULL,                   /* MenuStateCallback */
                       NULL,                   /* MenuStatusCallback */
-                      { 640, 480, GL_TRUE },  /* GameModeSize */
-                      16,                     /* GameModeDepth */
-                      72,                     /* GameModeRefresh */
+                      { 800, 600, GL_TRUE },  /* GameModeSize */
+                      24,                     /* GameModeDepth */
+                      60,                     /* GameModeRefresh */
                       GLUT_ACTION_EXIT,       /* ActionOnWindowClose */
                       GLUT_EXEC_STATE_INIT,   /* ExecState */
                       NULL,                   /* ProgramName */
@@ -88,7 +88,8 @@ SFG_State fgState = { { -1, -1, GL_FALSE },  /* Position */
                       4,                      /* SampleNumber */
                       1,                      /* MajorVersion */
                       0,                      /* MajorVersion */
-                      0                       /* ContextFlags */
+                      0,                       /* ContextFlags */
+					  24                      /* Window ColorBits*/
 };
 
 
@@ -448,10 +449,10 @@ void fgDeinitialize( void )
     fgState.KeyRepeat       = GLUT_KEY_REPEAT_ON;
     fgState.Modifiers       = INVALID_MODIFIERS;
 
-    fgState.GameModeSize.X  = 640;
-    fgState.GameModeSize.Y  = 480;
-    fgState.GameModeDepth   =  16;
-    fgState.GameModeRefresh =  72;
+    fgState.GameModeSize.X  = 800;
+    fgState.GameModeSize.Y  = 600;
+    fgState.GameModeDepth   =  24;
+    fgState.GameModeRefresh =  60;
 
     fgListInit( &fgState.Timers );
     fgListInit( &fgState.FreeTimers );

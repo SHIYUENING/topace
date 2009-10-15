@@ -148,6 +148,14 @@ void FGAPIENTRY glutSetOption( GLenum eWhat, int value )
       fgState.SampleNumber = value;
       break;
 
+	case GLUT_RGB:
+      fgState.ColorBits = value;
+      break;
+
+	case GLUT_DEPTH:
+		fgState.GameModeDepth = value;
+      break;
+
     default:
         fgWarning( "glutSetOption(): missing enum handle %d", eWhat );
         break;
