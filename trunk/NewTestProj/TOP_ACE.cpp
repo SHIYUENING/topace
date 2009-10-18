@@ -14,6 +14,8 @@ Also link glut.lib to your project once its done.
 #include <pthread.h>
 #include "tga.h"
 #include "AsciiFont.h"
+//#include "DDS.h"
+#include"Textures.h"
 //#include "JoyStick.h"
 //#include "GamePads.h"
 //#include "dinputd.h"
@@ -33,7 +35,9 @@ int winW=800;
 int winH=600;
 pthread_mutex_t mutex;
 struct timespec delay;
-TGA * ASCFontTGA=NULL;
+//TGA * ASCFontTGA=NULL;
+//CDDS * ASCFontDDS=NULL;
+Textures * ASCFontTex = NULL;
 LARGE_INTEGER t1,t2,feq,t3;//计算每桢运行时间相关
 int frameNumPs=0;
 int frame=0;
@@ -76,20 +80,25 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 					10.0f, 100000.0f);		
 	glMatrixMode (GL_MODELVIEW);	
 	
-	ASCFontTGA=new TGA;
-	ASCFontTGA->LoadTGA("Data/Font.tga");
-	ASCFontTGA->LoadTGA_RAMtoVRAM();
-	BuildFont(ASCFontTGA->texID);
+	ASCFontTex=new Textures;
+	ASCFontTex->loadfile("Data/Font");
+	ASCFontTex->LoadToVRAM();
+	BuildFont(ASCFontTex->TexID);
+	//ASCFontTGA=new TGA;
+	//ASCFontTGA->LoadTGA("Data/Font.tga");
+	//ASCFontTGA->LoadTGA_RAMtoVRAM();
+	//BuildFont(ASCFontTGA->texID);
 	QueryPerformanceCounter(&t1);
+	
+	QueryPerformanceFrequency(&feq);//每秒跳动次数
 }
 
 void display ( void )   // Create The Display Function
 {
 
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
 	QueryPerformanceCounter(&t2);//测后跳动次数
 
-	if(double((t2.QuadPart-t1.QuadPart)/feq.QuadPart)>1.0)
+	if(double((t2.QuadPart-t1.QuadPart)/feq.QuadPart)>=1.0)
 	{
 		QueryPerformanceCounter(&t1);//测前跳动次数
 		frame=frameNumPs;
@@ -310,8 +319,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	glutMainLoop        ( );          // Initialize The Main Loop
 //	FreeDirectInput();
 
-	if(ASCFontTGA)
-		delete ASCFontTGA;
+	//if(ASCFontTGA)
+	//	delete ASCFontTGA;
+	if(ASCFontTex)
+		delete ASCFontTex;
+	
 	return 0;
 }
 /*
