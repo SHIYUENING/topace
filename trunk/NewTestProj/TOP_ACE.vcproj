@@ -182,7 +182,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\AsciiFont.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DDS.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JoyStick.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TGA.cpp"
 				>
 			</File>
 			<File
@@ -196,11 +208,37 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\GamePads.h"
+				RelativePath=".\AsciiFont.h"
 				>
 			</File>
 			<File
+				RelativePath=".\DDS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GamePads.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\JoyStick.h"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Tga.h"
 				>
 			</File>
 		</Filter>
