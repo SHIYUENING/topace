@@ -190,7 +190,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GamePads.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\JoyStick.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Textures.cpp"
 				>
 			</File>
 			<File
@@ -236,6 +252,10 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Textures.h"
+				>
 			</File>
 			<File
 				RelativePath=".\Tga.h"

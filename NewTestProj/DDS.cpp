@@ -16,7 +16,7 @@ CDDS::~CDDS(void)
 }
 void CDDS::loadDDSTextureFile( const char *filename )
 {
-    DDS_IMAGE_DATA *pDDSImageData;
+   // DDS_IMAGE_DATA *pDDSImageData;
     DDSURFACEDESC2 ddsd;
 
     char filecode[4];
@@ -209,9 +209,10 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
             nWidth  = (nWidth  / 2);
             nHeight = (nHeight / 2);
         }
+		isVRAM=true;
     } 
 
-
+	
 	return g_compressedTextureID;
 } 
 void CDDS::DelDDS_RAM()
