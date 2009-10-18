@@ -1,29 +1,19 @@
-#define STRICT
-#define DIRECTINPUT_VERSION 0x0800
-#include "dinput.h"
-#include "dinputd.h"
-#include <math.h>
-#include <strsafe.h>
-extern bool ispad;
-extern bool ispadEffect;
 
+#include "JoyStick.h"
+
+bool ispad=true;
+bool ispadEffect=true;
+HWND hDlg;
 #pragma comment( lib, "dinput8.lib" )	
 #pragma comment( lib, "dxguid.lib" )
 
 //-----------------------------------------------------------------------------
 // Function-prototypes
 //-----------------------------------------------------------------------------
-BOOL CALLBACK    EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi, VOID* pContext );
-BOOL CALLBACK    EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VOID* pContext );
-HRESULT InitDirectInput( HWND hDlg );
-VOID FreeDirectInput();
-HRESULT UpdateInputState( HWND hDlg );
-HRESULT SetDeviceForcesXY();
+
 // Stuff to filter out XInput devices
 #include <wbemidl.h>
-HRESULT SetupForIsXInputDevice();
-bool IsXInputDevice( const GUID* pGuidProductFromDirectInput );
-void CleanupForIsXInputDevice();
+
 
 struct XINPUT_DEVICE_NODE
 {
@@ -406,7 +396,7 @@ BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,
 
     }
 
-
+/*
     // Set the UI to reflect what objects the joystick supports
     if( pdidoi->guidType == GUID_XAxis )
     {
@@ -478,7 +468,7 @@ BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,
                 break;
         }
     }
-
+*/
     return DIENUM_CONTINUE;
 }
 
@@ -519,7 +509,16 @@ HRESULT UpdateInputState( HWND hDlg )
     // Get the input's device state
     if( FAILED( hr = g_pJoystick->GetDeviceState( sizeof( DIJOYSTATE2 ), &js ) ) )
         return hr; // The device should have been acquired during the Poll()
-
+	bool shock =false;
+	for( int i = 0; i < 128; i++ )
+	{
+		if( js.rgbButtons[i] & 0x80 )
+			shock=true;
+	}
+	if( g_pEffect&&shock )
+        g_pEffect->Start( 1, 0 );
+	else
+		g_pEffect->Stop();
     // Display joystick state to dialog
 /*
     // Axes
@@ -585,6 +584,7 @@ VOID FreeDirectInput()
         g_pJoystick->Unacquire();
 
     // Release any DirectInput objects.
+	SAFE_RELEASE( g_pEffect );
     SAFE_RELEASE( g_pJoystick );
     SAFE_RELEASE( g_pDI );
 }
