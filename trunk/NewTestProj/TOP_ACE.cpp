@@ -16,6 +16,7 @@ Also link glut.lib to your project once its done.
 #include "AsciiFont.h"
 //#include "DDS.h"
 #include"Textures.h"
+#include"Draw.h"
 //#include "JoyStick.h"
 //#include "GamePads.h"
 //#include "dinputd.h"
@@ -35,21 +36,21 @@ int winW=800;
 int winH=600;
 pthread_mutex_t mutex;
 struct timespec delay;
-//TGA * ASCFontTGA=NULL;
-//CDDS * ASCFontDDS=NULL;
 Textures * ASCFontTex = NULL;
-LARGE_INTEGER t1,t2,feq,t3;//计算每桢运行时间相关
+LARGE_INTEGER t1,t2,feq,DataThread;//计算每桢运行时间相关
 int frameNumPs=0;
 int frame=0;
 char showfps[64]={0};
+float turn1,turn2;
 void* DataFream(void* Param)
 {
 	while(true)
 	{
-	 pthread_mutex_lock( &mutex );
-   rtri+=0.2f;						// Increase The Rotation Variable For The Triangle ( NEW )
-	rquad-=0.15f;						// Decrease The Rotation Variable For The Quad     ( NEW )
-	pthread_mutex_unlock( &mutex );
+		
+		pthread_mutex_lock( &mutex );
+		rtri+=0.2f;	
+		rquad-=0.15f;
+		pthread_mutex_unlock( &mutex );
 /*	if(ispad&&ispadEffect)
 	{
 		g_pDevice->Acquire();
@@ -58,7 +59,11 @@ void* DataFream(void* Param)
                     g_pEffect->Start( 1, 0 ); // Start the effect
 	}*/
 	//UpdateInputState(hDlg);
-	pthread_delay_np( &delay );
+
+		QueryPerformanceCounter(&t2);
+		delay.tv_nsec=max(10000000-int((t2.QuadPart-DataThread.QuadPart)/feq.QuadPart*1000000000.0),100);
+		pthread_delay_np( &delay );
+		QueryPerformanceCounter(&DataThread);
 	}
 	
 	return NULL;
@@ -84,12 +89,8 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	ASCFontTex->loadfile("Data/Font");
 	ASCFontTex->LoadToVRAM();
 	BuildFont(ASCFontTex->TexID);
-	//ASCFontTGA=new TGA;
-	//ASCFontTGA->LoadTGA("Data/Font.tga");
-	//ASCFontTGA->LoadTGA_RAMtoVRAM();
-	//BuildFont(ASCFontTGA->texID);
+
 	QueryPerformanceCounter(&t1);
-	
 	QueryPerformanceFrequency(&feq);//每秒跳动次数
 }
 
@@ -107,86 +108,14 @@ void display ( void )   // Create The Display Function
 	}
 	
 	
-	float turn1,turn2;
+	
 
 	pthread_mutex_lock( &mutex );
 	turn1=rtri;
 	turn2=rquad;
 	pthread_mutex_unlock( &mutex );
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
-  glDisable( GL_TEXTURE_2D );
-   glLoadIdentity();									// Reset The Current Modelview Matrix
-   glPushMatrix();
-	glTranslatef(-1.5f,0.0f,-6.0f);						// Move Left 1.5 Units And Into The Screen 6.0
-   glRotatef(turn1,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
-   glEnable(GL_MULTISAMPLE_ARB);
-	glBegin(GL_TRIANGLES);								// Drawing Using Triangles
-		glColor3f(1.0f,0.0f,0.0f);			// Red
-		glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Front)
-		glColor3f(0.0f,1.0f,0.0f);			// Green
-		glVertex3f(-1.0f,-1.0f, 1.0f);			// Left Of Triangle (Front)
-		glColor3f(0.0f,0.0f,1.0f);			// Blue
-		glVertex3f( 1.0f,-1.0f, 1.0f);			// Right Of Triangle (Front)
-		glColor3f(1.0f,0.0f,0.0f);			// Red
-		glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Right)
-		glColor3f(0.0f,0.0f,1.0f);			// Blue
-		glVertex3f( 1.0f,-1.0f, 1.0f);			// Left Of Triangle (Right)
-		glColor3f(0.0f,1.0f,0.0f);			// Green
-		glVertex3f( 1.0f,-1.0f, -1.0f);			// Right Of Triangle (Right)
-      glColor3f(1.0f,0.0f,0.0f);			// Red
-		glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Back)
-		glColor3f(0.0f,1.0f,0.0f);			// Green
-		glVertex3f( 1.0f,-1.0f, -1.0f);			// Left Of Triangle (Back)
-		glColor3f(0.0f,0.0f,1.0f);			// Blue
-		glVertex3f(-1.0f,-1.0f, -1.0f);			// Right Of Triangle (Back)
-		glColor3f(1.0f,0.0f,0.0f);			// Red
-		glVertex3f( 0.0f, 1.0f, 0.0f);			// Top Of Triangle (Left)
-		glColor3f(0.0f,0.0f,1.0f);			// Blue
-		glVertex3f(-1.0f,-1.0f,-1.0f);			// Left Of Triangle (Left)
-		glColor3f(0.0f,1.0f,0.0f);			// Green
-		glVertex3f(-1.0f,-1.0f, 1.0f);			// Right Of Triangle (Left)
-    glEnd();											// Finished Drawing The Triangle
-glDisable(GL_MULTISAMPLE_ARB);
-	glLoadIdentity();					// Reset The Current Modelview Matrix
-    glTranslatef(1.5f,0.0f,-6.0f);				// Move Right 1.5 Units And Into The Screen 6.0
-	glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
-	glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
-	glBegin(GL_QUADS);									// Draw A Quad
-		glColor3f(0.0f,1.0f,0.0f);			// Set The Color To Blue
-		glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f,-1.0f);			// Top Left Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f, 1.0f);			// Bottom Left Of The Quad (Top)
-		glVertex3f( 1.0f, 1.0f, 1.0f);			// Bottom Right Of The Quad (Top)
-		glColor3f(1.0f,0.5f,0.0f);			// Set The Color To Orange
-		glVertex3f( 1.0f,-1.0f, 1.0f);			// Top Right Of The Quad (Bottom)
-		glVertex3f(-1.0f,-1.0f, 1.0f);			// Top Left Of The Quad (Bottom)
-		glVertex3f(-1.0f,-1.0f,-1.0f);			// Bottom Left Of The Quad (Bottom)
-		glVertex3f( 1.0f,-1.0f,-1.0f);			// Bottom Right Of The Quad (Bottom)
-		glColor3f(1.0f,0.0f,0.0f);			// Set The Color To Red
-		glVertex3f( 1.0f, 1.0f, 1.0f);			// Top Right Of The Quad (Front)
-		glVertex3f(-1.0f, 1.0f, 1.0f);			// Top Left Of The Quad (Front)
-		glVertex3f(-1.0f,-1.0f, 1.0f);			// Bottom Left Of The Quad (Front)
-		glVertex3f( 1.0f,-1.0f, 1.0f);			// Bottom Right Of The Quad (Front)
-		glColor3f(1.0f,1.0f,0.0f);			// Set The Color To Yellow
-		glVertex3f( 1.0f,-1.0f,-1.0f);			// Bottom Left Of The Quad (Back)
-		glVertex3f(-1.0f,-1.0f,-1.0f);			// Bottom Right Of The Quad (Back)
-		glVertex3f(-1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Back)
-		glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Left Of The Quad (Back)
-		glColor3f(0.0f,0.0f,1.0f);			// Set The Color To Blue
-		glVertex3f(-1.0f, 1.0f, 1.0f);			// Top Right Of The Quad (Left)
-		glVertex3f(-1.0f, 1.0f,-1.0f);			// Top Left Of The Quad (Left)
-		glVertex3f(-1.0f,-1.0f,-1.0f);			// Bottom Left Of The Quad (Left)
-		glVertex3f(-1.0f,-1.0f, 1.0f);			// Bottom Right Of The Quad (Left)
-		glColor3f(1.0f,0.0f,1.0f);			// Set The Color To Violet
-		glVertex3f( 1.0f, 1.0f,-1.0f);			// Top Right Of The Quad (Right)
-		glVertex3f( 1.0f, 1.0f, 1.0f);			// Top Left Of The Quad (Right)
-		glVertex3f( 1.0f,-1.0f, 1.0f);			// Bottom Left Of The Quad (Right)
-		glVertex3f( 1.0f,-1.0f,-1.0f);			// Bottom Right Of The Quad (Right)
-	glEnd();						// Done Drawing The Quad
-  												// Done Drawing The Quad
-  glPopMatrix();
-  // rtri+=0.2f;						// Increase The Rotation Variable For The Triangle ( NEW )
-	//rquad-=0.15f;						// Decrease The Rotation Variable For The Quad     ( NEW )
+
+	Draw();
 
   glColor3f(0.0f,1.0f,0.0f);	
   glEnable( GL_TEXTURE_2D );
@@ -245,22 +174,7 @@ void arrow_keys ( int a_keys, int x, int y )  // Create Special Function (requir
 }
 
 
-//void main ( int argc, char** argv )   // Create Main Function For Bringing It All Together
-/*
-BOOL CALLBACK EnumDevices(LPCDIDEVICEINSTANCE pdInst, LPVOID pvRef)
-{
-    int Result;
- // Display a message box with name of device found
-    Result = MessageBox(HWND_DESKTOP, pdInst->tszInstanceName,
-            pdInst->tszProductName, MB_OKCANCEL);
-	
-    // Tell it to continue enumeration if OK pressed
-    if(Result == IDOK)
-        return DIENUM_CONTINUE;
-    // Stop enumeration
-    return DIENUM_STOP;
-}
-*/
+
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 /*	 HRESULT hr;
@@ -287,7 +201,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	glutInitWindowPosition((GetSystemMetrics(SM_CXFULLSCREEN)-winW)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-winH)/2);
 	glutInitWindowSize  ( winW, winH ); // If glutFullScreen wasn't called this is the window size
 	glutCreateWindow    ( "TOP_ACE" ); // Window Title (argv[0] for current directory as title)
-//	glutFullScreen      ( );          // Put Into Full Screen
 	InitGL ();
 	
 //	hDlg=*(HWND *) glutGetWindowData();
@@ -298,11 +211,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 //	}
 	//if(ispad&&ispadEffect)
 //	SetDeviceForcesXY();
-
-
-	delay.tv_nsec=10000000;
+	delay.tv_nsec=10000000;//1000000000
 	delay.tv_sec=0;
-//     pthread_t pid;
      pthread_attr_t attr;
      pthread_attr_init(&attr);
      pthread_attr_setscope(&attr, PTHREAD_SCOPE_PROCESS);
@@ -319,58 +229,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	glutMainLoop        ( );          // Initialize The Main Loop
 //	FreeDirectInput();
 
-	//if(ASCFontTGA)
-	//	delete ASCFontTGA;
+
 	if(ASCFontTex)
 		delete ASCFontTex;
 	
 	return 0;
 }
-/*
-//-----------------------------------------------------------------------------
-// Name: SetDeviceForcesXY()
-// Desc: Apply the X and Y forces to the effect we prepared.
-//-----------------------------------------------------------------------------
-HRESULT SetDeviceForcesXY()
-{
-    // Modifying an effect is basically the same as creating a new one, except
-    // you need only specify the parameters you are modifying
-    LONG rglDirection[2] = { 0, 0 };
-
-    DICONSTANTFORCE cf;
-
-    if( g_dwNumForceFeedbackAxis == 1 )
-    {
-        // If only one force feedback axis, then apply only one direction and 
-        // keep the direction at zero
-        cf.lMagnitude = g_nXForce;
-        rglDirection[0] = 0;
-    }
-    else
-    {
-        // If two force feedback axis, then apply magnitude from both directions 
-        rglDirection[0] = g_nXForce;
-        rglDirection[1] = g_nYForce;
-        cf.lMagnitude = ( DWORD )sqrt( ( double )g_nXForce * ( double )g_nXForce +
-                                       ( double )g_nYForce * ( double )g_nYForce );
-    }
-
-    DIEFFECT eff;
-    ZeroMemory( &eff, sizeof( eff ) );
-    eff.dwSize = sizeof( DIEFFECT );
-    eff.dwFlags = DIEFF_CARTESIAN | DIEFF_OBJECTOFFSETS;
-    eff.cAxes = g_dwNumForceFeedbackAxis;
-    eff.rglDirection = rglDirection;
-    eff.lpEnvelope = 0;
-    eff.cbTypeSpecificParams = sizeof( DICONSTANTFORCE );
-    eff.lpvTypeSpecificParams = &cf;
-    eff.dwStartDelay = 0;
-
-    // Now set the new parameters and start the effect immediately.
-    return g_pEffect->SetParameters( &eff, DIEP_DIRECTION |
-                                     DIEP_TYPESPECIFICPARAMS |
-                                     DIEP_START );
-}
-
-
-*/
