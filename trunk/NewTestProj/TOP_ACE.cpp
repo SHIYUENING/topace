@@ -37,14 +37,15 @@ int winH=600;
 pthread_mutex_t mutex;
 struct timespec delay;
 Textures * ASCFontTex = NULL;
-LARGE_INTEGER t1,t2,feq,DataThread;//计算每桢运行时间相关
+LARGE_INTEGER t1,t2,feq,feqf,DataThread,DataThreadf;//计算每桢运行时间相关
 int frameNumPs=0;
 int frame=0;
-char showfps[64]={0};
+char showfps[256]={0};
 float turn1,turn2;
 char TITLE[512]={0};
 extern tGameSet GameSet;
 extern tSoundSet SoundSet;
+LONGLONG LLfeq;
 void* DataFream(void* Param)
 {
 	while(true)
@@ -63,8 +64,9 @@ void* DataFream(void* Param)
 	}*/
 	//UpdateInputState(hDlg);
 
-		QueryPerformanceCounter(&t2);
-		delay.tv_nsec=max(10000000-int((t2.QuadPart-DataThread.QuadPart)/feq.QuadPart*1000000000.0),100);
+		QueryPerformanceFrequency(&feqf);
+		QueryPerformanceCounter(&DataThreadf);
+		delay.tv_nsec=max(10000000-int((DataThreadf.QuadPart-DataThread.QuadPart)/feqf.QuadPart*1000000000.0),100);
 		pthread_delay_np( &delay );
 		QueryPerformanceCounter(&DataThread);
 	}
@@ -95,10 +97,13 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 
 	QueryPerformanceCounter(&t1);
 	QueryPerformanceFrequency(&feq);//每秒跳动次数
+	QueryPerformanceFrequency(&feqf);
+	LLfeq=feq.QuadPart;
 }
 
 void display ( void )   // Create The Display Function
 {
+	QueryPerformanceFrequency(&feq);
 	QueryPerformanceCounter(&t2);//测后跳动次数
 	if(double((t2.QuadPart-t1.QuadPart)/feq.QuadPart)>=1.0)
 	{
