@@ -53,7 +53,11 @@ void* DataFream(void* Param)
 		
 		pthread_mutex_lock( &mutex );
 		rtri+=0.2f;	
+		if(rtri>=360.0f)
+			rtri=rtri-360.0f;
 		rquad-=0.15f;
+		if(rquad>=360.0f)
+			rquad=rquad-360.0f;
 		pthread_mutex_unlock( &mutex );
 /*	if(ispad&&ispadEffect)
 	{
@@ -135,19 +139,15 @@ void display ( void )   // Create The Display Function
 
 void reshape ( int width , int height )   // Create The Reshape Function (the viewport)
 {
-  if (height==0)										// Prevent A Divide By Zero By
+	if (height==0)										// Prevent A Divide By Zero By
 	{
 		height=1;										// Making Height Equal One
 	}
-
 	glViewport(0,0,width,height);						// Reset The Current Viewport
-
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
-
 	// Calculate The Aspect Ratio Of The Window
 	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,100.0f);
-
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glLoadIdentity();									
 }
@@ -240,8 +240,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	glutIdleFunc		  ( display );
 	glutMainLoop        ( );          // Initialize The Main Loop
 //	FreeDirectInput();
-
-
 	if(ASCFontTex)
 		delete ASCFontTex;
 	
