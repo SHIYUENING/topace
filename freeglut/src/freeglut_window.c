@@ -412,7 +412,7 @@ GLboolean fgSetupPixelFormat( SFG_Window* window, GLboolean checkOnly,
             pfd.cAlphaBits            = 0;
     }
 
-	pfd.cColorBits      = fgState.ColorBits;
+	pfd.cColorBits      = fgState.GameModeDepth;
     pfd.cRedShift       = 0;
     pfd.cGreenShift     = 0;
     pfd.cBlueShift      = 0;
@@ -426,7 +426,7 @@ GLboolean fgSetupPixelFormat( SFG_Window* window, GLboolean checkOnly,
     pfd.cDepthBits      = 32;
     pfd.cStencilBits    = 0;
 #else
-	pfd.cDepthBits      = fgState.GameModeDepth;
+	pfd.cDepthBits      = fgState.DepthBits;
     pfd.cStencilBits    = 8;
 #endif
     if( fgState.DisplayMode & GLUT_AUX4 )

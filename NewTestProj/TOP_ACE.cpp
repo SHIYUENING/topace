@@ -14,9 +14,9 @@ Also link glut.lib to your project once its done.
 #include <pthread.h>
 #include "tga.h"
 #include "AsciiFont.h"
-//#include "DDS.h"
 #include"Textures.h"
 #include"Draw.h"
+#include"IniFile.h"
 //#include "JoyStick.h"
 //#include "GamePads.h"
 //#include "dinputd.h"
@@ -42,6 +42,9 @@ int frameNumPs=0;
 int frame=0;
 char showfps[64]={0};
 float turn1,turn2;
+char TITLE[512]={0};
+extern tGameSet GameSet;
+extern tSoundSet SoundSet;
 void* DataFream(void* Param)
 {
 	while(true)
@@ -96,19 +99,18 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 
 void display ( void )   // Create The Display Function
 {
-
 	QueryPerformanceCounter(&t2);//测后跳动次数
-
 	if(double((t2.QuadPart-t1.QuadPart)/feq.QuadPart)>=1.0)
 	{
 		QueryPerformanceCounter(&t1);//测前跳动次数
 		frame=frameNumPs;
 		frameNumPs=0;
-		sprintf(showfps,"%d",frame);
+		if(ASCFontTex->TexType==IS_DDS)
+			sprintf(TITLE,"DDS");
+		if(ASCFontTex->TexType==IS_TGA)
+			sprintf(TITLE,"TGA");
+		sprintf(showfps,"FPS:%d %s",frame,TITLE);
 	}
-	
-	
-	
 
 	pthread_mutex_lock( &mutex );
 	turn1=rtri;
@@ -117,13 +119,13 @@ void display ( void )   // Create The Display Function
 
 	Draw();
 
-  glColor3f(0.0f,1.0f,0.0f);	
-  glEnable( GL_TEXTURE_2D );
+	glColor3f(0.0f,1.0f,0.0f);	
+	glEnable( GL_TEXTURE_2D );
 	glPrints(0, winH-16, winW,winH,showfps);
 
-  glutSwapBuffers ( );
+	glutSwapBuffers ( );
   // Swap The Buffers To Not Be Left With A Clear Screen
-  frameNumPs=frameNumPs+1;
+	frameNumPs=frameNumPs+1;
 }
 
 void reshape ( int width , int height )   // Create The Reshape Function (the viewport)
@@ -173,34 +175,39 @@ void arrow_keys ( int a_keys, int x, int y )  // Create Special Function (requir
   }
 }
 
-
-
+void isWindow()
+{
+	glutInitWindowPosition((GetSystemMetrics(SM_CXFULLSCREEN)-winW)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-winH)/2);
+	glutInitWindowSize  ( GameSet.winW, GameSet.winH );
+	glutCreateWindow    ( "TEST PROJ" );
+}
+void isFullScreem()
+{
+	char GameModeString[64]={0};
+	sprintf(GameModeString,"%dx%d:%d@60",GameSet.winW, GameSet.winH,GameSet.bits);
+	glutGameModeString(GameModeString);
+	glutEnterGameMode();
+}
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-/*	 HRESULT hr;
-	 hr = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, \
-              IID_IDirectInput8, (void**)&g_pDI, NULL);
-	if(FAILED(hr))
-	{
-		MessageBox (HWND_DESKTOP, "Error DirectInput", "Error", MB_OK | MB_ICONEXCLAMATION);
-	}
-	else
-	{
-		g_pDI->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumDevices,(LPVOID)hInstance, DIEDFL_ALLDEVICES);
-	}
-*/
+
+	loadIniFile();
 
 	char path[_MAX_PATH];
     GetModuleFileName(hInstance, path, _MAX_PATH);
 	char* argv=(char *)path;
 
 	glutInit            ( &nCmdShow, &argv ); // Erm Just Write It =)
-//	glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE ); // Display Mode
-	glutInitDisplayString("rgba double depth>=24 samples alpha");
-	glutSetOption(GLUT_MULTISAMPLE,2);
-	glutInitWindowPosition((GetSystemMetrics(SM_CXFULLSCREEN)-winW)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-winH)/2);
-	glutInitWindowSize  ( winW, winH ); // If glutFullScreen wasn't called this is the window size
-	glutCreateWindow    ( "TOP_ACE" ); // Window Title (argv[0] for current directory as title)
+	if(GameSet.AA>0)
+		glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE|GLUT_DEPTH|GLUT_MULTISAMPLE ); // Display Mode
+	else
+		glutInitDisplayMode ( GLUT_RGBA | GLUT_DOUBLE|GLUT_DEPTH );
+	if(GameSet.AA>0)
+		glutSetOption(GLUT_MULTISAMPLE,GameSet.AA);
+	if(GameSet.isFullScreem)
+		isFullScreem();
+	else
+		isWindow();
 	InitGL ();
 	
 //	hDlg=*(HWND *) glutGetWindowData();
@@ -213,10 +220,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 //	SetDeviceForcesXY();
 	delay.tv_nsec=10000000;//1000000000
 	delay.tv_sec=0;
-     pthread_attr_t attr;
-     pthread_attr_init(&attr);
-     pthread_attr_setscope(&attr, PTHREAD_SCOPE_PROCESS);
-     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    pthread_attr_t attr;
+    pthread_attr_init(&attr); 
+	pthread_attr_setscope(&attr, PTHREAD_SCOPE_PROCESS);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
 	pthread_t reader;
 	pthread_mutex_init(&mutex, NULL);
     pthread_create( &reader, &attr, DataFream,

@@ -324,7 +324,7 @@ struct tagSFG_State
     int              MajorVersion;         /* Major OpenGL context version  */
     int              MinorVersion;         /* Minor OpenGL context version  */
     int              ContextFlags;         /* OpenGL context flags          */
-	int              ColorBits;			   /* Window ColorBits              */
+	int              DepthBits;			   /* Window DepthBits              */
 };
 
 /* The structure used by display initialization in freeglut_init.c */

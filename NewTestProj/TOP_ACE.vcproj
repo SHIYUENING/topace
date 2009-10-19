@@ -206,6 +206,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\IniFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JoyStick.cpp"
 				>
 			</File>
@@ -249,6 +253,10 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\IniFile.h"
+				>
 			</File>
 			<File
 				RelativePath=".\JoyStick.h"

@@ -380,7 +380,7 @@ static GLboolean fghChangeDisplayMode( GLboolean haveToTest )
  */
 void FGAPIENTRY glutGameModeString( const char* string )
 {
-    int width = 800, height = 600, depth = 24, refresh = 60;
+    int width = 800, height = 600, depth = 32, refresh = 60;
 
     FREEGLUT_EXIT_IF_NOT_INITIALISED ( "glutGameModeString" );
 

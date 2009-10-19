@@ -16,6 +16,12 @@ CDDS::~CDDS(void)
 }
 void CDDS::loadDDSTextureFile( const char *filename )
 {
+
+	if((void *)glCompressedTexImage2DARB==NULL)
+	{
+		DDSerror=DDS_ERROR_INIT;
+		return ;
+	}
    // DDS_IMAGE_DATA *pDDSImageData;
     DDSURFACEDESC2 ddsd;
 
@@ -147,7 +153,7 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
 	if(g_compressedTextureID!=0)
 		return g_compressedTextureID;
 
-	if(&glCompressedTexImage2DARB==NULL)
+	if((void *)glCompressedTexImage2DARB==NULL)
 	{
 		DDSerror=DDS_ERROR_INIT;
 		return 0;
