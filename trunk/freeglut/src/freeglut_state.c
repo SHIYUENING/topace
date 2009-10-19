@@ -148,11 +148,11 @@ void FGAPIENTRY glutSetOption( GLenum eWhat, int value )
       fgState.SampleNumber = value;
       break;
 
-	case GLUT_RGB:
-      fgState.ColorBits = value;
+	case GLUT_DEPTH:
+      fgState.DepthBits = value;
       break;
 
-	case GLUT_DEPTH:
+	case GLUT_RGB:
 		fgState.GameModeDepth = value;
       break;
 

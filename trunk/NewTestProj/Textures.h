@@ -2,8 +2,10 @@
 #define _TEXTURES_H
 #include "DDS.h"
 #include "tga.h"
-#define IS_DDS 0;
-#define IS_TGA 1;
+#define NO_TEX 0
+#define IS_DDS 1
+#define IS_TGA 2
+
 class Textures
 {
 public:
