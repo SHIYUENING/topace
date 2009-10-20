@@ -18,7 +18,7 @@ Also link glut.lib to your project once its done.
 #include"Draw.h"
 #include"IniFile.h"
 //#include "JoyStick.h"
-//#include "GamePads.h"
+#include "GamePads.h"
 //#include "dinputd.h"
 //#include <commctrl.h>
 //#pragma comment( lib, "dinput8.lib" )	
@@ -45,12 +45,18 @@ float turn1,turn2;
 char TITLE[512]={0};
 extern tGameSet GameSet;
 extern tSoundSet SoundSet;
-LONGLONG LLfeq;
+extern tJoyStictKeyVal JoyStictKeyVal;
+//LONGLONG LLfeq;
+HWND MainhDlg;
 void* DataFream(void* Param)
 {
 	while(true)
 	{
+		JoyStictUpdeta();
 		
+	//	for(int i=0;i<MAX_JOY_KEYS;i++)
+	//	if(JoyStictKeyVal.KeyVal[i]>0.5f)
+	//		MessageBox (HWND_DESKTOP, "key", "!", MB_OK | MB_ICONEXCLAMATION);
 		pthread_mutex_lock( &mutex );
 		rtri+=0.2f;	
 		if(rtri>=360.0f)
@@ -66,7 +72,7 @@ void* DataFream(void* Param)
                 if( g_pEffect )
                     g_pEffect->Start( 1, 0 ); // Start the effect
 	}*/
-	//UpdateInputState(hDlg);
+	//UpdateInputState(MainhDlg);
 
 		QueryPerformanceFrequency(&feqf);
 		QueryPerformanceCounter(&DataThreadf);
@@ -103,7 +109,7 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	QueryPerformanceCounter(&t1);
 	QueryPerformanceFrequency(&feq);
 	QueryPerformanceFrequency(&feqf);
-	LLfeq=feq.QuadPart;
+	//LLfeq=feq.QuadPart;
 	sprintf(showfps,"FPS:- -");
 }
 
@@ -122,14 +128,11 @@ void display ( void )   // Create The Display Function
 			sprintf(TITLE,"TGA");
 		sprintf(showfps,"FPS:%d %s",frame,TITLE);
 	}
-
 	pthread_mutex_lock( &mutex );
 	turn1=rtri;
 	turn2=rquad;
 	pthread_mutex_unlock( &mutex );
-
 	Draw();
-
 	glColor3f(0.0f,1.0f,0.0f);	
 	glEnable( GL_TEXTURE_2D );
 	glPrints(0, winH-16, winW,winH,showfps);
@@ -216,11 +219,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	else
 		isWindow();
 	InitGL ();
-	
-//	hDlg=*(HWND *) glutGetWindowData();
-//	if( FAILED( InitDirectInput( hDlg ) ) )
+	InitJoyStict(glutGetWindowData());
+	//MainhDlg=*(HWND *) glutGetWindowData();
+	//if( FAILED( InitDirectInput( MainhDlg ) ) )
 //	{
-//		MessageBox (HWND_DESKTOP, "Error DirectInput", "Error", MB_OK | MB_ICONEXCLAMATION);
+	//	MessageBox (HWND_DESKTOP, "Error DirectInput", "Error", MB_OK | MB_ICONEXCLAMATION);
 	//	ispad=false;
 //	}
 	//if(ispad&&ispadEffect)
@@ -241,9 +244,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	glutSpecialFunc     ( arrow_keys );
 	glutIdleFunc		  ( display );
 	glutMainLoop        ( );          // Initialize The Main Loop
-//	FreeDirectInput();
+	//FreeDirectInput();
 	if(ASCFontTex)
 		delete ASCFontTex;
-	
+	FreeJoyStict();
 	return 0;
 }

@@ -10,8 +10,8 @@ BOOL CALLBACK    EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi, VOID
 BOOL CALLBACK    EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance, VOID* pContext );
 HRESULT InitDirectInput( HWND hDlg );
 VOID FreeDirectInput();
-HRESULT UpdateInputState( HWND hDlg );
-HRESULT SetDeviceForcesXY();
+HRESULT UpdateInputState(DIJOYSTATE2 * js);
+HRESULT SetDeviceForcesXY(int shockX,int shockY);
 HRESULT SetupForIsXInputDevice();
 bool IsXInputDevice( const GUID* pGuidProductFromDirectInput );
 void CleanupForIsXInputDevice();
