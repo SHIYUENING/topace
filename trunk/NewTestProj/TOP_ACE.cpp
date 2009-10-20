@@ -37,7 +37,7 @@ int winH=600;
 pthread_mutex_t mutex;
 struct timespec delay;
 Textures * ASCFontTex = NULL;
-LARGE_INTEGER t1,t2,feq,feqf,DataThread,DataThreadf;//计算每桢运行时间相关
+LARGE_INTEGER t1,t2,feq,feqf,DataThread,DataThreadf;
 int frameNumPs=0;
 int frame=0;
 char showfps[256]={0};
@@ -88,6 +88,7 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
 	glEnable ( GL_COLOR_MATERIAL );
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
 	gluPerspective (45.0, (GLfloat)(winW)/(GLfloat)(winH),			// Calculate The Aspect Ratio Of The Window
@@ -96,22 +97,23 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	
 	ASCFontTex=new Textures;
 	ASCFontTex->loadfile("Data/Font");
-	ASCFontTex->LoadToVRAM();
+	ASCFontTex->LoadToVRAM(GL_LINEAR_MIPMAP_LINEAR);
 	BuildFont(ASCFontTex->TexID);
 
 	QueryPerformanceCounter(&t1);
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
+	QueryPerformanceFrequency(&feq);
 	QueryPerformanceFrequency(&feqf);
 	LLfeq=feq.QuadPart;
+	sprintf(showfps,"FPS:- -");
 }
 
 void display ( void )   // Create The Display Function
 {
 	QueryPerformanceFrequency(&feq);
-	QueryPerformanceCounter(&t2);//测后跳动次数
+	QueryPerformanceCounter(&t2);
 	if(double((t2.QuadPart-t1.QuadPart)/feq.QuadPart)>=1.0)
 	{
-		QueryPerformanceCounter(&t1);//测前跳动次数
+		QueryPerformanceCounter(&t1);
 		frame=frameNumPs;
 		frameNumPs=0;
 		if(ASCFontTex->TexType==IS_DDS)
