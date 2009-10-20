@@ -29,8 +29,16 @@ GLuint TGA::LoadTGA_RAMtoVRAM(int TexParameter)
 		glGenTextures(1, &this->texID);
 		glBindTexture(GL_TEXTURE_2D, this->texID);
 		glTexImage2D(GL_TEXTURE_2D, 0, this->bpp / 8, this->width, this->height, 0, this->type, GL_UNSIGNED_BYTE, this->imageData);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,TexParameter);
-		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,TexParameter);
+		if(GL_LINEAR!=TexParameter)
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+		}
 	isVRAM=true;
 
 	return this->texID;

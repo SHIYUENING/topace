@@ -177,7 +177,7 @@ struct DDS_IMAGE_DATA
     int    components;
     unsigned int   format;
     int      numMipMaps;
-    unsigned char *pixels;//这个是压缩的图像信息文件,glCompressedTexImage2DARB就是加载这个。
+    unsigned char *pixels;
 };
 
 
