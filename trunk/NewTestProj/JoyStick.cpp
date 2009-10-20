@@ -1,8 +1,8 @@
 
 #include "JoyStick.h"
 
-bool ispad=true;
-bool ispadEffect=true;
+bool ispad=false;
+bool ispadEffect=false;
 HWND hDlg;
 #pragma comment( lib, "dinput8.lib" )	
 #pragma comment( lib, "dxguid.lib" )
@@ -49,7 +49,7 @@ LPDIRECTINPUTEFFECT     g_pEffect = NULL;
 BOOL                    g_bActive = TRUE;
 DWORD                   g_dwNumForceFeedbackAxis = 0;
 INT                     g_nXForce = 0000;
-INT                     g_nYForce = 5000;
+INT                     g_nYForce = 0000;
 DWORD                   g_dwLastEffectSet; // Time of the previous force feedback effect set
 
 //-----------------------------------------------------------------------------
@@ -68,8 +68,8 @@ HRESULT InitDirectInput( HWND hDlg )
         return hr;
 
 
-    if( g_bFilterOutXinputDevices )
-        SetupForIsXInputDevice();
+   // if( g_bFilterOutXinputDevices )
+     //   SetupForIsXInputDevice();
 
     DIJOYCONFIG PreferredJoyCfg = {0};
     DI_ENUM_CONTEXT enumContext;
@@ -91,17 +91,17 @@ HRESULT InitDirectInput( HWND hDlg )
                                          &enumContext, DIEDFL_ATTACHEDONLY ) ) )
         return hr;
 
-    if( g_bFilterOutXinputDevices )
-        CleanupForIsXInputDevice();
+  //  if( g_bFilterOutXinputDevices )
+    //    CleanupForIsXInputDevice();
 
     // Make sure we got a joystick
     if( NULL == g_pJoystick )
     {
-        MessageBox( NULL, TEXT( "Joystick not found. The sample will now exit." ),
-                    TEXT( "DirectInput Sample" ),
-                    MB_ICONERROR | MB_OK );
-        EndDialog( hDlg, 0 );
-        return S_OK;
+      //  MessageBox( NULL, TEXT( "Joystick not found. The sample will now exit." ),
+        //            TEXT( "DirectInput Sample" ),
+          //          MB_ICONERROR | MB_OK );
+       // EndDialog( hDlg, 0 );
+        return S_FALSE;
     }
 
     // Set the data format to "simple joystick" - a predefined data format 
@@ -134,6 +134,7 @@ HRESULT InitDirectInput( HWND hDlg )
                                                ( VOID* )hDlg, DIDFT_ALL ) ) )
         return hr;
 
+	
     // This simple sample only supports one or two axis joysticks
     if( g_dwNumForceFeedbackAxis > 2 )
         g_dwNumForceFeedbackAxis = 2;
@@ -161,11 +162,8 @@ HRESULT InitDirectInput( HWND hDlg )
     eff.dwStartDelay = 0;
 
     // Create the prepared effect
-    if( FAILED( hr = g_pJoystick->CreateEffect( GUID_ConstantForce,
-                                              &eff, &g_pEffect, NULL ) ) )
-    {
-        return hr;
-    }
+    ispadEffect = SUCCEEDED( hr = g_pJoystick->CreateEffect( GUID_ConstantForce, &eff, &g_pEffect, NULL ) );
+	ispad=true;
 
     return S_OK;
 }
@@ -479,14 +477,14 @@ BOOL CALLBACK EnumObjectsCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,
 // Name: UpdateInputState()
 // Desc: Get the input device's state and display it.
 //-----------------------------------------------------------------------------
-HRESULT UpdateInputState( HWND hDlg )
+HRESULT UpdateInputState(DIJOYSTATE2 * js)
 {
     HRESULT hr;
-    TCHAR strText[512] = {0}; // Device state text
-    DIJOYSTATE2 js;           // DInput joystick state 
+   // TCHAR strText[512] = {0}; // Device state text
+    //DIJOYSTATE2 js;           // DInput joystick state 
 
     if( NULL == g_pJoystick )
-        return S_OK;
+        return S_FALSE;
 
     // Poll the device to read the current state
     hr = g_pJoystick->Poll();
@@ -497,25 +495,31 @@ HRESULT UpdateInputState( HWND hDlg )
         // we don't have any special reset that needs to be done. We
         // just re-acquire and try again.
         hr = g_pJoystick->Acquire();
+		int DIERR_INPUTLOSTcheck=0;
         while( hr == DIERR_INPUTLOST )
+		{
             hr = g_pJoystick->Acquire();
+			DIERR_INPUTLOSTcheck=DIERR_INPUTLOSTcheck+1;
+			if(DIERR_INPUTLOSTcheck>=32)
+				return S_FALSE;
+		}
 
         // hr may be DIERR_OTHERAPPHASPRIO or other errors.  This
         // may occur when the app is minimized or in the process of 
         // switching, so just try again later 
-        return S_OK;
+       // return S_OK;
     }
 
     // Get the input's device state
-    if( FAILED( hr = g_pJoystick->GetDeviceState( sizeof( DIJOYSTATE2 ), &js ) ) )
+    if( FAILED( hr = g_pJoystick->GetDeviceState( sizeof( DIJOYSTATE2 ), js ) ) )
         return hr; // The device should have been acquired during the Poll()
 	bool shock =false;
-	for( int i = 0; i < 128; i++ )
+/*	for( int i = 0; i < 128; i++ )
 	{
 		if( js.rgbButtons[i] & 0x80 )
 			shock=true;
-	}
-	if( g_pEffect&&shock )
+	}*/
+	if( g_pEffect&&((g_nXForce!=0)||(g_nYForce!=0)))
         g_pEffect->Start( 1, 0 );
 	else
 		g_pEffect->Stop();
@@ -591,14 +595,18 @@ VOID FreeDirectInput()
 
 
 
-HRESULT SetDeviceForcesXY()
+HRESULT SetDeviceForcesXY(int shockX,int shockY)
 {
+	if(!g_pEffect)
+		return S_FALSE;
     // Modifying an effect is basically the same as creating a new one, except
     // you need only specify the parameters you are modifying
     LONG rglDirection[2] = { 0, 0 };
 
     DICONSTANTFORCE cf;
 
+	g_nXForce=shockX;
+	g_nYForce=shockY;
     if( g_dwNumForceFeedbackAxis == 1 )
     {
         // If only one force feedback axis, then apply only one direction and 
