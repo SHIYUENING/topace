@@ -194,15 +194,12 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Fonts.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GamePads.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\IniFile.cpp"
@@ -240,6 +237,10 @@
 			</File>
 			<File
 				RelativePath=".\Draw.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Fonts.h"
 				>
 			</File>
 			<File
