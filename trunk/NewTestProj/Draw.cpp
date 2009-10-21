@@ -45,11 +45,10 @@ GLfloat TriTexCoord[24] = {
 	1.0f,1.0f};
 void Draw()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear Screen And Depth Buffer
  
 	glLoadIdentity();									// Reset The Current Modelview Matrix
 	glPushMatrix();
-		glTranslatef(-1.5f,0.0f,-6.0f);						// Move Left 1.5 Units And Into The Screen 6.0
+		glTranslatef(-1.5f,0.0f,-12.0f);						// Move Left 1.5 Units And Into The Screen 6.0
 		glRotatef(turn1,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
 
 		for(int i=0;i<36;i++)
@@ -108,7 +107,7 @@ void Draw()
 		glBindTexture(GL_TEXTURE_2D, 1);	
 		//glDisable( GL_TEXTURE_2D );
 		glLoadIdentity();					// Reset The Current Modelview Matrix
-		glTranslatef(1.5f,0.0f,-6.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+		glTranslatef(1.5f,0.0f,-12.0f);				// Move Right 1.5 Units And Into The Screen 6.0
 		glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
 		glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
 		glTexCoord2f(1.0f,1.0f);
