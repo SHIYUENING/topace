@@ -19,6 +19,7 @@ Also link glut.lib to your project once its done.
 #include"IniFile.h"
 //#include "JoyStick.h"
 #include "GamePads.h"
+#include "Fonts.h"
 //#include "dinputd.h"
 //#include <commctrl.h>
 //#pragma comment( lib, "dinput8.lib" )	
@@ -46,6 +47,7 @@ char TITLE[512]={0};
 extern tGameSet GameSet;
 extern tSoundSet SoundSet;
 extern tJoyStictKeyVal JoyStictKeyVal;
+CFonts Fonts;
 //LONGLONG LLfeq;
 HWND MainhDlg;
 void* DataFream(void* Param)
@@ -95,12 +97,12 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	glEnable ( GL_COLOR_MATERIAL );
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
-	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
+	/*glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
 	gluPerspective (45.0, (GLfloat)(winW)/(GLfloat)(winH),			// Calculate The Aspect Ratio Of The Window
 					10.0f, 100000.0f);		
 	glMatrixMode (GL_MODELVIEW);	
-	
+	*/
 	ASCFontTex=new Textures;
 	ASCFontTex->loadfile("Data/Font");
 	ASCFontTex->LoadToVRAM(GL_LINEAR_MIPMAP_LINEAR);
@@ -111,6 +113,7 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	QueryPerformanceFrequency(&feqf);
 	//LLfeq=feq.QuadPart;
 	sprintf(showfps,"FPS:- -");
+	Fonts.LoadFont("ËÎÌו");
 }
 
 void display ( void )   // Create The Display Function
@@ -127,15 +130,19 @@ void display ( void )   // Create The Display Function
 		if(ASCFontTex->TexType==IS_TGA)
 			sprintf(TITLE,"TGA");
 		sprintf(showfps,"FPS:%d %s",frame,TITLE);
+		Fonts.inputTxt("ËÎÌו123ABC");
 	}
 	pthread_mutex_lock( &mutex );
 	turn1=rtri;
 	turn2=rquad;
 	pthread_mutex_unlock( &mutex );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Draw();
 	glColor3f(0.0f,1.0f,0.0f);	
 	glEnable( GL_TEXTURE_2D );
 	glPrints(0, winH-16, winW,winH,showfps);
+	Fonts.DrawTXT(winW,winH,150,winH-32,32,32,0);
+	
 
 	glutSwapBuffers ( );
   // Swap The Buffers To Not Be Left With A Clear Screen
@@ -152,7 +159,7 @@ void reshape ( int width , int height )   // Create The Reshape Function (the vi
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.1f,100.0f);
+	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,10.0f,100000.0f);
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glLoadIdentity();									
 }

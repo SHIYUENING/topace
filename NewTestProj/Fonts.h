@@ -16,5 +16,6 @@ public:
 	GLuint FontList[MAX_FONT_LIST];
 	GLYPHMETRICSFLOAT gmf[MAX_FONT_LIST];
 	unsigned int WordNum;
+	int GetCharHex(char H,char L);
 };
 #endif
