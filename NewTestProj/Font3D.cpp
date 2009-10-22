@@ -1,6 +1,6 @@
-#include "Fonts.h"
+#include "Font3D.h"
 
-CFonts::CFonts(void)
+CFont3D::CFont3D(void)
 : hDC(NULL)
 , WordNum(0)
 {
@@ -9,14 +9,14 @@ CFonts::CFonts(void)
 	hDC=CreateDC( "DISPLAY", "", "", NULL );
 }
 
-CFonts::~CFonts(void)
+CFont3D::~CFont3D(void)
 {
 	for(unsigned int i=0;i<MAX_FONT_LIST;i++)
 		if(FontList[i]>0)
 			glDeleteLists(FontList[i], 1);
 }
 
-bool CFonts::LoadFont(const char * FontName,int CHARSET)
+bool CFont3D::LoadFont(const char * FontName,int CHARSET)
 {
 	HFONT	font;										// Windows Font ID
 	font = CreateFont(	-MulDiv(16,GetDeviceCaps(hDC,LOGPIXELSY),72),//							// Height Of Font
@@ -40,14 +40,14 @@ bool CFonts::LoadFont(const char * FontName,int CHARSET)
 	else
 		return false;
 }
-int CFonts::GetCharHex(char H,char L)
+int CFont3D::GetCharHex(char H,char L)
 {
 	if(L<0)
 		return (256+H)*256+256+L;
 	else
 		return (256+H)*256+L;
 }
-void CFonts::inputTxt(const char * Chars)
+void CFont3D::inputTxt(const char * Chars)
 {
 	if(!hDC)
 		return;
@@ -91,7 +91,7 @@ void CFonts::inputTxt(const char * Chars)
 	}
 }
 
-void CFonts::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit)
+void CFont3D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit)
 {
 	glDisable(GL_BLEND);
 	//glLoadIdentity();									// Reset The Current Modelview Matrix

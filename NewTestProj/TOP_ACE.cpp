@@ -19,7 +19,7 @@ Also link glut.lib to your project once its done.
 #include"IniFile.h"
 //#include "JoyStick.h"
 #include "GamePads.h"
-#include "Fonts.h"
+#include "Font3D.h"
 //#include "dinputd.h"
 //#include <commctrl.h>
 //#pragma comment( lib, "dinput8.lib" )	
@@ -47,7 +47,7 @@ char TITLE[512]={0};
 extern tGameSet GameSet;
 extern tSoundSet SoundSet;
 extern tJoyStictKeyVal JoyStictKeyVal;
-CFonts Fonts;
+CFont3D Fonts;
 //LONGLONG LLfeq;
 HWND MainhDlg;
 void* DataFream(void* Param)
@@ -113,7 +113,7 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	QueryPerformanceFrequency(&feqf);
 	//LLfeq=feq.QuadPart;
 	sprintf(showfps,"FPS:- -");
-	Fonts.LoadFont("ֻ־ּו");
+	Fonts.LoadFont("SimSun");
 }
 
 void display ( void )   // Create The Display Function
@@ -130,7 +130,7 @@ void display ( void )   // Create The Display Function
 		if(ASCFontTex->TexType==IS_TGA)
 			sprintf(TITLE,"TGA");
 		sprintf(showfps,"FPS:%d %s",frame,TITLE);
-		Fonts.inputTxt("ֻ־ּו123ABC");
+		Fonts.inputTxt("ֻ־ּE23ABC");
 	}
 	pthread_mutex_lock( &mutex );
 	turn1=rtri;

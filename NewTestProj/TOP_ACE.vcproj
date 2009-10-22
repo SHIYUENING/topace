@@ -194,7 +194,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Fonts.cpp"
+				RelativePath=".\Font3D.cpp"
 				>
 			</File>
 			<File
@@ -240,7 +240,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Fonts.h"
+				RelativePath=".\Font3D.h"
 				>
 			</File>
 			<File
