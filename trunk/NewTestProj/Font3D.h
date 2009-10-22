@@ -1,14 +1,14 @@
 //#pragma once
-#ifndef _FONTS_H
-#define _FONTS_H
+#ifndef _FONT3D_H
+#define _FONT3D_H
 #include <windows.h> 
 #include <GL/glew.h>
 #define MAX_FONT_LIST 64
-class CFonts
+class CFont3D
 {
 public:
-	CFonts(void);
-	~CFonts(void);
+	CFont3D(void);
+	~CFont3D(void);
 	bool LoadFont(const char * FontName,int CHARSET=GB2312_CHARSET);
 	void inputTxt(const char * Chars);
 	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit);
