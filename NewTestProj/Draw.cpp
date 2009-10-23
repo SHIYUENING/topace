@@ -43,6 +43,29 @@ GLfloat TriTexCoord[24] = {
 	0.5f,0.0f,
 	0.0f,1.0f,
 	1.0f,1.0f};
+GLubyte Tex3DData[32][32][4][4];
+GLuint Tex3DID=0;
+void init3DTexTest()
+{
+	for(int i=0;i<32;i++)
+	{
+		for(int j=0;j<32;j++)
+		{
+			for(int k=0;k<4;k++)
+			{
+				Tex3DData[i][j][k][0]=rand()%256;
+				Tex3DData[i][j][k][1]=rand()%256;
+				Tex3DData[i][j][k][2]=rand()%256;
+				Tex3DData[i][j][k][3]=rand()%256;
+			}
+		}
+	}
+    glGenTextures( 1, &Tex3DID );
+	glBindTexture( GL_TEXTURE_3D, Tex3DID ); 
+	glTexParameteri(GL_TEXTURE_3D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_3D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexImage3D(GL_TEXTURE_3D,0,GL_RGBA,32,32,4,0,GL_RGBA,GL_UNSIGNED_BYTE,Tex3DData);
+}
 void Draw()
 {
  
@@ -118,30 +141,74 @@ void Draw()
 			glTexCoord2f(1.0f,1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f); 				// Bottom Left Of The Quad (Top)
 			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f, 1.0f, 1.0f); 				// Bottom Right Of The Quad (Top)
 			glColor3f(1.0f,0.5f,0.0f);			// Set The Color To Orange
-			glVertex3f( 1.0f,-1.0f, 1.0f); glTexCoord2f(0.0f,0.0f);				// Top Right Of The Quad (Bottom)
-			glVertex3f(-1.0f,-1.0f, 1.0f); glTexCoord2f(1.0f,0.0f);				// Top Left Of The Quad (Bottom)
-			glVertex3f(-1.0f,-1.0f,-1.0f); glTexCoord2f(1.0f,1.0f);				// Bottom Left Of The Quad (Bottom)
-			glVertex3f( 1.0f,-1.0f,-1.0f); glTexCoord2f(0.0f,1.0f);				// Bottom Right Of The Quad (Bottom)
+			glTexCoord2f(0.0f,0.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Top Right Of The Quad (Bottom)
+			glTexCoord2f(1.0f,0.0f);	glVertex3f(-1.0f,-1.0f, 1.0f); 			// Top Left Of The Quad (Bottom)
+			glTexCoord2f(1.0f,1.0f);	glVertex3f(-1.0f,-1.0f,-1.0f); 			// Bottom Left Of The Quad (Bottom)
+			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Bottom)
 			glColor3f(1.0f,0.0f,0.0f);			// Set The Color To Red
-			glVertex3f( 1.0f, 1.0f, 1.0f); glTexCoord2f(0.0f,0.0f);				// Top Right Of The Quad (Front)
-			glVertex3f(-1.0f, 1.0f, 1.0f); glTexCoord2f(1.0f,0.0f);				// Top Left Of The Quad (Front)
-			glVertex3f(-1.0f,-1.0f, 1.0f); glTexCoord2f(1.0f,1.0f);				// Bottom Left Of The Quad (Front)
-			glVertex3f( 1.0f,-1.0f, 1.0f); glTexCoord2f(0.0f,1.0f);				// Bottom Right Of The Quad (Front)
+			glTexCoord2f(0.0f,0.0f);	glVertex3f( 1.0f, 1.0f, 1.0f); 			// Top Right Of The Quad (Front)
+			glTexCoord2f(1.0f,0.0f);	glVertex3f(-1.0f, 1.0f, 1.0f); 			// Top Left Of The Quad (Front)
+			glTexCoord2f(1.0f,1.0f);	glVertex3f(-1.0f,-1.0f, 1.0f); 			// Bottom Left Of The Quad (Front)
+			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Bottom Right Of The Quad (Front)
 			glColor3f(1.0f,1.0f,0.0f);			// Set The Color To Yellow
-			glVertex3f( 1.0f,-1.0f,-1.0f); glTexCoord2f(0.0f,0.0f);				// Bottom Left Of The Quad (Back)
-			glVertex3f(-1.0f,-1.0f,-1.0f); glTexCoord2f(1.0f,0.0f);				// Bottom Right Of The Quad (Back)
-			glVertex3f(-1.0f, 1.0f,-1.0f); glTexCoord2f(1.0f,1.0f);				// Top Right Of The Quad (Back)
-			glVertex3f( 1.0f, 1.0f,-1.0f); glTexCoord2f(0.0f,1.0f);				// Top Left Of The Quad (Back)
+			glTexCoord2f(0.0f,0.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Left Of The Quad (Back)
+			glTexCoord2f(1.0f,0.0f);	glVertex3f(-1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Back)
+			glTexCoord2f(1.0f,1.0f);	glVertex3f(-1.0f, 1.0f,-1.0f); 			// Top Right Of The Quad (Back)
+			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f, 1.0f,-1.0f); 			// Top Left Of The Quad (Back)
 			glColor3f(0.0f,0.0f,1.0f);			// Set The Color To Blue
-			glVertex3f(-1.0f, 1.0f, 1.0f); glTexCoord2f(0.0f,0.0f);				// Top Right Of The Quad (Left)
-			glVertex3f(-1.0f, 1.0f,-1.0f); glTexCoord2f(1.0f,0.0f);				// Top Left Of The Quad (Left)
-			glVertex3f(-1.0f,-1.0f,-1.0f); glTexCoord2f(1.0f,1.0f);				// Bottom Left Of The Quad (Left)
-			glVertex3f(-1.0f,-1.0f, 1.0f); glTexCoord2f(0.0f,1.0f);				// Bottom Right Of The Quad (Left)
+			glTexCoord2f(0.0f,0.0f);	glVertex3f(-1.0f, 1.0f, 1.0f); 			// Top Right Of The Quad (Left)
+			glTexCoord2f(1.0f,0.0f);	glVertex3f(-1.0f, 1.0f,-1.0f); 			// Top Left Of The Quad (Left)
+			glTexCoord2f(1.0f,1.0f);	glVertex3f(-1.0f,-1.0f,-1.0f); 			// Bottom Left Of The Quad (Left)
+			glTexCoord2f(0.0f,1.0f);	glVertex3f(-1.0f,-1.0f, 1.0f); 			// Bottom Right Of The Quad (Left)
 			glColor3f(1.0f,0.0f,1.0f);			// Set The Color To Violet
-			glVertex3f( 1.0f, 1.0f,-1.0f); glTexCoord2f(0.0f,0.0f);				// Top Right Of The Quad (Right)
-			glVertex3f( 1.0f, 1.0f, 1.0f); glTexCoord2f(1.0f,0.0f);				// Top Left Of The Quad (Right)
-			glVertex3f( 1.0f,-1.0f, 1.0f); glTexCoord2f(1.0f,1.0f);				// Bottom Left Of The Quad (Right)
-			glVertex3f( 1.0f,-1.0f,-1.0f); glTexCoord2f(0.0f,1.0f);				// Bottom Right Of The Quad (Right)
+			glTexCoord2f(0.0f,0.0f);	glVertex3f( 1.0f, 1.0f,-1.0f); 			// Top Right Of The Quad (Right)
+			glTexCoord2f(1.0f,0.0f);	glVertex3f( 1.0f, 1.0f, 1.0f); 			// Top Left Of The Quad (Right)
+			glTexCoord2f(1.0f,1.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Bottom Left Of The Quad (Right)
+			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Right)
 		glEnd();						// Done Drawing The Quad
 	glPopMatrix();
+	glDisable( GL_TEXTURE_2D );
+	glEnable(GL_BLEND);
+	glEnable( GL_TEXTURE_3D );
+	glBindTexture(GL_TEXTURE_2D, Tex3DID);
+	glPushMatrix();
+	glLoadIdentity();
+		glTranslatef(0.0f,0.0f,-7.0f);
+		glRotatef(turn2,1.0f,1.0f,1.0f);
+		glBegin(GL_QUADS);
+			glColor4f(1.0f,1.0f,1.0f,1.0f);		
+			glTexCoord3f(1.0f,1.0f,0.0f);	glVertex3f( 1.0f, 1.0f,-1.0f); 	    	// Top Right Of The Quad (Top)
+			glTexCoord3f(0.0f,1.0f,0.0f);	glVertex3f(-1.0f, 1.0f,-1.0f); 		    // Top Left Of The Quad (Top)
+			glTexCoord3f(0.0f,1.0f,1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f); 				// Bottom Left Of The Quad (Top)
+			glTexCoord3f(1.0f,1.0f,1.0f);	glVertex3f( 1.0f, 1.0f, 1.0f); 				// Bottom Right Of The Quad (Top)
+			
+			glTexCoord3f(1.0f,0.0f,1.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Top Right Of The Quad (Bottom)
+			glTexCoord3f(0.0f,0.0f,1.0f);	glVertex3f(-1.0f,-1.0f, 1.0f); 			// Top Left Of The Quad (Bottom)
+			glTexCoord3f(0.0f,0.0f,0.0f);	glVertex3f(-1.0f,-1.0f,-1.0f); 			// Bottom Left Of The Quad (Bottom)
+			glTexCoord3f(1.0f,0.0f,0.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Bottom)
+			
+			glTexCoord3f(1.0f,1.0f,1.0f);	glVertex3f( 1.0f, 1.0f, 1.0f); 			// Top Right Of The Quad (Front)
+			glTexCoord3f(0.0f,1.0f,1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f); 			// Top Left Of The Quad (Front)
+			glTexCoord3f(0.0f,0.0f,1.0f);	glVertex3f(-1.0f,-1.0f, 1.0f); 			// Bottom Left Of The Quad (Front)
+			glTexCoord3f(1.0f,0.0f,1.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Bottom Right Of The Quad (Front)
+			
+			glTexCoord3f(1.0f,0.0f,0.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Left Of The Quad (Back)
+			glTexCoord3f(0.0f,0.0f,0.0f);	glVertex3f(-1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Back)
+			glTexCoord3f(0.0f,1.0f,0.0f);	glVertex3f(-1.0f, 1.0f,-1.0f); 			// Top Right Of The Quad (Back)
+			glTexCoord3f(1.0f,1.0f,0.0f);	glVertex3f( 1.0f, 1.0f,-1.0f); 			// Top Left Of The Quad (Back)
+			
+			glTexCoord3f(0.0f,1.0f,1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f); 			// Top Right Of The Quad (Left)
+			glTexCoord3f(0.0f,1.0f,0.0f);	glVertex3f(-1.0f, 1.0f,-1.0f); 			// Top Left Of The Quad (Left)
+			glTexCoord3f(0.0f,0.0f,0.0f);	glVertex3f(-1.0f,-1.0f,-1.0f); 			// Bottom Left Of The Quad (Left)
+			glTexCoord3f(0.0f,0.0f,1.0f);	glVertex3f(-1.0f,-1.0f, 1.0f); 			// Bottom Right Of The Quad (Left)
+			
+			glTexCoord3f(1.0f,1.0f,0.0f);	glVertex3f( 1.0f, 1.0f,-1.0f); 			// Top Right Of The Quad (Right)
+			glTexCoord3f(1.0f,1.0f,1.0f);	glVertex3f( 1.0f, 1.0f, 1.0f); 			// Top Left Of The Quad (Right)
+			glTexCoord3f(1.0f,0.0f,1.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Bottom Left Of The Quad (Right)
+			glTexCoord3f(1.0f,0.0f,0.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Right)
+
+		glEnd();
+
+	glPopMatrix();
+	glDisable( GL_TEXTURE_3D );
 }
