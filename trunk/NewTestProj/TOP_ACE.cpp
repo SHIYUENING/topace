@@ -50,6 +50,7 @@ extern tJoyStictKeyVal JoyStictKeyVal;
 CFont3D Fonts;
 //LONGLONG LLfeq;
 HWND MainhDlg;
+
 void* DataFream(void* Param)
 {
 	while(true)
@@ -90,7 +91,7 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 
 	glewInit();
 	glShadeModel(GL_SMOOTH);							// Enable Smooth Shading
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);				// Black Background
+	glClearColor(0.5f, 0.5f, 0.0f, 0.5f);				// Black Background
 	glClearDepth(1.0f);									// Depth Buffer Setup
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
@@ -114,6 +115,8 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	//LLfeq=feq.QuadPart;
 	sprintf(showfps,"FPS:- -");
 	Fonts.LoadFont("SimSun");
+
+	init3DTexTest();
 }
 
 void display ( void )   // Create The Display Function
@@ -141,7 +144,7 @@ void display ( void )   // Create The Display Function
 	glColor3f(0.0f,1.0f,0.0f);	
 	glEnable( GL_TEXTURE_2D );
 	glPrints(0, winH-16, winW,winH,showfps);
-	Fonts.DrawTXT(winW,winH,150,winH-32,32,32,0);
+	//Fonts.DrawTXT(winW,winH,150,winH-32,32,32,0);
 	
 
 	glutSwapBuffers ( );
@@ -159,7 +162,7 @@ void reshape ( int width , int height )   // Create The Reshape Function (the vi
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
 	// Calculate The Aspect Ratio Of The Window
-	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,10.0f,100000.0f);
+	gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,5.0f,10000.0f);
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glLoadIdentity();									
 }
