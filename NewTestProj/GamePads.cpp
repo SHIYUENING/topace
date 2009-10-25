@@ -96,7 +96,7 @@ float GetKeyVal(int KeySetNum,DIJOYSTATE2 js)
 }
 bool JoyStictUpdeta(int shockX,int shockY)
 {
-	SetDeviceForcesXY(JoyStictKeyVal.KeyVal[14]*5000,shockY);
+	SetDeviceForcesXY(int(JoyStictKeyVal.KeyVal[14])*5000,shockY);
 	DIJOYSTATE2 js;
 	if(FAILED(UpdateInputState(&js)))
 		return false;

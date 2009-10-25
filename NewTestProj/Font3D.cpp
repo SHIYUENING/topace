@@ -112,7 +112,7 @@ void CFont3D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 	glOrtho(0,WinW,0,WinH,-100,100);							// Set Up An Ortho Screen
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();	
-	glTranslatef(PosX,PosY*1.004,0.0f);
+	glTranslatef(float(PosX),float(PosY)*1.004f,0.0f);
 	glScaled(SizeW,SizeW,10.0);
 	//
 	for(unsigned int i=0;i<WordNum;i++)
