@@ -19,6 +19,7 @@ Also link glut.lib to your project once its done.
 #include"IniFile.h"
 //#include "JoyStick.h"
 #include "GamePads.h"
+#include "Font2D.h"
 #include "Font3D.h"
 //#include "dinputd.h"
 //#include <commctrl.h>
@@ -47,7 +48,10 @@ char TITLE[512]={0};
 extern tGameSet GameSet;
 extern tSoundSet SoundSet;
 extern tJoyStictKeyVal JoyStictKeyVal;
+
 CFont3D Fonts;
+
+CFont2D FontsTest;
 //LONGLONG LLfeq;
 HWND MainhDlg;
 
@@ -116,6 +120,12 @@ void InitGL ( GLvoid )     // Create Some Everyday Functions
 	sprintf(showfps,"FPS:- -");
 	Fonts.LoadFont("SimSun");
 
+	char szPath[MAX_PATH];
+	GetWindowsDirectory(szPath,sizeof(szPath));
+	char FontPath[MAX_PATH];
+	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
+	FontsTest.LoadFont(FontPath,32,32);
+	FontsTest.inputTxt("Мы");
 	init3DTexTest();
 }
 
