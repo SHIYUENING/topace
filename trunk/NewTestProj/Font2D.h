@@ -1,6 +1,6 @@
 //#pragma once
-#ifndef _FONT3D_H
-#define _FONT3D_H
+#ifndef _FONT2D_H
+#define _FONT2D_H
 #include <windows.h> 
 #include <GL/glew.h>
 #include <ft2build.h>
@@ -24,5 +24,6 @@ public:
 	FT_Library library;
 	GLuint TexID;
 	int FontCharSet;
+	void CharToImage(const char * Chars,int byteNum);
 };
 #endif
