@@ -127,7 +127,7 @@ void Draw()
 		*/
 		glDisable(GL_MULTISAMPLE_ARB);
 		glEnable(GL_BLEND);
-		glBindTexture(GL_TEXTURE_2D, 1);	
+		glBindTexture(GL_TEXTURE_2D, 2);	
 		//glDisable( GL_TEXTURE_2D );
 		glLoadIdentity();					// Reset The Current Modelview Matrix
 		glTranslatef(1.5f,0.0f,-12.0f);				// Move Right 1.5 Units And Into The Screen 6.0
@@ -175,7 +175,7 @@ void Draw()
 	glLoadIdentity();
 		glTranslatef(0.0f,0.0f,-7.0f);
 		glRotatef(turn2,1.0f,1.0f,1.0f);
-		glBegin(GL_QUADS);
+/*		glBegin(GL_QUADS);
 			glColor4f(1.0f,1.0f,1.0f,1.0f);		
 			glTexCoord3f(1.0f,1.0f,0.0f);	glVertex3f( 1.0f, 1.0f,-1.0f); 	    	// Top Right Of The Quad (Top)
 			glTexCoord3f(0.0f,1.0f,0.0f);	glVertex3f(-1.0f, 1.0f,-1.0f); 		    // Top Left Of The Quad (Top)
@@ -208,7 +208,7 @@ void Draw()
 			glTexCoord3f(1.0f,0.0f,0.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Right)
 
 		glEnd();
-
+*/
 	glPopMatrix();
 	glDisable( GL_TEXTURE_3D );
 }

@@ -9,12 +9,14 @@
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
 #define MAX_FONT_LIST 64
+#define DEFINE_FONT_W 256
+#define DEFINE_FONT_H 256
 class CFont2D
 {
 public:
 	CFont2D(void);
 	~CFont2D(void);
-	bool LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int CHARSET=GB2312_CHARSET);
+	bool LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int FontW=DEFINE_FONT_W,int FontH=DEFINE_FONT_H,int CHARSET=GB2312_CHARSET);
 	void inputTxt(const char * Chars);
 	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit);
 	unsigned int WordNum;
@@ -25,5 +27,9 @@ public:
 	GLuint TexID;
 	int FontCharSet;
 	void CharToImage(const char * Chars,int byteNum);
+	int FontPosX;
+	int FontPosY;
+	int FontTexW;
+	int FontTexH;
 };
 #endif

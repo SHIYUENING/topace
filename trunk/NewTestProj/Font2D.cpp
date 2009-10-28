@@ -7,6 +7,10 @@ CFont2D::CFont2D(void)
 ,library(NULL)
 , TexID(0)
 , FontCharSet(0)
+,FontPosX(0)
+,FontPosY(0)
+,FontTexW(DEFINE_FONT_W)
+,FontTexH(DEFINE_FONT_H)
 {
 }
 
@@ -23,17 +27,29 @@ CFont2D::~CFont2D(void)
 	library=NULL;
 }
 
-bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int CHARSET)
+bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int FontW,int FontH,int CHARSET)
 {
+	FontTexW=next_p2(FontW);
+	FontTexH=next_p2(FontH);
 	FontCharSet=CHARSET;
 	if (FT_Init_FreeType( &library ))
 		return false;
 	
 	if (FT_New_Face( library, FontName, 0, &face )) 
 		return false;
-	FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 96, 96);
-
+//	FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 96, 96);
+	FT_Set_Pixel_Sizes(face, FontSizeW, FontSizeH);
+	unsigned char* data;
+	data =new unsigned char[FontTexW*FontTexH*2];
+	ZeroMemory(data,FontTexW*FontTexH*2);
 	glGenTextures( 1, &TexID );
+	glBindTexture(GL_TEXTURE_2D, TexID);			// ¹¹ÔìÎÆÀí
+	glTexImage2D(GL_TEXTURE_2D,0, GL_ALPHA, FontTexW, FontTexH, 0,GL_ALPHA, GL_UNSIGNED_BYTE, data);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	delete [] data;
 	return true;
 }
 int CFont2D::GetCharHex(char H,char L)
@@ -56,6 +72,8 @@ void CFont2D::inputTxt(const char * Chars)
 		return;
 	if(WordNum>MAX_FONT_LIST)
 		WordNum=MAX_FONT_LIST;
+	FontPosX=0;
+	FontPosY=0;
 	for(unsigned int i=0;i<WordNum;i++)
 	{
 		if(Chars[i]>0)
@@ -99,5 +117,20 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
 	FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 );
     FT_BitmapGlyph bitmap_glyph = (FT_BitmapGlyph)glyph;
 	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
+	unsigned char* data;
+	data =new unsigned char[32*32];
 
+	for(int j=0; j <32;j++) {
+		for(int i=0; i < 32; i++){
+			data[i+j*32] = (i>=bitmap.width || j>=bitmap.rows) ? 0 : bitmap.buffer[i + bitmap.width*j];
+		}
+	}
+
+	glBindTexture(GL_TEXTURE_2D, TexID);
+	glTexSubImage2D(GL_TEXTURE_2D,0,FontPosX,FontPosY,bitmap.width,bitmap.rows,GL_ALPHA,GL_UNSIGNED_BYTE,bitmap.buffer);
+	FontPosX=FontPosX+FontTexW/8;
+	FontPosY=FontPosY+FontTexH/8;
+	FT_Done_Glyph(glyph);
+
+	delete [] data;
 }
