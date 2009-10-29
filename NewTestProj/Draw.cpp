@@ -6,18 +6,18 @@
 #include "Glsl.h"
 extern float turn1,turn2;
 GLfloat Triangle[36];
-GLfloat TriangleO[36] = { 0.0f, 1.0f, 0.0f,
-						-1.0f,-1.0f, 1.0f,
-						 1.0f,-1.0f, 1.0f,
-						 0.0f, 1.0f, 0.0f,
-						 1.0f,-1.0f, 1.0f,
-						 1.0f,-1.0f,-1.0f,
-						 0.0f, 1.0f, 0.0f,
-						 1.0f,-1.0f,-1.0f,
-						-1.0f,-1.0f,-1.0f,
-						 0.0f, 1.0f, 0.0f,
-						-1.0f,-1.0f,-1.0f,
-						-1.0f,-1.0f, 1.0f};
+GLfloat TriangleO[36] = {000.0f, 100.0f, 000.0f,
+						-100.0f,-100.0f, 100.0f,
+						 100.0f,-100.0f, 100.0f,
+						 000.0f, 100.0f, 000.0f,
+						 100.0f,-100.0f, 100.0f,
+						 100.0f,-100.0f,-100.0f,
+						 000.0f, 100.0f, 000.0f,
+						 100.0f,-100.0f,-100.0f,
+						-100.0f,-100.0f,-100.0f,
+						 000.0f, 100.0f, 000.0f,
+						-100.0f,-100.0f,-100.0f,
+						-100.0f,-100.0f, 100.0f};
 GLfloat TriColor[36];
 GLfloat TriColorO[36] = {1.0f,0.0f,0.0f,
 						0.0f,1.0f,0.0f,
@@ -72,7 +72,7 @@ void Draw()
  
 	glLoadIdentity();									// Reset The Current Modelview Matrix
 	glPushMatrix();
-		glTranslatef(-1.5f,0.0f,-12.0f);						// Move Left 1.5 Units And Into The Screen 6.0
+		glTranslatef(-1.5f,0.0f,-500.0f);						// Move Left 1.5 Units And Into The Screen 6.0
 		glRotatef(turn1,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
 
 		for(int i=0;i<36;i++)
@@ -81,7 +81,7 @@ void Draw()
 			TriColor[i]=TriColorO[i]+turn2/360.0f;
 
 		glEnable(GL_MULTISAMPLE_ARB);
-
+		glEnable(GL_BLEND);
 		glEnable( GL_TEXTURE_2D );
 		glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 		GLSL_Enable_ATC();
@@ -133,7 +133,7 @@ void Draw()
 		glBindTexture(GL_TEXTURE_2D, 2);	
 		//glDisable( GL_TEXTURE_2D );
 		glLoadIdentity();					// Reset The Current Modelview Matrix
-		glTranslatef(1.5f,0.0f,-12.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+		glTranslatef(1.5f,0.0f,-4.0f);				// Move Right 1.5 Units And Into The Screen 6.0
 		glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
 		glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
 		glTexCoord2f(1.0f,1.0f);
@@ -176,7 +176,7 @@ void Draw()
 	glBindTexture(GL_TEXTURE_2D, Tex3DID);
 	glPushMatrix();
 	glLoadIdentity();
-		glTranslatef(0.0f,0.0f,-7.0f);
+		glTranslatef(0.0f,0.0f,-5.0f);
 		glRotatef(turn2,1.0f,1.0f,1.0f);
 /*		glBegin(GL_QUADS);
 			glColor4f(1.0f,1.0f,1.0f,1.0f);		
