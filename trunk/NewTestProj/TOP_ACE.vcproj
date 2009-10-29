@@ -206,6 +206,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Glsl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\IniFile.cpp"
 				>
 			</File>
@@ -263,6 +267,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Glsl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\IniFile.h"
 				>
 			</File>
@@ -299,6 +307,22 @@
 				RelativePath=".\TOP_ACE.rc"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Shaders"
+			>
+			<Filter
+				Name="Glsl"
+				>
+				<File
+					RelativePath=".\shaders\glsl\Alpha_TO_Coverage.ps"
+					>
+				</File>
+				<File
+					RelativePath=".\shaders\glsl\Alpha_TO_Coverage.vs"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

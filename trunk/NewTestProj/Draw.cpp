@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <math.h>
 #include <stdio.h>	
+#include "Glsl.h"
 extern float turn1,turn2;
 GLfloat Triangle[36];
 GLfloat TriangleO[36] = { 0.0f, 1.0f, 0.0f,
@@ -83,6 +84,7 @@ void Draw()
 
 		glEnable( GL_TEXTURE_2D );
 		glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		GLSL_Enable_ATC();
 		glColor3f(1.0f,1.0f,1.0f);	
 		glEnableClientState( GL_COLOR_ARRAY );
    		glEnableClientState( GL_VERTEX_ARRAY );	
@@ -94,6 +96,7 @@ void Draw()
 		glDisableClientState( GL_COLOR_ARRAY );	
 		glDisableClientState( GL_VERTEX_ARRAY );
 		glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+		GLSL_Disable_ATC();
 		glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 
 	   /*
