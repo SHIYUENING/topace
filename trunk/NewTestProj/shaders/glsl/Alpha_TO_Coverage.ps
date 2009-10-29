@@ -3,19 +3,19 @@ uniform sampler2D Tex_ATC;
 void main()
 {
 	vec2 lodTexCoord = gl_TexCoord[0].xy *vec2(256.0,256.0);
-	//vec2 dx = dFdx(lodTexCoord);
-	//vec2 dy = dFdy(lodTexCoord);
+	vec2 dx = dFdx(lodTexCoord);
+	vec2 dy = dFdy(lodTexCoord);
 
 	// Compute the mipmap size using derivatives
-	//float size = max(inversesqrt(min(dot(dx, dx), dot(dy, dy))), 1.0);
+	float size = max(inversesqrt(min(dot(dx, dx), dot(dy, dy))), 1.0);
 
-	//vec4 base = texture2D(Tex_ATC, gl_TexCoord[0].xy);
+	vec4 base = texture2D(Tex_ATC, gl_TexCoord[0].xy);
 
 	// Enhance the alpha contrast
-	//base.a = size * (base.a - 0.5) + 0.5;
+	base.a = size * (base.a - 0.5) + 0.5;
 
-	//gl_FragColor = base;
-	gl_FragColor = gl_Color;
+	gl_FragColor = base*gl_Color;
+	//gl_FragColor = gl_Color;
 	return;
 }
 
