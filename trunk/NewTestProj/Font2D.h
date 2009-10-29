@@ -31,5 +31,8 @@ public:
 	int FontPosY;
 	int FontTexW;
 	int FontTexH;
+	int OnefontW;
+	int OnefontH;
+	unsigned char* OnefontData;
 };
 #endif
