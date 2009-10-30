@@ -84,7 +84,7 @@ void Draw()
 		glEnable(GL_BLEND);
 		glEnable( GL_TEXTURE_2D );
 		glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-		GLSL_Enable_ATC();
+		//GLSL_Enable_ATC();
 		glColor3f(1.0f,1.0f,1.0f);	
 		glEnableClientState( GL_COLOR_ARRAY );
    		glEnableClientState( GL_VERTEX_ARRAY );	
@@ -96,7 +96,7 @@ void Draw()
 		glDisableClientState( GL_COLOR_ARRAY );	
 		glDisableClientState( GL_VERTEX_ARRAY );
 		glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-		GLSL_Disable_ATC();
+		//GLSL_Disable_ATC();
 		glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
 
 	   /*
