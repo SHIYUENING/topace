@@ -76,7 +76,7 @@ void Draw()
 		glRotatef(turn1,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
 
 		for(int i=0;i<36;i++)
-			Triangle[i]=TriangleO[i]+turn2/360.0f;
+			Triangle[i]=TriangleO[i]+turn2/3.60f;
 		for(int i=0;i<36;i++)
 			TriColor[i]=TriColorO[i]+turn2/360.0f;
 

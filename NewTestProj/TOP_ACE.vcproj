@@ -218,6 +218,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LoadData_thread.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Textures.cpp"
 				>
 			</File>
@@ -284,6 +288,10 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\LoadData_thread.h"
+				>
 			</File>
 			<File
 				RelativePath=".\Textures.h"
