@@ -11,6 +11,14 @@
 #define MAX_FONT_LIST 64
 #define DEFINE_FONT_W 256
 #define DEFINE_FONT_H 256
+struct tFont2Dset
+{
+	int FontSizeW;
+	int FontSizeH;
+	int FontW;
+	int FontH;
+	int CHARSET;
+};
 class CFont2D
 {
 public:
