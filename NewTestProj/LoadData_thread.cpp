@@ -5,6 +5,25 @@
 extern pthread_mutex_t mutex_LoadData;
 extern pthread_cond_t cond_LoadData;
 extern tLoadDataList * LoadDataList;
+void Initthread_LoadData()
+{
+	LoadDataList = new tLoadDataList;
+	LoadDataList->Data=NULL;
+	LoadDataList->DataPath[0]=0;
+	LoadDataList->DataPointer=NULL;
+	LoadDataList->DataType=0;
+	LoadDataList->NextNode=NULL;
+	LoadDataList->DataSet=NULL;
+
+	pthread_attr_t attr_LoadData; 
+	pthread_attr_init(&attr_LoadData); 
+	pthread_attr_setscope(&attr_LoadData, PTHREAD_SCOPE_PROCESS);
+    pthread_attr_setdetachstate(&attr_LoadData, PTHREAD_CREATE_DETACHED);
+	pthread_t threadID_LoadData;
+	pthread_mutex_init(&mutex_LoadData, NULL);
+	pthread_cond_init(&cond_LoadData,NULL);
+	pthread_create( &threadID_LoadData, &attr_LoadData, LoadData, NULL);
+}
 void* LoadData(void* Param)
 {
 	while(true)

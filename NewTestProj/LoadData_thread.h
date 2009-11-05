@@ -17,4 +17,5 @@ struct tLoadDataList
 	void * DataSet;
 };
 void* LoadData(void* Param);
+void Initthread_LoadData();
 #endif
