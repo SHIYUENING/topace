@@ -1,10 +1,12 @@
 #include "LoadData_thread.h"
 #include <stdio.h>	
 #include <pthread.h>
-
+#include <windows.h> 
 extern pthread_mutex_t mutex_LoadData;
 extern pthread_cond_t cond_LoadData;
 extern tLoadDataList * LoadDataList;
+
+int tmpint=0;
 void Initthread_LoadData()
 {
 	LoadDataList = new tLoadDataList;
@@ -30,7 +32,9 @@ void* LoadData(void* Param)
 	{
 		pthread_mutex_lock( &mutex_LoadData );
 		pthread_cond_wait( &cond_LoadData ,&mutex_LoadData);
+		pthread_cond_init(&cond_LoadData,NULL);
 		tLoadDataList * loadnod=LoadDataList;
+		MessageBox( NULL, "ok", "ok", MB_OK|MB_ICONEXCLAMATION );
 		while(loadnod)
 		{
 			switch(loadnod->DataType)
@@ -39,7 +43,6 @@ void* LoadData(void* Param)
 					pLoadTexture = new Textures;
 					pLoadTexture->loadfile(loadnod->DataPath);
 					loadnod->Data = pLoadTexture;
-					loadnod = loadnod->NextNode;
 					break;
 
 				case DATATYPE_FONT2D: CFont2D * pLoadFont2D;
@@ -60,7 +63,6 @@ void* LoadData(void* Param)
 					else
 						pLoadFont2D->LoadFont(loadnod->DataPath,0,0);
 					loadnod->Data = pLoadFont2D;
-					loadnod = loadnod->NextNode;
 					break;
 
 				case DATATYPE_FONT3D: CFont3D * pLoadFont3D;
@@ -70,11 +72,10 @@ void* LoadData(void* Param)
 					else
 						pLoadFont3D->LoadFont(loadnod->DataPath);
 					loadnod->Data = pLoadFont3D;
-					loadnod = loadnod->NextNode;
 					break;
 
 			}
-		
+			loadnod = loadnod->NextNode;
 		}
 		pthread_mutex_unlock( &mutex_LoadData );
 	}
