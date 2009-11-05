@@ -13,6 +13,45 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "123"
+    BEGIN
+        MENUITEM "1234",                        ID_123_1234
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_FORMVIEW DIALOGEX 0, 0, 185, 93
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 9, "MS UI Gothic", 400, 0, 0x0
+BEGIN
+    LTEXT           "TODO: フォーム ビューをレイアウトしてください。",IDC_STATIC,37,39,137,8
+END
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
 // 中国語 (P.R.C.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
