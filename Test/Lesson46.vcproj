@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="Lesson46"
 	ProjectGUID="{1DCE836F-4BF8-4289-9396-3037903B0B71}"
+	RootNamespace="Lesson46"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>
@@ -79,7 +80,7 @@
 				OutputFile=".\Release/Lesson46.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\Graphics\lib;..\Src\Sound\Library"
+				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Library"
 				ProgramDatabaseFile=".\Release/Lesson46.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -175,7 +176,7 @@
 				OutputFile=".\Debug/Lesson46.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\Graphics\lib;..\Src\Sound\Library"
+				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Library"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Lesson46.pdb"
 				SubSystem="2"
@@ -345,6 +346,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Shader.h"
 				>
 			</File>
@@ -373,6 +378,22 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath=".\bitmap1.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\bitmap2.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\ico.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res.rc"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Cg"

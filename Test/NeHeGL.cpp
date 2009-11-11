@@ -12,7 +12,10 @@
 #include <gl/glu.h>														// Header File For The GLu32 Library
 
 #include "NeHeGL.h"														// Header File For The NeHeGL Basecode
-
+#pragma warning( disable : 4996 ) // disable deprecated warning 
+#include <strsafe.h>
+#pragma warning( default : 4996 )
+#include "resource.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 
@@ -274,6 +277,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Get The Window Context
 	GL_Window* window = (GL_Window*)(GetWindowLong (hWnd, GWL_USERDATA));
 
+	int menuid;
 	switch (uMsg)														// Evaluate Window Message
 	{
 		case WM_SYSCOMMAND:												// Intercept System Commands
@@ -354,6 +358,14 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessage (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
+		case WM_MENUSELECT:
+			menuid=LOWORD(lParam);
+			if(menuid==11)
+			{
+				TerminateApplication(window);								// Terminate The Application
+			return 0;
+			}
+		break;
 	}
 
 	return DefWindowProc (hWnd, uMsg, wParam, lParam);					// Pass Unhandled Messages To DefWindowProc
@@ -400,7 +412,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	ZeroMemory (&window, sizeof (GL_Window));							// Make Sure Memory Is Zeroed
 	window.keys					= &keys;								// Window Key Structure
 	window.init.application		= &application;							// Window Application
-	window.init.title			= "±¦ÈªÓªµØÐéÄâ";	// Window Title
+	window.init.title			= "123";	// Window Title
 	window.init.width			= 800;									// Window Width
 	window.init.height			= 600;									// Window Height
 	window.init.bitsPerPixel	= 32;									// Bits Per Pixel
@@ -440,6 +452,15 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			}
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
+
+				HMENU menuID;
+				menuID=CreateMenu();
+
+				AppendMenu(menuID,MF_ENABLED,10,"inwin");
+				AppendMenu(menuID,MF_ENABLED,11,"exit");
+				SetMenu(window.hWnd,menuID);
+				DialogBox( hInstance, MAKEINTRESOURCE( IDD_FORMVIEW ), window.hWnd, MainDlgProc );
+
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
@@ -492,3 +513,59 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 	return 0;
 }																		// End Of WinMain()
+INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+    UNREFERENCED_PARAMETER( lParam );
+
+    switch( msg )
+    {
+
+		case WM_MOUSEMOVE:
+			tagPOINT pt;
+			tagRECT rect;
+			GetCursorPos(&pt);
+			TCHAR sz[128];
+			StringCchPrintf( sz, 128, TEXT( "%04d " ), pt.x );
+            //StringCchCat( strTextX, 512, sz );
+			//EnableWindow( GetDlgItem( hDlg, IDC_IMAGET1 ), false );
+			GetWindowRect( GetDlgItem( hDlg, IDC_IMAGET1 ), &rect );
+			if(pt.x>rect.left&&pt.x<rect.right&&pt.y<rect.bottom&&pt.y>rect.top)
+			{
+				
+				ShowWindow( GetDlgItem( hDlg, IDC_IMAGET1 ), false );
+				ShowWindow( GetDlgItem( hDlg, IDC_IMAGET2 ), true );
+			}
+			else
+			{
+				ShowWindow( GetDlgItem( hDlg, IDC_IMAGET1 ), true );
+				ShowWindow( GetDlgItem( hDlg, IDC_IMAGET2 ), false );
+			}
+			SetWindowText( GetDlgItem( hDlg, IDC_BUTTONS ), sz );
+			return TRUE;
+
+
+		//case WM_NCHITTEST:
+			//EndDialog( hDlg, 0 );
+		//	return TRUE;
+
+
+        case WM_COMMAND:
+            switch( LOWORD( wParam ) )
+            {
+
+				case IDC_BUTTON1:
+                    EndDialog( hDlg, 0 );
+                    return TRUE;
+				case IDCANCEL:
+                    EndDialog( hDlg, 0 );
+                    return TRUE;
+            }
+
+        case WM_DESTROY:
+            // Cleanup everything
+            KillTimer( hDlg, 0 );
+            return TRUE;
+    }
+
+    return FALSE; // Message not handled 
+}
