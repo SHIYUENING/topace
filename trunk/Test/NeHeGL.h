@@ -74,3 +74,4 @@ extern int mouse_x;
 extern int mouse_y;
 
 #endif												// GL_FRAMEWORK__INCLUDED
+INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
