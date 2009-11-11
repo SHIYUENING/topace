@@ -277,7 +277,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Get The Window Context
 	GL_Window* window = (GL_Window*)(GetWindowLong (hWnd, GWL_USERDATA));
 
-	int menuid;
+	
+	
 	switch (uMsg)														// Evaluate Window Message
 	{
 		case WM_SYSCOMMAND:												// Intercept System Commands
@@ -359,9 +360,13 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PostMessage (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 		case WM_MENUSELECT:
-			menuid=LOWORD(lParam);
-			if(menuid==11)
+			//menuid=HIWORD(lParam); 
+			menuid=LOWORD(wParam);
+//			itoa(menuid,showmenuid,9);
+			//MessageBox (HWND_DESKTOP, showmenuid, "...", MB_OK | MB_ICONEXCLAMATION);
+			if(menuid==ID_SSS_EXIT)
 			{
+				//MessageBox (HWND_DESKTOP, "...", "...", MB_OK | MB_ICONEXCLAMATION);
 				TerminateApplication(window);								// Terminate The Application
 			return 0;
 			}
@@ -454,10 +459,12 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			{	// Initialize was a success
 
 				HMENU menuID;
-				menuID=CreateMenu();
+				menuID=LoadMenu(hInstance,MAKEINTRESOURCE(IDR_MENU1));
+				menuid=GetMenuItemCount(menuID);
+				//menuID=CreateMenu();
 
-				AppendMenu(menuID,MF_ENABLED,10,"inwin");
-				AppendMenu(menuID,MF_ENABLED,11,"exit");
+				//AppendMenu(menuID,MF_ENABLED,10,"inwin");
+				//AppendMenu(menuID,MF_ENABLED,11,"exit");
 				SetMenu(window.hWnd,menuID);
 				DialogBox( hInstance, MAKEINTRESOURCE( IDD_FORMVIEW ), window.hWnd, MainDlgProc );
 
