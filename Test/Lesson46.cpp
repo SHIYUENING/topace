@@ -81,6 +81,7 @@ CMd5Camera CMd5CameraTest;
 Missledata ViewPos;
 Transform ViewTo;
 double Getrotation(Transform& Input);
+extern int menuid=0;
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -148,7 +149,7 @@ void DrawFPS()
 	}
 	
 	g_nFrames++;											
-	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%4.0d MY%4.0d %4.2f %4.2f %4.2f %4.2f" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2));
+	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%4.0d MY%4.0d %4.2f %4.2f %4.2f %4.2f MID:%d" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2),menuid);
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
 	char ShowMoveSpeed[32]={0};
 	sprintf(ShowMoveSpeed,"Move Speed:%4.2f",movespeed);

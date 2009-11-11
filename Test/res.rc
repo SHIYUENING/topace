@@ -59,8 +59,8 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "test",IDC_BUTTONS,37,39,137,8
     PUSHBUTTON      "Button1",IDC_BUTTON1,19,59,50,14
-    CONTROL         101,IDC_IMAGET1,"Static",SS_BITMAP | SS_REALSIZEIMAGE | NOT WS_VISIBLE,25,8,32,30
-    CONTROL         104,IDC_IMAGET2,"Static",SS_BITMAP | SS_REALSIZEIMAGE,25,8,32,30
+    CONTROL         101,IDC_IMAGET1,"Static",SS_BITMAP | SS_CENTERIMAGE | NOT WS_VISIBLE,25,8,32,30
+    CONTROL         104,IDC_IMAGET2,"Static",SS_BITMAP | SS_CENTERIMAGE,25,8,32,30
 END
 
 
@@ -86,12 +86,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "Lesson46 アプリケーション"
+            VALUE "FileDescription", "Lesson46 "
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "Lesson46"
             VALUE "LegalCopyright", "Copyright (C) 2009"
             VALUE "OriginalFilename", "Lesson46.exe"
-            VALUE "ProductName", "Lesson46 アプリケーション"
+            VALUE "ProductName", "Lesson46 "
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
