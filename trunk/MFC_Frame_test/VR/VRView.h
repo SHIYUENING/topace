@@ -53,6 +53,7 @@ public:
 	bool DrawScene(void);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	float turnX;
+	afx_msg void OnAaaXxxx();
 };
 
 #ifndef _DEBUG  // debug version in VRView.cpp

@@ -24,6 +24,7 @@ BEGIN_MESSAGE_MAP(CVRView, CView)
 	ON_WM_CREATE()
 	ON_WM_DESTROY()
 	ON_WM_SIZE()
+	ON_COMMAND(ID_AAA_XXXX, &CVRView::OnAaaXxxx)
 END_MESSAGE_MAP()
 
 // CVRView construction/destruction
@@ -59,7 +60,7 @@ void CVRView::OnDraw(CDC* /*pDC*/)
 //	this->UpdateWindow();
 	// TODO: add draw code for native data here
 	DrawScene();
-	Invalidate(FALSE);
+	//Invalidate(FALSE);
 }
 
 
@@ -112,19 +113,19 @@ bool CVRView::SetupPixFormat(CDC * pDC)
 	   sizeof(PIXELFORMATDESCRIPTOR), // ÉÏÊö¸ñÊ½ÃèÊö·ûµÄ´óĞ¡
 	   1,         // °æ±¾ºÅ
 	   PFD_DRAW_TO_WINDOW |    // ¸ñÊ½Ö§³Ö´°¿Ú
-	   PFD_SUPPORT_OPENGL |    // ¸ñÊ½±ØĞëÖ§³ÖOpenGL
-	   PFD_DOUBLEBUFFER,     // ±ØĞëÖ§³ÖË«»º³å
-	   PFD_TYPE_RGBA,      // ÉêÇë RGBA ¸ñÊ½
-	   24,         // 24Î»É«²ÊÉî¶È£¬¼´1.67Ç§ÍòµÄÕæ²ÊÉ«
+	   PFD_SUPPORT_OPENGL |    // ¸ñÊ½±ØĞE§³ÖOpenGL
+	   PFD_DOUBLEBUFFER,     // ±ØĞE§³ÖË«»º³E
+	   PFD_TYPE_RGBA,      // ÉEERGBA ¸ñÊ½
+	   24,         // 24Î»É«²ÊÉûÒÈ£¬¼´1.67Ç§ÍòµÄÕæ²ÊÉ«
 	   0, 0, 0, 0, 0, 0,     // ºöÂÔµÄÉ«²ÊÎ»
-	   0,         // ÎŞAlpha»º´æ
+	   0,         // ÎŞAlpha»º´E
 	   0,         // ºöÂÔShift Bit
-	   0,         // ÎŞÀÛ¼Ó»º´æ
+	   0,         // ÎŞÀÛ¼Ó»º´E
 	   0, 0, 0, 0,       // ºöÂÔ¾Û¼¯Î»
-	   32,         // 32Î» Z-»º´æ (Éî¶È»º´æ)
-	   0,         // ÎŞÃÉ°å»º´æ
-	   0,         // ÎŞ¸¨Öú»º´æ
-	   PFD_MAIN_PLANE,      // Ö÷»æÍ¼²ã
+	   32,         // 32Î» Z-»º´E(ÉûÒÈ»º´E
+	   0,         // ÎŞÃÉ°å»º´E
+	   0,         // ÎŞ¸¨Öú»º´E
+	   PFD_MAIN_PLANE,      // Ö÷»æÍ¼²E
 	   0,         // Reserved
 	   0, 0, 0        // ºöÂÔ²ãÕÚÕÖ
 	};
@@ -139,9 +140,9 @@ bool CVRView::InitialGL(void)
 {
 	glShadeModel(GL_SMOOTH);           // ÆôÓÃÒõÓ°Æ½»¬
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);       // ºÚÉ«±³¾°
-	glClearDepth(1.0f);                            // ÉèÖÃÉî¶È»º´æ
-	glEnable(GL_DEPTH_TEST);             // ÆôÓÃÉî¶È²âÊÔ
-	glDepthFunc(GL_LEQUAL);              // Ëù×÷Éî¶È²âÊÔµÄÀàĞÍ
+	glClearDepth(1.0f);                            // ÉèÖÃÉûÒÈ»º´E
+	glEnable(GL_DEPTH_TEST);             // ÆôÓÃÉûÒÈ²âÊÔ
+	glDepthFunc(GL_LEQUAL);              // Ëù×÷ÉûÒÈ²âÊÔµÄÀàĞÍ
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    // ¸æËßÏµÍ³¶ÔÍ¸ÊÓ½øĞĞĞŞÕı
 	return TRUE;
 }
@@ -175,20 +176,20 @@ void CVRView::OnDestroy()
 
 bool CVRView::DrawScene(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    // Çå³ıÆÁÄ»ºÍÉî¶È»º´æ
-	glLoadIdentity();            // ÖØÖÃµ±Ç°µÄÄ£ĞÍ¹Û²ì¾ØÕó
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);    // Çå³ıÆÁÄ»ºÍÉûÒÈ»º´E
+	glLoadIdentity();            // ÖØÖÃµ±Ç°µÄÄ£ĞÍ¹Û²EØÕE
 
 	turnX=turnX+1.1f;
-	glTranslatef(-1.5f,0.0f,-6.0f);       // ×óÒÆ 1.5 µ¥Î»£¬²¢ÒÆÈëÆÁÄ» 6.0
+	glTranslatef(-1.5f,0.0f,-6.0f);       // ×óÒÆ 1.5 µ¥Î»£¬²¢ÒÆÈEÁÄ» 6.0
 	glRotatef(turnX,1.0f,0.0f,0.0f);
 	glBegin(GL_TRIANGLES);         // »æÖÆÈı½ÇĞÎ
 	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f( 0.0f, 1.0f, 0.0f);       // ÉÏ¶¥µã
+	glVertex3f( 0.0f, 1.0f, 0.0f);       // ÉÏ¶¥µE
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glVertex3f(-1.0f,-1.0f, 0.0f);       // ×óÏÂ
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f( 1.0f,-1.0f, 0.0f);       // ÓÒÏÂ
-	glEnd();            // Èı½ÇĞÎ»æÖÆ½áÊø
+	glEnd();            // Èı½ÇĞÎ»æÖÆ½áÊE
 
 	glTranslatef(3.0f,0.0f,0.0f);       // ÓÒÒÆ3µ¥Î»
 	glColor3f(0.0f, 0.0f, 1.0f);
@@ -199,7 +200,7 @@ bool CVRView::DrawScene(void)
 	glVertex3f(-1.0f,-1.0f, 0.0f);       // ÓÒÏÂ
 	   glEnd();
 
-	SwapBuffers(m_pDC->GetSafeHdc());        // ½»»»»º³åÇø
+	SwapBuffers(m_pDC->GetSafeHdc());        // ½»»»»º³åÇE
 	return TRUE;
 	}
 
@@ -214,11 +215,17 @@ void CVRView::OnSize(UINT nType, int cx, int cy)
 	}
 
 	glViewport(0, 0, cx, cy);      // ÖØÖÃµ±Ç°µÄÊÓ¿Ú
-	glMatrixMode(GL_PROJECTION);     // Ñ¡ÔñÍ¶Ó°¾ØÕó
-	glLoadIdentity();        // ÖØÖÃÍ¶Ó°¾ØÕó
+	glMatrixMode(GL_PROJECTION);     // Ñ¡ÔñÍ¶Ó°¾ØÕE
+	glLoadIdentity();        // ÖØÖÃÍ¶Ó°¾ØÕE
 
 	// ÉèÖÃÊÓ¿ÚµÄ´óĞ¡
 	gluPerspective(45.0f,(GLfloat)cx/(GLfloat)cy,0.1f,100.0f);
-	glMatrixMode(GL_MODELVIEW);      // Ñ¡ÔñÄ£ĞÍ¹Û²ì¾ØÕó
-	glLoadIdentity();        // ÖØÖÃÄ£ĞÍ¹Û²ì¾ØÕó
+	glMatrixMode(GL_MODELVIEW);      // Ñ¡ÔñÄ£ĞÍ¹Û²EØÕE
+	glLoadIdentity();        // ÖØÖÃÄ£ĞÍ¹Û²EØÕE
+}
+
+void CVRView::OnAaaXxxx()
+{
+	MessageBox ( _T("xxx"), _T("xxx"), MB_OK | MB_ICONEXCLAMATION);
+	// TODO: ‚±‚±‚ÉƒRƒ}ƒ“ƒh ƒnƒ“ƒhƒ‰ ƒR[ƒh‚ğ’Ç‰Á‚µ‚Ü‚·B
 }
