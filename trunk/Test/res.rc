@@ -133,12 +133,12 @@ IDB_BITMAP2             BITMAP                  "bitmap2.bmp"
 
 IDR_MENU1 MENU 
 BEGIN
-    POPUP "sss"
+    POPUP "File"
     BEGIN
-        MENUITEM "aaa",                         ID_SSS_AAA
-        MENUITEM "exit",                        ID_SSS_EXIT
+        MENUITEM "Open Win",                    ID_MENU_OPEN_WIN
+        MENUITEM "exit",                        ID_MENU_EXIT
     END
-    MENUITEM "bbb",                         0
+    MENUITEM "bbb",                         ID_BBB
 END
 
 #endif    // “ú–{Œê resources

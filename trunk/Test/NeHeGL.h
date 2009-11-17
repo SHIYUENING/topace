@@ -29,7 +29,7 @@
 #define GL_FRAMEWORK__INCLUDED
 
 #include <windows.h>								// Header File For Windows
-
+#include "resource.h"
 typedef struct {									// Structure For Keyboard Stuff
 	BOOL keyDown [256];								// Holds TRUE / FALSE For Each Key
 } Keys;												// Keys
@@ -70,8 +70,10 @@ void Deinitialize (void);							// Performs All Your DeInitialization
 void Update (DWORD milliseconds);					// Perform Motion Updates
 
 void Draw (void);									// Perform All Your Scene Drawing
+
+bool OpenSelectWindow();
 extern int mouse_x;
 extern int mouse_y;
 extern int menuid;
-#endif												// GL_FRAMEWORK__INCLUDED
 INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
+#endif												// GL_FRAMEWORK__INCLUDED

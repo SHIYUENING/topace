@@ -33,22 +33,18 @@ void Transform::Reset(){
 }
 
 
-///<summary>变换的旋转矩阵</summary>
 const Matrix33d& Transform::Matrix() const{
     return m;
 }
 
-///<summary>变换的参考点</summary>
 const Vector3d& Transform::RefPos() const{
     return p;
 }
 
-///<summary>变换矩阵(4维)</summary>
 const double* Transform::Matrix4() const{
     return m4.data();
 }
 
-///<summary>按外部坐标系旋转角向量旋转(以其方向为轴，大小为旋转角)</summary>
 void Transform::Rotate(const Vector3d& externalTheta){
     double theta = norm2(externalTheta);
     if (theta == 0){ return; }
@@ -80,14 +76,12 @@ void Transform::Rotate(const Vector3d& externalTheta){
          sin(theta),  cos(theta), 0,
                0,        0, 1;
 
-    m = Mu * Rho * trans(Mu) * Matrix33d(m); //注意：不应在等式左右同时直接出现一个矩阵或向量，必须先拷贝为临时变量，否则会计算出错。
-
+    m = Mu * Rho * trans(Mu) * Matrix33d(m); 
     RefreshM4();
 }
 
 
 
-///<summary>按内部坐标系旋转角向量旋转(以其方向为轴，大小为旋转角)</summary>
 void Transform::RotateInternal(const Vector3d& internalTheta){
     double theta = norm2(internalTheta);
     if (theta == 0){ return; }
@@ -119,14 +113,12 @@ void Transform::RotateInternal(const Vector3d& internalTheta){
           sin(theta),  cos(theta), 0,
                    0,           0, 1;
 
-    m = Matrix33d(m) * Mu * Rho * trans(Mu); //注意：不应在等式左右同时直接出现一个矩阵或向量，必须先拷贝为临时变量，否则会计算出错。
-
+    m = Matrix33d(m) * Mu * Rho * trans(Mu); 
     RefreshM4();
 }
 
 
 
-///<summary>按外部向量平移</summary>
 void Transform::Translate(const Vector3d& externalReplacement){
     p += externalReplacement;
     RefreshM4();
@@ -134,7 +126,6 @@ void Transform::Translate(const Vector3d& externalReplacement){
 
 
 
-///<summary>按内部向量平移</summary>
 void Transform::TranslateInternal(const Vector3d& internalReplacement){
     p += m * internalReplacement;
     RefreshM4();
@@ -147,7 +138,6 @@ Transform Transform::Invert() const{
 
 
 void Transform::RefreshM4(){
-    //注意到tvmet与OpenGL的数据存储优先格式相反
     m4 = m(0, 0), m(1, 0), m(2, 0), 0,
          m(0, 1), m(1, 1), m(2, 1), 0,
          m(0, 2), m(1, 2), m(2, 2), 0,
