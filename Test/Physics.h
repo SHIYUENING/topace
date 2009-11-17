@@ -4,16 +4,16 @@
 
 class RigidBody{
 public:
-    Transform& State; //运动学状态
-    Vector3d Velocity; //速度
-    Vector3d Acceleration; //加速度
-    Vector3d GravityAcceleration; //重力加速度
-    Vector3d AngleVelocity; //角速度
-    Vector3d AngleAcceleration; //角加速度
-    double MaxSpeed; //最大速度
-    double MaxAngleSpeed; //最大角速度
-    double VelocityResistance; //速度衰减系数[0,1]
-    double AngleVelocityResistance; //角速度衰减系数[0,1]
+    Transform& State; 
+    Vector3d Velocity; 
+    Vector3d Acceleration; 
+    Vector3d GravityAcceleration;
+    Vector3d AngleVelocity;
+    Vector3d AngleAcceleration; 
+    double MaxSpeed; 
+    double MaxAngleSpeed; 
+    double VelocityResistance; 
+    double AngleVelocityResistance;
 
     RigidBody(Transform& State):State(State){
         Velocity = 0, 0, 0;

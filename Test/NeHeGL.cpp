@@ -15,7 +15,7 @@
 #pragma warning( disable : 4996 ) // disable deprecated warning 
 #include <strsafe.h>
 #pragma warning( default : 4996 )
-#include "resource.h"
+
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 
@@ -29,6 +29,8 @@ static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScree
 static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
 int winwidth,winheight; 
 char * LoadCameraName=NULL;
+HINSTANCE hIns;
+HWND HWNDMainWin;
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -360,16 +362,20 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PostMessage (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 		case WM_MENUSELECT:
-			//menuid=HIWORD(lParam); 
+			if(lParam==0)
+			{
+				//menuid=0;
+				return 0;
+			}
 			menuid=LOWORD(wParam);
 //			itoa(menuid,showmenuid,9);
 			//MessageBox (HWND_DESKTOP, showmenuid, "...", MB_OK | MB_ICONEXCLAMATION);
-			if(menuid==ID_SSS_EXIT)
+/*			if(menuid==ID_SSS_EXIT)
 			{
 				//MessageBox (HWND_DESKTOP, "...", "...", MB_OK | MB_ICONEXCLAMATION);
 				TerminateApplication(window);								// Terminate The Application
 			return 0;
-			}
+			}*/
 		break;
 	}
 
@@ -400,6 +406,7 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	hIns=hInstance;
 	if(strlen(lpCmdLine)>0)
 		LoadCameraName=lpCmdLine;
 	Application			application;									// Application Structure
@@ -461,12 +468,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 				HMENU menuID;
 				menuID=LoadMenu(hInstance,MAKEINTRESOURCE(IDR_MENU1));
 				menuid=GetMenuItemCount(menuID);
-				//menuID=CreateMenu();
-
-				//AppendMenu(menuID,MF_ENABLED,10,"inwin");
-				//AppendMenu(menuID,MF_ENABLED,11,"exit");
+				HWNDMainWin=window.hWnd;
 				SetMenu(window.hWnd,menuID);
-				DialogBox( hInstance, MAKEINTRESOURCE( IDD_FORMVIEW ), window.hWnd, MainDlgProc );
+				
+				//OpenSelectWindow();
 
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
@@ -575,4 +580,10 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
     }
 
     return FALSE; // Message not handled 
+}
+bool OpenSelectWindow()
+{
+	DialogBox( hIns, MAKEINTRESOURCE( IDD_FORMVIEW ), HWNDMainWin, MainDlgProc );
+	menuid=0;
+	return true;
 }

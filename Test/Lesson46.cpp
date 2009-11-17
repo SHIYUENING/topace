@@ -36,7 +36,7 @@ bool doangle = true;
 #ifndef CDS_FULLSCREEN											// CDS_FULLSCREEN Is Not Defined By Some
 #define CDS_FULLSCREEN 4										// Compilers. By Defining It This Way,
 #endif															// We Can Avoid Errors
-LARGE_INTEGER t1,t2,feq,t3;//计算每桢运行时间相关
+LARGE_INTEGER t1,t2,feq,t3;
 GL_Window*	g_window;
 Keys*		g_keys;
 int			g_nFPS = 0, g_nFrames = 0;							// FPS and FPS Counter
@@ -56,23 +56,23 @@ int UImodelTest=0;
 float angle= 0.75f;
 float Updown= 0.0f;
 float angle2=0.0f;
-double oneframetime=0.0;//每桢运行时间，超过0.016游戏就不能保持全速了
+double oneframetime=0.0;
 double oneframetimeT=0.0;
-double oneframetimelimit=1.0/60.0;//每桢最大时间
-CLoadVBMD *m_VBMD = NULL;//VBMD模型对象
+double oneframetimelimit=1.0/60.0;
+CLoadVBMD *m_VBMD = NULL;
 GLuint AsciiFontTexId;
 GLuint base;
 extern int winwidth,winheight;
 extern char * LoadCameraName;
 float posX,posY,posZ;
-Transform MView(Vector3d(0, 0, -40));//观察矩阵
-Transform MWorld;//世界矩阵
-Transform MFighter;//玩家
+Transform MView(Vector3d(0, 0, -40));
+Transform MWorld;
+Transform MFighter;
 Transform Msky;
 CSkyBox SkyBox;
 extern float eyePositionSea[3];
 extern GLuint AmbientReflectiveTexture;
-extern bool ShaderWater;//是否使用shader
+extern bool ShaderWater;
 GLuint SeaTexID=0;
 float globalAmbientGL[4]={0.3f,0.3f,0.3f,1.0f};
 float lightColor[4]={0.7f,0.7f,0.7f,1.0f};
@@ -172,41 +172,40 @@ void Delay(__int64 Us)
 void LockFPS (void)
 {
 	double waitTime=0.0;
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
-	QueryPerformanceCounter(&t2);//测后跳动次数
+	QueryPerformanceFrequency(&feq);
+	QueryPerformanceCounter(&t2);
     if (t2.QuadPart >= t1.QuadPart)
 	{
-	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
 		
     }
 	else
 		return;
-	//QueryPerformanceCounter(&t1);//测前跳动次数
 
 	double SleepTime=(oneframetimelimit-oneframetime)*1000.0;
-	while(SleepTime>2.0)
+	while(SleepTime>30.0)
 	{
 		Sleep(1);
-		QueryPerformanceFrequency(&feq);//每秒跳动次数
-		QueryPerformanceCounter(&t2);//测后跳动次数
+		QueryPerformanceFrequency(&feq);
+		QueryPerformanceCounter(&t2);
 		if (t2.QuadPart >= t1.QuadPart)
-			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
 		else
 			return;
 		SleepTime=(oneframetimelimit-waitTime)*1000.0;
 	}
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
-	QueryPerformanceCounter(&t2);//测后跳动次数
+	QueryPerformanceFrequency(&feq);
+	QueryPerformanceCounter(&t2);
     if (t2.QuadPart >= t1.QuadPart)
 	{
-	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
 		
     }
 	else
 		return;
 
 	Delay(__int64((oneframetimelimit-waitTime)*1000000));
-	QueryPerformanceCounter(&t1);//测前跳动次数
+	QueryPerformanceCounter(&t1);
 }
 
 void loadmodels()
@@ -440,6 +439,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	{
 		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	}
+	if(menuid==ID_MENU_EXIT)
+		TerminateApplication (g_window);
+	if(menuid==ID_MENU_OPEN_WIN)
+		OpenSelectWindow();
 	LockFPS();
 }
 void DrawSky(Transform viewSky,float ne=0.0)

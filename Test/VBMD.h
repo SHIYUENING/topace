@@ -26,33 +26,32 @@ struct tVBMD
 {
 	bool Islife;
 	bool UseTangentArray;
-	// 网格数据
-	unsigned int	TextureID;								// 贴图编号
-	unsigned int	NormalTexID;								// 法线贴图编号
+
+	unsigned int	TextureID;							
+	unsigned int	NormalTexID;						
 	unsigned int	SpecularTexID;
 
-	unsigned int	VertexCount;							// 顶点数组顶点数
-	float*			pVertices;								// 顶点数组顶点数据
-	float*			pNormals;								// 顶点数组法线数据
-	float*			pTexCoords;								// 顶点数组纹理坐标数据
-	float*			pTangent;								// 顶点数组切线数据
+	unsigned int	VertexCount;					
+	float*			pVertices;							
+	float*			pNormals;							
+	float*			pTexCoords;							
+	float*			pTangent;							
 
-	// 顶点缓存对象ID
-	unsigned int	VBOVertices;							// 顶点 顶点缓存ID
-	unsigned int	VBONormals;								// 法线 顶点缓存ID
-	unsigned int	VBOTexCoords;							// 纹理坐标 顶点缓存ID
-	unsigned int	VBOTangent;							// 切线 顶点缓存ID
+	unsigned int	VBOVertices;						
+	unsigned int	VBONormals;							
+	unsigned int	VBOTexCoords;					
+	unsigned int	VBOTangent;					
 };
 
-class CLoadVBMD		// CLoadVBMD类处理所有的装入代码
+class CLoadVBMD	
 {
 public:
-	CLoadVBMD();								// 初始化数据成员
+	CLoadVBMD();							
 	virtual ~CLoadVBMD();
 	int Init(char *filename,bool UseTexture=true,GLint UserTexture=0,bool UseTangent=false);					
 	bool ShowVBMD(unsigned int MID,bool BindSelfTexture=true);
-	void CleanUpVBMD(unsigned int MID);					// 删除模型数据
-	void BuildVBO(unsigned int MID);					// 创建顶点缓存对象
+	void CleanUpVBMD(unsigned int MID);				
+	void BuildVBO(unsigned int MID);				
 	bool VBOSupported;
 	bool m_IsSupportFBO;
 	int TotalMid;
@@ -62,7 +61,7 @@ public:
 	float TBNout[3];
 
 private:
-	FILE	*m_FilePointer;								// 文件指针
+	FILE	*m_FilePointer;							
 public:
 	void TBN(void);
 	unsigned int GetTextureID(int MID);
