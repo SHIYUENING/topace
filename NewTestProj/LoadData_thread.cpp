@@ -34,7 +34,7 @@ void* LoadData(void* Param)
 		pthread_cond_wait( &cond_LoadData ,&mutex_LoadData);
 		pthread_cond_init(&cond_LoadData,NULL);
 		tLoadDataList * loadnod=LoadDataList;
-		MessageBox( NULL, "ok", "ok", MB_OK|MB_ICONEXCLAMATION );
+		//MessageBox( NULL, "ok", "ok", MB_OK|MB_ICONEXCLAMATION );
 		while(loadnod)
 		{
 			switch(loadnod->DataType)

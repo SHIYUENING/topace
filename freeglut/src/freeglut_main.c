@@ -1978,7 +1978,7 @@ LRESULT CALLBACK fgWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 
         /* Convert the Win32 keystroke codes to GLUTtish way */
 #       define KEY(a,b) case a: keypress = b; break;
-
+/*
         switch( wParam )
         {
             KEY( VK_F1,     GLUT_KEY_F1        );
@@ -2005,10 +2005,10 @@ LRESULT CALLBACK fgWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 
         case VK_DELETE:
             /* The delete key should be treated as an ASCII keypress: */
-            INVOKE_WCB( *window, Keyboard,
+     /*       INVOKE_WCB( *window, Keyboard,
                         ( 127, window->State.MouseX, window->State.MouseY )
-            );
-        }
+            );*/
+      //  }
 
 #if defined(_WIN32_WCE)
         if(!(lParam & 0x40000000)) /* Prevent auto-repeat */
@@ -2031,13 +2031,17 @@ LRESULT CALLBACK fgWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                 keypress = GLUT_KEY_F4;
         }
 #endif
-
+/*
         if( keypress != -1 )
             INVOKE_WCB( *window, Special,
                         ( keypress,
                           window->State.MouseX, window->State.MouseY )
-            );
-
+			
+            );*/
+		INVOKE_WCB( *window, Keyboard,
+                        ( (unsigned char)wParam,
+                          window->State.MouseX, window->State.MouseY )
+						  );
         fgState.Modifiers = INVALID_MODIFIERS;
     }
     break;
@@ -2089,11 +2093,11 @@ LRESULT CALLBACK fgWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
             KEY( VK_DOWN,   GLUT_KEY_DOWN      );
             KEY( VK_INSERT, GLUT_KEY_INSERT    );
 
-          case VK_DELETE:
+     //     case VK_DELETE:
               /* The delete key should be treated as an ASCII keypress: */
-              INVOKE_WCB( *window, KeyboardUp,
+             /* INVOKE_WCB( *window, KeyboardUp,
                           ( 127, window->State.MouseX, window->State.MouseY )
-              );
+              );*/
               break;
 
         default:
@@ -2113,14 +2117,18 @@ LRESULT CALLBACK fgWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
             );
 #endif /* !defined(_WIN32_WCE) */
         }
+		INVOKE_WCB( *window, KeyboardUp,
+                        ( (unsigned char)wParam,
+                          window->State.MouseX, window->State.MouseY )
+						  );
         }
-
+/*
         if( keypress != -1 )
             INVOKE_WCB( *window, SpecialUp,
                         ( keypress,
                           window->State.MouseX, window->State.MouseY )
             );
-
+*/
         fgState.Modifiers = INVALID_MODIFIERS;
     }
     break;
