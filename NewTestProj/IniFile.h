@@ -22,6 +22,7 @@
 #define JOY_KEY_START 19
 #define JOY_KEY_NO_USE 20
 #define MAX_JOY_KEYS 128
+#define MAX_KeyBoard_KEYS 256
 struct tGameSet
 {
 	int winW;
@@ -48,5 +49,10 @@ struct tJoyStictSet
 {
 	int KeySet[MAX_JOY_KEYS];
 };
+struct tKeyBoardSet
+{
+	int KeySet[MAX_KeyBoard_KEYS];
+};
+
 void loadIniFile();
 #endif
