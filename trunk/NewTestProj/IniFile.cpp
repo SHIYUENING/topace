@@ -4,6 +4,7 @@
 tGameSet GameSet;
 tSoundSet SoundSet;
 tJoyStictSet JoyStictSet;
+tKeyBoardSet KeyBoardSet;
 void loadIniFile()
 {
 	FILE *IntFile=NULL;
@@ -52,6 +53,28 @@ void loadIniFile()
 		WritePrivateProfileString("JoyStictSet","JOY_KEY_SELECT","81",".\\gameset.ini");
 		WritePrivateProfileString("JoyStictSet","JOY_KEY_START","91",".\\gameset.ini");
 		WritePrivateProfileString("JoyStictSet","JOY_KEY_NO_USE","101",".\\gameset.ini");
+
+
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_UP","119",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_DOWN","115",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_LEFT","97",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_RIGHT","100",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_MAIN_WEAPON","102",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_SUB_WEAPON","101",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_LOCK","113",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_MAP","116",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_SPEED_UP","38",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_SPEED_DOWN","40",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_L","37",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_R","39",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_VIEW_UP","56",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_VIEW_DOWN","50",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_VIEW_LEFT","52",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_VIEW_RIGHT","54",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_VIEW_RESET","53",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_SELECT","118",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_START","98",".\\gameset.ini");
+		WritePrivateProfileString("KeyBoardSet","JOY_KEY_NO_USE","96",".\\gameset.ini");
 	}
 
 		GameSet.winW=GetPrivateProfileInt("GameSet","winW",800,".\\gameset.ini");
@@ -97,4 +120,25 @@ void loadIniFile()
 		JoyStictSet.KeySet[JOY_KEY_SELECT]		=GetPrivateProfileInt("JoyStictSet","JOY_KEY_SELECT",		81,".\\gameset.ini");
 		JoyStictSet.KeySet[JOY_KEY_START]		=GetPrivateProfileInt("JoyStictSet","JOY_KEY_START",		91,".\\gameset.ini");
 		JoyStictSet.KeySet[JOY_KEY_NO_USE]		=GetPrivateProfileInt("JoyStictSet","JOY_KEY_NO_USE",		101,".\\gameset.ini");
+
+		KeyBoardSet.KeySet[JOY_KEY_UP]			=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_UP",			119,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_DOWN]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_DOWN",			115,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_LEFT]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_LEFT",			97,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_RIGHT]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_RIGHT",		100,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_MAIN_WEAPON]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_MAIN_WEAPON",	102,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_SUB_WEAPON]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_SUB_WEAPON",	101,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_LOCK]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_LOCK",			113,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_MAP]			=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_MAP",			116,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_SPEED_UP]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_SPEED_UP",		38,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_SPEED_DOWN]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_SPEED_DOWN",	40,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_L]			=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_L",			37,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_R]			=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_R",			39,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_UP]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_VIEW_UP",		56,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_DOWN]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_VIEW_DOWN",	50,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_LEFT]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_VIEW_LEFT",	52,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_RIGHT]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_VIEW_RIGHT",	54,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_RESET]	=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_VIEW_RESET",	53,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_SELECT]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_SELECT",		118,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_START]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_START",		98,".\\gameset.ini");
+		KeyBoardSet.KeySet[JOY_KEY_NO_USE]		=GetPrivateProfileInt("KeyBoardSet","JOY_KEY_NO_USE",		96,".\\gameset.ini");
 }
