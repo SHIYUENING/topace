@@ -203,7 +203,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GamePads.cpp"
+				RelativePath=".\GameInput.cpp"
 				>
 			</File>
 			<File
@@ -261,7 +261,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GamePads.h"
+				RelativePath=".\GameInput.h"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
