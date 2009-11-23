@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>	
 #include "Glsl.h"
+#include <lib3ds.h>
 extern float turn1,turn2;
 GLfloat Triangle[36];
 GLfloat TriangleO[36] = {000.0f, 100.0f, 000.0f,
@@ -46,8 +47,52 @@ GLfloat TriTexCoord[24] = {
 	1.0f,1.0f};
 GLubyte Tex3DData[32][32][4][4];
 GLuint Tex3DID=0;
+Lib3dsFile *Model3ds=0;
+Lib3dsNode *Node=0;
+Lib3dsMesh *Mesh=0;
+Lib3dsFace *Face=0;
+void Test3DS()
+{
+	Model3ds=lib3ds_file_open("Data/Model/3ds.3DS");
+
+	Lib3dsMeshInstanceNode *MeshData=0;
+	
+	Node=Model3ds->nodes;
+
+	while(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+	{
+		Node=Node->next;
+		if(!Node)
+			return;
+	}
+
+	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
+	if(!Mesh)
+		return;
+		
+	//for(Mesh=Model3ds->meshes;Mesh!=NULL;Mesh=Model3ds->)
+}
+void DrawTest3DS()
+{
+
+	float tmpxxx=0.0f;
+	
+	float * pvertices = new float[Mesh->nvertices*3*3*4];
+	for(int i=0;i<Mesh->nfaces;i++)
+	{
+		Face=&(Mesh->faces[i]);
+		for(int j=0;j<3;j++)
+		{
+		glVertex3fv(Mesh->vertices[Face->index[j]]);
+		tmpxxx=pvertices[(i*3+j)*3+0]=Mesh->vertices[Face->index[j]][0];
+		tmpxxx=pvertices[(i*3+j)*3+1]=Mesh->vertices[Face->index[j]][1];
+		tmpxxx=pvertices[(i*3+j)*3+2]=Mesh->vertices[Face->index[j]][2];
+		}
+	}
+}
 void init3DTexTest()
 {
+	Test3DS();
 	for(int i=0;i<32;i++)
 	{
 		for(int j=0;j<32;j++)
@@ -136,6 +181,7 @@ void Draw()
 		glTranslatef(1.5f,0.0f,-4.0f);				// Move Right 1.5 Units And Into The Screen 6.0
 		glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
 		glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
+		DrawTest3DS();
 		glTexCoord2f(1.0f,1.0f);
 		glBegin(GL_QUADS);									// Draw A Quad
 			glColor3f(0.0f,1.0f,0.0f);			// Set The Color To Blue
