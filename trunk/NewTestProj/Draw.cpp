@@ -5,7 +5,9 @@
 #include <stdio.h>	
 #include "Glsl.h"
 #include <lib3ds.h>
+#include <string.h>	
 extern float turn1,turn2;
+extern GLuint Test3DsTexID;
 GLfloat Triangle[36];
 GLfloat TriangleO[36] = {000.0f, 100.0f, 000.0f,
 						-100.0f,-100.0f, 100.0f,
@@ -59,13 +61,13 @@ void Test3DS()
 	
 	Node=Model3ds->nodes;
 
-	while(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+	while((Node->type!=LIB3DS_NODE_MESH_INSTANCE)||(strcmp(Node->name,"$$$DUMMY")==0))
 	{
 		Node=Node->next;
 		if(!Node)
 			return;
 	}
-
+Node=Node->next;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 	if(!Mesh)
 		return;
@@ -75,20 +77,33 @@ void Test3DS()
 void DrawTest3DS()
 {
 
-	float tmpxxx=0.0f;
-	
-	float * pvertices = new float[Mesh->nvertices*3*3*4];
+	//float tmpxxx=0.0f;
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslatef(1.5f,-0.0f,-200.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+	glRotatef(turn2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
+	//float * pvertices = new float[Mesh->nvertices*3*3*4];
+	glBegin(GL_TRIANGLES);
 	for(int i=0;i<Mesh->nfaces;i++)
 	{
+		
 		Face=&(Mesh->faces[i]);
-		for(int j=0;j<3;j++)
-		{
-		glVertex3fv(Mesh->vertices[Face->index[j]]);
-		tmpxxx=pvertices[(i*3+j)*3+0]=Mesh->vertices[Face->index[j]][0];
-		tmpxxx=pvertices[(i*3+j)*3+1]=Mesh->vertices[Face->index[j]][1];
-		tmpxxx=pvertices[(i*3+j)*3+2]=Mesh->vertices[Face->index[j]][2];
-		}
+
+
+		//glVertex3fv(Mesh->vertices[Face->index[j]]);
+		glTexCoord2f(Mesh->texcos[Face->index[0]][0],Mesh->texcos[Face->index[0]][1]);glVertex3f(Mesh->vertices[Face->index[0]][0],Mesh->vertices[Face->index[0]][2],Mesh->vertices[Face->index[0]][1]);
+		glTexCoord2f(Mesh->texcos[Face->index[1]][0],Mesh->texcos[Face->index[1]][1]);glVertex3f(Mesh->vertices[Face->index[1]][0],Mesh->vertices[Face->index[1]][2],Mesh->vertices[Face->index[1]][1]);
+		glTexCoord2f(Mesh->texcos[Face->index[2]][0],Mesh->texcos[Face->index[2]][1]);glVertex3f(Mesh->vertices[Face->index[2]][0],Mesh->vertices[Face->index[2]][2],Mesh->vertices[Face->index[2]][1]);
+		//tmpxxx=pvertices[(i*3+j)*3+0]=Mesh->vertices[Face->index[j]][0]*0.01f;
+		//tmpxxx=pvertices[(i*3+j)*3+1]=Mesh->vertices[Face->index[j]][1]*0.01f;
+		//tmpxxx=pvertices[(i*3+j)*3+2]=Mesh->vertices[Face->index[j]][2]*0.01f;
+		
+		
 	}
+	glEnd();
+	glPopMatrix();
 }
 void init3DTexTest()
 {
@@ -175,13 +190,13 @@ void Draw()
 		*/
 		glDisable(GL_MULTISAMPLE_ARB);
 		glEnable(GL_BLEND);
-		glBindTexture(GL_TEXTURE_2D, 2);	
+		glBindTexture(GL_TEXTURE_2D, Test3DsTexID);	
 		//glDisable( GL_TEXTURE_2D );
 		glLoadIdentity();					// Reset The Current Modelview Matrix
 		glTranslatef(1.5f,0.0f,-4.0f);				// Move Right 1.5 Units And Into The Screen 6.0
 		glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
 		glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
-		DrawTest3DS();
+		
 		glTexCoord2f(1.0f,1.0f);
 		glBegin(GL_QUADS);									// Draw A Quad
 			glColor3f(0.0f,1.0f,0.0f);			// Set The Color To Blue
@@ -216,10 +231,12 @@ void Draw()
 			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Right)
 		glEnd();						// Done Drawing The Quad
 	glPopMatrix();
+	DrawTest3DS();
 	glDisable( GL_TEXTURE_2D );
 	glEnable(GL_BLEND);
 	glEnable( GL_TEXTURE_3D );
-	glBindTexture(GL_TEXTURE_2D, Tex3DID);
+	glBindTexture(GL_TEXTURE_3D, Tex3DID);
+	
 	glPushMatrix();
 	glLoadIdentity();
 		glTranslatef(0.0f,0.0f,-5.0f);
