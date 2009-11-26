@@ -67,7 +67,6 @@ void Test3DS()
 		if(!Node)
 			return;
 	}
-Node=Node->next;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 	if(!Mesh)
 		return;
