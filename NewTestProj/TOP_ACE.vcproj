@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Load3DS.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LoadData_thread.cpp"
 				>
 			</File>
@@ -289,6 +293,10 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Load3DS.h"
+				>
 			</File>
 			<File
 				RelativePath=".\LoadData_thread.h"
