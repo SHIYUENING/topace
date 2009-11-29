@@ -13,6 +13,7 @@ struct tVBOIDs
 	unsigned int TexCoordID;
 	unsigned int NormalID;
 	unsigned int TangentID;
+	int VerticeNum;
 };
 class CLoad3DS
 {
@@ -30,7 +31,8 @@ public:
 	int TotelVertices;
 	int TotelMeshs;
 	tVBOIDs * VBOIDs;
-	void Render(void);
+	void Render(float current_frame=0.0f);
+	void RenderNode(Lib3dsNode *Node);
 	bool LoadNode(Lib3dsNode *Node);
 	int Error;
 };

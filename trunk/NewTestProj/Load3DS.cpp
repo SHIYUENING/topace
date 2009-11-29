@@ -35,7 +35,7 @@ bool CLoad3DS::Loadfile(char * filename)
 		isRAM=false;
 		return false;
 	}
-	TotelMeshs=Model3ds->nmeshes;
+	TotelMeshs=Model3ds->nmeshes+2;
 	if(!TotelMeshs)
 	{
 		Error=ERROR_NO_MESH;
@@ -44,7 +44,7 @@ bool CLoad3DS::Loadfile(char * filename)
 	}
 	if(VBOSupported)
 	{
-		VBOIDs = new tVBOIDs[TotelMeshs+1];
+		VBOIDs = new tVBOIDs[TotelMeshs];
 		for(int i=0;i<TotelMeshs;i++)
 		{
 			VBOIDs[i].VerticeID=0;
@@ -54,6 +54,7 @@ bool CLoad3DS::Loadfile(char * filename)
 			VBOIDs[i].TangentID=0;
 		}
 	}
+	lib3ds_file_eval(Model3ds, 0.0f);
 	isRAM=true;
 	return true;
 }
@@ -99,13 +100,71 @@ void CLoad3DS::Del_VRAM(void)
 		if(VBOIDs[i].TangentID)
 			glDeleteBuffersARB(1,&VBOIDs[i].TangentID);
 	}
-	delete VBOIDs;
+	delete[] VBOIDs;
 	VBOIDs=NULL;
 	isVRAM=false;
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
-
-void CLoad3DS::Render(void)
+void CLoad3DS::RenderNode(Lib3dsNode *Node)
 {
+	Lib3dsNode      *pNode; 
+	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){   
+        RenderNode(pNode);   
+    } 
+	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+		return ;
+	if(strcmp(Node->name,"$$$DUMMY")==0)
+		return ;
+	if(!Node)
+		return ;
+
+	Lib3dsMesh *Mesh=0;
+	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
+	float       M1[4][4]; 
+	float       M2[4][4]; 
+	lib3ds_matrix_copy(M1, Node->matrix);   
+	lib3ds_matrix_inv(M1);   
+	lib3ds_matrix_copy(M2, Mesh->matrix);   
+	lib3ds_matrix_inv(M2); 
+	
+
+	glMultMatrixf(&M2[0][0]); 
+	glMultMatrixf(&Node->matrix[0][0]);  
+	
+	
+
+
+	int i=Node->node_id;
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glEnableClientState( GL_NORMAL_ARRAY );
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].VerticeID );
+	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].NormalID );
+	glNormalPointer( GL_FLOAT, 0, (char *) NULL );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].TexCoordID );
+	glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
+	glDrawArrays( GL_TRIANGLES, 0, VBOIDs[i].VerticeNum );	
+
+	glDisableClientState( GL_VERTEX_ARRAY );
+	glDisableClientState( GL_NORMAL_ARRAY );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+
+}
+void CLoad3DS::Render(float current_frame)
+{
+	lib3ds_file_eval(Model3ds, current_frame);
+	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
+		return;
+	Lib3dsNode *ThisNode=0;
+	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+		glPushMatrix();
+			RenderNode(ThisNode);
+		glPopMatrix();
+	}
 }
 
 bool CLoad3DS::LoadNode(Lib3dsNode *Node)
@@ -122,26 +181,47 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 	if(!Mesh->vertices)
 		return false;            //if no vertices ,Nothing to do.
-	float * VBOverticesBuffer=new float[Mesh->nvertices*3];
-	float * VBONormalsBuffer=new float[Mesh->nvertices*3];
+	float * VBOverticesBuffer=new float[Mesh->nfaces*3*3*4];
+	float (* VBONormalsBuffer)[3]=(float(*)[3])new float[Mesh->nfaces*3*3*4];
+	float * VBOTexCoordBuffer=new float[Mesh->nfaces*3*2*4];
+
+	lib3ds_mesh_calculate_vertex_normals(Mesh, VBONormalsBuffer); 
+
 	Lib3dsFace *Face=0;
+	VBOIDs[Node->node_id].VerticeNum=Mesh->nfaces*3;
+	TotelVertices=TotelVertices+Mesh->nfaces*3;
+
 	for(int i=0;i<Mesh->nfaces;i++)
 	{
 		Face=&(Mesh->faces[i]);
 		for(int j=0;j<3;j++)
-			for(int k=0;k<3;k++)
-			{
-				VBOverticesBuffer[i*3*3+j*3+k]=Mesh->vertices[Face->index[j]][k];
-			}
+		{
+			VBOverticesBuffer[i*3*3+j*3+0]=Mesh->vertices[Face->index[j]][0];
+			VBOverticesBuffer[i*3*3+j*3+1]=Mesh->vertices[Face->index[j]][1];
+			VBOverticesBuffer[i*3*3+j*3+2]=Mesh->vertices[Face->index[j]][2];
+
+			VBOTexCoordBuffer[i*3*2+j*2+0]=Mesh->texcos[Face->index[j]][0];
+			VBOTexCoordBuffer[i*3*2+j*2+1]=Mesh->texcos[Face->index[j]][1];
+		}
 	}
 	glGenBuffersARB( 1,&VBOIDs[Node->node_id].VerticeID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].VerticeID );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nvertices*3*sizeof(float), VBOverticesBuffer, GL_STATIC_DRAW_ARB );
-	delete VBOverticesBuffer;
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*3*sizeof(float), VBOverticesBuffer, GL_STATIC_DRAW_ARB );
+	delete[] VBOverticesBuffer;
 	VBOverticesBuffer=NULL;
 
-	delete VBONormalsBuffer;
+	glGenBuffersARB( 1,&VBOIDs[Node->node_id].NormalID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].NormalID );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*3*sizeof(float), VBONormalsBuffer, GL_STATIC_DRAW_ARB );
+	delete[] VBONormalsBuffer;
 	VBONormalsBuffer=NULL;
+
+	glGenBuffersARB( 1,&VBOIDs[Node->node_id].TexCoordID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].TexCoordID );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*2*sizeof(float), VBOTexCoordBuffer, GL_STATIC_DRAW_ARB );
+	delete[] VBOTexCoordBuffer;
+	VBOTexCoordBuffer=NULL;
+
 	
 	return false;
 }

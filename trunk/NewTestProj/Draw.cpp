@@ -6,7 +6,8 @@
 #include "Glsl.h"
 #include <lib3ds.h>
 #include <string.h>	
-extern float turn1,turn2;
+#include "Load3DS.h"
+extern float turn1,turn2,frametest;
 extern GLuint Test3DsTexID;
 GLfloat Triangle[36];
 GLfloat TriangleO[36] = {000.0f, 100.0f, 000.0f,
@@ -53,6 +54,8 @@ Lib3dsFile *Model3ds=0;
 Lib3dsNode *Node=0;
 Lib3dsMesh *Mesh=0;
 Lib3dsFace *Face=0;
+CLoad3DS Model3DsTest1;
+/*
 void Test3DS()
 {
 	Model3ds=lib3ds_file_open("Data/Model/3ds.3DS");
@@ -68,24 +71,27 @@ void Test3DS()
 			return;
 	}
 	Node=Node->next;
+	Node=Node->next;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 	if(!Mesh)
 		return;
 		
 	//for(Mesh=Model3ds->meshes;Mesh!=NULL;Mesh=Model3ds->)
-}
+}*/
 void DrawTest3DS()
 {
 
 	//float tmpxxx=0.0f;
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslatef(1.5f,-0.0f,-200.0f);				// Move Right 1.5 Units And Into The Screen 6.0
-	glRotatef(turn2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
+	glTranslatef(1.5f,-0.0f,-600.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+	//glRotatef(-90.f,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
+	Model3DsTest1.Render(frametest);
 	//float * pvertices = new float[Mesh->nvertices*3*3*4];
-	glBegin(GL_TRIANGLES);
+	/*glBegin(GL_TRIANGLES);
 	for(int i=0;i<Mesh->nfaces;i++)
 	{
 		
@@ -102,12 +108,14 @@ void DrawTest3DS()
 		
 		
 	}
-	glEnd();
+	glEnd();*/
 	glPopMatrix();
 }
 void init3DTexTest()
 {
-	Test3DS();
+//	Test3DS();
+	Model3DsTest1.Loadfile("Data/Model/3ds.3DS");
+	Model3DsTest1.LoadToVRAM();
 	for(int i=0;i<32;i++)
 	{
 		for(int j=0;j<32;j++)
@@ -131,8 +139,9 @@ void Draw()
 {
  
 	glLoadIdentity();									// Reset The Current Modelview Matrix
+	DrawTest3DS();
 	glPushMatrix();
-		glTranslatef(-1.5f,0.0f,-500.0f);						// Move Left 1.5 Units And Into The Screen 6.0
+		glTranslatef(-1.5f,0.0f,-1500.0f);						// Move Left 1.5 Units And Into The Screen 6.0
 		glRotatef(turn1,0.0f,1.0f,0.0f);				// Rotate The Triangle On The Y axis
 
 		for(int i=0;i<36;i++)
@@ -189,11 +198,13 @@ void Draw()
 		glEnd();											// Finished Drawing The Triangle
 		*/
 		glDisable(GL_MULTISAMPLE_ARB);
+
+		/*
 		glEnable(GL_BLEND);
 		glBindTexture(GL_TEXTURE_2D, Test3DsTexID);	
 		//glDisable( GL_TEXTURE_2D );
 		glLoadIdentity();					// Reset The Current Modelview Matrix
-		glTranslatef(1.5f,0.0f,-4.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+		glTranslatef(1.5f,0.0f,-40.0f);				// Move Right 1.5 Units And Into The Screen 6.0
 		glRotatef(turn2,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
 		glColor3f(0.5f,0.5f,1.0f);							// Set The Color To Blue One Time Only
 		
@@ -230,8 +241,10 @@ void Draw()
 			glTexCoord2f(1.0f,1.0f);	glVertex3f( 1.0f,-1.0f, 1.0f); 			// Bottom Left Of The Quad (Right)
 			glTexCoord2f(0.0f,1.0f);	glVertex3f( 1.0f,-1.0f,-1.0f); 			// Bottom Right Of The Quad (Right)
 		glEnd();						// Done Drawing The Quad
+		*/
 	glPopMatrix();
-	DrawTest3DS();
+	
+	
 	glDisable( GL_TEXTURE_2D );
 	glEnable(GL_BLEND);
 	glEnable( GL_TEXTURE_3D );
