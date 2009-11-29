@@ -58,7 +58,9 @@ void main()
 	posz=posz/13.0;
 	
 	vec4 Ocolor;
-    Ocolor.xyz = lerp(globalAmbient*0.5f, globalAmbient, saturate(Normal.y*0.5+0.5f)) + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
+		float lerpF = clamp(Normal.y*0.5+0.5f,0.0,1.0);
+		Ocolor.xyz = globalAmbient*0.5f*(1.0-lerpF*lerpF)+globalAmbient*lerpF*lerpF + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
+    //Ocolor.xyz = lerp(globalAmbient*0.5f, globalAmbient, clamp(Normal.y*0.5+0.5f,0.0,1.0)) + gl_TexCoord[5].xyz + (diffuse + (specularLight*8.0)*SpecularMapcolor.x)*posz;
     Ocolor.w = 1.0;
     vec3 Reflective=reflect(ViewDir,Normal);
     vec4 ReflectiveWorld = Worldmatrix*vec4(Reflective,0.0);
