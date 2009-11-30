@@ -141,10 +141,16 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].VerticeID );
 	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].NormalID );
-	glNormalPointer( GL_FLOAT, 0, (char *) NULL );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].TexCoordID );
-	glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
+	if(VBOIDs[i].NormalID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].NormalID );
+		glNormalPointer( GL_FLOAT, 0, (char *) NULL );
+	}
+	if(VBOIDs[i].TexCoordID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].TexCoordID );
+		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
+	}
 	glDrawArrays( GL_TRIANGLES, 0, VBOIDs[i].VerticeNum );	
 
 	glDisableClientState( GL_VERTEX_ARRAY );
@@ -183,7 +189,10 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		return false;            //if no vertices ,Nothing to do.
 	float * VBOverticesBuffer=new float[Mesh->nfaces*3*3*4];
 	float (* VBONormalsBuffer)[3]=(float(*)[3])new float[Mesh->nfaces*3*3*4];
-	float * VBOTexCoordBuffer=new float[Mesh->nfaces*3*2*4];
+	
+	float * VBOTexCoordBuffer=NULL;
+	if(Mesh->texcos)
+			VBOTexCoordBuffer=new float[Mesh->nfaces*3*2*4];
 
 	lib3ds_mesh_calculate_vertex_normals(Mesh, VBONormalsBuffer); 
 
@@ -200,8 +209,11 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 			VBOverticesBuffer[i*3*3+j*3+1]=Mesh->vertices[Face->index[j]][1];
 			VBOverticesBuffer[i*3*3+j*3+2]=Mesh->vertices[Face->index[j]][2];
 
-			VBOTexCoordBuffer[i*3*2+j*2+0]=Mesh->texcos[Face->index[j]][0];
-			VBOTexCoordBuffer[i*3*2+j*2+1]=Mesh->texcos[Face->index[j]][1];
+			if(Mesh->texcos)
+			{
+				VBOTexCoordBuffer[i*3*2+j*2+0]=Mesh->texcos[Face->index[j]][0];
+				VBOTexCoordBuffer[i*3*2+j*2+1]=Mesh->texcos[Face->index[j]][1];
+			}
 		}
 	}
 	glGenBuffersARB( 1,&VBOIDs[Node->node_id].VerticeID);
@@ -216,11 +228,14 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	delete[] VBONormalsBuffer;
 	VBONormalsBuffer=NULL;
 
-	glGenBuffersARB( 1,&VBOIDs[Node->node_id].TexCoordID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].TexCoordID );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*2*sizeof(float), VBOTexCoordBuffer, GL_STATIC_DRAW_ARB );
-	delete[] VBOTexCoordBuffer;
-	VBOTexCoordBuffer=NULL;
+	if(Mesh->texcos)
+	{
+		glGenBuffersARB( 1,&VBOIDs[Node->node_id].TexCoordID);
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].TexCoordID );
+		glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*2*sizeof(float), VBOTexCoordBuffer, GL_STATIC_DRAW_ARB );
+		delete[] VBOTexCoordBuffer;
+		VBOTexCoordBuffer=NULL;
+	}
 
 	
 	return false;
