@@ -81,17 +81,17 @@ void Test3DS()
 void DrawTest3DS()
 {
 
-	GLfloat LightPos[]={10000.0f,0.0f,0.0f,0.0f};
-	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
+	//GLfloat LightPos[]={10000.0f,0.0f,0.0f,0.0f};
+	//glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	//float tmpxxx=0.0f;
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslatef(1.5f,-100.0f,-15000.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+	glTranslatef(1.5f,-0.0f,-100.0f);				// Move Right 1.5 Units And Into The Screen 6.0
 	glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
 	//glRotatef(-90.0f,1.0f,0.0f,0.0f);
 	Model3DsTest1.Render(frametest);
