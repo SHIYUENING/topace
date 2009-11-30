@@ -14,6 +14,7 @@ struct tVBOIDs
 	unsigned int NormalID;
 	unsigned int TangentID;
 	int VerticeNum;
+	float MeshMatrix[4][4];
 };
 class CLoad3DS
 {
