@@ -81,14 +81,19 @@ void Test3DS()
 void DrawTest3DS()
 {
 
+	GLfloat LightPos[]={10000.0f,0.0f,0.0f,0.0f};
+	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	//float tmpxxx=0.0f;
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslatef(1.5f,-0.0f,-600.0f);				// Move Right 1.5 Units And Into The Screen 6.0
-	//glRotatef(-90.f,1.0f,0.0f,0.0f);			// Rotate The Quad On The X axis
+	glTranslatef(1.5f,-100.0f,-15000.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+	glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
+	//glRotatef(-90.0f,1.0f,0.0f,0.0f);
 	Model3DsTest1.Render(frametest);
 	//float * pvertices = new float[Mesh->nvertices*3*3*4];
 	/*glBegin(GL_TRIANGLES);
@@ -110,6 +115,7 @@ void DrawTest3DS()
 	}
 	glEnd();*/
 	glPopMatrix();
+	glDisable(GL_LIGHTING);
 }
 void init3DTexTest()
 {
@@ -161,7 +167,7 @@ void Draw()
 		glColorPointer( 3, GL_FLOAT, 0, TriColor );
 		glTexCoordPointer( 2, GL_FLOAT, 0, TriTexCoord );
 		glVertexPointer( 3, GL_FLOAT, 0, Triangle ); 
-		glDrawArrays( GL_TRIANGLES, 0, 12 );	
+		//glDrawArrays( GL_TRIANGLES, 0, 12 );	
 		glDisableClientState( GL_COLOR_ARRAY );	
 		glDisableClientState( GL_VERTEX_ARRAY );
 		glDisableClientState( GL_TEXTURE_COORD_ARRAY );

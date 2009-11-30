@@ -117,7 +117,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 		return ;
 	if(!Node)
 		return ;
-
+/*
 	Lib3dsMesh *Mesh=0;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 	float       M1[4][4]; 
@@ -127,17 +127,25 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 	lib3ds_matrix_copy(M2, Mesh->matrix);   
 	lib3ds_matrix_inv(M2); 
 	
+*/
 
-	glMultMatrixf(&M2[0][0]); 
-	glMultMatrixf(&Node->matrix[0][0]);  
-	
-	
-
-
+	//glColor3f(float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f);
 	int i=Node->node_id;
+
+	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
+
+	
+	glMultMatrixf(&Node->matrix[0][0]);  
+	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
+	glMultMatrixf(&VBOIDs[i].MeshMatrix[0][0]); 
+
 	glEnableClientState( GL_VERTEX_ARRAY );
-	glEnableClientState( GL_NORMAL_ARRAY );
-	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(VBOIDs[i].NormalID)
+		glEnableClientState( GL_NORMAL_ARRAY );
+	if(VBOIDs[i].TexCoordID)
+		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(VBOIDs[i].ColorID)
+		glEnableClientState( GL_COLOR_ARRAY );
 
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].VerticeID );
 	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
@@ -151,11 +159,20 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].TexCoordID );
 		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
 	}
+	if(VBOIDs[i].ColorID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].ColorID );
+		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
+	}
 	glDrawArrays( GL_TRIANGLES, 0, VBOIDs[i].VerticeNum );	
 
 	glDisableClientState( GL_VERTEX_ARRAY );
-	glDisableClientState( GL_NORMAL_ARRAY );
-	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(VBOIDs[i].NormalID)
+		glDisableClientState( GL_NORMAL_ARRAY );
+	if(VBOIDs[i].TexCoordID)
+		glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(VBOIDs[i].ColorID)
+		glDisableClientState( GL_COLOR_ARRAY );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 
 }
@@ -180,6 +197,8 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		return false;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
 		return false;
+	//if(strcmp(Node->name,"Box01")==0)
+	//	return false;
 	if(!Node)
 		return false;
 
@@ -237,6 +256,8 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		VBOTexCoordBuffer=NULL;
 	}
 
+	lib3ds_matrix_copy(VBOIDs[Node->node_id].MeshMatrix, Mesh->matrix);   
+	lib3ds_matrix_inv(VBOIDs[Node->node_id].MeshMatrix); 
 	
 	return false;
 }
