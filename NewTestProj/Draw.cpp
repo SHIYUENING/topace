@@ -9,6 +9,8 @@
 #include "Load3DS.h"
 extern float turn1,turn2,frametest;
 extern GLuint Test3DsTexID;
+extern float TestPos[3];
+extern float TestRot[3];
 GLfloat Triangle[36];
 GLfloat TriangleO[36] = {000.0f, 100.0f, 000.0f,
 						-100.0f,-100.0f, 100.0f,
@@ -87,12 +89,12 @@ void DrawTest3DS()
 	glEnable(GL_LIGHT0);
 	//float tmpxxx=0.0f;
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
-	//glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, Test3DsTexID);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(1.5f,-0.0f,-100.0f);				// Move Right 1.5 Units And Into The Screen 6.0
-	glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
+	//glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
 	//glRotatef(-90.0f,1.0f,0.0f,0.0f);
 	Model3DsTest1.Render(frametest);
 	//float * pvertices = new float[Mesh->nvertices*3*3*4];

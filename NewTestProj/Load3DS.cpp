@@ -107,6 +107,14 @@ void CLoad3DS::Del_VRAM(void)
 }
 void CLoad3DS::RenderNode(Lib3dsNode *Node)
 {
+	if(!Node)
+		return ;
+	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
+
+	if(!MeshData)
+		return ;
+	glMultMatrixf(&Node->matrix[0][0]);  
+	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	Lib3dsNode      *pNode; 
 	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){   
         RenderNode(pNode);   
@@ -115,8 +123,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 		return ;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
 		return ;
-	if(!Node)
-		return ;
+
 /*
 	Lib3dsMesh *Mesh=0;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
@@ -132,11 +139,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 	//glColor3f(float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f);
 	int i=Node->node_id;
 
-	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
 
-	
-	glMultMatrixf(&Node->matrix[0][0]);  
-	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	glMultMatrixf(&VBOIDs[i].MeshMatrix[0][0]); 
 
 	glEnableClientState( GL_VERTEX_ARRAY );
