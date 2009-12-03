@@ -93,9 +93,10 @@ void DrawTest3DS()
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslatef(1.5f,-0.0f,-100.0f);				// Move Right 1.5 Units And Into The Screen 6.0
+	glTranslatef(TestPos[0],TestPos[1],-100.0f+TestPos[2]);				// Move Right 1.5 Units And Into The Screen 6.0
 	//glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
-	//glRotatef(-90.0f,1.0f,0.0f,0.0f);
+	glRotatef(TestRot[0],1.0f,0.0f,0.0f);
+	glRotatef(TestRot[1],0.0f,1.0f,0.0f);
 	Model3DsTest1.Render(frametest);
 	//float * pvertices = new float[Mesh->nvertices*3*3*4];
 	/*glBegin(GL_TRIANGLES);
