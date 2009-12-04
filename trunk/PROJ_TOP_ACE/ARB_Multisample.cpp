@@ -67,8 +67,9 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 	 // See If The String Exists In WGL!
 	if (!WGLisExtensionSupported("WGL_ARB_multisample"))
 	{
-		arbMultisampleSupported=false;
-		return false;
+		//arbMultisampleSupported=false;
+		//return false;
+		GameSet.AA=0;
 	}
 
 	// Get Our Pixel Format

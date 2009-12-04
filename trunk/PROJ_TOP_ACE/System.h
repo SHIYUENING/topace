@@ -69,6 +69,6 @@ void Deinitialize (void);							// Performs All Your DeInitialization
 
 void Update ();					// Perform Motion Updates
 
-void Draw (void);									// Perform All Your Scene Drawing
+void Render (void);									// Perform All Your Scene Drawing
 
 #endif												// GL_FRAMEWORK__INCLUDED

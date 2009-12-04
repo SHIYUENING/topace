@@ -234,7 +234,31 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DDS.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Draw.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Font2D.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Font3D.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Glsl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\IniFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Load3DS.cpp"
 				>
 			</File>
 			<File
@@ -258,6 +282,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Textures.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TGA.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TOP_ACE.cpp"
 				>
 				<FileConfiguration
@@ -277,10 +309,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\TOP_ACE.rc"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -291,7 +319,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DDS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Draw.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Font2D.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Font3D.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Glsl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\IniFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Load3DS.h"
 				>
 			</File>
 			<File
@@ -302,6 +354,14 @@
 				RelativePath=".\System.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Textures.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tga.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -309,6 +369,10 @@
 			>
 			<File
 				RelativePath=".\TOP_ACE.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\TOP_ACE.rc"
 				>
 			</File>
 		</Filter>
