@@ -6,10 +6,12 @@
 #include "System.h"														// Header File For The NeHeGL Basecode
 
 #include "ARB_MULTISAMPLE.h"
-#pragma comment( lib, "glew32s.lib" )
+#include"Draw.h"
+#pragma comment( lib, "glew32.lib" )
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
+#pragma comment( lib, "lib3ds-2_0.lib" )
 #ifdef _DEBUG
 #pragma comment( linker, "/NODEFAULTLIB:LIBCMT.lib")
 #endif
@@ -21,6 +23,9 @@ extern tGameSet GameSet;
 
 static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScreen/Windowed Toggle																		// Between Fullscreen / Windowed Mode
 static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
+
+int (__stdcall *hglSwapBuffers)(void *)=NULL;
+HMODULE gl_dll=false;
 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
@@ -38,7 +43,7 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
-	gluPerspective(50, (float)width/(float)height, 5,  2000);
+	gluPerspective(50, (float)width/(float)height, 10,  200000);
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
 }
@@ -400,6 +405,14 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		return -1;														// Terminate Application
 	}
 
+	gl_dll=LoadLibrary("OpenGL32.DLL");
+
+	if(!gl_dll)
+		MessageBox (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
+
+	if(gl_dll)
+		hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
+
 	g_isProgramLooping = TRUE;											// Program Looping Is Set To TRUE
 	g_createFullScreen = window.init.isFullScreen;						// g_createFullScreen Is Set To User Default
 	
@@ -444,9 +457,12 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 						{
 
 							Update ();	// Update The Counter
-							Draw ();									// Draw Our Scene
+							Render ();									// Draw Our Scene
 
-							SwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
+							if(gl_dll)
+								hglSwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
+							else
+								SwapBuffers (window.hDC);
 						}
 					}
 				}														// Loop While isMessagePumpActive == TRUE

@@ -84,7 +84,7 @@ void Update ()								// Perform Motion Updates Here
 	}
 }
 
-void Draw (void)												// Draw The Scene
+void Render (void)												// Draw The Scene
 {
 	// ROACH
 	if(domulti)
@@ -118,5 +118,8 @@ void Draw (void)												// Draw The Scene
 	// ROACH
 	if(domulti)
 		glDisable(GL_MULTISAMPLE_ARB);
+
+
+
 	// ENDROACH
 }
