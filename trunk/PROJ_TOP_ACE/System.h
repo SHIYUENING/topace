@@ -71,4 +71,5 @@ void Update ();					// Perform Motion Updates
 
 void Render (void);									// Perform All Your Scene Drawing
 
+void Swap(void);
 #endif												// GL_FRAMEWORK__INCLUDED

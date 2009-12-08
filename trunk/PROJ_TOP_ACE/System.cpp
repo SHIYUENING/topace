@@ -26,7 +26,7 @@ static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
 
 int (__stdcall *hglSwapBuffers)(void *)=NULL;
 HMODULE gl_dll=false;
-
+HDC SwapHdc; 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -422,6 +422,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		window.init.isFullScreen = g_createFullScreen;					// Set Init Param Of Window Creation To Fullscreen?
 		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
 		{
+			SwapHdc=window.hDC;
 			// At This Point We Should Have A Window That Is Setup To Render OpenGL
 			if (Initialize (&window, &keys) == FALSE)					// Call User Intialization
 			{
@@ -449,6 +450,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 					}
 					else												// If There Are No Messages
 					{
+						Update ();	// Update The Counter
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{
 							WaitMessage ();								// Application Is Minimized Wait For A Message
@@ -456,13 +458,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 						else											// If Window Is Visible
 						{
 
-							Update ();	// Update The Counter
+						
 							Render ();									// Draw Our Scene
 
-							if(gl_dll)
-								hglSwapBuffers (window.hDC);					// Swap Buffers (Double Buffering)
-							else
-								SwapBuffers (window.hDC);
+							Swap();
 						}
 					}
 				}														// Loop While isMessagePumpActive == TRUE
@@ -485,3 +484,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 	return 0;
 }																		// End Of WinMain()
+void Swap(void)
+{
+	if(gl_dll)
+		hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
+	else
+		SwapBuffers (SwapHdc);
+}
