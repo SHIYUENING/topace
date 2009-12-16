@@ -12,6 +12,7 @@ CLoad3DS::CLoad3DS(void)
 , TotelMeshs(0)
 , VBOIDs(NULL)
 , Error(0)
+, MeshLoadNum(0)
 {
 }
 
@@ -73,7 +74,10 @@ bool CLoad3DS::LoadToVRAM(void)
 	}
 	Lib3dsNode *ThisNode=0;
 	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+
 		LoadNode(ThisNode);
+	}
 	isVRAM=true;
 	return true;
 }
@@ -136,8 +140,8 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 	
 */
 
-	//glColor3f(float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->node_id].VerticeNum%255)/255.0f);
-	int i=Node->node_id;
+	//glColor3f(float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f);
+	int i=Node->user_id;
 
 
 	glMultMatrixf(&VBOIDs[i].MeshMatrix[0][0]); 
@@ -195,6 +199,11 @@ void CLoad3DS::Render(float current_frame)
 
 bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 {
+	if(!Node)
+		return false;
+	Lib3dsNode      *pNode; 
+	for (pNode=Node->childs; pNode!=0; pNode=pNode->next)
+		LoadNode(pNode);
 
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return false;
@@ -202,13 +211,17 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		return false;
 	//if(strcmp(Node->name,"Box01")==0)
 	//	return false;
-	if(!Node)
+
+	if(Node->user_id!=0)
 		return false;
 
 	Lib3dsMesh *Mesh=0;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 	if(!Mesh->vertices)
 		return false;            //if no vertices ,Nothing to do.
+	if(MeshLoadNum>=TotelMeshs)
+		return false;  
+	Node->user_id=MeshLoadNum;
 	float * VBOverticesBuffer=new float[Mesh->nfaces*3*3*4];
 	float (* VBONormalsBuffer)[3]=(float(*)[3])new float[Mesh->nfaces*3*3*4];
 	
@@ -219,7 +232,7 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	lib3ds_mesh_calculate_vertex_normals(Mesh, VBONormalsBuffer); 
 
 	Lib3dsFace *Face=0;
-	VBOIDs[Node->node_id].VerticeNum=Mesh->nfaces*3;
+	VBOIDs[Node->user_id].VerticeNum=Mesh->nfaces*3;
 	TotelVertices=TotelVertices+Mesh->nfaces*3;
 
 	for(int i=0;i<Mesh->nfaces;i++)
@@ -238,29 +251,30 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 			}
 		}
 	}
-	glGenBuffersARB( 1,&VBOIDs[Node->node_id].VerticeID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].VerticeID );
+	glGenBuffersARB( 1,&VBOIDs[Node->user_id].VerticeID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->user_id].VerticeID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*3*sizeof(float), VBOverticesBuffer, GL_STATIC_DRAW_ARB );
 	delete[] VBOverticesBuffer;
 	VBOverticesBuffer=NULL;
 
-	glGenBuffersARB( 1,&VBOIDs[Node->node_id].NormalID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].NormalID );
+	glGenBuffersARB( 1,&VBOIDs[Node->user_id].NormalID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->user_id].NormalID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*3*sizeof(float), VBONormalsBuffer, GL_STATIC_DRAW_ARB );
 	delete[] VBONormalsBuffer;
 	VBONormalsBuffer=NULL;
 
 	if(Mesh->texcos)
 	{
-		glGenBuffersARB( 1,&VBOIDs[Node->node_id].TexCoordID);
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->node_id].TexCoordID );
+		glGenBuffersARB( 1,&VBOIDs[Node->user_id].TexCoordID);
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[Node->user_id].TexCoordID );
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, Mesh->nfaces*3*2*sizeof(float), VBOTexCoordBuffer, GL_STATIC_DRAW_ARB );
 		delete[] VBOTexCoordBuffer;
 		VBOTexCoordBuffer=NULL;
 	}
 
-	lib3ds_matrix_copy(VBOIDs[Node->node_id].MeshMatrix, Mesh->matrix);   
-	lib3ds_matrix_inv(VBOIDs[Node->node_id].MeshMatrix); 
+	lib3ds_matrix_copy(VBOIDs[Node->user_id].MeshMatrix, Mesh->matrix);   
+	lib3ds_matrix_inv(VBOIDs[Node->user_id].MeshMatrix); 
 	
-	return false;
+	MeshLoadNum=MeshLoadNum+1;
+	return true;
 }
