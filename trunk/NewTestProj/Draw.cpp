@@ -57,6 +57,7 @@ Lib3dsNode *Node=0;
 Lib3dsMesh *Mesh=0;
 Lib3dsFace *Face=0;
 CLoad3DS Model3DsTest1;
+float TestRotSNYC=0.0f;
 /*
 void Test3DS()
 {
@@ -97,6 +98,10 @@ void DrawTest3DS()
 	//glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
 	glRotatef(TestRot[0],1.0f,0.0f,0.0f);
 	glRotatef(TestRot[1],0.0f,1.0f,0.0f);
+	TestRotSNYC=TestRotSNYC+1;
+	if(TestRotSNYC>=100.0f)
+		TestRotSNYC=0.0f;
+	//frametest=TestRotSNYC;
 	Model3DsTest1.Render(frametest);
 	//float * pvertices = new float[Mesh->nvertices*3*3*4];
 	/*glBegin(GL_TRIANGLES);

@@ -21,6 +21,7 @@ void loadIniFile()
 		WritePrivateProfileString("GameSet","bits","32",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","depth","24",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","isFullScreem","0",".\\gameset.ini");
+		WritePrivateProfileString("GameSet","SYNC","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","LOW","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","AA","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Light","0",".\\gameset.ini");
@@ -85,6 +86,10 @@ void loadIniFile()
 			GameSet.isFullScreem=true;
 		else
 			GameSet.isFullScreem=false;
+		if(GetPrivateProfileInt("GameSet","SYNC",0,".\\gameset.ini")>0)
+			GameSet.SYNC=true;
+		else
+			GameSet.SYNC=false;
 		if(GetPrivateProfileInt("GameSet","LOW",0,".\\gameset.ini")>0)
 			GameSet.LOW=true;
 		else
