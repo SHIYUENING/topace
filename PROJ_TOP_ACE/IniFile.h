@@ -30,6 +30,7 @@ struct tGameSet
 	int bits;
 	int depth;
 	bool isFullScreem;
+	bool SYNC;
 	bool LOW;
 	int AA;
 	int Light;

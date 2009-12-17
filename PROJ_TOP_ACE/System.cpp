@@ -7,7 +7,7 @@
 
 #include "ARB_MULTISAMPLE.h"
 #include"Draw.h"
-#pragma comment( lib, "glew32.lib" )
+#pragma comment( lib, "glew32s.lib" )
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
@@ -15,6 +15,7 @@
 #ifdef _DEBUG
 #pragma comment( linker, "/NODEFAULTLIB:LIBCMT.lib")
 #endif
+#pragma comment( linker, "/NODEFAULTLIB:LIBC.lib")
 BOOL DestroyWindowGL (GL_Window* window);
 BOOL CreateWindowGL (GL_Window* window);
 bool isInit=false;
