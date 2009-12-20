@@ -36,6 +36,7 @@ public:
 	void RenderNode(Lib3dsNode *Node);
 	bool LoadNode(Lib3dsNode *Node);
 	int Error;
+	int MeshLoadNum;
 };
 
 #endif
