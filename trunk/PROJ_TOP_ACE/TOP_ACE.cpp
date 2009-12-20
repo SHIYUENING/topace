@@ -10,12 +10,10 @@
 **************************************/
 
 #include <windows.h>											// Header File For Windows
-#include <gl\gl.h>												// Header File For The OpenGL32 Library
-#include <gl\glu.h>												// Header File For The GLu32 Library
-#include <gl\glaux.h>											// Header File For The GLaux Library
+#include <gl\glew.h>												// Header File For The OpenGL32 Library
 #include "System.h"												// Header File For NeHeGL
 #include <math.h>												// We'll Need Some Math
-
+#include "Draw.h"
 // ROACH
 #include "arb_multisample.h"
 bool domulti = true;
@@ -32,11 +30,9 @@ GL_Window*	g_window;
 Keys*		g_keys;
 
 float angle= 0.0f;
-extern bool isInit;
+
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
 {
-	if(isInit)
-		return TRUE;
 	g_window	= window;
 	g_keys		= keys;
 
@@ -118,8 +114,5 @@ void Render (void)												// Draw The Scene
 	// ROACH
 	if(domulti)
 		glDisable(GL_MULTISAMPLE_ARB);
-
-
-
 	// ENDROACH
 }

@@ -1,13 +1,21 @@
-
+/***********************************************
+*                                              *
+*    Jeff Molofee's Revised OpenGL Basecode    *
+*  Huge Thanks To Maxwell Sayles & Peter Puck  *
+*            http://nehe.gamedev.net           *
+*                     2001                     *
+*                                              *
+***********************************************/
 
 #include <windows.h>													// Header File For The Windows Library
-#include <GL/glew.h>
-#include"IniFile.h"
-#include "System.h"														// Header File For The NeHeGL Basecode
+#include <gl/glew.h>
 
+
+#include "System.h"														// Header File For The NeHeGL Basecode
+#include "IniFile.h"		
+//ROACH
 #include "ARB_MULTISAMPLE.h"
-#include"Draw.h"
-#pragma comment( lib, "glew32s.lib" )
+#pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
@@ -18,16 +26,16 @@
 #pragma comment( linker, "/NODEFAULTLIB:LIBC.lib")
 BOOL DestroyWindowGL (GL_Window* window);
 BOOL CreateWindowGL (GL_Window* window);
-bool isInit=false;
-extern tGameSet GameSet;
+//ENDROACH
+
 #define WM_TOGGLEFULLSCREEN (WM_USER+1)									// Application Define Message For Toggling
 
 static BOOL g_isProgramLooping;											// Window Creation Loop, For FullScreen/Windowed Toggle																		// Between Fullscreen / Windowed Mode
 static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
-
 int (__stdcall *hglSwapBuffers)(void *)=NULL;
 HMODULE gl_dll=false;
 HDC SwapHdc; 
+extern tGameSet GameSet;
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -44,7 +52,7 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
-	gluPerspective(50, (float)width/(float)height, 10,  200000);
+	gluPerspective(50, (float)width/(float)height, 5,  2000);
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
 }
@@ -367,14 +375,13 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	loadIniFile();
 	Application			application;									// Application Structure
 	GL_Window			window;											// Window Structure
 	Keys				keys;											// Key Structure
 	BOOL				isMessagePumpActive;							// Message Pump Active?
 	MSG					msg;											// Window Message Structure
-									// Used For The Tick Counter
 
+	loadIniFile();
 	// Fill Out Application Data
 	application.className = "TOP_ACE";									// Application Class Name
 	application.hInstance = hInstance;									// Application Instance
@@ -390,8 +397,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	window.init.isFullScreen	= GameSet.isFullScreem;									// Fullscreen? (Set To TRUE)
 
 	ZeroMemory (&keys, sizeof (Keys));									// Zero keys Structure
-/*
 
+/*
 	// Ask The User If They Want To Start In FullScreen Mode?
 	if (MessageBox (HWND_DESKTOP, "Would You Like To Run In Fullscreen Mode?", "Start FullScreen?", MB_YESNO | MB_ICONQUESTION) == IDNO)
 	{
@@ -432,7 +439,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			}
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
-				isInit=true;
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
@@ -451,25 +457,27 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 					}
 					else												// If There Are No Messages
 					{
-						Update ();	// Update The Counter
+						Update ();
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{
 							WaitMessage ();								// Application Is Minimized Wait For A Message
 						}
 						else											// If Window Is Visible
 						{
-
-						
+							// Process Application Loop
+							//tickCount = GetTickCount ();				// Get The Tick Count
+								// Update The Counter
+							//window.lastTickCount = tickCount;			// Set Last Count To Current Count
 							Render ();									// Draw Our Scene
 
-							Swap();
+							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
 						}
 					}
 				}														// Loop While isMessagePumpActive == TRUE
 			}															// If (Initialize (...
 
 			// Application Is Finished
-			
+														// User Defined DeInitialization
 
 			DestroyWindowGL (&window);									// Destroy The Active Window
 		}
@@ -480,15 +488,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			g_isProgramLooping = FALSE;									// Terminate The Loop
 		}
 	}																	// While (isProgramLooping)
-	Deinitialize ();											// User Defined DeInitialization
+	Deinitialize ();
 
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 	return 0;
 }																		// End Of WinMain()
-void Swap(void)
-{
-	if(gl_dll)
-		hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
-	else
-		SwapBuffers (SwapHdc);
-}
