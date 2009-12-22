@@ -1,6 +1,6 @@
 #include "Font2D.h"
 
-#pragma comment( lib, "libfreetype.lib" )
+#pragma comment( lib, "freetype2311MT.lib" )
 CFont2D::CFont2D(void)
 : WordNum(0)
 ,face(NULL)
@@ -44,7 +44,7 @@ bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int Fon
 		return false;
 	if (FT_New_Face( library, FontName, 0, &face )) 
 		return false;
-//	FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 96, 96);
+	//FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 64, 64);
 	FT_Set_Pixel_Sizes(face, min(FontSizeW,FontTexW/8), min(FontSizeH,FontTexH/8));
 	unsigned char* data;
 	data =new unsigned char[FontTexW*FontTexH*2];
