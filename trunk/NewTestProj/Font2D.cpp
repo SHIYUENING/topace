@@ -1,6 +1,6 @@
 #include "Font2D.h"
 
-#pragma comment( lib, "libfreetype.lib" )
+#pragma comment( lib, "freetype2311MT.lib" )
 CFont2D::CFont2D(void)
 : WordNum(0)
 ,face(NULL)

@@ -15,9 +15,12 @@
 #include <math.h>												// We'll Need Some Math
 #include "Draw.h"
 // ROACH
+#include "Font2D.h"
 #include "arb_multisample.h"
 bool domulti = true;
 bool doangle = true;
+bool domultiR = true;
+bool doangleR = true;
 // ENDROACH
 
 
@@ -30,6 +33,7 @@ GL_Window*	g_window;
 Keys*		g_keys;
 
 float angle= 0.0f;
+CFont2D * Font2D=NULL; 
 
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
 {
@@ -51,6 +55,18 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glShadeModel(GL_SMOOTH);									// Select Smooth Shading
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
+	if(!Font2D)
+	{
+		char szPath[MAX_PATH];
+		GetWindowsDirectory(szPath,sizeof(szPath));
+		char FontPath[MAX_PATH];
+		sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
+	//FontsTest.LoadFont(FontPath,16,16,128,128);
+	//FontsTest.inputTxt("qwerttyyuioop[]");
+		Font2D=new CFont2D;
+		Font2D->LoadFont(FontPath,32,32,256,256);
+		Font2D->inputTxt("a²â");
+	}
 
 	return TRUE;												// Return TRUE (Initialization Successful)
 }
@@ -79,7 +95,11 @@ void Update ()								// Perform Motion Updates Here
 		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	}
 }
-
+void ExchangeData (void)
+{
+	domultiR=domulti;
+	doangleR=doangle;
+}
 void Render (void)												// Draw The Scene
 {
 	// ROACH
@@ -91,6 +111,7 @@ void Render (void)												// Draw The Scene
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The View	
 
+	//glDisable( GL_TEXTURE_2D );
 	for(float i=-10;i<10;i++)
 		for(float j=-10;j<10;j++)
 		{
@@ -98,21 +119,27 @@ void Render (void)												// Draw The Scene
 			glTranslatef(i*2.0f,j*2.0f,-5.0f);
 			glRotatef(angle,0.f,0.f,1.f);
 				glBegin(GL_QUADS);
-				glColor3f(1.0f,0.0f,0.0f);glVertex3f(i,j,0.0f);
-				glColor3f(0.0f,1.0f,0.0f);glVertex3f(i + 2.0f,j,0.0f);
-				glColor3f(0.0f,0.0f,1.0f);glVertex3f(i + 2.0f,j + 2.0f,0.0f);
-				glColor3f(1.0f,1.0f,1.0f);glVertex3f(i,j + 2.0f,0.0f);
+				glColor3f(1.0f,0.0f,0.0f);glVertex3f(i,j,0.0f);glTexCoord2d(0,0);
+				glColor3f(0.0f,1.0f,0.0f);glVertex3f(i + 2.0f,j,0.0f);glTexCoord2d(1,0);
+				glColor3f(0.0f,0.0f,1.0f);glVertex3f(i + 2.0f,j + 2.0f,0.0f);glTexCoord2d(1,1);
+				glColor3f(1.0f,1.0f,1.0f);glVertex3f(i,j + 2.0f,0.0f);glTexCoord2d(0,1);
 				glEnd();
 			glPopMatrix();
 		}
 
+	
 	if(doangle)
 		angle+=0.05f;
 
-	glFlush ();													// Flush The GL Rendering Pipeline
+	//glFlush ();													// Flush The GL Rendering Pipeline
 
-	// ROACH
+	glEnable( GL_TEXTURE_2D );
+			
+	Font2D->DrawTXT(800,600,400,300,32,32,0);
 	if(domulti)
-		glDisable(GL_MULTISAMPLE_ARB);
+	glDisable(GL_MULTISAMPLE_ARB);
+	// ROACH
+	
+
 	// ENDROACH
 }

@@ -334,6 +334,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 		break;															// Break
 
+		case WM_ACTIVATE:
 		case WM_KEYUP:													// Update Keyboard Buffers For Keys Released
 			if ((wParam >= 0) && (wParam <= 255))						// Is Key (wParam) In A Valid Range?
 			{
