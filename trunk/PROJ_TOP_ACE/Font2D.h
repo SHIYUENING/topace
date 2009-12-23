@@ -41,6 +41,9 @@ public:
 	int FontTexH;
 	int OnefontW;
 	int OnefontH;
+	float OneCharWidth[MAX_FONT_LIST];
 	unsigned char* OnefontData;
+private:
+	int CharNum;
 };
 #endif

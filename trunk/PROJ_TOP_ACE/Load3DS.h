@@ -3,7 +3,7 @@
 #define _LOAD3DS_H
 #include <gl\glew.h>
 #include <lib3ds.h>
-#define NO_ERROR 0
+#define NO_ERROR_3DS 0
 #define ERROR_NOT_OPEN_FILE 1
 #define ERROR_NO_MESH 2
 struct tVBOIDs
