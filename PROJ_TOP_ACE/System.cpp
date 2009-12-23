@@ -6,13 +6,14 @@
 *                     2001                     *
 *                                              *
 ***********************************************/
-
+#include"Draw.h"
 #include <windows.h>													// Header File For The Windows Library
 #include <gl/glew.h>
 
 
 #include "System.h"														// Header File For The NeHeGL Basecode
 #include "IniFile.h"		
+#include"Draw.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
@@ -432,6 +433,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
 		{
 			SwapHdc=window.hDC;
+			InitDraw();
 			// At This Point We Should Have A Window That Is Setup To Render OpenGL
 			if (Initialize (&window, &keys) == FALSE)					// Call User Intialization
 			{
@@ -465,11 +467,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 						}
 						else											// If Window Is Visible
 						{
-							// Process Application Loop
-							//tickCount = GetTickCount ();				// Get The Tick Count
-								// Update The Counter
-							//window.lastTickCount = tickCount;			// Set Last Count To Current Count
-							Render ();									// Draw Our Scene
+							Draw ();									// Draw Our Scene
 
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
 						}
@@ -490,7 +488,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		}
 	}																	// While (isProgramLooping)
 	Deinitialize ();
-
+	DeinitDraw();
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 	return 0;
 }																		// End Of WinMain()

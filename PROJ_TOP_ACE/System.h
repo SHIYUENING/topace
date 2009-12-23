@@ -69,7 +69,6 @@ void Deinitialize (void);							// Performs All Your DeInitialization
 
 void Update ();					// Perform Motion Updates
 
-void Render (void);									// Perform All Your Scene Drawing
 
 void ExchangeData (void);
 void Swap(void);

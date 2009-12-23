@@ -14,6 +14,7 @@ CFont2D::CFont2D(void)
 ,OnefontData(NULL)
 ,OnefontW(DEFINE_FONT_W/8)
 ,OnefontH(DEFINE_FONT_W/8)
+, CharNum(0)
 {
 }
 
@@ -71,6 +72,7 @@ int CFont2D::GetCharHex(char H,char L)
 }
 void CFont2D::inputTxt(const char * Chars)
 {
+	CharNum=0;
 	if(!face)
 		return;
 	if(!library)
@@ -124,15 +126,25 @@ void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 	glBindTexture(GL_TEXTURE_2D, TexID);
 	for(unsigned int i=0;i<WordNum;i++)
 	{
+		int thisFontW=int(float(SizeW)*OneCharWidth[i]);
 		glLoadIdentity();
 		if(WordRightLimit>0)
 		{
-			if(WinPosX>(WordRightLimit-PosX-SizeW))
+			if(WinPosX>=(WordRightLimit-PosX-thisFontW))
 			{
 				WinPosX=0;
 				WinPosY=WinPosY-SizeH;
 			}
 		}
+		else
+		{
+			if(WinPosX>=WinW)
+			{
+				WinPosX=0;
+				WinPosY=WinPosY-SizeH;
+			}
+		}
+		WinPosX=WinPosX+thisFontW;
 
 		if(WordRightLimit>0)
 			glTranslated(WinPosX+PosX,WinPosY-PosY,0);
@@ -141,12 +153,12 @@ void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 		float FontTexPosX=(float(i%8))/8.0f;
 		float FontTexPosY=(float(i/8))/8.0f;
 			glBegin(GL_QUADS);
-				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+1.0f/8.0f);	glVertex2i(-SizeW,-SizeH);
-				glTexCoord2f(FontTexPosX+1.0f/8.0f,	FontTexPosY+1.0f/8.0f);	glVertex2i( 0,-SizeH);
-				glTexCoord2f(FontTexPosX+1.0f/8.0f,	FontTexPosY+0.0f);		glVertex2i( 0, 0);
-				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+0.0f);		glVertex2i(-SizeW, 0);
+				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+1.0f/8.0f);	glVertex2i(-thisFontW,-SizeH);
+				glTexCoord2f(FontTexPosX+OneCharWidth[i]/8.0f,	FontTexPosY+1.0f/8.0f);	glVertex2i( 0,-SizeH);
+				glTexCoord2f(FontTexPosX+OneCharWidth[i]/8.0f,	FontTexPosY+0.0f);		glVertex2i( 0, 0);
+				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+0.0f);		glVertex2i(-thisFontW, 0);
 			glEnd();
-		WinPosX=WinPosX+SizeW;
+		
 
 	}
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
@@ -174,6 +186,11 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
     FT_BitmapGlyph bitmap_glyph = (FT_BitmapGlyph)glyph;
 	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
 
+	if(bitmap.width*2>=OnefontW)
+		OneCharWidth[CharNum]=1.0f;
+	else
+		OneCharWidth[CharNum]=0.5f;
+	CharNum=CharNum+1;
 	for(int j=0; j <OnefontH;j++) {
 		for(int i=0; i < OnefontW; i++){
 			OnefontData[i+j*OnefontW] = (i>=bitmap.width || j<(OnefontH-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-OnefontH+bitmap.rows)];
