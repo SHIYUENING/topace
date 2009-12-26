@@ -45,8 +45,10 @@ bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int Fon
 		return false;
 	if (FT_New_Face( library, FontName, 0, &face )) 
 		return false;
-	//FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 64, 64);
-	FT_Set_Pixel_Sizes(face, min(FontSizeW,FontTexW/8), min(FontSizeH,FontTexH/8));
+	if(FontSizeW<32)
+		FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 66, 64);
+	else
+		FT_Set_Pixel_Sizes(face, min(FontSizeW,FontTexW/8), min(FontSizeH,FontTexH/8));
 	unsigned char* data;
 	data =new unsigned char[FontTexW*FontTexH*2];
 	ZeroMemory(data,FontTexW*FontTexH*2);
@@ -107,7 +109,7 @@ void CFont2D::inputTxt(const char * Chars)
 
 }
 
-void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit)
+void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit,int Pitch)
 {
 	if(WordNum<1)
 		return;
@@ -144,7 +146,7 @@ void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 				WinPosY=WinPosY-SizeH;
 			}
 		}
-		WinPosX=WinPosX+thisFontW;
+		WinPosX=WinPosX+thisFontW+Pitch;
 
 		if(WordRightLimit>0)
 			glTranslated(WinPosX+PosX,WinPosY-PosY,0);
@@ -179,6 +181,7 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
 	MultiByteToWideChar(CP_ACP,0,Chars,byteNum,&InputChar,1);
 	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, InputChar ), FT_LOAD_DEFAULT ))
 		return;
+	FT_Outline_Embolden( &(face->glyph->outline), 30 );
 	FT_Glyph glyph;
     if(FT_Get_Glyph( face->glyph, &glyph ))
 		return;
@@ -186,17 +189,27 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
     FT_BitmapGlyph bitmap_glyph = (FT_BitmapGlyph)glyph;
 	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
 
-	if(bitmap.width*2>=OnefontW)
+	if(bitmap.width>=OnefontW)
 		OneCharWidth[CharNum]=1.0f;
 	else
+		OneCharWidth[CharNum]=float(bitmap.width)/float(OnefontW);
+	if(Chars[0]==0x20)
 		OneCharWidth[CharNum]=0.5f;
+
 	CharNum=CharNum+1;
-	for(int j=0; j <OnefontH;j++) {
+	int Ymove=0;
+	if(Chars[0]>0)
+		Ymove=bitmap.rows/10;
+	for(int j=Ymove; j <OnefontH;j++) {
 		for(int i=0; i < OnefontW; i++){
-			OnefontData[i+j*OnefontW] = (i>=bitmap.width || j<(OnefontH-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-OnefontH+bitmap.rows)];
+			OnefontData[i+(j-Ymove)*OnefontW] = (i>=bitmap.width || j<(OnefontH-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-OnefontH+bitmap.rows)];
 		}
 	}
-
+	for(int j=OnefontH-Ymove; j <OnefontH;j++) {
+		for(int i=0; i < OnefontW; i++){
+			OnefontData[i+(j)*OnefontW] = 0;
+		}
+	}
 	glBindTexture(GL_TEXTURE_2D, TexID);
 	glTexSubImage2D(
 		GL_TEXTURE_2D,

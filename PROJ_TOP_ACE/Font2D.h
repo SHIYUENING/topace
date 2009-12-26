@@ -26,7 +26,10 @@ public:
 	~CFont2D(void);
 	bool LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int FontW=DEFINE_FONT_W,int FontH=DEFINE_FONT_H,int CHARSET=GB2312_CHARSET);
 	void inputTxt(const char * Chars);
-	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit);
+	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit,int Pitch=2);
+
+private:
+	int CharNum;
 	unsigned int WordNum;
 	int GetCharHex(char H,char L);
 	int next_p2 ( int a );
@@ -43,7 +46,5 @@ public:
 	int OnefontH;
 	float OneCharWidth[MAX_FONT_LIST];
 	unsigned char* OnefontData;
-private:
-	int CharNum;
 };
 #endif
