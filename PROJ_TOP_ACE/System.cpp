@@ -434,6 +434,14 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		{
 			SwapHdc=window.hDC;
 			InitDraw();
+			if(GameSet.SYNC)
+			{
+				typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)( int );
+				PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT = 0;
+				wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)
+				wglGetProcAddress("wglSwapIntervalEXT");
+				wglSwapIntervalEXT(1);
+			}
 			// At This Point We Should Have A Window That Is Setup To Render OpenGL
 			if (Initialize (&window, &keys) == FALSE)					// Call User Intialization
 			{
