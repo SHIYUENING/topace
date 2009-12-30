@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// 拞崙岅 (P.R.C.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -54,8 +54,8 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
     "LANGUAGE 4, 2\r\n"
     "#pragma code_page(936)\r\n"
-    "#include ""res\\TOP_ACE_SET.rc2""  // 非 Microsoft Visual C++ 编辑的资源\r\n"
-    "#include ""l.CHS\\afxres.rc""          // 标准组件\r\n"
+    "#include ""res\\TOP_ACE_SET.rc2""  // ?? Microsoft Visual C++ ?狆???????\r\n"
+    "#include ""l.CHS\\afxres.rc""          // ????鮠?\r\n"
     "#endif\r\n"
     "\0"
 END
@@ -126,11 +126,11 @@ BEGIN
     DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
 END
 
-IDD_TOP_ACE_SET_FORM DIALOGEX 0, 0, 198, 329
+IDD_TOP_ACE_SET_FORM DIALOGEX 0, 0, 201, 329
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    CONTROL         "",IDC_TAB1,"SysTabControl32",0x0,7,7,184,292
+    CONTROL         "",IDC_TAB1,"SysTabControl32",0x0,7,7,187,292
     PUSHBUTTON      "保存设置",IDC_BUTTON1,70,307,50,14
     PUSHBUTTON      "运行游戏",IDC_BUTTON2,7,307,50,14
 END
@@ -141,18 +141,17 @@ FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     GROUPBOX        "分辨率",IDC_STATIC,7,7,193,55
     COMBOBOX        IDC_COMBO1,57,16,128,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "预设",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,15,18,34,10
-    CONTROL         "自定义",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,15,42,37,10
+    CONTROL         "全屏",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,15,18,34,10
+    CONTROL         "窗口",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,15,42,37,10
     LTEXT           "宽",IDC_STATIC,55,42,9,8
     LTEXT           "高",IDC_STATIC,99,41,9,8
     EDITTEXT        IDC_EDIT1,65,38,31,14,ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_EDIT2,110,38,31,14,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "全屏",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,67,32,10
-    CONTROL         "垂直同步",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,88,48,10
-    LTEXT           "反锯齿",IDC_STATIC,7,111,25,8
-    COMBOBOX        IDC_COMBO2,37,107,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "垂直同步",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,64,48,10
+    LTEXT           "反锯齿",IDC_STATIC,7,80,25,8
+    COMBOBOX        IDC_COMBO2,37,76,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "色深",IDC_STATIC,143,42,17,8
-    COMBOBOX        IDC_COMBO3,159,38,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO3,161,38,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
 END
 
 IDD_DIALOG_KEYSET DIALOGEX 0, 0, 241, 311
@@ -317,7 +316,7 @@ BEGIN
     IDD_TOP_ACE_SET_FORM, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 191
+        RIGHTMARGIN, 194
         TOPMARGIN, 7
         BOTTOMMARGIN, 321
     END
@@ -501,7 +500,7 @@ BEGIN
     AFX_IDS_SCTASKLIST      "激活任务列表"
 END
 
-#endif    // Chinese (P.R.C.) resources
+#endif    // 拞崙岅 (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -519,8 +518,8 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE 4, 2
 #pragma code_page(936)
-#include "res\TOP_ACE_SET.rc2"  // 非 Microsoft Visual C++ 编辑的资源
-#include "l.CHS\afxres.rc"          // 标准组件
+#include "res\TOP_ACE_SET.rc2"  // 旕 Microsoft Visual C++ ??揑?尮
+#include "l.CHS\afxres.rc"          // ?弝?審
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
