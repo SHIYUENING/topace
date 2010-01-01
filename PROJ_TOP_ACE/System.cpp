@@ -542,9 +542,9 @@ void LockFPS (void)
 	//QueryPerformanceCounter(&t1);//测前跳动次数
 
 	double SleepTime=(oneframetimelimit-oneframetime)*1000.0;
-	while(SleepTime>2.0)
+	while(SleepTime>=1.5)
 	{
-		Sleep(1);
+		Sleep(max(int(SleepTime-1.0),0));
 		QueryPerformanceFrequency(&feq);//每秒跳动次数
 		QueryPerformanceCounter(&t2);//测后跳动次数
 		if (t2.QuadPart >= t1.QuadPart)
