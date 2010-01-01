@@ -70,6 +70,7 @@ void Deinitialize (void);							// Performs All Your DeInitialization
 
 void Update ();					// Perform Motion Updates
 HANDLE InitRenderThread();
+void ExitRenderThread();
 unsigned int __stdcall RenderThread(LPVOID lpvoid);
 void ExchangeData (void);
 void Swap(void);
