@@ -37,6 +37,22 @@ int (__stdcall *hglSwapBuffers)(void *)=NULL;
 HMODULE gl_dll=false;
 HDC SwapHdc; 
 extern tGameSet GameSet;
+LARGE_INTEGER t1,t2,feq;
+double oneframetimelimit=1.0/60.0;
+double oneframetime=0.0;
+void Delay(__int64 Us)
+{
+    LARGE_INTEGER CurrTicks, TicksCount; 
+
+    QueryPerformanceFrequency(&TicksCount);
+    QueryPerformanceCounter(&CurrTicks); 
+
+    TicksCount.QuadPart = TicksCount.QuadPart * Us / 1000000i64;
+    TicksCount.QuadPart += CurrTicks.QuadPart; 
+
+    while(CurrTicks.QuadPart<TicksCount.QuadPart)
+        QueryPerformanceCounter(&CurrTicks);
+}
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -451,6 +467,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
+				QueryPerformanceCounter(&t1);
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
 					// Success Creating Window.  Check For Window Messages
@@ -479,6 +496,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
 						}
+						LockFPS();
 					}
 				}														// Loop While isMessagePumpActive == TRUE
 			}															// If (Initialize (...
@@ -500,3 +518,51 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 	return 0;
 }																		// End Of WinMain()
+HANDLE InitRenderThread()
+{
+	HANDLE ha = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,0,0); 
+	return ha;
+}
+unsigned int __stdcall RenderThread(LPVOID lpvoid)
+{
+	return 0;
+}
+void LockFPS (void)
+{
+	double waitTime=0.0;
+	QueryPerformanceFrequency(&feq);//每秒跳动次数
+	QueryPerformanceCounter(&t2);//测后跳动次数
+    if (t2.QuadPart >= t1.QuadPart)
+	{
+	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+		
+    }
+	else
+		return;
+	//QueryPerformanceCounter(&t1);//测前跳动次数
+
+	double SleepTime=(oneframetimelimit-oneframetime)*1000.0;
+	while(SleepTime>2.0)
+	{
+		Sleep(1);
+		QueryPerformanceFrequency(&feq);//每秒跳动次数
+		QueryPerformanceCounter(&t2);//测后跳动次数
+		if (t2.QuadPart >= t1.QuadPart)
+			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+		else
+			return;
+		SleepTime=(oneframetimelimit-waitTime)*1000.0;
+	}
+	QueryPerformanceFrequency(&feq);//每秒跳动次数
+	QueryPerformanceCounter(&t2);//测后跳动次数
+    if (t2.QuadPart >= t1.QuadPart)
+	{
+	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+		
+    }
+	else
+		return;
+
+	Delay(__int64((oneframetimelimit-waitTime)*1000000));
+	QueryPerformanceCounter(&t1);//测前跳动次数
+}

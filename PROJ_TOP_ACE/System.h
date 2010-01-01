@@ -30,6 +30,7 @@
 
 #include <windows.h>								// Header File For Windows
 
+#include <process.h>
 typedef struct {									// Structure For Keyboard Stuff
 	BOOL keyDown [256];								// Holds TRUE / FALSE For Each Key
 } Keys;												// Keys
@@ -68,8 +69,9 @@ BOOL Initialize (GL_Window* window, Keys* keys);	// Performs All Your Initializa
 void Deinitialize (void);							// Performs All Your DeInitialization
 
 void Update ();					// Perform Motion Updates
-
-
+HANDLE InitRenderThread();
+unsigned int __stdcall RenderThread(LPVOID lpvoid);
 void ExchangeData (void);
 void Swap(void);
+void LockFPS (void);
 #endif												// GL_FRAMEWORK__INCLUDED
