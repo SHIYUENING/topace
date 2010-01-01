@@ -40,6 +40,10 @@ extern tGameSet GameSet;
 LARGE_INTEGER t1,t2,feq;
 double oneframetimelimit=1.0/60.0;
 double oneframetime=0.0;
+bool isDraw=true;
+bool RenderThreadisSuspend=false;
+HANDLE RenderThreadHANDLE=NULL;
+extern float angleR;
 void Delay(__int64 Us)
 {
     LARGE_INTEGER CurrTicks, TicksCount; 
@@ -468,6 +472,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				QueryPerformanceCounter(&t1);
+				InitRenderThread();
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
 					// Success Creating Window.  Check For Window Messages
@@ -485,6 +490,12 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 					}
 					else												// If There Are No Messages
 					{
+						//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
+						if(RenderThreadisSuspend)
+						{
+							RenderThreadisSuspend=false;
+							ResumeThread(RenderThreadHANDLE);
+						}
 						Update ();
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{
@@ -499,6 +510,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 						LockFPS();
 					}
 				}														// Loop While isMessagePumpActive == TRUE
+				ExitRenderThread();
 			}															// If (Initialize (...
 
 			// Application Is Finished
@@ -520,11 +532,27 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 }																		// End Of WinMain()
 HANDLE InitRenderThread()
 {
-	HANDLE ha = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,0,0); 
-	return ha;
+	isDraw=true;
+	RenderThreadHANDLE = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,0,0); 
+	return RenderThreadHANDLE;
+}
+void ExitRenderThread()
+{
+	isDraw=false;
+	if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
+		ResumeThread(RenderThreadHANDLE);
+	_endthreadex((int)RenderThreadHANDLE);
+	
 }
 unsigned int __stdcall RenderThread(LPVOID lpvoid)
 {
+	while(isDraw)
+	{
+
+		angleR=angleR+0.05f;
+		RenderThreadisSuspend=true;
+		SuspendThread(RenderThreadHANDLE);
+	}
 	return 0;
 }
 void LockFPS (void)
