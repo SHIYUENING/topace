@@ -41,9 +41,11 @@ LARGE_INTEGER t1,t2,feq;
 double oneframetimelimit=1.0/60.0;
 double oneframetime=0.0;
 bool isDraw=true;
+bool isRun=true;
 bool RenderThreadisSuspend=false;
 HANDLE RenderThreadHANDLE=NULL;
 extern float angleR;
+HINSTANCE hInst;
 void Delay(__int64 Us)
 {
     LARGE_INTEGER CurrTicks, TicksCount; 
@@ -397,6 +399,46 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	hInst=hInstance;
+	InitRenderThread();
+	QueryPerformanceCounter(&t1);
+	while(isRun)
+	{
+		angleR=angleR+0.05f;
+		if(RenderThreadisSuspend)
+		{
+			RenderThreadisSuspend=false;
+			ResumeThread(RenderThreadHANDLE);
+		}
+		LockFPS();
+	}
+	return 0;
+}																		// End Of WinMain()
+HANDLE InitRenderThread()
+{
+	isDraw=true;
+	RenderThreadHANDLE = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,0,0); 
+	SetPriorityClass(RenderThreadHANDLE,THREAD_PRIORITY_TIME_CRITICAL);
+	return RenderThreadHANDLE;
+}
+void ExitRenderThread()
+{
+	isDraw=false;
+	//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
+	//	ResumeThread(RenderThreadHANDLE);
+	//_endthreadex((int)RenderThreadHANDLE);
+	
+}
+unsigned int __stdcall RenderThread(LPVOID lpvoid)
+{
+/*	while(isDraw)
+	{
+
+		//angleR=angleR+0.05f;
+		RenderThreadisSuspend=true;
+		SuspendThread(RenderThreadHANDLE);
+	}*/
+
 	Application			application;									// Application Structure
 	GL_Window			window;											// Window Structure
 	Keys				keys;											// Key Structure
@@ -406,7 +448,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	loadIniFile();
 	// Fill Out Application Data
 	application.className = "TOP_ACE";									// Application Class Name
-	application.hInstance = hInstance;									// Application Instance
+	application.hInstance = hInst;									// Application Instance
 
 	// Fill Out Window
 	ZeroMemory (&window, sizeof (GL_Window));							// Make Sure Memory Is Zeroed
@@ -420,14 +462,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 	ZeroMemory (&keys, sizeof (Keys));									// Zero keys Structure
 
-/*
-	// Ask The User If They Want To Start In FullScreen Mode?
-	if (MessageBox (HWND_DESKTOP, "Would You Like To Run In Fullscreen Mode?", "Start FullScreen?", MB_YESNO | MB_ICONQUESTION) == IDNO)
-	{
-		window.init.isFullScreen = FALSE;								// If Not, Run In Windowed Mode
-	}
-*/
-	// Register A Class For Our Window To Use
+
 	if (RegisterWindowClass (&application) == FALSE)					// Did Registering A Class Fail?
 	{
 		// Failure
@@ -471,8 +506,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
-				QueryPerformanceCounter(&t1);
-				InitRenderThread();
+				
+				
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
 					// Success Creating Window.  Check For Window Messages
@@ -491,11 +526,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 					else												// If There Are No Messages
 					{
 						//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
-						if(RenderThreadisSuspend)
-						{
-							RenderThreadisSuspend=false;
-							ResumeThread(RenderThreadHANDLE);
-						}
+
 						Update ();
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{
@@ -507,10 +538,12 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
 						}
-						LockFPS();
+						
 					}
+					//RenderThreadisSuspend=true;
+					//SuspendThread(RenderThreadHANDLE);
 				}														// Loop While isMessagePumpActive == TRUE
-				ExitRenderThread();
+				
 			}															// If (Initialize (...
 
 			// Application Is Finished
@@ -528,31 +561,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	Deinitialize ();
 	DeinitDraw();
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
-	return 0;
-}																		// End Of WinMain()
-HANDLE InitRenderThread()
-{
-	isDraw=true;
-	RenderThreadHANDLE = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,0,0); 
-	return RenderThreadHANDLE;
-}
-void ExitRenderThread()
-{
-	isDraw=false;
-	if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
-		ResumeThread(RenderThreadHANDLE);
-	_endthreadex((int)RenderThreadHANDLE);
-	
-}
-unsigned int __stdcall RenderThread(LPVOID lpvoid)
-{
-	while(isDraw)
-	{
 
-		angleR=angleR+0.05f;
-		RenderThreadisSuspend=true;
-		SuspendThread(RenderThreadHANDLE);
-	}
+
+	isRun=false;
 	return 0;
 }
 void LockFPS (void)
