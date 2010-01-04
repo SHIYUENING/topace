@@ -548,6 +548,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 
 			// Application Is Finished
 														// User Defined DeInitialization
+			DeinitDraw();
 
 			DestroyWindowGL (&window);									// Destroy The Active Window
 		}
@@ -559,7 +560,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		}
 	}																	// While (isProgramLooping)
 	Deinitialize ();
-	DeinitDraw();
+	
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 
 
@@ -569,39 +570,39 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 void LockFPS (void)
 {
 	double waitTime=0.0;
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
-	QueryPerformanceCounter(&t2);//测后跳动次数
+	QueryPerformanceFrequency(&feq);
+	QueryPerformanceCounter(&t2);
     if (t2.QuadPart >= t1.QuadPart)
 	{
-	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
 		
     }
 	else
 		return;
-	//QueryPerformanceCounter(&t1);//测前跳动次数
+	//QueryPerformanceCounter(&t1);
 
 	double SleepTime=(oneframetimelimit-oneframetime)*1000.0;
 	while(SleepTime>=1.5)
 	{
 		Sleep(max(int(SleepTime-1.0),0));
-		QueryPerformanceFrequency(&feq);//每秒跳动次数
-		QueryPerformanceCounter(&t2);//测后跳动次数
+		QueryPerformanceFrequency(&feq);
+		QueryPerformanceCounter(&t2);
 		if (t2.QuadPart >= t1.QuadPart)
-			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
 		else
 			return;
 		SleepTime=(oneframetimelimit-waitTime)*1000.0;
 	}
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
-	QueryPerformanceCounter(&t2);//测后跳动次数
+	QueryPerformanceFrequency(&feq);
+	QueryPerformanceCounter(&t2);
     if (t2.QuadPart >= t1.QuadPart)
 	{
-	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);//时间差秒
+	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
 		
     }
 	else
 		return;
 
 	Delay(__int64((oneframetimelimit-waitTime)*1000000));
-	QueryPerformanceCounter(&t1);//测前跳动次数
+	QueryPerformanceCounter(&t1);
 }
