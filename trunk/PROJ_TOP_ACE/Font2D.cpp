@@ -35,6 +35,7 @@ CFont2D::~CFont2D(void)
 
 bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int FontW,int FontH,int CHARSET)
 {
+	glEnable( GL_TEXTURE_2D );
 	FontTexW=next_p2(FontW);
 	FontTexH=next_p2(FontH);
 	OnefontW=FontTexW/8;
@@ -115,6 +116,7 @@ void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 		return;
 	int WinPosX=0;
 	int WinPosY=WinH;
+	glEnable( GL_TEXTURE_2D );
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
@@ -200,6 +202,8 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
 	int Ymove=0;
 	if(Chars[0]>0)
 		Ymove=bitmap.rows/10;
+	if(Chars[0]=='-')
+		Ymove=OnefontH/2-bitmap.rows*2;
 	for(int j=Ymove; j <OnefontH;j++) {
 		for(int i=0; i < OnefontW; i++){
 			OnefontData[i+(j-Ymove)*OnefontW] = (i>=bitmap.width || j<(OnefontH-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-OnefontH+bitmap.rows)];
