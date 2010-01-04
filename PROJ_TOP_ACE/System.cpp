@@ -405,11 +405,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	while(isRun)
 	{
 		angleR=angleR+0.05f;
-		if(RenderThreadisSuspend)
+		/*if(RenderThreadisSuspend)
 		{
 			RenderThreadisSuspend=false;
 			ResumeThread(RenderThreadHANDLE);
-		}
+		}*/
 		LockFPS();
 	}
 	return 0;
@@ -536,6 +536,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 						{
 							Draw ();									// Draw Our Scene
 
+							//Sleep(30+rand()%15);
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
 						}
 						
