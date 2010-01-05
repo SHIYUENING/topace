@@ -26,6 +26,7 @@ public:
 	~CFont2D(void);
 	bool LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int FontW=DEFINE_FONT_W,int FontH=DEFINE_FONT_H,int CHARSET=GB2312_CHARSET);
 	void inputTxt(const char * Chars);
+	void inputTxt(const wchar_t * Chars);
 	void DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit,int Pitch=2);
 
 private:
@@ -38,6 +39,7 @@ private:
 	GLuint TexID;
 	int FontCharSet;
 	void CharToImage(const char * Chars,int byteNum);
+	void CharToImage(const wchar_t * Chars);
 	int FontPosX;
 	int FontPosY;
 	int FontTexW;
