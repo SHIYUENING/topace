@@ -103,13 +103,42 @@ void CFont2D::inputTxt(const char * Chars)
 				CharToImage(&Chars[i-1],2);
 			}
 		}
+	}
+}
+void CFont2D::inputTxt(const wchar_t * Chars)
+{
+	CharNum=0;
+	if(!face)
+		return;
+	if(!library)
+		return;
 
-	
+	WordNum=0;
+	WordNum=wcslen(Chars);
+	if(WordNum<1)
+		return;
+	if(WordNum>MAX_FONT_LIST)
+		WordNum=MAX_FONT_LIST;
+	FontPosX=0;
+	FontPosY=0;
+	for(unsigned int i=0;i<WordNum;i++)
+	{
+//		if(Chars[i]>0)
+//		{
+			CharToImage(&Chars[i]);
+//		}
+//		else
+//		{
+//			i++;
+//			if(i<WordNum)
+//			{
+//				CharToImage(&Chars[i-1],2);
+//			}
+//		}
 	}
 
 
 }
-
 void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int SizeH,int WordRightLimit,int Pitch)
 {
 	if(WordNum<1)
@@ -201,9 +230,11 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
 	CharNum=CharNum+1;
 	int Ymove=0;
 	if(Chars[0]>0)
-		Ymove=bitmap.rows/10;
+		Ymove=bitmap.rows/6;
 	if(Chars[0]=='-')
 		Ymove=OnefontH/2-bitmap.rows*2;
+	if(Chars[0]=='.')
+		Ymove=bitmap.rows/2;
 	for(int j=Ymove; j <OnefontH;j++) {
 		for(int i=0; i < OnefontW; i++){
 			OnefontData[i+(j-Ymove)*OnefontW] = (i>=bitmap.width || j<(OnefontH-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-OnefontH+bitmap.rows)];
@@ -238,3 +269,66 @@ void CFont2D::CharToImage(const char * Chars,int byteNum)
 
 }
 
+void CFont2D::CharToImage(const wchar_t * Chars)
+{
+	//	wchar_t InputChar;
+//	MultiByteToWideChar(CP_ACP,0,Chars,byteNum,&InputChar,1);
+	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, Chars[0] ), FT_LOAD_DEFAULT ))
+		return;
+	FT_Outline_Embolden( &(face->glyph->outline), 30 );
+	FT_Glyph glyph;
+    if(FT_Get_Glyph( face->glyph, &glyph ))
+		return;
+	FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 );
+    FT_BitmapGlyph bitmap_glyph = (FT_BitmapGlyph)glyph;
+	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
+
+	if(bitmap.width>=OnefontW)
+		OneCharWidth[CharNum]=1.0f;
+	else
+		OneCharWidth[CharNum]=float(bitmap.width)/float(OnefontW);
+	if(Chars[0]==L' ')
+		OneCharWidth[CharNum]=0.5f;
+
+	CharNum=CharNum+1;
+
+	int Ymove=0;
+	if(Chars[0]<0x80)
+		Ymove=bitmap.rows/6;
+	if(Chars[0]==L'-')
+		Ymove=OnefontH/2-bitmap.rows*2;
+	if(Chars[0]==L'.')
+		Ymove=bitmap.rows/2;
+
+	for(int j=Ymove; j <OnefontH;j++) {
+		for(int i=0; i < OnefontW; i++){
+			OnefontData[i+(j-Ymove)*OnefontW] = (i>=bitmap.width || j<(OnefontH-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-OnefontH+bitmap.rows)];
+		}
+	}
+	for(int j=OnefontH-Ymove; j <OnefontH;j++) {
+		for(int i=0; i < OnefontW; i++){
+			OnefontData[i+(j)*OnefontW] = 0;
+		}
+	}
+	glBindTexture(GL_TEXTURE_2D, TexID);
+	glTexSubImage2D(
+		GL_TEXTURE_2D,
+		0,
+		FontPosX,
+		FontPosY,
+		OnefontW,
+		OnefontH,
+		GL_ALPHA,
+		GL_UNSIGNED_BYTE,
+		OnefontData);
+
+	FontPosX=FontPosX+OnefontW;
+	if(FontPosX>=FontTexW)
+	{
+		FontPosX=0;
+		FontPosY=FontPosY+OnefontH;
+		if(FontPosY>=FontTexH)
+			FontPosY=FontTexH;
+	}
+	FT_Done_Glyph(glyph);
+}

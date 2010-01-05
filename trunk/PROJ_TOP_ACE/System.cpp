@@ -46,6 +46,8 @@ bool RenderThreadisSuspend=false;
 HANDLE RenderThreadHANDLE=NULL;
 extern float angleR;
 HINSTANCE hInst;
+int WindowWidth=800;
+int WindowHeight=600;
 void Delay(__int64 Us)
 {
     LARGE_INTEGER CurrTicks, TicksCount; 
@@ -72,6 +74,8 @@ void ToggleFullscreen (GL_Window* window)								// Toggle Fullscreen/Windowed
 
 void ReshapeGL (int width, int height)									// Reshape The Window When It's Moved Or Resized
 {
+	WindowWidth=width;
+	WindowHeight=height;
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
@@ -153,7 +157,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 								   window->init.application->className,	// Class Name
 								   window->init.title,					// Window Title
 								   windowStyle,							// Window Style
-								   0, 0,								// Window X,Y Position
+								   (GetSystemMetrics(SM_CXFULLSCREEN)-WindowWidth)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-WindowHeight)/2,								// Window X,Y Position
 								   windowRect.right - windowRect.left,	// Window Width
 								   windowRect.bottom - windowRect.top,	// Window Height
 								   HWND_DESKTOP,						// Desktop Is Window's Parent
@@ -459,6 +463,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	window.init.height			= GameSet.winH;									// Window Height
 	window.init.bitsPerPixel	= GameSet.bits;									// Bits Per Pixel
 	window.init.isFullScreen	= GameSet.isFullScreem;									// Fullscreen? (Set To TRUE)
+
+	WindowWidth=GameSet.winW;
+	WindowHeight=GameSet.winH;
 
 	ZeroMemory (&keys, sizeof (Keys));									// Zero keys Structure
 
