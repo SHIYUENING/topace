@@ -522,7 +522,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				
-				LockFPSRender.Init(60);
+				LockFPSRender.Init(GameSet.FPS);
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
 					// Success Creating Window.  Check For Window Messages
@@ -553,7 +553,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 
 							//Sleep(30+rand()%15);
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
-							LockFPSRender.LockFPS();
+							if(GameSet.FPS>0)
+								LockFPSRender.LockFPS();
 							
 						}
 						
