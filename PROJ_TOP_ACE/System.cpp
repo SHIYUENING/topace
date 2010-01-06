@@ -9,7 +9,7 @@
 #include"Draw.h"
 #include <windows.h>													// Header File For The Windows Library
 #include <gl/glew.h>
-
+#include "LockFPS.h"
 
 #include "System.h"														// Header File For The NeHeGL Basecode
 #include "IniFile.h"		
@@ -37,7 +37,7 @@ int (__stdcall *hglSwapBuffers)(void *)=NULL;
 HMODULE gl_dll=false;
 HDC SwapHdc; 
 extern tGameSet GameSet;
-LARGE_INTEGER t1,t2,feq;
+//LARGE_INTEGER t1,t2,feq;
 double oneframetimelimit=1.0/60.0;
 double oneframetime=0.0;
 bool isDraw=true;
@@ -48,6 +48,9 @@ extern float angleR;
 HINSTANCE hInst;
 int WindowWidth=800;
 int WindowHeight=600;
+
+CLockFPS LockFPSSYS,LockFPSRender;
+/*
 void Delay(__int64 Us)
 {
     LARGE_INTEGER CurrTicks, TicksCount; 
@@ -61,6 +64,7 @@ void Delay(__int64 Us)
     while(CurrTicks.QuadPart<TicksCount.QuadPart)
         QueryPerformanceCounter(&CurrTicks);
 }
+*/
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -405,7 +409,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 {
 	hInst=hInstance;
 	InitRenderThread();
-	QueryPerformanceCounter(&t1);
+	//QueryPerformanceFrequency(&feq);
+	//QueryPerformanceCounter(&t1);
+	LockFPSSYS.Init(60);
 	while(isRun)
 	{
 		angleR=angleR+0.05f;
@@ -414,15 +420,17 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 			RenderThreadisSuspend=false;
 			ResumeThread(RenderThreadHANDLE);
 		}*/
-		LockFPS();
+		//LockFPS();
+		LockFPSSYS.LockFPS();
 	}
 	return 0;
 }																		// End Of WinMain()
 HANDLE InitRenderThread()
 {
 	isDraw=true;
-	RenderThreadHANDLE = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,0,0); 
-	SetPriorityClass(RenderThreadHANDLE,THREAD_PRIORITY_TIME_CRITICAL);
+	RenderThreadHANDLE = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,CREATE_SUSPENDED,0); 
+	//SetPriorityClass(RenderThreadHANDLE,THREAD_PRIORITY_TIME_CRITICAL);
+	ResumeThread(RenderThreadHANDLE);
 	return RenderThreadHANDLE;
 }
 void ExitRenderThread()
@@ -514,7 +522,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				
-				
+				LockFPSRender.Init(60);
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
 				{
 					// Success Creating Window.  Check For Window Messages
@@ -545,6 +553,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 
 							//Sleep(30+rand()%15);
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
+							LockFPSRender.LockFPS();
+							
 						}
 						
 					}
@@ -575,6 +585,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	isRun=false;
 	return 0;
 }
+/*
 void LockFPS (void)
 {
 	double waitTime=0.0;
@@ -614,3 +625,4 @@ void LockFPS (void)
 	Delay(__int64((oneframetimelimit-waitTime)*1000000));
 	QueryPerformanceCounter(&t1);
 }
+*/
