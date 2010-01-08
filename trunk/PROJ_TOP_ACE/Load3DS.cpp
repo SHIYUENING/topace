@@ -45,7 +45,7 @@ bool CLoad3DS::Loadfile(char * filename)
 	}
 	if(VBOSupported)
 	{
-		VBOIDs = new tVBOIDs[TotelMeshs];
+		VBOIDs = new tModelNodes[TotelMeshs];
 		for(int i=0;i<TotelMeshs;i++)
 		{
 			VBOIDs[i].VerticeID=0;
