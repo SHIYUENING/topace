@@ -6,7 +6,7 @@
 #define NO_ERROR_3DS 0
 #define ERROR_NOT_OPEN_FILE 1
 #define ERROR_NO_MESH 2
-struct tVBOIDs
+struct tModelNodes
 {
 	unsigned int VerticeID;
 	unsigned int ColorID;
@@ -31,7 +31,7 @@ public:
 	Lib3dsFile *Model3ds;
 	int TotelVertices;
 	int TotelMeshs;
-	tVBOIDs * VBOIDs;
+	tModelNodes * VBOIDs;
 	void Render(float current_frame=0.0f);
 	void RenderNode(Lib3dsNode *Node);
 	bool LoadNode(Lib3dsNode *Node);
