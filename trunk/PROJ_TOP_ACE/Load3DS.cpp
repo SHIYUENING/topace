@@ -20,6 +20,8 @@ CLoad3DS::~CLoad3DS(void)
 {
 	Del_RAM();
 	Del_VRAM();
+	delete[] VBOIDs;
+	VBOIDs=NULL;
 }
 
 bool CLoad3DS::Loadfile(char * filename)
@@ -91,6 +93,8 @@ void CLoad3DS::Del_RAM(void)
 
 void CLoad3DS::Del_VRAM(void)
 {
+	if((!VBOIDs)||(!isVRAM))
+		return;
 	for(int i=0;i<TotelMeshs;i++)
 	{
 		if(VBOIDs[i].VerticeID)
@@ -104,8 +108,7 @@ void CLoad3DS::Del_VRAM(void)
 		if(VBOIDs[i].TangentID)
 			glDeleteBuffersARB(1,&VBOIDs[i].TangentID);
 	}
-	delete[] VBOIDs;
-	VBOIDs=NULL;
+
 	isVRAM=false;
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
