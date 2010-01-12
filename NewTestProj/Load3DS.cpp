@@ -117,12 +117,15 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 
 	if(!MeshData)
 		return ;
+
+	Lib3dsNode      *pNode; 
+	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){  
+		glPushMatrix();
+        RenderNode(pNode); 
+		glPopMatrix();
+    } 
 	glMultMatrixf(&Node->matrix[0][0]);  
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
-	Lib3dsNode      *pNode; 
-	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){   
-        RenderNode(pNode);   
-    } 
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return ;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
