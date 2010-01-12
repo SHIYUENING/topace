@@ -3,5 +3,6 @@
 
 void InitDraw();
 void DeinitDraw();
+void ClearVRAM();
 void Draw();
 #endif

@@ -157,11 +157,18 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 	}
 
 	// Create The OpenGL Window
+	int CWX=(GetSystemMetrics(SM_CXFULLSCREEN)-WindowWidth)/2;
+	int CWY=(GetSystemMetrics(SM_CYFULLSCREEN)-WindowHeight)/2;
+	if(GameSet.isFullScreem)
+	{
+		CWX=0;
+		CWY=0;
+	}
 	window->hWnd = CreateWindowEx (windowExtendedStyle,					// Extended Style
 								   window->init.application->className,	// Class Name
 								   window->init.title,					// Window Title
 								   windowStyle,							// Window Style
-								   (GetSystemMetrics(SM_CXFULLSCREEN)-WindowWidth)/2,(GetSystemMetrics(SM_CYFULLSCREEN)-WindowHeight)/2,								// Window X,Y Position
+								   CWX,CWY,								// Window X,Y Position
 								   windowRect.right - windowRect.left,	// Window Width
 								   windowRect.bottom - windowRect.top,	// Window Height
 								   HWND_DESKTOP,						// Desktop Is Window's Parent
@@ -375,7 +382,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;															// Break
 
 		case WM_TOGGLEFULLSCREEN:										// Toggle FullScreen Mode On/Off
-			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
+			GameSet.isFullScreem=g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessage (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 	}
@@ -503,7 +510,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
 		{
 			SwapHdc=window.hDC;
-			InitDraw();
+			
 			if(GameSet.SYNC)
 			{
 				typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)( int );
@@ -521,6 +528,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
+				InitDraw();
 				
 				LockFPSRender.Init(GameSet.FPS);
 				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
@@ -562,12 +570,13 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					//RenderThreadisSuspend=true;
 					//SuspendThread(RenderThreadHANDLE);
 				}														// Loop While isMessagePumpActive == TRUE
+				ClearVRAM();
 				
 			}															// If (Initialize (...
 
 			// Application Is Finished
 														// User Defined DeInitialization
-			DeinitDraw();
+			
 
 			DestroyWindowGL (&window);									// Destroy The Active Window
 		}
@@ -578,6 +587,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			g_isProgramLooping = FALSE;									// Terminate The Loop
 		}
 	}																	// While (isProgramLooping)
+	DeinitDraw();
 	Deinitialize ();
 	
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
