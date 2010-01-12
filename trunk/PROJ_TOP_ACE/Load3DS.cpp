@@ -86,7 +86,8 @@ bool CLoad3DS::LoadToVRAM(void)
 
 void CLoad3DS::Del_RAM(void)
 {
-	lib3ds_file_free(Model3ds);
+	if(Model3ds)
+		lib3ds_file_free(Model3ds);
 	Model3ds=NULL;
 	isRAM=false;
 }
@@ -120,12 +121,15 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 
 	if(!MeshData)
 		return ;
+
+	Lib3dsNode      *pNode; 
+	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){  
+		glPushMatrix();
+        RenderNode(pNode);   
+		glPopMatrix();
+    } 
 	glMultMatrixf(&Node->matrix[0][0]);  
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
-	Lib3dsNode      *pNode; 
-	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){   
-        RenderNode(pNode);   
-    } 
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return ;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
@@ -188,6 +192,8 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 }
 void CLoad3DS::Render(float current_frame)
 {
+	if(!Model3ds)
+		return;
 	lib3ds_file_eval(Model3ds, current_frame);
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;

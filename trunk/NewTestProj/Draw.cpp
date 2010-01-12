@@ -84,8 +84,8 @@ void Test3DS()
 void DrawTest3DS()
 {
 
-	//GLfloat LightPos[]={10000.0f,0.0f,0.0f,0.0f};
-	//glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
+	GLfloat LightPos[]={10000.0f,0.0f,0.0f,0.0f};
+	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	//float tmpxxx=0.0f;
@@ -94,8 +94,8 @@ void DrawTest3DS()
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	glPushMatrix();
 	glLoadIdentity();
-	glTranslatef(TestPos[0],TestPos[1],-100.0f+TestPos[2]);				// Move Right 1.5 Units And Into The Screen 6.0
-	//glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
+	glTranslatef(TestPos[0],TestPos[1],-150.0f+TestPos[2]);				// Move Right 1.5 Units And Into The Screen 6.0
+	glRotatef(-turn2*2,0.0f,1.0f,0.0f);			// Rotate The Quad On The X axis
 	glRotatef(TestRot[0],1.0f,0.0f,0.0f);
 	glRotatef(TestRot[1],0.0f,1.0f,0.0f);
 	TestRotSNYC=TestRotSNYC+1;
@@ -128,7 +128,7 @@ void DrawTest3DS()
 void init3DTexTest()
 {
 //	Test3DS();
-	Model3DsTest1.Loadfile("Data/Model/3ds.3DS");
+	Model3DsTest1.Loadfile("Data/Model/Test3dsModel.3DS");
 	Model3DsTest1.LoadToVRAM();
 	for(int i=0;i<32;i++)
 	{
