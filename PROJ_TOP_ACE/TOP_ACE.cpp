@@ -63,7 +63,7 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 
 }
 
-void Update ()								// Perform Motion Updates Here
+void KeyUpdate ()								// Perform Motion Updates Here
 {
 	// ROACH
 	if(g_keys->keyDown [VK_SPACE] == TRUE)

@@ -37,6 +37,9 @@ public:
 	bool LoadNode(Lib3dsNode *Node);
 	int Error;
 	int MeshLoadNum;
+	bool Clear3DSIDs(Lib3dsNode *Node);
+	unsigned int GrassTexID;
+	unsigned int DiffuseTexID;
 };
 
 #endif

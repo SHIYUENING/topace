@@ -68,7 +68,7 @@ BOOL Initialize (GL_Window* window, Keys* keys);	// Performs All Your Initializa
 
 void Deinitialize (void);							// Performs All Your DeInitialization
 
-void Update ();					// Perform Motion Updates
+void KeyUpdate ();					// Perform Motion Updates
 HANDLE InitRenderThread();
 void ExitRenderThread();
 unsigned int __stdcall RenderThread(LPVOID lpvoid);
