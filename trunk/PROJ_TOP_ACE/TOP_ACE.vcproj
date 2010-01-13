@@ -234,6 +234,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\DataUpdata.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DDS.cpp"
 				>
 			</File>
@@ -320,6 +324,10 @@
 			>
 			<File
 				RelativePath="ARB_Multisample.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataUpdata.h"
 				>
 			</File>
 			<File

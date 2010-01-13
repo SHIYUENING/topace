@@ -14,6 +14,7 @@
 #include "System.h"														// Header File For The NeHeGL Basecode
 #include "IniFile.h"		
 #include"Draw.h"
+#include "DataUpdata.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
@@ -44,10 +45,11 @@ bool isDraw=true;
 bool isRun=true;
 bool RenderThreadisSuspend=false;
 HANDLE RenderThreadHANDLE=NULL;
-extern float angleR;
+
 HINSTANCE hInst;
 int WindowWidth=800;
 int WindowHeight=600;
+
 
 CLockFPS LockFPSSYS,LockFPSRender;
 /*
@@ -382,7 +384,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;															// Break
 
 		case WM_TOGGLEFULLSCREEN:										// Toggle FullScreen Mode On/Off
-			GameSet.isFullScreem=g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
+			GameSet.isFullScreem = (g_createFullScreen == TRUE) ? FALSE : TRUE;
+			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessage (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 	}
@@ -421,7 +424,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	LockFPSSYS.Init(60);
 	while(isRun)
 	{
-		angleR=angleR+0.05f;
+		
+		DataUpdata();
 		/*if(RenderThreadisSuspend)
 		{
 			RenderThreadisSuspend=false;
@@ -550,7 +554,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					{
 						//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
 
-						Update ();
+						KeyUpdate ();
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{
 							WaitMessage ();								// Application Is Minimized Wait For A Message

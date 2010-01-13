@@ -13,13 +13,16 @@ CLoad3DS::CLoad3DS(void)
 , VBOIDs(NULL)
 , Error(0)
 , MeshLoadNum(0)
+, GrassTexID(0)
+, DiffuseTexID(0)
 {
 }
 
 CLoad3DS::~CLoad3DS(void)
 {
-	Del_RAM();
+	
 	Del_VRAM();
+	Del_RAM();
 	delete[] VBOIDs;
 	VBOIDs=NULL;
 }
@@ -55,6 +58,7 @@ bool CLoad3DS::Loadfile(char * filename)
 			VBOIDs[i].TexCoordID=0;
 			VBOIDs[i].NormalID=0;
 			VBOIDs[i].TangentID=0;
+			VBOIDs[i].VerticeNum=0;
 		}
 	}
 	lib3ds_file_eval(Model3ds, 0.0f);
@@ -94,6 +98,28 @@ void CLoad3DS::Del_RAM(void)
 
 void CLoad3DS::Del_VRAM(void)
 {
+
+	if(Model3ds)
+	{
+		Lib3dsNode *ThisNode=0;
+		for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+		{
+
+			Clear3DSIDs(ThisNode);
+		}
+	}
+	if(VBOIDs)
+	{
+		for(int i=0;i<TotelMeshs;i++)
+		{
+			VBOIDs[i].VerticeID=0;
+			VBOIDs[i].ColorID=0;
+			VBOIDs[i].TexCoordID=0;
+			VBOIDs[i].NormalID=0;
+			VBOIDs[i].TangentID=0;
+			VBOIDs[i].VerticeNum=0;
+		}
+	}
 	if((!VBOIDs)||(!isVRAM))
 		return;
 	for(int i=0;i<TotelMeshs;i++)
@@ -111,6 +137,8 @@ void CLoad3DS::Del_VRAM(void)
 	}
 
 	isVRAM=false;
+	TotelVertices=0;
+	MeshLoadNum=0;
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
 void CLoad3DS::RenderNode(Lib3dsNode *Node)
@@ -134,7 +162,23 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 		return ;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
 		return ;
+	if((Node->name[0]=='W')&&(Node->name[1]=='W'))
+		return ;
 
+	if((Node->name[0]=='G')&&(Node->name[1]=='R'))
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
+		glDepthMask(GL_FALSE);
+		glBindTexture(GL_TEXTURE_2D, GrassTexID);
+	}
+	else
+	{
+		glDisable(GL_BLEND);
+		glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
+	}
+
+		
 /*
 	Lib3dsMesh *Mesh=0;
 	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
@@ -188,6 +232,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 	if(VBOIDs[i].ColorID)
 		glDisableClientState( GL_COLOR_ARRAY );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glDepthMask(GL_TRUE);
 
 }
 void CLoad3DS::Render(float current_frame)
@@ -285,5 +330,23 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	lib3ds_matrix_inv(VBOIDs[Node->user_id].MeshMatrix); 
 	
 	MeshLoadNum=MeshLoadNum+1;
+	return true;
+}
+
+bool CLoad3DS::Clear3DSIDs(Lib3dsNode *Node)
+{
+	if(!Node)
+		return false;
+	Lib3dsNode      *pNode; 
+	for (pNode=Node->childs; pNode!=0; pNode=pNode->next)
+		Clear3DSIDs(pNode);
+
+	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+		return false;
+	if(strcmp(Node->name,"$$$DUMMY")==0)
+		return false;
+
+	Node->user_id=0;
+
 	return true;
 }
