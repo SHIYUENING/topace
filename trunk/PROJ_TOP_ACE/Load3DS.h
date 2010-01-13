@@ -33,7 +33,7 @@ public:
 	int TotelMeshs;
 	tModelNodes * VBOIDs;
 	void Render(float current_frame=0.0f);
-	void RenderNode(Lib3dsNode *Node);
+	void RenderNode(Lib3dsNode *Node,bool isTranslucent=false);
 	bool LoadNode(Lib3dsNode *Node);
 	int Error;
 	int MeshLoadNum;

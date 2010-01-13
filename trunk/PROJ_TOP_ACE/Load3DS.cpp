@@ -141,7 +141,7 @@ void CLoad3DS::Del_VRAM(void)
 	MeshLoadNum=0;
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
-void CLoad3DS::RenderNode(Lib3dsNode *Node)
+void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 {
 	if(!Node)
 		return ;
@@ -153,7 +153,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 	Lib3dsNode      *pNode; 
 	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){  
 		glPushMatrix();
-        RenderNode(pNode);   
+        RenderNode(pNode,isTranslucent);   
 		glPopMatrix();
     } 
 	glMultMatrixf(&Node->matrix[0][0]);  
@@ -164,7 +164,9 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 		return ;
 	if((Node->name[0]=='W')&&(Node->name[1]=='W'))
 		return ;
-
+	if(((Node->name[0]=='G')&&(Node->name[1]=='R'))!=isTranslucent)
+		return ;
+/*
 	if((Node->name[0]=='G')&&(Node->name[1]=='R'))
 	{
 		glEnable(GL_BLEND);
@@ -177,7 +179,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 		glDisable(GL_BLEND);
 		glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
 	}
-
+*/
 		
 /*
 	Lib3dsMesh *Mesh=0;
@@ -232,7 +234,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node)
 	if(VBOIDs[i].ColorID)
 		glDisableClientState( GL_COLOR_ARRAY );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	glDepthMask(GL_TRUE);
+	
 
 }
 void CLoad3DS::Render(float current_frame)
@@ -242,6 +244,8 @@ void CLoad3DS::Render(float current_frame)
 	lib3ds_file_eval(Model3ds, current_frame);
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
+	glDisable(GL_BLEND);
+	glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
 	Lib3dsNode *ThisNode=0;
 	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
@@ -249,6 +253,19 @@ void CLoad3DS::Render(float current_frame)
 			RenderNode(ThisNode);
 		glPopMatrix();
 	}
+
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
+	glDepthMask(GL_FALSE);
+	glBindTexture(GL_TEXTURE_2D, GrassTexID);
+	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+		glPushMatrix();
+			RenderNode(ThisNode,true);
+		glPopMatrix();
+	}
+	glDepthMask(GL_TRUE);
 }
 
 bool CLoad3DS::LoadNode(Lib3dsNode *Node)
