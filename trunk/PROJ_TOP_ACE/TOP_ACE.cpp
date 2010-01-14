@@ -21,6 +21,9 @@ bool domulti = true;
 bool doangle = true;
 bool domultiR = true;
 bool doangleR = true;
+float moveZ=0.0f;
+float moveY=0.0f;
+float moveX=0.0f;
 // ENDROACH
 
 
@@ -82,6 +85,21 @@ void KeyUpdate ()								// Perform Motion Updates Here
 	{
 		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	}
+	if(g_keys->keyDown [VK_PRIOR] == TRUE)
+		moveZ=moveZ+1.0f;
+	if(g_keys->keyDown [VK_NEXT] == TRUE)
+		moveZ=moveZ-1.0f;
+
+	if(g_keys->keyDown [VK_UP] == TRUE)
+		moveY=moveY+1.0f;
+	if(g_keys->keyDown [VK_DOWN] == TRUE)
+		moveY=moveY-1.0f;
+
+
+	if(g_keys->keyDown [VK_RIGHT] == TRUE)
+		moveX=moveX+1.0f;
+	if(g_keys->keyDown [VK_LEFT] == TRUE)
+		moveX=moveX-1.0f;
 }
 void ExchangeData (void)
 {
