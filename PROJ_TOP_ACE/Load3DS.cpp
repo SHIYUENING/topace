@@ -241,7 +241,8 @@ void CLoad3DS::Render(float current_frame)
 {
 	if(!Model3ds)
 		return;
-	lib3ds_file_eval(Model3ds, current_frame);
+	if(float(Model3ds->frames)>=current_frame)
+		lib3ds_file_eval(Model3ds, current_frame);
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
 	glDisable(GL_BLEND);
