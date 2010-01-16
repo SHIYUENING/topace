@@ -12,7 +12,7 @@ public:
 	Textures(void);
 	~Textures(void);
 	bool loadfile(char * filename);
-	unsigned int LoadToVRAM(int TexParameter = GL_LINEAR);
+	unsigned int LoadToVRAM(int TexParameter = 0);
 	bool isRAM();
 	bool isVRAM();
 	int GetTexError();
