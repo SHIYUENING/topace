@@ -118,6 +118,7 @@ void CLoad3DS::Del_VRAM(void)
 			VBOIDs[i].NormalID=0;
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
+			VBOIDs[i].UseMaterial=false;
 		}
 	}
 	if((!VBOIDs)||(!isVRAM))
@@ -195,6 +196,19 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 
 	//glColor3f(float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f);
 	int i=Node->user_id;
+	//Lib3dsMaterial *m = Model3ds->materials[i];
+/*
+	GLfloat mat_specular[]={1.0f,1.0f,1.0f,1.0f};
+	GLfloat mat_ambient[]={0.5f,0.5f,0.5f,1.0f};
+	GLfloat mat_diffuse[]={0.5f,0.5f,0.5f,1.0f};
+	GLfloat mat_shininess[]={100.0f};*/
+	if(VBOIDs[i].UseMaterial)
+	{
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,VBOIDs[i].mat_specular);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,VBOIDs[i].mat_ambient);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,VBOIDs[i].mat_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&VBOIDs[i].mat_shininess);
+	}
 
 
 	glMultMatrixf(&VBOIDs[i].MeshMatrix[0][0]); 
@@ -306,6 +320,29 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	Lib3dsFace *Face=0;
 	VBOIDs[Node->user_id].VerticeNum=Mesh->nfaces*3;
 	TotelVertices=TotelVertices+Mesh->nfaces*3;
+
+	if(Mesh->faces[0].material>=0)
+	{
+		Lib3dsMaterial *Material = Model3ds->materials[Mesh->faces[0].material];
+
+		VBOIDs[Node->user_id].UseMaterial=true;
+		VBOIDs[Node->user_id].mat_ambient[0]=Material->ambient[0];
+		VBOIDs[Node->user_id].mat_ambient[1]=Material->ambient[1];
+		VBOIDs[Node->user_id].mat_ambient[2]=Material->ambient[2];
+		VBOIDs[Node->user_id].mat_ambient[3]=1.0f;
+		VBOIDs[Node->user_id].mat_diffuse[0]=Material->diffuse[0];
+		VBOIDs[Node->user_id].mat_diffuse[1]=Material->diffuse[1];
+		VBOIDs[Node->user_id].mat_diffuse[2]=Material->diffuse[2];
+		VBOIDs[Node->user_id].mat_diffuse[3]=1.0f;
+		VBOIDs[Node->user_id].mat_specular[0]=Material->specular[0];
+		VBOIDs[Node->user_id].mat_specular[1]=Material->specular[1];
+		VBOIDs[Node->user_id].mat_specular[2]=Material->specular[2];
+		VBOIDs[Node->user_id].mat_specular[3]=1.0f;
+		VBOIDs[Node->user_id].mat_shininess=pow(2, 10 * Material->shininess - 1)*10.0f;
+	}
+	else
+		VBOIDs[Node->user_id].UseMaterial=false;
+	//VBOIDs[Node->user_id].mat_shininess=Material->shininess*128.0f;
 
 	for(int i=0;i<Mesh->nfaces;i++)
 	{

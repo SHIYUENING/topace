@@ -3,6 +3,7 @@
 #define _LOAD3DS_H
 #include <gl\glew.h>
 #include <lib3ds.h>
+#include"Textures.h"
 #define NO_ERROR_3DS 0
 #define ERROR_NOT_OPEN_FILE 1
 #define ERROR_NO_MESH 2
@@ -15,6 +16,12 @@ struct tModelNodes
 	unsigned int TangentID;
 	int VerticeNum;
 	float MeshMatrix[4][4];
+
+	bool UseMaterial;
+	float mat_specular[4];
+	float mat_ambient[4];
+	float mat_diffuse[4];
+	float mat_shininess;
 };
 class CLoad3DS
 {

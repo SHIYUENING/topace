@@ -29,7 +29,7 @@ GLuint TGA::LoadTGA_RAMtoVRAM(int TexParameter)
 		glGenTextures(1, &this->texID);
 		glBindTexture(GL_TEXTURE_2D, this->texID);
 		glTexImage2D(GL_TEXTURE_2D, 0, this->bpp / 8, this->width, this->height, 0, this->type, GL_UNSIGNED_BYTE, this->imageData);
-		if(GL_LINEAR!=TexParameter)
+		if((GL_LINEAR!=TexParameter)&&(0!=TexParameter))
 		{
 			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
