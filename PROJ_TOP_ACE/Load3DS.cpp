@@ -259,6 +259,7 @@ void CLoad3DS::Render(float current_frame)
 		lib3ds_file_eval(Model3ds, current_frame);
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
+	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
 	Lib3dsNode *ThisNode=0;
@@ -269,7 +270,7 @@ void CLoad3DS::Render(float current_frame)
 		glPopMatrix();
 	}
 
-
+	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glDepthMask(GL_FALSE);
