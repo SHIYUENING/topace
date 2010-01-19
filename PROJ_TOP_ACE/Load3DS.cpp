@@ -439,6 +439,11 @@ bool CLoad3DS::Clear3DSIDs(Lib3dsNode *Node)
 void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 {
 	int NodeNameLen=strlen(NodeName);
+	if(NodeNameLen>=4)
+	{
+		if(((NodeName[0]=='B')&&(NodeName[1]=='o'))&&((NodeName[2]=='n')&&(NodeName[3]=='e')))
+			VBOIDs[NodeID].IsBone=true;
+	}
 	int firstFlagLen=0;
 	while((firstFlagLen<NodeNameLen)&&(NodeName[firstFlagLen]!='_'))
 		firstFlagLen=firstFlagLen+1;
