@@ -59,6 +59,18 @@ bool CLoad3DS::Loadfile(char * filename)
 			VBOIDs[i].NormalID=0;
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
+			VBOIDs[i].UseMaterial=false;
+			VBOIDs[i].AB=false;
+			VBOIDs[i].CX=false;
+			VBOIDs[i].CY=false;
+			VBOIDs[i].CZ=false;
+			VBOIDs[i].EN=false;
+			VBOIDs[i].GR=false;
+			VBOIDs[i].MH=false;
+			VBOIDs[i].SP=false;
+			VBOIDs[i].WP=false;
+			VBOIDs[i].WW=false;
+			VBOIDs[i].IsBone=false;
 		}
 	}
 	lib3ds_file_eval(Model3ds, 0.0f);
@@ -119,6 +131,17 @@ void CLoad3DS::Del_VRAM(void)
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
 			VBOIDs[i].UseMaterial=false;
+			VBOIDs[i].AB=false;
+			VBOIDs[i].CX=false;
+			VBOIDs[i].CY=false;
+			VBOIDs[i].CZ=false;
+			VBOIDs[i].EN=false;
+			VBOIDs[i].GR=false;
+			VBOIDs[i].MH=false;
+			VBOIDs[i].SP=false;
+			VBOIDs[i].WP=false;
+			VBOIDs[i].WW=false;
+			VBOIDs[i].IsBone=false;
 		}
 	}
 	if((!VBOIDs)||(!isVRAM))
@@ -151,12 +174,18 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	if(!MeshData)
 		return ;
 
+	float ThisNodematrix[4][4];
 	Lib3dsNode      *pNode; 
 	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){  
-		glPushMatrix();
+		//glPushMatrix();
+		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
         RenderNode(pNode,isTranslucent);   
-		glPopMatrix();
+		//glPopMatrix();
+		glLoadIdentity();
+		glLoadMatrixf(&ThisNodematrix[0][0]);
     } 
+	if(VBOIDs[Node->user_id].IsBone)
+		return;
 	glMultMatrixf(&Node->matrix[0][0]);  
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
@@ -309,6 +338,7 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	if(MeshLoadNum>=TotelMeshs)
 		return false;  
 	Node->user_id=MeshLoadNum;
+	GetNodeType(Node->user_id,&Node->name[0]);
 	float * VBOverticesBuffer=new float[Mesh->nfaces*3*3*4];
 	float (* VBONormalsBuffer)[3]=(float(*)[3])new float[Mesh->nfaces*3*3*4];
 	
@@ -405,4 +435,42 @@ bool CLoad3DS::Clear3DSIDs(Lib3dsNode *Node)
 	Node->user_id=0;
 
 	return true;
+}
+void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
+{
+	int NodeNameLen=strlen(NodeName);
+	int firstFlagLen=0;
+	while((firstFlagLen<NodeNameLen)&&(NodeName[firstFlagLen]!='_'))
+		firstFlagLen=firstFlagLen+1;
+	for(int i=0;i<firstFlagLen;i=i+2)
+	{
+		if(NodeName[i]=='C')
+		{
+			if(NodeName[i+1]=='X')
+				VBOIDs[NodeID].CX=true;
+			if(NodeName[i+1]=='Y')
+				VBOIDs[NodeID].CX=true;
+			if(NodeName[i+1]=='Z')
+				VBOIDs[NodeID].CX=true;
+		}
+		if((NodeName[i]=='E')&&(NodeName[i+1]=='N'))
+			VBOIDs[NodeID].EN=true;
+		if((NodeName[i]=='A')&&(NodeName[i+1]=='B'))
+			VBOIDs[NodeID].AB=true;
+		if((NodeName[i]=='W')&&(NodeName[i+1]=='P'))
+			VBOIDs[NodeID].WP=true;
+		if((NodeName[i]=='W')&&(NodeName[i+1]=='W'))
+			VBOIDs[NodeID].WW=true;
+		if((NodeName[i]=='S')&&(NodeName[i+1]=='P'))
+			VBOIDs[NodeID].SP=true;
+		if((NodeName[i]=='G')&&(NodeName[i+1]=='R'))
+			VBOIDs[NodeID].GR=true;
+		if((NodeName[i]=='M')&&(NodeName[i+1]=='H'))
+			VBOIDs[NodeID].MH=true;
+	}
+	if(firstFlagLen+4>=NodeNameLen)
+		return;
+	if((NodeName[firstFlagLen+1]=='D')&&(NodeName[firstFlagLen+2]=='M')&&(NodeName[firstFlagLen+3]=='_'))
+		VBOIDs[NodeID].IsBone=true;
+
 }
