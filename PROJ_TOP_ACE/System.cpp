@@ -15,6 +15,7 @@
 #include "IniFile.h"		
 #include"Draw.h"
 #include "DataUpdata.h"
+#include "KeyInput.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
@@ -554,6 +555,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					{
 						//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
 
+						UpdataKeyInput(&window.keys->keyDown[0]);
 						KeyUpdate ();
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{

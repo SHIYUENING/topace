@@ -16,6 +16,7 @@ CLoad3DS::CLoad3DS(void)
 , GrassTexID(0)
 , DiffuseTexID(0)
 {
+	for()
 }
 
 CLoad3DS::~CLoad3DS(void)
@@ -60,17 +61,8 @@ bool CLoad3DS::Loadfile(char * filename)
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
 			VBOIDs[i].UseMaterial=false;
-			VBOIDs[i].AB=false;
-			VBOIDs[i].CX=false;
-			VBOIDs[i].CY=false;
-			VBOIDs[i].CZ=false;
-			VBOIDs[i].EN=false;
-			VBOIDs[i].GR=false;
-			VBOIDs[i].MH=false;
-			VBOIDs[i].SP=false;
-			VBOIDs[i].WP=false;
-			VBOIDs[i].WW=false;
-			VBOIDs[i].IsBone=false;
+			for(int j=0;j<MAX_TYPE_3DS_NODE;j++)
+				VBOIDs[i].NodeType[j]=false;
 		}
 	}
 	lib3ds_file_eval(Model3ds, 0.0f);
@@ -131,17 +123,8 @@ void CLoad3DS::Del_VRAM(void)
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
 			VBOIDs[i].UseMaterial=false;
-			VBOIDs[i].AB=false;
-			VBOIDs[i].CX=false;
-			VBOIDs[i].CY=false;
-			VBOIDs[i].CZ=false;
-			VBOIDs[i].EN=false;
-			VBOIDs[i].GR=false;
-			VBOIDs[i].MH=false;
-			VBOIDs[i].SP=false;
-			VBOIDs[i].WP=false;
-			VBOIDs[i].WW=false;
-			VBOIDs[i].IsBone=false;
+			for(int j=0;j<MAX_TYPE_3DS_NODE;j++)
+				VBOIDs[i].NodeType[j]=false;
 		}
 	}
 	if((!VBOIDs)||(!isVRAM))
@@ -184,7 +167,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 		glLoadIdentity();
 		glLoadMatrixf(&ThisNodematrix[0][0]);
     } 
-	if(VBOIDs[Node->user_id].IsBone)
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_DM])
 		return;
 	glMultMatrixf(&Node->matrix[0][0]);  
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
@@ -192,9 +175,12 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 		return ;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
 		return ;
-	if((Node->name[0]=='W')&&(Node->name[1]=='W'))
+	//if((Node->name[0]=='W')&&(Node->name[1]=='W'))
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_WW])
 		return ;
-	if(((Node->name[0]=='G')&&(Node->name[1]=='R'))!=isTranslucent)
+	
+	//if(((Node->name[0]=='G')&&(Node->name[1]=='R'))!=isTranslucent)
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_GR]!=isTranslucent)
 		return ;
 /*
 	if((Node->name[0]=='G')&&(Node->name[1]=='R'))
@@ -442,7 +428,7 @@ void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 	if(NodeNameLen>=4)
 	{
 		if(((NodeName[0]=='B')&&(NodeName[1]=='o'))&&((NodeName[2]=='n')&&(NodeName[3]=='e')))
-			VBOIDs[NodeID].IsBone=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_DM]=true;
 	}
 	int firstFlagLen=0;
 	while((firstFlagLen<NodeNameLen)&&(NodeName[firstFlagLen]!='_'))
@@ -452,30 +438,30 @@ void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 		if(NodeName[i]=='C')
 		{
 			if(NodeName[i+1]=='X')
-				VBOIDs[NodeID].CX=true;
+				VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_CX]=true;
 			if(NodeName[i+1]=='Y')
-				VBOIDs[NodeID].CX=true;
+				VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_CY]=true;
 			if(NodeName[i+1]=='Z')
-				VBOIDs[NodeID].CX=true;
+				VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_CZ]=true;
 		}
 		if((NodeName[i]=='E')&&(NodeName[i+1]=='N'))
-			VBOIDs[NodeID].EN=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_EN]=true;
 		if((NodeName[i]=='A')&&(NodeName[i+1]=='B'))
-			VBOIDs[NodeID].AB=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_AB]=true;
 		if((NodeName[i]=='W')&&(NodeName[i+1]=='P'))
-			VBOIDs[NodeID].WP=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_WP]=true;
 		if((NodeName[i]=='W')&&(NodeName[i+1]=='W'))
-			VBOIDs[NodeID].WW=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_WW]=true;
 		if((NodeName[i]=='S')&&(NodeName[i+1]=='P'))
-			VBOIDs[NodeID].SP=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_SP]=true;
 		if((NodeName[i]=='G')&&(NodeName[i+1]=='R'))
-			VBOIDs[NodeID].GR=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_GR]=true;
 		if((NodeName[i]=='M')&&(NodeName[i+1]=='H'))
-			VBOIDs[NodeID].MH=true;
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_MH]=true;
 	}
 	if(firstFlagLen+4>=NodeNameLen)
 		return;
 	if((NodeName[firstFlagLen+1]=='D')&&(NodeName[firstFlagLen+2]=='M')&&(NodeName[firstFlagLen+3]=='_'))
-		VBOIDs[NodeID].IsBone=true;
+		VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_DM]=true;
 
 }

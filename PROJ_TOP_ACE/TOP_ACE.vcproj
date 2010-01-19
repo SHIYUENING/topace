@@ -262,6 +262,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyInput.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Load3DS.cpp"
 				>
 			</File>
@@ -352,6 +356,10 @@
 			</File>
 			<File
 				RelativePath=".\IniFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KeyInput.h"
 				>
 			</File>
 			<File
