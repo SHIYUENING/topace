@@ -275,6 +275,33 @@ void CLoad3DS::Render(float current_frame)
 		lib3ds_file_eval(Model3ds, current_frame);
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
+	if((Model3ds->cameras)&&(Model3ds->ncameras>0))
+	{
+		Lib3dsCamera * TestCamera=Model3ds->cameras[0];
+		Lib3dsNode *ThisNodeC=0;
+		for(ThisNodeC=Model3ds->nodes;ThisNodeC!=NULL;ThisNodeC=ThisNodeC->next)
+		{
+			if(ThisNodeC->type==LIB3DS_NODE_CAMERA)
+			{
+				Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)ThisNodeC;
+				TestCamera->position[0]=LCN->pos[0];
+				TestCamera->position[1]=LCN->pos[1];
+				TestCamera->position[2]=LCN->pos[2];
+				TestCamera->roll=LCN->roll;
+			}
+			if(ThisNodeC->type==LIB3DS_NODE_CAMERA_TARGET)
+			{
+				Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)ThisNodeC;
+				TestCamera->target[0]=LCN->pos[0];
+				TestCamera->target[1]=LCN->pos[1];
+				TestCamera->target[2]=LCN->pos[2];
+			}
+		}
+		
+		float Test_matrix_camera[4][4];
+		lib3ds_matrix_camera(Test_matrix_camera,TestCamera->position,TestCamera->target,TestCamera->roll);
+		glMultMatrixf(&Test_matrix_camera[0][0]); 
+	}
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
