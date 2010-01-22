@@ -16,7 +16,6 @@ CLoad3DS::CLoad3DS(void)
 , GrassTexID(0)
 , DiffuseTexID(0)
 {
-	for()
 }
 
 CLoad3DS::~CLoad3DS(void)
@@ -49,6 +48,8 @@ bool CLoad3DS::Loadfile(char * filename)
 		isRAM=false;
 		return false;
 	}
+	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
+		TypeFrame[i]=0.0f;
 	if(VBOSupported)
 	{
 		VBOIDs = new tModelNodes[TotelMeshs];
