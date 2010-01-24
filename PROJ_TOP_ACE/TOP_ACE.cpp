@@ -48,7 +48,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glViewport(0 , 0,window->init.width ,window->init.height);	// Set Up A Viewport
 	glMatrixMode(GL_PROJECTION);								// Select The Projection Matrix
 	glLoadIdentity();											// Reset The Projection Matrix
-	gluPerspective(50, (float)window->init.width/(float)window->init.height, 5,  2000); // Set Our Perspective
+	gluPerspective(45, (float)window->init.width/(float)window->init.height, 5,  2000); // Set Our Perspective
 	glMatrixMode(GL_MODELVIEW);									// Select The Modelview Matrix
 	glLoadIdentity();											// Reset The Modelview Matrix
 

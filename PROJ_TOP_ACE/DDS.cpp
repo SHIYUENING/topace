@@ -6,6 +6,7 @@ CDDS::CDDS(void)
 ,DDSerror(0)
 ,isRAM(false)
 ,isVRAM(false)
+,UseAlpha(false)
 {
 }
 
@@ -75,18 +76,21 @@ void CDDS::loadDDSTextureFile( const char *filename )
             // DXT1's compression ratio is 8:1
             pDDSImageData->format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
             factor = 2;
+			UseAlpha=false;
             break; 
 
         case FOURCC_DXT3:
             // DXT3's compression ratio is 4:1
             pDDSImageData->format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
             factor = 4;
+			UseAlpha=true;
             break; 
 
         case FOURCC_DXT5:
             // DXT5's compression ratio is 4:1
             pDDSImageData->format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
             factor = 4;
+			UseAlpha=true;
             break; 
 
         default:

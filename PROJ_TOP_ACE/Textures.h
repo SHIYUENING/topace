@@ -22,5 +22,6 @@ public:
 	GLuint TexID;
 	CDDS *DDSfile;
 	TGA *TGAfile;
+	bool UseAlpha;
 };
 #endif
