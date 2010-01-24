@@ -4,6 +4,7 @@ Textures::Textures(void)
 ,TexID(0)
 ,DDSfile(NULL)
 ,TGAfile(NULL)
+,UseAlpha(false)
 {
 }
 Textures::~Textures(void)
@@ -40,10 +41,16 @@ bool Textures::loadfile(char * filename)
 			return false;
 		}
 		else
+		{
+			UseAlpha=TGAfile->UseAlpha;
 			TexType=IS_TGA;
+		}
 	}
 	else
+	{
 		TexType=IS_DDS;
+		UseAlpha=DDSfile->UseAlpha;
+	}
 	return true;
 }
 unsigned int Textures::LoadToVRAM(int TexParameter)

@@ -58,6 +58,7 @@ class TGA
 		int TGAerror;
 		bool isRAM;
 		bool isVRAM;
+		bool UseAlpha;
 
 		bool LoadTGA(char * filename);
 		bool LoadUncompressedTGA(char * filename, FILE * fTGA);

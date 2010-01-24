@@ -12,6 +12,7 @@ TGA::TGA(void)
 ,isRAM(false)
 ,isVRAM(false)
 ,TGAerror(0)
+,UseAlpha(false)
 {
 }
 TGA::~TGA(void)
@@ -117,9 +118,15 @@ bool TGA::LoadUncompressedTGA(char * filename, FILE * fTGA)	// Load an uncompres
 	}
 
 	if(this->bpp == 24)													// If the BPP of the image is 24...
+	{
 		this->type	= GL_RGB;											// Set Image type to GL_RGB
+		UseAlpha=false;
+	}
 	else																	// Else if its 32 BPP
+	{
 		this->type	= GL_RGBA;											// Set image type to GL_RGBA
+		UseAlpha=true;
+	}
 
 	tga.bytesPerPixel	= (tga.Bpp / 8);									// Compute the number of BYTES per pixel
 	tga.imageSize		= (tga.bytesPerPixel * tga.Width * tga.Height);		// Compute the total amout ofmemory needed to store data

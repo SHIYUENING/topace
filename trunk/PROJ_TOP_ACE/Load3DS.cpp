@@ -15,6 +15,8 @@ CLoad3DS::CLoad3DS(void)
 , MeshLoadNum(0)
 , GrassTexID(0)
 , DiffuseTexID(0)
+, TextureMap(NULL)
+, TextureMapNum(0)
 {
 }
 
@@ -25,10 +27,19 @@ CLoad3DS::~CLoad3DS(void)
 	Del_RAM();
 	delete[] VBOIDs;
 	VBOIDs=NULL;
+
+	if(TextureMap)
+	{
+		delete[] TextureMap;
+	}
+
+
 }
 
 bool CLoad3DS::Loadfile(char * filename)
 {
+
+
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
 		VBOSupported=true;
 	else
@@ -48,6 +59,10 @@ bool CLoad3DS::Loadfile(char * filename)
 		isRAM=false;
 		return false;
 	}
+
+	loadTex(filename);
+
+
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 		TypeFrame[i]=0.0f;
 	if(VBOSupported)
@@ -67,6 +82,7 @@ bool CLoad3DS::Loadfile(char * filename)
 		}
 	}
 	lib3ds_file_eval(Model3ds, 0.0f);
+
 	isRAM=true;
 	return true;
 }
@@ -492,4 +508,54 @@ void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 	if((NodeName[firstFlagLen+1]=='D')&&(NodeName[firstFlagLen+2]=='M')&&(NodeName[firstFlagLen+3]=='_'))
 		VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_DM]=true;
 
+}
+void CLoad3DS::LoadTexToRam(int TexID,char * FilePath)
+{
+	int TexNameLen=64;
+	if(!(Model3ds->materials[TexID]->texture1_map.name))
+		return;
+	for(int i=0;i<TexID;i++)
+	{
+		if(stricmp(Model3ds->materials[TexID]->texture1_map.name,Model3ds->materials[i]->texture1_map.name)==0)
+			return;
+	}
+	char TexName[64]={0};
+	while(Model3ds->materials[TexID]->texture1_map.name[TexNameLen]!='.')
+	{
+		TexNameLen=TexNameLen-1;
+		if(TexNameLen<=0)
+			break;
+	}
+	for(int i=TexNameLen;i>0;i--)
+	{
+		TexName[i-1]=Model3ds->materials[TexID]->texture1_map.name[i-1];
+	}
+	char * TexNameFull = new char [strlen(TexName)+strlen(FilePath)+4];
+	sprintf(TexNameFull,"%s/%s",FilePath,TexName);
+	//TextureMap[TextureMapNum].loadfile(&TexNameFull[0]);
+	TextureMapNum=TextureMapNum+1;
+	delete[] TexNameFull;
+}
+
+void CLoad3DS::loadTex(char * filename)
+{
+	char * FilePath = new char[strlen(filename)+1];
+	sprintf(FilePath,"%s",filename);
+	for(int i=strlen(filename)-1;i>0;i--)
+	{
+		if(filename[i]=='/')
+		{
+			FilePath[i]=0;
+			break;
+		}
+	}
+	if(Model3ds->nmaterials>0)
+	{
+		TextureMap=new Textures[Model3ds->nmaterials];
+		for(int i=0;i<Model3ds->nmaterials;i++)
+		{
+			LoadTexToRam(i,FilePath);
+		}
+	}
+	delete[] FilePath;
 }

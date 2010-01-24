@@ -195,5 +195,6 @@ public:
 	void DelDDS_VRAM();
 	bool isRAM;
 	bool isVRAM;
+	bool UseAlpha;
 };
 #endif
