@@ -13,8 +13,8 @@ CLoad3DS::CLoad3DS(void)
 , VBOIDs(NULL)
 , Error(0)
 , MeshLoadNum(0)
-, GrassTexID(0)
-, DiffuseTexID(0)
+//, GrassTexID(0)
+//, DiffuseTexID(0)
 , TextureMap(NULL)
 , TextureMapNum(0)
 {
@@ -27,19 +27,10 @@ CLoad3DS::~CLoad3DS(void)
 	Del_RAM();
 	delete[] VBOIDs;
 	VBOIDs=NULL;
-
-	if(TextureMap)
-	{
-		delete[] TextureMap;
-	}
-
-
 }
 
 bool CLoad3DS::Loadfile(char * filename)
 {
-
-
 	if (glewIsSupported("GL_ARB_vertex_buffer_object"))
 		VBOSupported=true;
 	else
@@ -76,6 +67,7 @@ bool CLoad3DS::Loadfile(char * filename)
 			VBOIDs[i].NormalID=0;
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
+			VBOIDs[i].MaterialID=-1;
 			VBOIDs[i].UseMaterial=false;
 			for(int j=0;j<MAX_TYPE_3DS_NODE;j++)
 				VBOIDs[i].NodeType[j]=false;
@@ -99,25 +91,36 @@ bool CLoad3DS::LoadToVRAM(void)
 		isVRAM=false;
 		return false;
 	}
-	Lib3dsNode *ThisNode=0;
-	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
-	{
 
+	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 		LoadNode(ThisNode);
+
+	if(TextureMap)
+	{
+		for(int i=0;i<TextureMapNum;i++)
+		{
+			TextureMap[i].LoadToVRAM();
+		}
 	}
 	isVRAM=true;
 	return true;
 }
 
-void CLoad3DS::Del_RAM(void)
+void inline CLoad3DS::Del_RAM(void)
 {
 	if(Model3ds)
 		lib3ds_file_free(Model3ds);
 	Model3ds=NULL;
+	if(TextureMap)
+	{
+		delete[] TextureMap;
+		TextureMap=NULL;
+		TextureMapNum=0;
+	}
 	isRAM=false;
 }
 
-void CLoad3DS::Del_VRAM(void)
+void inline CLoad3DS::Del_VRAM(void)
 {
 
 	if(Model3ds)
@@ -139,6 +142,7 @@ void CLoad3DS::Del_VRAM(void)
 			VBOIDs[i].NormalID=0;
 			VBOIDs[i].TangentID=0;
 			VBOIDs[i].VerticeNum=0;
+			VBOIDs[i].MaterialID=-1;
 			VBOIDs[i].UseMaterial=false;
 			for(int j=0;j<MAX_TYPE_3DS_NODE;j++)
 				VBOIDs[i].NodeType[j]=false;
@@ -159,234 +163,59 @@ void CLoad3DS::Del_VRAM(void)
 		if(VBOIDs[i].TangentID)
 			glDeleteBuffersARB(1,&VBOIDs[i].TangentID);
 	}
+	if(TextureMap)
+	{
+		for(int i=0;i<TextureMapNum;i++)
+		{
+			TextureMap[i].Del_VRAM();
+		}
+	}
 
 	isVRAM=false;
 	TotelVertices=0;
 	MeshLoadNum=0;
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
-void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
-{
-	if(!Node)
-		return ;
-	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
-
-	if(!MeshData)
-		return ;
-
-	float ThisNodematrix[4][4];
-	Lib3dsNode      *pNode; 
-	for (pNode=Node->childs; pNode!=0; pNode=pNode->next){  
-		//glPushMatrix();
-		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
-        RenderNode(pNode,isTranslucent);   
-		//glPopMatrix();
-		glLoadIdentity();
-		glLoadMatrixf(&ThisNodematrix[0][0]);
-    } 
-	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_DM])
-		return;
-	glMultMatrixf(&Node->matrix[0][0]);  
-	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
-	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
-		return ;
-	if(strcmp(Node->name,"$$$DUMMY")==0)
-		return ;
-	//if((Node->name[0]=='W')&&(Node->name[1]=='W'))
-	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_WW])
-		return ;
-	
-	//if(((Node->name[0]=='G')&&(Node->name[1]=='R'))!=isTranslucent)
-	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_GR]!=isTranslucent)
-		return ;
-/*
-	if((Node->name[0]=='G')&&(Node->name[1]=='R'))
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
-		glDepthMask(GL_FALSE);
-		glBindTexture(GL_TEXTURE_2D, GrassTexID);
-	}
-	else
-	{
-		glDisable(GL_BLEND);
-		glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
-	}
-*/
-		
-/*
-	Lib3dsMesh *Mesh=0;
-	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
-	float       M1[4][4]; 
-	float       M2[4][4]; 
-	lib3ds_matrix_copy(M1, Node->matrix);   
-	lib3ds_matrix_inv(M1);   
-	lib3ds_matrix_copy(M2, Mesh->matrix);   
-	lib3ds_matrix_inv(M2); 
-	
-*/
-
-	//glColor3f(float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f,float(VBOIDs[Node->user_id].VerticeNum%255)/255.0f);
-	int i=Node->user_id;
-	//Lib3dsMaterial *m = Model3ds->materials[i];
-/*
-	GLfloat mat_specular[]={1.0f,1.0f,1.0f,1.0f};
-	GLfloat mat_ambient[]={0.5f,0.5f,0.5f,1.0f};
-	GLfloat mat_diffuse[]={0.5f,0.5f,0.5f,1.0f};
-	GLfloat mat_shininess[]={100.0f};*/
-	if(VBOIDs[i].UseMaterial)
-	{
-		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,VBOIDs[i].mat_specular);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,VBOIDs[i].mat_ambient);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,VBOIDs[i].mat_diffuse);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&VBOIDs[i].mat_shininess);
-	}
-
-
-	glMultMatrixf(&VBOIDs[i].MeshMatrix[0][0]); 
-
-	glEnableClientState( GL_VERTEX_ARRAY );
-	if(VBOIDs[i].NormalID)
-		glEnableClientState( GL_NORMAL_ARRAY );
-	if(VBOIDs[i].TexCoordID)
-		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	if(VBOIDs[i].ColorID)
-		glEnableClientState( GL_COLOR_ARRAY );
-
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].VerticeID );
-	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
-	if(VBOIDs[i].NormalID)
-	{
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].NormalID );
-		glNormalPointer( GL_FLOAT, 0, (char *) NULL );
-	}
-	if(VBOIDs[i].TexCoordID)
-	{
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].TexCoordID );
-		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
-	}
-	if(VBOIDs[i].ColorID)
-	{
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOIDs[i].ColorID );
-		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
-	}
-	glDrawArrays( GL_TRIANGLES, 0, VBOIDs[i].VerticeNum );	
-
-	glDisableClientState( GL_VERTEX_ARRAY );
-	if(VBOIDs[i].NormalID)
-		glDisableClientState( GL_NORMAL_ARRAY );
-	if(VBOIDs[i].TexCoordID)
-		glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-	if(VBOIDs[i].ColorID)
-		glDisableClientState( GL_COLOR_ARRAY );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	
-
-}
-void CLoad3DS::Render(float current_frame)
-{
-	if(!Model3ds)
-		return;
-	if(float(Model3ds->frames)>=current_frame)
-		lib3ds_file_eval(Model3ds, current_frame);
-	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
-		return;
-	if((Model3ds->cameras)&&(Model3ds->ncameras>0))
-	{
-		Lib3dsCamera * TestCamera=Model3ds->cameras[0];
-		Lib3dsNode *ThisNodeC=0;
-		for(ThisNodeC=Model3ds->nodes;ThisNodeC!=NULL;ThisNodeC=ThisNodeC->next)
-		{
-			if(ThisNodeC->type==LIB3DS_NODE_CAMERA)
-			{
-				Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)ThisNodeC;
-				TestCamera->position[0]=LCN->pos[0];
-				TestCamera->position[1]=LCN->pos[1];
-				TestCamera->position[2]=LCN->pos[2];
-				TestCamera->roll=LCN->roll;
-			}
-			if(ThisNodeC->type==LIB3DS_NODE_CAMERA_TARGET)
-			{
-				Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)ThisNodeC;
-				TestCamera->target[0]=LCN->pos[0];
-				TestCamera->target[1]=LCN->pos[1];
-				TestCamera->target[2]=LCN->pos[2];
-			}
-		}
-		
-		float Test_matrix_camera[4][4];
-		lib3ds_matrix_camera(Test_matrix_camera,TestCamera->position,TestCamera->target,TestCamera->roll);
-		glMultMatrixf(&Test_matrix_camera[0][0]); 
-	}
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-	glBindTexture(GL_TEXTURE_2D, DiffuseTexID);
-	Lib3dsNode *ThisNode=0;
-	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
-	{
-		glPushMatrix();
-			RenderNode(ThisNode);
-		glPopMatrix();
-	}
-
-	glDisable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
-	glDepthMask(GL_FALSE);
-	glBindTexture(GL_TEXTURE_2D, GrassTexID);
-	for(ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
-	{
-		glPushMatrix();
-			RenderNode(ThisNode,true);
-		glPopMatrix();
-	}
-	glDepthMask(GL_TRUE);
-}
-
 bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 {
 	if(!Node)
 		return false;
-	Lib3dsNode      *pNode; 
-	for (pNode=Node->childs; pNode!=0; pNode=pNode->next)
+	for (Lib3dsNode *pNode=Node->childs; pNode!=0; pNode=pNode->next)
 		LoadNode(pNode);
-
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return false;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
 		return false;
-	//if(strcmp(Node->name,"Box01")==0)
-	//	return false;
-
 	if(Node->user_id!=0)
 		return false;
 
-	Lib3dsMesh *Mesh=0;
-	Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
+	Lib3dsMesh *Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
+
 	if(!Mesh->vertices)
 		return false;            //if no vertices ,Nothing to do.
 	if(MeshLoadNum>=TotelMeshs)
 		return false;  
+
 	Node->user_id=MeshLoadNum;
+
 	GetNodeType(Node->user_id,&Node->name[0]);
+
 	float * VBOverticesBuffer=new float[Mesh->nfaces*3*3*4];
 	float (* VBONormalsBuffer)[3]=(float(*)[3])new float[Mesh->nfaces*3*3*4];
-	
 	float * VBOTexCoordBuffer=NULL;
 	if(Mesh->texcos)
 			VBOTexCoordBuffer=new float[Mesh->nfaces*3*2*4];
 
 	lib3ds_mesh_calculate_vertex_normals(Mesh, VBONormalsBuffer); 
 
-	Lib3dsFace *Face=0;
+	
 	VBOIDs[Node->user_id].VerticeNum=Mesh->nfaces*3;
 	TotelVertices=TotelVertices+Mesh->nfaces*3;
 
+	VBOIDs[Node->user_id].MaterialID=Mesh->faces[0].material;
 	if(Mesh->faces[0].material>=0)
 	{
 		Lib3dsMaterial *Material = Model3ds->materials[Mesh->faces[0].material];
-
-		VBOIDs[Node->user_id].UseMaterial=true;
 		VBOIDs[Node->user_id].mat_ambient[0]=Material->ambient[0];
 		VBOIDs[Node->user_id].mat_ambient[1]=Material->ambient[1];
 		VBOIDs[Node->user_id].mat_ambient[2]=Material->ambient[2];
@@ -401,10 +230,8 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		VBOIDs[Node->user_id].mat_specular[3]=1.0f;
 		VBOIDs[Node->user_id].mat_shininess=pow(2, 10 * Material->shininess - 1)*10.0f;
 	}
-	else
-		VBOIDs[Node->user_id].UseMaterial=false;
-	//VBOIDs[Node->user_id].mat_shininess=Material->shininess*128.0f;
 
+	Lib3dsFace *Face=0;
 	for(int i=0;i<Mesh->nfaces;i++)
 	{
 		Face=&(Mesh->faces[i]);
@@ -449,24 +276,180 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	return true;
 }
 
-bool CLoad3DS::Clear3DSIDs(Lib3dsNode *Node)
+void CLoad3DS::Render(float current_frame)
+{
+	if(!Model3ds)
+		return;
+	if(float(Model3ds->frames)>=current_frame)
+		lib3ds_file_eval(Model3ds, current_frame);
+	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
+		return;
+
+	CameraMatrix(current_frame);
+
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+		glPushMatrix();
+			RenderNode(ThisNode);
+		glPopMatrix();
+	}
+
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
+	glDepthMask(GL_FALSE);
+	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+		glPushMatrix();
+			RenderNode(ThisNode,true);
+		glPopMatrix();
+	}
+	glDepthMask(GL_TRUE);
+}
+
+void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 {
 	if(!Node)
-		return false;
+		return ;
+	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
+	if(!MeshData)
+		return ;
+
+	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
+	{  
+		float ThisNodematrix[4][4];
+		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+        RenderNode(pNode,isTranslucent);   
+		glLoadIdentity();
+		glLoadMatrixf(&ThisNodematrix[0][0]);
+    } 
+
+	if(strcmp(Node->name,"$$$DUMMY")==0)
+		return ;
+	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+		return ;
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_DM])
+		return ;
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_WW])
+		return ;
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_GR]!=isTranslucent)
+		return ;
+
+	glMultMatrixf(&Node->matrix[0][0]);  
+	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
+	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
+
+	if(VBOIDs[Node->user_id].MaterialID>=0)
+	{
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,VBOIDs[Node->user_id].mat_specular);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,VBOIDs[Node->user_id].mat_ambient);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,VBOIDs[Node->user_id].mat_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&VBOIDs[Node->user_id].mat_shininess);
+
+		Lib3dsMaterial *Material = Model3ds->materials[VBOIDs[Node->user_id].MaterialID];
+		if(TextureMap)
+		{
+			if(Material->texture1_map.user_id<(unsigned int)TextureMapNum)
+				glBindTexture(GL_TEXTURE_2D, TextureMap[Material->texture1_map.user_id].TexID);
+		}
+		
+	}
+
+	RenderNodeMesh(VBOIDs[Node->user_id]);
+
+}
+void inline CLoad3DS::CameraMatrix(float Frame)
+{
+	if(!(Model3ds->cameras))
+		return;
+	if(Model3ds->ncameras<=0)
+		return;
+	Lib3dsCamera * TestCamera=Model3ds->cameras[0];
+	Lib3dsNode *ThisNodeC=0;
+	for(ThisNodeC=Model3ds->nodes;ThisNodeC!=NULL;ThisNodeC=ThisNodeC->next)
+	{
+		if(ThisNodeC->type==LIB3DS_NODE_CAMERA)
+		{
+			Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)ThisNodeC;
+			TestCamera->position[0]=LCN->pos[0];
+			TestCamera->position[1]=LCN->pos[1];
+			TestCamera->position[2]=LCN->pos[2];
+			TestCamera->roll=LCN->roll;
+		}
+		if(ThisNodeC->type==LIB3DS_NODE_CAMERA_TARGET)
+		{
+			Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)ThisNodeC;
+			TestCamera->target[0]=LCN->pos[0];
+			TestCamera->target[1]=LCN->pos[1];
+			TestCamera->target[2]=LCN->pos[2];
+		}
+	}
+		
+	float Test_matrix_camera[4][4];
+	lib3ds_matrix_camera(Test_matrix_camera,TestCamera->position,TestCamera->target,TestCamera->roll);
+	glMultMatrixf(&Test_matrix_camera[0][0]); 
+	
+}
+
+void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
+{
+	glEnableClientState( GL_VERTEX_ARRAY );
+	if(ModelNode.NormalID)
+		glEnableClientState( GL_NORMAL_ARRAY );
+	if(ModelNode.TexCoordID)
+		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(ModelNode.ColorID)
+		glEnableClientState( GL_COLOR_ARRAY );
+
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, ModelNode.VerticeID );
+	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
+	if(ModelNode.NormalID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, ModelNode.NormalID );
+		glNormalPointer( GL_FLOAT, 0, (char *) NULL );
+	}
+	if(ModelNode.TexCoordID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, ModelNode.TexCoordID );
+		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
+	}
+	if(ModelNode.ColorID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, ModelNode.ColorID );
+		glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );
+	}
+	glDrawArrays( GL_TRIANGLES, 0, ModelNode.VerticeNum );	
+
+	glDisableClientState( GL_VERTEX_ARRAY );
+	if(ModelNode.NormalID)
+		glDisableClientState( GL_NORMAL_ARRAY );
+	if(ModelNode.TexCoordID)
+		glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(ModelNode.ColorID)
+		glDisableClientState( GL_COLOR_ARRAY );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+}
+
+void inline CLoad3DS::Clear3DSIDs(Lib3dsNode *Node)
+{
+	if(!Node)
+		return ;
 	Lib3dsNode      *pNode; 
 	for (pNode=Node->childs; pNode!=0; pNode=pNode->next)
 		Clear3DSIDs(pNode);
 
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
-		return false;
+		return ;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
-		return false;
+		return ;
 
 	Node->user_id=0;
 
-	return true;
+	return ;
 }
-void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
+void inline CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 {
 	int NodeNameLen=strlen(NodeName);
 	if(NodeNameLen>=4)
@@ -509,7 +492,7 @@ void CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 		VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_DM]=true;
 
 }
-void CLoad3DS::LoadTexToRam(int TexID,char * FilePath)
+void inline CLoad3DS::LoadTexToRam(int TexID,char * FilePath)
 {
 	int TexNameLen=64;
 	if(!(Model3ds->materials[TexID]->texture1_map.name))
@@ -532,13 +515,17 @@ void CLoad3DS::LoadTexToRam(int TexID,char * FilePath)
 	}
 	char * TexNameFull = new char [strlen(TexName)+strlen(FilePath)+4];
 	sprintf(TexNameFull,"%s/%s",FilePath,TexName);
-	//TextureMap[TextureMapNum].loadfile(&TexNameFull[0]);
+
+	TextureMap[TextureMapNum].loadfile(&TexNameFull[0]);
+	Model3ds->materials[TexID]->texture1_map.user_id=TextureMapNum;
 	TextureMapNum=TextureMapNum+1;
 	delete[] TexNameFull;
 }
 
-void CLoad3DS::loadTex(char * filename)
+void inline CLoad3DS::loadTex(char * filename)
 {
+	if(Model3ds->nmaterials<=0)
+		return;
 	char * FilePath = new char[strlen(filename)+1];
 	sprintf(FilePath,"%s",filename);
 	for(int i=strlen(filename)-1;i>0;i--)
@@ -559,3 +546,5 @@ void CLoad3DS::loadTex(char * filename)
 	}
 	delete[] FilePath;
 }
+
+
