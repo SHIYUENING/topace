@@ -276,16 +276,20 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	return true;
 }
 
-void CLoad3DS::Render(float current_frame)
+void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 {
 	if(!Model3ds)
 		return;
-	if(float(Model3ds->frames)>=current_frame)
-		lib3ds_file_eval(Model3ds, current_frame);
+	
+	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
+		TypeFrame[i]=NodesFrameIn[i];
+
+	//if(float(Model3ds->frames)>=current_frame)
+	//	lib3ds_file_eval(Model3ds, current_frame);
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
 
-	CameraMatrix(current_frame);
+	//CameraMatrix(current_frame);
 
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
@@ -317,6 +321,21 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	if(!MeshData)
 		return ;
 
+
+	if(Node->type==LIB3DS_NODE_MESH_INSTANCE)
+	{
+		int TypeFrameID=MAX_TYPE_3DS_NODE-1;
+		while(!VBOIDs[Node->user_id].NodeType[TypeFrameID])
+		{
+			TypeFrameID=TypeFrameID-1;
+			if(TypeFrameID==0)
+				break;
+		}
+
+		MeshNodeEval(Node,TypeFrame[TypeFrameID]);
+		glMultMatrixf(&Node->matrix[0][0]); 
+	}
+ 
 	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
 	{  
 		float ThisNodematrix[4][4];
@@ -337,7 +356,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_GR]!=isTranslucent)
 		return ;
 
-	glMultMatrixf(&Node->matrix[0][0]);  
+	//glMultMatrixf(&Node->matrix[0][0]);  
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
 
@@ -360,6 +379,29 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	RenderNodeMesh(VBOIDs[Node->user_id]);
 
 }
+void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
+{
+			float t=Frame;
+	         float NodeMatrix[4][4];
+            Lib3dsMeshInstanceNode *n = (Lib3dsMeshInstanceNode*)Node;
+
+            lib3ds_track_eval_vector(&n->pos_track, n->pos, t);
+            lib3ds_track_eval_quat(&n->rot_track, n->rot, t);
+            if (n->scl_track.nkeys) {
+                lib3ds_track_eval_vector(&n->scl_track, n->scl, t);
+            } else {
+                n->scl[0] = n->scl[1] = n->scl[2] = 1.0f;
+            }
+            lib3ds_track_eval_bool(&n->hide_track, &n->hide, t);
+
+            lib3ds_matrix_identity(NodeMatrix);
+            lib3ds_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
+            lib3ds_matrix_rotate_quat(NodeMatrix, n->rot);
+            lib3ds_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
+			lib3ds_matrix_copy(Node->matrix, NodeMatrix);
+			//glMultMatrixf(&NodeMatrix[0][0]);
+}
+
 void inline CLoad3DS::CameraMatrix(float Frame)
 {
 	if(!(Model3ds->cameras))
@@ -396,12 +438,9 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 {
 	glEnableClientState( GL_VERTEX_ARRAY );
-	if(ModelNode.NormalID)
-		glEnableClientState( GL_NORMAL_ARRAY );
-	if(ModelNode.TexCoordID)
-		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-	if(ModelNode.ColorID)
-		glEnableClientState( GL_COLOR_ARRAY );
+	if(ModelNode.NormalID)		glEnableClientState( GL_NORMAL_ARRAY );
+	if(ModelNode.TexCoordID)	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(ModelNode.ColorID)		glEnableClientState( GL_COLOR_ARRAY );
 
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, ModelNode.VerticeID );
 	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
@@ -423,12 +462,9 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 	glDrawArrays( GL_TRIANGLES, 0, ModelNode.VerticeNum );	
 
 	glDisableClientState( GL_VERTEX_ARRAY );
-	if(ModelNode.NormalID)
-		glDisableClientState( GL_NORMAL_ARRAY );
-	if(ModelNode.TexCoordID)
-		glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-	if(ModelNode.ColorID)
-		glDisableClientState( GL_COLOR_ARRAY );
+	if(ModelNode.NormalID)		glDisableClientState( GL_NORMAL_ARRAY );
+	if(ModelNode.TexCoordID)	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+	if(ModelNode.ColorID)		glDisableClientState( GL_COLOR_ARRAY );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
 
@@ -546,5 +582,6 @@ void inline CLoad3DS::loadTex(char * filename)
 	}
 	delete[] FilePath;
 }
+
 
 
