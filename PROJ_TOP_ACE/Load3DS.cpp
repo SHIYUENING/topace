@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>	
 #include "Load3DS.h"
-
+#include "EasyMatrix.h"
 CLoad3DS::CLoad3DS(void)
 : isRAM(false)
 , isVRAM(false)
@@ -360,46 +360,29 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
 
-	if(VBOIDs[Node->user_id].MaterialID>=0)
-	{
-		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,VBOIDs[Node->user_id].mat_specular);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,VBOIDs[Node->user_id].mat_ambient);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,VBOIDs[Node->user_id].mat_diffuse);
-		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&VBOIDs[Node->user_id].mat_shininess);
-
-		Lib3dsMaterial *Material = Model3ds->materials[VBOIDs[Node->user_id].MaterialID];
-		if(TextureMap)
-		{
-			if(Material->texture1_map.user_id<(unsigned int)TextureMapNum)
-				glBindTexture(GL_TEXTURE_2D, TextureMap[Material->texture1_map.user_id].TexID);
-		}
-		
-	}
-
 	RenderNodeMesh(VBOIDs[Node->user_id]);
 
 }
 void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 {
-			float t=Frame;
-	         float NodeMatrix[4][4];
-            Lib3dsMeshInstanceNode *n = (Lib3dsMeshInstanceNode*)Node;
-
-            lib3ds_track_eval_vector(&n->pos_track, n->pos, t);
-            lib3ds_track_eval_quat(&n->rot_track, n->rot, t);
-            if (n->scl_track.nkeys) {
-                lib3ds_track_eval_vector(&n->scl_track, n->scl, t);
-            } else {
-                n->scl[0] = n->scl[1] = n->scl[2] = 1.0f;
-            }
-            lib3ds_track_eval_bool(&n->hide_track, &n->hide, t);
-
-            lib3ds_matrix_identity(NodeMatrix);
-            lib3ds_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
-            lib3ds_matrix_rotate_quat(NodeMatrix, n->rot);
-            lib3ds_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
-			lib3ds_matrix_copy(Node->matrix, NodeMatrix);
-			//glMultMatrixf(&NodeMatrix[0][0]);
+	float NodeMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
+									0.0f,1.0f,0.0f,0.0f,
+									0.0f,0.0f,1.0f,0.0f,
+									0.0f,0.0f,0.0f,1.0f};;
+	Lib3dsMeshInstanceNode *n = (Lib3dsMeshInstanceNode*)Node;
+	lib3ds_track_eval_vector(&n->pos_track, n->pos, Frame);
+	lib3ds_track_eval_quat(&n->rot_track, n->rot, Frame);
+	if (n->scl_track.nkeys) 
+		lib3ds_track_eval_vector(&n->scl_track, n->scl, Frame);
+	else 
+		n->scl[0] = n->scl[1] = n->scl[2] = 1.0f;
+	lib3ds_track_eval_bool(&n->hide_track, &n->hide, Frame);
+	//lib3ds_matrix_identity(NodeMatrix);
+	Easy_matrix_identity(NodeMatrix);
+	lib3ds_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
+	lib3ds_matrix_rotate_quat(NodeMatrix, n->rot);
+    lib3ds_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
+	lib3ds_matrix_copy(Node->matrix, NodeMatrix);
 }
 
 void inline CLoad3DS::CameraMatrix(float Frame)
@@ -437,6 +420,23 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 
 void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 {
+
+	if(ModelNode.MaterialID>=0)
+	{
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,ModelNode.mat_specular);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,ModelNode.mat_ambient);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,ModelNode.mat_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&ModelNode.mat_shininess);
+
+		Lib3dsMaterial *Material = Model3ds->materials[ModelNode.MaterialID];
+		glBindTexture(GL_TEXTURE_2D, 0);
+		if(TextureMap)
+		{
+			if(Material->texture1_map.user_id<(unsigned int)TextureMapNum)
+				glBindTexture(GL_TEXTURE_2D, TextureMap[Material->texture1_map.user_id].TexID);
+		}
+		
+	}
 	glEnableClientState( GL_VERTEX_ARRAY );
 	if(ModelNode.NormalID)		glEnableClientState( GL_NORMAL_ARRAY );
 	if(ModelNode.TexCoordID)	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
