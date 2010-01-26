@@ -246,6 +246,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EasyMatrix.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Font2D.cpp"
 				>
 			</File>
@@ -340,6 +344,10 @@
 			</File>
 			<File
 				RelativePath=".\Draw.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EasyMatrix.h"
 				>
 			</File>
 			<File
