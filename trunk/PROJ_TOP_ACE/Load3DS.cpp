@@ -300,7 +300,7 @@ void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 		glPopMatrix();
 	}
 
-	glDisable(GL_CULL_FACE);
+	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glDepthMask(GL_FALSE);
@@ -311,6 +311,7 @@ void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 		glPopMatrix();
 	}
 	glDepthMask(GL_TRUE);
+	glDisable(GL_CULL_FACE);
 }
 
 void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
@@ -421,7 +422,7 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 {
 
-	if(ModelNode.MaterialID>=0)
+	if((ModelNode.MaterialID>=0)&&(Model3ds->nmaterials>ModelNode.MaterialID))
 	{
 		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,ModelNode.mat_specular);
 		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,ModelNode.mat_ambient);
@@ -429,6 +430,13 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&ModelNode.mat_shininess);
 
 		Lib3dsMaterial *Material = Model3ds->materials[ModelNode.MaterialID];
+		if(Material->two_sided)
+			glDisable(GL_CULL_FACE);
+		else
+			glEnable(GL_CULL_FACE);
+
+		//if(Material->use_wire)
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 		if(TextureMap)
 		{
