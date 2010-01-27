@@ -10,6 +10,7 @@ public:
 	~CLockFPS(void);
 	void Init(int LimitFPS);
 	void LockFPS(void);
+	float oneframetimepoint;
 
 protected:
 	LARGE_INTEGER feq;

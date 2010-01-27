@@ -563,7 +563,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 						}
 						else											// If Window Is Visible
 						{
-							Draw ();									// Draw Our Scene
+							Draw (LockFPSRender.oneframetimepoint);									// Draw Our Scene
 
 							//Sleep(30+rand()%15);
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
