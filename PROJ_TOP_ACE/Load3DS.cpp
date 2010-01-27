@@ -435,7 +435,10 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 		else
 			glEnable(GL_CULL_FACE);
 
-		//if(Material->use_wire)
+		if(Material->use_wire)
+			glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+		else
+			glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		if(TextureMap)
