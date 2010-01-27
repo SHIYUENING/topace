@@ -380,7 +380,7 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 	lib3ds_track_eval_bool(&n->hide_track, &n->hide, Frame);
 	//lib3ds_matrix_identity(NodeMatrix);
 	Easy_matrix_identity(NodeMatrix);
-	lib3ds_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
+	Easy_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
 	lib3ds_matrix_rotate_quat(NodeMatrix, n->rot);
     lib3ds_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
 	lib3ds_matrix_copy(Node->matrix, NodeMatrix);
