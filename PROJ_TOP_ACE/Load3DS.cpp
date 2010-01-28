@@ -276,7 +276,7 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	return true;
 }
 
-void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
+void CLoad3DS::Render()
 {
 	if(!Model3ds)
 		return;
@@ -398,6 +398,7 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 	{
 		if(ThisNodeC->type==LIB3DS_NODE_CAMERA)
 		{
+			MeshNodeEval(ThisNodeC,Frame);
 			Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)ThisNodeC;
 			TestCamera->position[0]=LCN->pos[0];
 			TestCamera->position[1]=LCN->pos[1];
@@ -406,6 +407,7 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 		}
 		if(ThisNodeC->type==LIB3DS_NODE_CAMERA_TARGET)
 		{
+			MeshNodeEval(ThisNodeC,Frame);
 			Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)ThisNodeC;
 			TestCamera->target[0]=LCN->pos[0];
 			TestCamera->target[1]=LCN->pos[1];
@@ -601,6 +603,7 @@ void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_fram
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 		TypeFrame[i]=NodesFrameIn[i];
 
+	CameraMatrix(test_frame);
 	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
 		float ThisNodematrix[4][4];

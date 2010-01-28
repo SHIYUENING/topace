@@ -1,9 +1,11 @@
 #ifndef _EASYMATRIX_H
 #define _EASYMATRIX_H
+#define USE_SSE 1
 #include <stdio.h>			// Header File For Standard Input/Output
 #include <stdlib.h>
 #include <math.h>
 #include <windows.h>
+#include <xmmintrin.h>
 const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
 									0.0f,1.0f,0.0f,0.0f,
 									0.0f,0.0f,1.0f,0.0f,
@@ -19,6 +21,7 @@ void inline Easy_matrix_translate(float Matrix[4][4], float x, float y, float z)
 	Matrix[3][2] += Matrix[0][2] * x + Matrix[1][2] * y + Matrix[2][2] * z;
 }
 void inline Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
+
     float tmp[4][4];
     int i, j, k;
     float ab;
@@ -31,6 +34,11 @@ void inline Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
             Matrix[j][i] = ab;
         }
     }
+}
+void inline Easy_matrix_mult(float Matrix[4][4], const float a[4][4], const float b[4][4]) 
+{
+
+
 }
 void inline Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
     float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
