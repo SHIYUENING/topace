@@ -552,7 +552,10 @@ void inline CLoad3DS::LoadTexToRam(int TexID,char * FilePath)
 	for(int i=0;i<TexID;i++)
 	{
 		if(stricmp(Model3ds->materials[TexID]->texture1_map.name,Model3ds->materials[i]->texture1_map.name)==0)
+		{
+			Model3ds->materials[TexID]->texture1_map.user_id=Model3ds->materials[i]->texture1_map.user_id;
 			return;
+		}
 	}
 	char TexName[64]={0};
 	while(Model3ds->materials[TexID]->texture1_map.name[TexNameLen]!='.')
