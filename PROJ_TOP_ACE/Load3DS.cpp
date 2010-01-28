@@ -300,7 +300,6 @@ void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 		glPopMatrix();
 	}
 
-	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glDepthMask(GL_FALSE);
@@ -318,10 +317,6 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 {
 	if(!Node)
 		return ;
-	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
-	if(!MeshData)
-		return ;
-
 
 	if(Node->type==LIB3DS_NODE_MESH_INSTANCE)
 	{
@@ -356,7 +351,9 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 		return ;
 	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_GR]!=isTranslucent)
 		return ;
-
+	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
+	if(!MeshData)
+		return ;
 	//glMultMatrixf(&Node->matrix[0][0]);  
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
@@ -366,10 +363,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 }
 void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 {
-	float NodeMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
-									0.0f,1.0f,0.0f,0.0f,
-									0.0f,0.0f,1.0f,0.0f,
-									0.0f,0.0f,0.0f,1.0f};;
+
 	Lib3dsMeshInstanceNode *n = (Lib3dsMeshInstanceNode*)Node;
 	lib3ds_track_eval_vector(&n->pos_track, n->pos, Frame);
 	lib3ds_track_eval_quat(&n->rot_track, n->rot, Frame);
@@ -379,11 +373,15 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 		n->scl[0] = n->scl[1] = n->scl[2] = 1.0f;
 	lib3ds_track_eval_bool(&n->hide_track, &n->hide, Frame);
 	//lib3ds_matrix_identity(NodeMatrix);
-	Easy_matrix_identity(NodeMatrix);
+	//Easy_matrix_identity(NodeMatrix);
+	float NodeMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
+							0.0f,1.0f,0.0f,0.0f,
+							0.0f,0.0f,1.0f,0.0f,
+							0.0f,0.0f,0.0f,1.0f};
 	Easy_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
-	lib3ds_matrix_rotate_quat(NodeMatrix, n->rot);
-    lib3ds_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
-	lib3ds_matrix_copy(Node->matrix, NodeMatrix);
+	Easy_matrix_rotate_quat(NodeMatrix, n->rot);
+    Easy_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
+	Easy_matrix_copy(Node->matrix, NodeMatrix);
 }
 
 void inline CLoad3DS::CameraMatrix(float Frame)
