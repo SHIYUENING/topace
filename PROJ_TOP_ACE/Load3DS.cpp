@@ -393,22 +393,25 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 	if(Model3ds->ncameras<=0)
 		return;
 	Lib3dsCamera * TestCamera=Model3ds->cameras[0];
-	Lib3dsNode *ThisNodeC=0;
-	for(ThisNodeC=Model3ds->nodes;ThisNodeC!=NULL;ThisNodeC=ThisNodeC->next)
+	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
-		if(ThisNodeC->type==LIB3DS_NODE_CAMERA)
+		if(ThisNode->type==LIB3DS_NODE_CAMERA)
 		{
-			MeshNodeEval(ThisNodeC,Frame);
-			Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)ThisNodeC;
+			//MeshNodeEval(ThisNode,Frame);
+			Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)ThisNode;
+
+			lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
+            lib3ds_track_eval_float(&LCN->roll_track, &LCN->roll, Frame);
 			TestCamera->position[0]=LCN->pos[0];
 			TestCamera->position[1]=LCN->pos[1];
 			TestCamera->position[2]=LCN->pos[2];
 			TestCamera->roll=LCN->roll;
 		}
-		if(ThisNodeC->type==LIB3DS_NODE_CAMERA_TARGET)
+		if(ThisNode->type==LIB3DS_NODE_CAMERA_TARGET)
 		{
-			MeshNodeEval(ThisNodeC,Frame);
-			Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)ThisNodeC;
+			//MeshNodeEval(ThisNode,Frame);
+			Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)ThisNode;
+			lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
 			TestCamera->target[0]=LCN->pos[0];
 			TestCamera->target[1]=LCN->pos[1];
 			TestCamera->target[2]=LCN->pos[2];
