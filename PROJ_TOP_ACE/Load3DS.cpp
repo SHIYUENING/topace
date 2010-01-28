@@ -281,8 +281,8 @@ void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 	if(!Model3ds)
 		return;
 	
-	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
-		TypeFrame[i]=NodesFrameIn[i];
+	//for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
+	//	TypeFrame[i]=NodesFrameIn[i];
 
 	//if(float(Model3ds->frames)>=current_frame)
 	//	lib3ds_file_eval(Model3ds, current_frame);
@@ -291,13 +291,14 @@ void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 
 	//CameraMatrix(current_frame);
 
+	//Model3ds->nodes
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
-		glPushMatrix();
+		//glPushMatrix();
 			RenderNode(ThisNode);
-		glPopMatrix();
+		//glPopMatrix();
 	}
 
 	glEnable(GL_BLEND);
@@ -305,9 +306,9 @@ void CLoad3DS::Render(float NodesFrameIn[MAX_TYPE_3DS_NODE],float current_frame)
 	glDepthMask(GL_FALSE);
 	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
-		glPushMatrix();
+		//glPushMatrix();
 			RenderNode(ThisNode,true);
-		glPopMatrix();
+		//glPopMatrix();
 	}
 	glDepthMask(GL_TRUE);
 	glDisable(GL_CULL_FACE);
@@ -317,7 +318,7 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 {
 	if(!Node)
 		return ;
-
+/*
 	if(Node->type==LIB3DS_NODE_MESH_INSTANCE)
 	{
 		int TypeFrameID=MAX_TYPE_3DS_NODE-1;
@@ -331,14 +332,14 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 		MeshNodeEval(Node,TypeFrame[TypeFrameID]);
 		glMultMatrixf(&Node->matrix[0][0]); 
 	}
- 
+ */
 	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
 	{  
-		float ThisNodematrix[4][4];
-		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+		//float ThisNodematrix[4][4];
+		//glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
         RenderNode(pNode,isTranslucent);   
-		glLoadIdentity();
-		glLoadMatrixf(&ThisNodematrix[0][0]);
+		//glLoadIdentity();
+		//glLoadMatrixf(&ThisNodematrix[0][0]);
     } 
 
 	if(strcmp(Node->name,"$$$DUMMY")==0)
@@ -355,9 +356,10 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	if(!MeshData)
 		return ;
 	//glMultMatrixf(&Node->matrix[0][0]);  
-	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
-	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
+	//glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
+	//glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
 
+	glLoadMatrixf(&Node->matrix[0][0]);
 	RenderNodeMesh(VBOIDs[Node->user_id]);
 
 }
@@ -592,5 +594,53 @@ void inline CLoad3DS::loadTex(char * filename)
 	delete[] FilePath;
 }
 
+void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_frame)
+{
+	if(!Model3ds)
+		return;
+	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
+		TypeFrame[i]=NodesFrameIn[i];
 
+	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+		float ThisNodematrix[4][4];
+		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+			NodeMatrix(ThisNode);
+		glLoadMatrixf(&ThisNodematrix[0][0]);
+	}
+}
 
+void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
+{
+	if(Node->type==LIB3DS_NODE_MESH_INSTANCE)
+	{
+		int TypeFrameID=MAX_TYPE_3DS_NODE-1;
+		while(!VBOIDs[Node->user_id].NodeType[TypeFrameID])
+		{
+			TypeFrameID=TypeFrameID-1;
+			if(TypeFrameID==0)
+				break;
+		}
+		MeshNodeEval(Node,TypeFrame[TypeFrameID]);
+		glMultMatrixf(&Node->matrix[0][0]); 
+	}
+
+	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
+	{  
+		float ThisNodematrix[4][4];
+		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+        NodeMatrix(pNode); 
+		glLoadMatrixf(&ThisNodematrix[0][0]);
+    } 
+
+	if(strcmp(Node->name,"$$$DUMMY")==0)
+		return ;
+	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+		return ;
+	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
+	if(!MeshData)
+		return ; 
+	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
+	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
+	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+}
