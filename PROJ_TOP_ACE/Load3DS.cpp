@@ -314,6 +314,30 @@ void CLoad3DS::Render()
 	glDisable(GL_CULL_FACE);
 }
 
+void CLoad3DS::RenderNoColor()
+{
+	if(!Model3ds)
+		return;
+
+	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
+		return;
+
+	GLboolean UseGL_LIGHTING=false;
+	glGetBooleanv(GL_LIGHTING,&UseGL_LIGHTING);
+	glDisable( GL_TEXTURE_2D );
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	{
+		RenderNodeNoColor(ThisNode);
+	}
+	if(UseGL_LIGHTING)
+		glEnable(GL_LIGHTING);
+	glDisable(GL_CULL_FACE);
+	glEnable( GL_TEXTURE_2D );
+}
+
 void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 {
 	if(!Node)
@@ -365,6 +389,35 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	glLoadMatrixf(&ThisNodematrix[0][0]);
 
 }
+void CLoad3DS::RenderNodeNoColor(Lib3dsNode *Node)
+{
+	if(!Node)
+		return ;
+	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
+	{
+        RenderNodeNoColor(pNode);
+    } 
+
+	if(strcmp(Node->name,"$$$DUMMY")==0)
+		return ;
+	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
+		return ;
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_DM])
+		return ;
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_WW])
+		return ;
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_GR])
+		return ;
+	Lib3dsMeshInstanceNode * MeshData = (Lib3dsMeshInstanceNode *)Node;
+	if(!MeshData)
+		return ; 
+	float ThisNodematrix[4][4];
+	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+	glMultMatrixf(&Node->matrix[0][0]);
+	RenderNodeMeshNoColor(VBOIDs[Node->user_id]);
+	glLoadMatrixf(&ThisNodematrix[0][0]);
+
+}
 void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 {
 
@@ -388,7 +441,7 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 	Easy_matrix_copy(Node->matrix, NodeMatrix);
 }
 
-void inline CLoad3DS::CameraMatrix()
+void CLoad3DS::MultCameraMatrix()
 {
 	if(!(Model3ds->cameras))
 		return;
@@ -483,6 +536,16 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 	if(ModelNode.NormalID)		glDisableClientState( GL_NORMAL_ARRAY );
 	if(ModelNode.TexCoordID)	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
 	if(ModelNode.ColorID)		glDisableClientState( GL_COLOR_ARRAY );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+}
+
+void inline CLoad3DS::RenderNodeMeshNoColor(tModelNodes ModelNode)
+{
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, ModelNode.VerticeID );
+	glVertexPointer( 3, GL_FLOAT, 0, (char *) NULL );
+	glDrawArrays( GL_TRIANGLES, 0, ModelNode.VerticeNum );	
+	glDisableClientState( GL_VERTEX_ARRAY );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
 

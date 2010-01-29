@@ -47,7 +47,10 @@ void CLockFPS::LockFPS(void)
     }
 	else
 		return;
-	oneframetimepoint=float(100.0*(oneframetime/oneframetimelimit));
+	if(oneframetimelimit>0.0)
+		oneframetimepoint=float(100.0*(oneframetime/oneframetimelimit));
+	else
+		oneframetimepoint=100.0f;
 	//QueryPerformanceCounter(&t1);
 
 	 double SleepTime=(oneframetimelimit*1000.0-oneframetime*1000.0);

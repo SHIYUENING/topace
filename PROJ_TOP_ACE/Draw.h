@@ -4,5 +4,5 @@
 void InitDraw();
 void DeinitDraw();
 void ClearVRAM();
-void Draw(float oneframetimepoint=0);
+void Draw(float oneframetimepointCPUSYS=0.0f,float oneframetimepointGPU=0.0f);
 #endif
