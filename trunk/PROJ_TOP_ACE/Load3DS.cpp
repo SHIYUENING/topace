@@ -269,8 +269,8 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		VBOTexCoordBuffer=NULL;
 	}
 
-	lib3ds_matrix_copy(VBOIDs[Node->user_id].MeshMatrix, Mesh->matrix);   
-	lib3ds_matrix_inv(VBOIDs[Node->user_id].MeshMatrix); 
+	Easy_matrix_copy(VBOIDs[Node->user_id].MeshMatrix, Mesh->matrix);   
+	Easy_matrix_inv(VBOIDs[Node->user_id].MeshMatrix); 
 	
 	MeshLoadNum=MeshLoadNum+1;
 	return true;
@@ -474,7 +474,7 @@ void CLoad3DS::MultCameraMatrix()
 	}
 		*/
 	float Test_matrix_camera[4][4];
-	lib3ds_matrix_camera(Test_matrix_camera,TestCamera->position,TestCamera->target,TestCamera->roll);
+	Easy_matrix_camera(Test_matrix_camera,TestCamera->position,TestCamera->target,TestCamera->roll);
 	glMultMatrixf(&Test_matrix_camera[0][0]); 
 	
 }
@@ -681,7 +681,7 @@ void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_fram
 	{
 		float ThisNodematrix[4][4];
 		glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
-			NodeMatrix(ThisNode);
+		NodeMatrix(ThisNode);
 		glLoadMatrixf(&ThisNodematrix[0][0]);
 	}
 	glLoadMatrixf(&ThisNodematrix[0][0]);
