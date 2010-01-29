@@ -289,7 +289,7 @@ void CLoad3DS::Render()
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
 
-	//CameraMatrix(current_frame);
+	//CameraMatrix();
 
 	//Model3ds->nodes
 	glEnable(GL_CULL_FACE);
@@ -358,9 +358,11 @@ void CLoad3DS::RenderNode(Lib3dsNode *Node,bool isTranslucent)
 	//glMultMatrixf(&Node->matrix[0][0]);  
 	//glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	//glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
-
-	glLoadMatrixf(&Node->matrix[0][0]);
+	float ThisNodematrix[4][4];
+	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+	glMultMatrixf(&Node->matrix[0][0]);
 	RenderNodeMesh(VBOIDs[Node->user_id]);
+	glLoadMatrixf(&ThisNodematrix[0][0]);
 
 }
 void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
@@ -386,14 +388,14 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 	Easy_matrix_copy(Node->matrix, NodeMatrix);
 }
 
-void inline CLoad3DS::CameraMatrix(float Frame)
+void inline CLoad3DS::CameraMatrix()
 {
 	if(!(Model3ds->cameras))
 		return;
 	if(Model3ds->ncameras<=0)
 		return;
 	Lib3dsCamera * TestCamera=Model3ds->cameras[0];
-	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
+	/*for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
 		if(ThisNode->type==LIB3DS_NODE_CAMERA)
 		{
@@ -417,7 +419,7 @@ void inline CLoad3DS::CameraMatrix(float Frame)
 			TestCamera->target[2]=LCN->pos[2];
 		}
 	}
-		
+		*/
 	float Test_matrix_camera[4][4];
 	lib3ds_matrix_camera(Test_matrix_camera,TestCamera->position,TestCamera->target,TestCamera->roll);
 	glMultMatrixf(&Test_matrix_camera[0][0]); 
@@ -608,8 +610,10 @@ void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_fram
 		return;
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 		TypeFrame[i]=NodesFrameIn[i];
-
-	CameraMatrix(test_frame);
+	float ThisNodematrix[4][4];
+	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+	glLoadIdentity();
+	//CameraMatrix(test_frame);
 	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 	{
 		float ThisNodematrix[4][4];
@@ -617,6 +621,7 @@ void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_fram
 			NodeMatrix(ThisNode);
 		glLoadMatrixf(&ThisNodematrix[0][0]);
 	}
+	glLoadMatrixf(&ThisNodematrix[0][0]);
 }
 
 void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
@@ -632,6 +637,18 @@ void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
 		}
 		MeshNodeEval(Node,TypeFrame[TypeFrameID]);
 		glMultMatrixf(&Node->matrix[0][0]); 
+	}
+	if(Node->type==LIB3DS_NODE_CAMERA)
+	{
+		CameraNodeEval(Node,TypeFrame[0]);
+		glMultMatrixf(&Node->matrix[0][0]); 
+		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]); 
+	}
+	if(Node->type==LIB3DS_NODE_CAMERA_TARGET)
+	{
+		CameraTGTNodeEval(Node,TypeFrame[0]);
+		glMultMatrixf(&Node->matrix[0][0]);  
+		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
 	}
 
 	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
@@ -652,4 +669,39 @@ void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
 	glTranslatef(-MeshData->pivot[0],-MeshData->pivot[1],-MeshData->pivot[2]);
 	glMultMatrixf(&VBOIDs[Node->user_id].MeshMatrix[0][0]); 
 	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+}
+
+void CLoad3DS::CameraNodeEval(Lib3dsNode *Node,float Frame)
+{
+	if(!(Model3ds->cameras))
+		return;
+	if(Model3ds->ncameras<=0)
+		return;
+	Lib3dsCamera * TestCamera=Model3ds->cameras[0];
+	Lib3dsCameraNode *LCN = (Lib3dsCameraNode*)Node;
+    lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
+	lib3ds_track_eval_float(&LCN->fov_track, &LCN->fov, Frame);
+	lib3ds_track_eval_float(&LCN->roll_track, &LCN->roll, Frame);
+	TestCamera->position[0]=LCN->pos[0];
+	TestCamera->position[1]=LCN->pos[1];
+	TestCamera->position[2]=LCN->pos[2];
+	TestCamera->roll=LCN->roll;
+	TestCamera->fov=LCN->fov;
+	Easy_matrix_identity(Node->matrix);
+	Easy_matrix_translate(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+}
+void CLoad3DS::CameraTGTNodeEval(Lib3dsNode *Node,float Frame)
+{
+	if(!(Model3ds->cameras))
+		return;
+	if(Model3ds->ncameras<=0)
+		return;	
+	Lib3dsCamera * TestCamera=Model3ds->cameras[0];
+	Lib3dsTargetNode *LCN = (Lib3dsTargetNode*)Node;
+	lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
+	TestCamera->target[0]=LCN->pos[0];
+	TestCamera->target[1]=LCN->pos[1];
+	TestCamera->target[2]=LCN->pos[2];
+	Easy_matrix_identity(Node->matrix);
+	Easy_matrix_translate(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 }
