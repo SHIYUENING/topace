@@ -351,6 +351,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EasyQuat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EasyVector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Font2D.h"
 				>
 			</File>
