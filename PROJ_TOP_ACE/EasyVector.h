@@ -90,4 +90,24 @@ void inline Easy_vector_normalize(float c[3])
     }
 #endif
 }
+__forceinline   void   Easy_vector_normalize(__m128   vec)   
+  {   
+  _asm   {    
+  movaps   xmm1,   vec  
+  movaps   xmm0,   xmm1   
+  mulps     xmm1,   xmm1   
+    
+  movaps   xmm2,   xmm1   
+  shufps   xmm2,   xmm1,   0x09   
+  movaps   xmm3,   xmm2   
+  shufps   xmm3,   xmm2,   0x09   
+  addps     xmm1,   xmm2   
+  addps     xmm1,   xmm3   
+    
+  sqrtps   xmm1,   xmm1   
+  divps     xmm0,   xmm1   
+    
+  movaps   vec,   xmm0   
+  }   
+  } 
 #endif
