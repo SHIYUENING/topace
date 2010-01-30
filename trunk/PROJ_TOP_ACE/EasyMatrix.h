@@ -12,17 +12,17 @@ static const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
 									0.0f,1.0f,0.0f,0.0f,
 									0.0f,0.0f,1.0f,0.0f,
 									0.0f,0.0f,0.0f,1.0f};
-void inline Easy_matrix_identity(float Matrix[4][4])
+inline void Easy_matrix_identity(float Matrix[4][4])
 {
 	memcpy(Matrix,IdentityMatrix,4*4*sizeof(float));
 }
-void inline Easy_matrix_translate(float Matrix[4][4], float x, float y, float z)
+inline void Easy_matrix_translate(float Matrix[4][4], float x, float y, float z)
 {
 	Matrix[3][0] += Matrix[0][0] * x + Matrix[1][0] * y + Matrix[2][0] * z;
 	Matrix[3][1] += Matrix[0][1] * x + Matrix[1][1] * y + Matrix[2][1] * z;
 	Matrix[3][2] += Matrix[0][2] * x + Matrix[1][2] * y + Matrix[2][2] * z;
 }
-void inline Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
+inline void Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
 
     float tmp[4][4];
     int i, j, k;
@@ -37,7 +37,7 @@ void inline Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
         }
     }
 }
-void inline Easy_matrix_mult(float * Matrix, const float * a, const float * b) 
+inline void Easy_matrix_mult(float * Matrix, const float * a, const float * b) 
 {
 #ifdef USE_SSE
 	int				i;
@@ -83,7 +83,10 @@ void inline Easy_matrix_mult(float * Matrix, const float * a, const float * b)
 
 }
 
-void inline Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
+inline void Easy_matrix_mult(__m128 Matrix[4], const __m128 a, const __m128 b)
+{
+}
+inline void Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
     float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
     float R[4][4];
 
@@ -122,7 +125,7 @@ void inline Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
     //Easy_matrix_mult(m, m, R);
 	Easy_matrix_mult(&m[0][0],&m[0][0],&R[0][0]);
 }
-void inline Easy_matrix_rotate(float m[4][4], float angle, float ax, float ay, float az) {
+inline void Easy_matrix_rotate(float m[4][4], float angle, float ax, float ay, float az) {
     float q[4];
 	float axis[3]={ax,ay,az};
 
@@ -130,7 +133,7 @@ void inline Easy_matrix_rotate(float m[4][4], float angle, float ax, float ay, f
     Easy_quat_axis_angle(q, axis, angle);
     Easy_matrix_rotate_quat(m, q);
 }
-void inline Easy_matrix_scale(float m[4][4], float x, float y, float z) {
+inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) {
     int i;
 
     for (i = 0; i < 4; i++) {
@@ -139,10 +142,10 @@ void inline Easy_matrix_scale(float m[4][4], float x, float y, float z) {
         m[2][i] *= z;
     }
 }
-void inline Easy_matrix_copy(__m128 dest[4], __m128 src[4]) {
+inline void Easy_matrix_copy(__m128 dest[4], __m128 src[4]) {
     memcpy(dest, src, 16 * sizeof(float));
 }
-void inline Easy_matrix_copy(float dest[4][4], float src[4][4]) {
+inline void Easy_matrix_copy(float dest[4][4], float src[4][4]) {
     memcpy(dest, src, 16 * sizeof(float));
 }
 //http://www.devmaster.net/forums/showthread.php?t=14569
@@ -465,7 +468,7 @@ inline void _mm_inverse_ps(__m128 const in[4], __m128 out[4])
 	out[3] = _mm_mul_ps(Inv3, Rcp0);
 }
 
-void inline Easy_matrix_inv(float m[4][4]) 
+inline void Easy_matrix_inv(float m[4][4]) 
 {
 #ifdef USE_SSE
 	__m128 matrixIN[4],matrixOUT[4];
@@ -572,7 +575,7 @@ void inline Easy_matrix_inv(float m[4][4])
 #endif
 }
 
-void inline Easy_matrix_camera(float matrix[4][4], float pos[3], float tgt[3], float roll) {
+inline void Easy_matrix_camera(float matrix[4][4], float pos[3], float tgt[3], float roll) {
     float M[4][4];
     float x[3], y[3], z[3];
 

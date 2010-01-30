@@ -8,7 +8,7 @@
 #include <xmmintrin.h>
 
 
-void inline Easy_quat_axis_angle(float c[4], float axis[3], float angle) 
+inline void Easy_quat_axis_angle(float c[4], float axis[3], float angle) 
 {
     double omega, s;
     double l;
@@ -26,19 +26,70 @@ void inline Easy_quat_axis_angle(float c[4], float axis[3], float angle)
         c[3] = (float)cos(omega);
     }
 }
-void inline Easy_vector_sub(float c[3], float a[3], float b[3]) 
+inline void Easy_vector_sub(float c[3], float a[3], float b[3]) 
 {
     int i;
     for (i = 0; i < 3; ++i) {
         c[i] = a[i] - b[i];
     }
 }
-void inline Easy_vector_cross(float c[3], float a[3], float b[3]) {
+inline void Easy_vector_cross(float c[3], float a[3], float b[3]) 
+{
+#ifdef USE_SSE
+
+	__m128 INa,INb,OUTc;
+	INa.m128_f32[0]=a[0];
+	INa.m128_f32[1]=a[1];
+	INa.m128_f32[2]=a[2];
+	INa.m128_f32[3]=0.0f;
+
+	INb.m128_f32[0]=b[0];
+	INb.m128_f32[1]=b[1];
+	INb.m128_f32[2]=b[2];
+	INb.m128_f32[3]=0.0f;
+	_asm 
+	{
+		movups xmm0, INa
+		movups xmm1, INb
+		movaps xmm2, xmm0
+		movaps xmm3, xmm1
+		shufps xmm0, xmm0, 0xc9
+		shufps xmm1, xmm1, 0xd2
+		mulps xmm0, xmm1
+		shufps xmm2, xmm2, 0xd2
+		shufps xmm3, xmm3, 0xc9
+		mulps xmm2, xmm3
+		subps xmm0, xmm2
+		movups OUTc, xmm0
+	}
+	c[0]=OUTc.m128_f32[0];
+	c[1]=OUTc.m128_f32[1];
+	c[2]=OUTc.m128_f32[2];
+#else
     c[0] = a[1] * b[2] - a[2] * b[1];
     c[1] = a[2] * b[0] - a[0] * b[2];
     c[2] = a[0] * b[1] - a[1] * b[0];
+#endif
 }
-void inline Easy_vector_normalize(float c[3]) 
+inline void Easy_vector_cross(__m128 OUTc,const __m128 INa,const __m128 INb) 
+{
+	_asm 
+	{
+		movups xmm0, INa
+		movups xmm1, INb
+		movaps xmm2, xmm0
+		movaps xmm3, xmm1
+		shufps xmm0, xmm0, 0xc9
+		shufps xmm1, xmm1, 0xd2
+		mulps xmm0, xmm1
+		shufps xmm2, xmm2, 0xd2
+		shufps xmm3, xmm3, 0xc9
+		mulps xmm2, xmm3
+		subps xmm0, xmm2
+		movups OUTc, xmm0
+	}
+}
+inline void Easy_vector_normalize(float c[3]) 
 {
 #ifdef USE_SSE
 	__m128 tmp;
@@ -90,10 +141,10 @@ void inline Easy_vector_normalize(float c[3])
     }
 #endif
 }
-__forceinline   void   Easy_vector_normalize(__m128   vec)   
+__forceinline   void   Easy_vector_normalize(__m128 vec)   
   {   
   _asm   {    
-  movaps   xmm1,   vec  
+  movaps   xmm1,   vec
   movaps   xmm0,   xmm1   
   mulps     xmm1,   xmm1   
     
