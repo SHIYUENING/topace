@@ -91,6 +91,11 @@ bool CLoad3DS::LoadToVRAM(void)
 		isVRAM=false;
 		return false;
 	}
+	if(!VBOSupported)
+	{
+		isVRAM=false;
+		return false;
+	}
 
 	for(Lib3dsNode *ThisNode=Model3ds->nodes;ThisNode!=NULL;ThisNode=ThisNode->next)
 		LoadNode(ThisNode);
@@ -443,6 +448,8 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 
 void CLoad3DS::MultCameraMatrix()
 {
+	if(!Model3ds)
+		return;
 	if(!(Model3ds->cameras))
 		return;
 	if(Model3ds->ncameras<=0)
