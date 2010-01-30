@@ -8,7 +8,7 @@
 #include <xmmintrin.h>
 #include "EasyVector.h"
 #include "EasyQuat.h"
-const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
+static const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
 									0.0f,1.0f,0.0f,0.0f,
 									0.0f,0.0f,1.0f,0.0f,
 									0.0f,0.0f,0.0f,1.0f};
@@ -39,7 +39,7 @@ void inline Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
 }
 void inline Easy_matrix_mult(float * Matrix, const float * a, const float * b) 
 {
-#if USE_SSE
+#ifdef USE_SSE
 	int				i;
 	__m128			_t0, _t1, _t2, _t3, _t4, _t5, _t6, _t7;
 
@@ -70,25 +70,15 @@ void inline Easy_matrix_mult(float * Matrix, const float * a, const float * b)
 	}
 
 #else
-        out[ 0] = b[ 0]*a[ 0] + b[ 1]*a[ 4] + b[ 2]*a[ 8] + b[ 3]*a[12];
-        out[ 1] = b[ 0]*a[ 1] + b[ 1]*a[ 5] + b[ 2]*a[ 9] + b[ 3]*a[13];
-		out[ 2] = b[ 0]*a[ 2] + b[ 1]*a[ 6] + b[ 2]*a[10] + b[ 3]*a[14];
-		out[ 3] = b[ 0]*a[ 3] + b[ 1]*a[ 7] + b[ 2]*a[11] + b[ 3]*a[15];
-
-		out[ 4] = b[ 4]*a[ 0] + b[ 5]*a[ 4] + b[ 6]*a[ 8] + b[ 7]*a[12];
-		out[ 5] = b[ 4]*a[ 1] + b[ 5]*a[ 5] + b[ 6]*a[ 9] + b[ 7]*a[13];
-		out[ 6] = b[ 4]*a[ 2] + b[ 5]*a[ 6] + b[ 6]*a[10] + b[ 7]*a[14];
-		out[ 7] = b[ 4]*a[ 3] + b[ 5]*a[ 7] + b[ 6]*a[11] + b[ 7]*a[15];
-
-		out[ 8] = b[ 8]*a[ 0] + b[ 9]*a[ 4] + b[10]*a[ 8] + b[11]*a[12];
-		out[ 9] = b[ 8]*a[ 1] + b[ 9]*a[ 5] + b[10]*a[ 9] + b[11]*a[13];
-		out[10] = b[ 8]*a[ 2] + b[ 9]*a[ 6] + b[10]*a[10] + b[11]*a[14];
-		out[11] = b[ 8]*a[ 3] + b[ 9]*a[ 7] + b[10]*a[11] + b[11]*a[15];
-
-		out[12] = b[12]*a[ 0] + b[13]*a[ 4] + b[14]*a[ 8] + b[15]*a[12];
-		out[13] = b[12]*a[ 1] + b[13]*a[ 5] + b[14]*a[ 9] + b[15]*a[13];
-		out[14] = b[12]*a[ 2] + b[13]*a[ 6] + b[14]*a[10] + b[15]*a[14];
-		out[15] = b[12]*a[ 3] + b[13]*a[ 7] + b[14]*a[11] + b[15]*a[15];
+    float tmp[16];
+    int j;
+    memcpy(tmp, a, 16 * sizeof(float));
+    for (j = 0; j < 4; j++) {
+		Matrix[j*4+0] = tmp[0] * b[j*4+0]+tmp[4] * b[j*4+1]+tmp[8] * b[j*4+2]+tmp[12] * b[j*4+3];
+		Matrix[j*4+1] = tmp[1] * b[j*4+0]+tmp[5] * b[j*4+1]+tmp[9] * b[j*4+2]+tmp[13] * b[j*4+3];
+		Matrix[j*4+2] = tmp[2] * b[j*4+0]+tmp[6] * b[j*4+1]+tmp[10] * b[j*4+2]+tmp[14] * b[j*4+3];
+		Matrix[j*4+3] = tmp[3] * b[j*4+0]+tmp[7] * b[j*4+1]+tmp[11] * b[j*4+2]+tmp[15] * b[j*4+3];
+    }
 #endif
 
 }
@@ -155,11 +145,12 @@ void inline Easy_matrix_copy(float dest[4][4], float src[4][4]) {
 static const __m128 one = _mm_set_ps1(1.0f);
 inline __m128 _mm_dot_ps(__m128 v1, __m128 v2)
 {
-	__m128 mul0 = _mm_mul_ps(v1, v2);
-	__m128 swp0 = _mm_shuffle_ps(mul0, mul0, _MM_SHUFFLE(2, 3, 0, 1));
-	__m128 add0 = _mm_add_ps(mul0, swp0);
-	__m128 swp1 = _mm_shuffle_ps(add0, add0, _MM_SHUFFLE(0, 1, 2, 3));
-	__m128 add1 = _mm_add_ps(add0, swp1);
+	__m128 mul0,swp0,add0,swp1,add1;
+	 mul0 = _mm_mul_ps(v1, v2);
+	 swp0 = _mm_shuffle_ps(mul0, mul0, _MM_SHUFFLE(2, 3, 0, 1));
+	 add0 = _mm_add_ps(mul0, swp0);
+	 swp1 = _mm_shuffle_ps(add0, add0, _MM_SHUFFLE(0, 1, 2, 3));
+	 add1 = _mm_add_ps(add0, swp1);
 	return add1;
 }
 inline void _mm_mul_ps(__m128 in1[4], __m128 in2[4], __m128 out[4])
@@ -469,7 +460,21 @@ inline void _mm_inverse_ps(__m128 const in[4], __m128 out[4])
 	out[2] = _mm_mul_ps(Inv2, Rcp0);
 	out[3] = _mm_mul_ps(Inv3, Rcp0);
 }
-void inline Easy_matrix_inv(float m[4][4]) {
+
+void inline Easy_matrix_inv(float m[4][4]) 
+{
+#ifdef USE_SSE
+	__m128 matrixIN[4],matrixOUT[4];
+	matrixIN[0]=_mm_loadu_ps(&m[0][0]);
+	matrixIN[1]=_mm_loadu_ps(&m[1][0]);
+	matrixIN[2]=_mm_loadu_ps(&m[2][0]);
+	matrixIN[3]=_mm_loadu_ps(&m[3][0]);
+	_mm_inverse_ps(matrixIN,matrixOUT);
+	_mm_storeu_ps(&m[0][0],matrixOUT[0]);
+	_mm_storeu_ps(&m[1][0],matrixOUT[1]);
+	_mm_storeu_ps(&m[2][0],matrixOUT[2]);
+	_mm_storeu_ps(&m[3][0],matrixOUT[3]);
+#else
     int i, j, k;
     int pvt_i[4], pvt_j[4];            /* Locations of pivot elements */
     float pvt_val;               /* Value of current pivot element */
@@ -560,6 +565,7 @@ void inline Easy_matrix_inv(float m[4][4]) {
                 m[i][j] = hold;
             }
     }
+#endif
 }
 
 void inline Easy_matrix_camera(float matrix[4][4], float pos[3], float tgt[3], float roll) {
