@@ -285,7 +285,8 @@ void CLoad3DS::Render()
 {
 	if(!Model3ds)
 		return;
-	
+	if(!VBOSupported)
+		return;
 	//for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 	//	TypeFrame[i]=NodesFrameIn[i];
 
@@ -323,7 +324,8 @@ void CLoad3DS::RenderNoColor()
 {
 	if(!Model3ds)
 		return;
-
+	if(!VBOSupported)
+		return;
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
 
@@ -449,6 +451,8 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 void CLoad3DS::MultCameraMatrix()
 {
 	if(!Model3ds)
+		return;
+	if(!VBOSupported)
 		return;
 	if(!(Model3ds->cameras))
 		return;
@@ -677,6 +681,8 @@ void inline CLoad3DS::loadTex(char * filename)
 void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_frame)
 {
 	if(!Model3ds)
+		return;
+	if(!VBOSupported)
 		return;
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 		TypeFrame[i]=NodesFrameIn[i];
