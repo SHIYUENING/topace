@@ -1,7 +1,7 @@
 #ifndef _EASYMATRIX_H
 #define _EASYMATRIX_H
-#define USE_SSE 1
-#include <stdio.h>			// Header File For Standard Input/Output
+#include "Def.h"	
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <windows.h>
@@ -82,6 +82,7 @@ void inline Easy_matrix_mult(float * Matrix, const float * a, const float * b)
 #endif
 
 }
+
 void inline Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
     float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
     float R[4][4];
@@ -137,6 +138,9 @@ void inline Easy_matrix_scale(float m[4][4], float x, float y, float z) {
         m[1][i] *= y;
         m[2][i] *= z;
     }
+}
+void inline Easy_matrix_copy(__m128 dest[4], __m128 src[4]) {
+    memcpy(dest, src, 16 * sizeof(float));
 }
 void inline Easy_matrix_copy(float dest[4][4], float src[4][4]) {
     memcpy(dest, src, 16 * sizeof(float));
@@ -572,7 +576,10 @@ void inline Easy_matrix_camera(float matrix[4][4], float pos[3], float tgt[3], f
     float M[4][4];
     float x[3], y[3], z[3];
 
-    Easy_vector_sub(y, tgt, pos);
+	y[0]=tgt[0]-pos[0];
+	y[1]=tgt[1]-pos[1];
+	y[2]=tgt[2]-pos[2];
+    //Easy_vector_sub(y, tgt, pos);
     Easy_vector_normalize(y);
 
     if (y[0] != 0. || y[1] != 0) {
