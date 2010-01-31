@@ -7,24 +7,21 @@
 #include <windows.h>
 #include <xmmintrin.h>
 
-
-inline void Easy_quat_axis_angle(float c[4], float axis[3], float angle) 
-{
-    double omega, s;
-    double l;
-
-    l = sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]);
-    if (l < 1e-5) {
-        c[0] = c[1] = c[2] = 0.0f;
-        c[3] = 1.0f;
-    } else {
-        omega = -0.5 * angle;
-        s = sin(omega) / l;
-        c[0] = (float)s * axis[0];
-        c[1] = (float)s * axis[1];
-        c[2] = (float)s * axis[2];
-        c[3] = (float)cos(omega);
+inline void Easy_vector_add(float c[3], float a[3], float b[3]) {
+    int i;
+    for (i = 0; i < 3; ++i) {
+        c[i] = a[i] + b[i];
     }
+}
+inline void Easy_vector_add(__m128 c, const __m128 a, const __m128 b) 
+{
+	_asm 
+	{
+		movups xmm0, a
+		movups xmm1, b
+		addps xmm0, xmm1
+		movups c,xmm0
+	}
 }
 inline void Easy_vector_sub(float c[3], float a[3], float b[3]) 
 {
@@ -32,6 +29,17 @@ inline void Easy_vector_sub(float c[3], float a[3], float b[3])
     for (i = 0; i < 3; ++i) {
         c[i] = a[i] - b[i];
     }
+}
+
+inline void Easy_vector_sub(__m128 c, const __m128 a, const __m128 b) 
+{
+	_asm 
+	{
+		movups xmm0, a
+		movups xmm1, b
+		subps xmm0, xmm1
+		movups c,xmm0
+	}
 }
 inline void Easy_vector_cross(float c[3], float a[3], float b[3]) 
 {
@@ -141,7 +149,7 @@ inline void Easy_vector_normalize(float c[3])
     }
 #endif
 }
-__forceinline   void   Easy_vector_normalize(__m128 vec)   
+inline void Easy_vector_normalize(__m128 vec)   
   {   
   _asm   {    
   movaps   xmm1,   vec
@@ -161,4 +169,14 @@ __forceinline   void   Easy_vector_normalize(__m128 vec)
   movaps   vec,   xmm0   
   }   
   } 
+inline void Easy_vector_transform(float c[3], float m[4][4], float a[3]) {
+    c[0] = m[0][0] * a[0] + m[1][0] * a[1] + m[2][0] * a[2] + m[3][0];
+    c[1] = m[0][1] * a[0] + m[1][1] * a[1] + m[2][1] * a[2] + m[3][1];
+    c[2] = m[0][2] * a[0] + m[1][2] * a[1] + m[2][2] * a[2] + m[3][2];
+}
+inline void Easy_vector_transform(__m128 Out, const __m128 Matrix[4], const __m128 Pos) {
+	Out.m128_f32[0] = Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2] + Matrix[3].m128_f32[0];
+	Out.m128_f32[1] = Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2] + Matrix[3].m128_f32[1];
+	Out.m128_f32[2] = Matrix[0].m128_f32[2] * Pos.m128_f32[0] + Matrix[1].m128_f32[2] * Pos.m128_f32[1] + Matrix[2].m128_f32[2] * Pos.m128_f32[2] + Matrix[3].m128_f32[2];
+}
 #endif
