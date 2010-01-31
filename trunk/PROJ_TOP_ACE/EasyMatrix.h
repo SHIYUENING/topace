@@ -12,9 +12,29 @@ static const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
 									0.0f,1.0f,0.0f,0.0f,
 									0.0f,0.0f,1.0f,0.0f,
 									0.0f,0.0f,0.0f,1.0f};
+static const __m128 one = _mm_set_ps1(1.0f);
+static const __m128 Matrix0 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+static const __m128 Matrix1 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
+static const __m128 Matrix2 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
+static const __m128 Matrix3 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
+
 inline void Easy_matrix_identity(float Matrix[4][4])
 {
 	memcpy(Matrix,IdentityMatrix,4*4*sizeof(float));
+}
+inline void Easy_matrix_identity(__m128 Matrix[4])
+{
+	_asm
+	{
+		movups xmm0,Matrix0
+		movups xmm1,Matrix1
+		movups xmm2,Matrix2
+		movups xmm3,Matrix3
+		movups Matrix[0],xmm0
+		movups Matrix[1],xmm1
+		movups Matrix[2],xmm2
+		movups Matrix[3],xmm3
+	}
 }
 inline void Easy_matrix_transpose(float m[4][4]) 
 {
@@ -220,12 +240,56 @@ inline void Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
     //Easy_matrix_mult(m, m, R);
 	Easy_matrix_mult(&m[0][0],&m[0][0],&R[0][0]);
 }
+inline void Easy_matrix_rotate_quat(__m128 m[4],const __m128 q) {
+    float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
+    __m128 R[4];
+
+	l = q.m128_f32[0] * q.m128_f32[0] + q.m128_f32[1] * q.m128_f32[1] + q.m128_f32[2] * q.m128_f32[2] + q.m128_f32[3] * q.m128_f32[3];
+    if (fabs(l) < 1e-5) {
+        s = 1.0f;
+    } else {
+        s = 2.0f / l;
+    }
+
+    xs = q.m128_f32[0] * s;
+    ys = q.m128_f32[1] * s;
+    zs = q.m128_f32[2] * s;
+    wx = q.m128_f32[3] * xs;
+    wy = q.m128_f32[3] * ys;
+    wz = q.m128_f32[3] * zs;
+    xx = q.m128_f32[0] * xs;
+    xy = q.m128_f32[0] * ys;
+    xz = q.m128_f32[0] * zs;
+    yy = q.m128_f32[1] * ys;
+    yz = q.m128_f32[1] * zs;
+    zz = q.m128_f32[2] * zs;
+
+    R[0].m128_f32[0] = 1.0f - (yy + zz);
+    R[1].m128_f32[0] = xy - wz;
+    R[2].m128_f32[0] = xz + wy;
+    R[0].m128_f32[1] = xy + wz;
+    R[1].m128_f32[1] = 1.0f - (xx + zz);
+    R[2].m128_f32[1] = yz - wx;
+    R[0].m128_f32[2] = xz - wy;
+    R[1].m128_f32[2] = yz + wx;
+    R[2].m128_f32[2] = 1.0f - (xx + yy);
+    R[3].m128_f32[0] = R[3].m128_f32[1] = R[3].m128_f32[2] = R[0].m128_f32[3] = R[1].m128_f32[3] = R[2].m128_f32[3] = 0.0f;
+    R[3].m128_f32[3] = 1.0f;
+
+    //Easy_matrix_mult(m, m, R);
+	Easy_matrix_mult(m,m,R);
+}
 inline void Easy_matrix_rotate(float m[4][4], float angle, float ax, float ay, float az) {
     float q[4];
 	float axis[3]={ax,ay,az};
 
    // lib3ds_vector_make(axis, ax, ay, az);
     Easy_quat_axis_angle(q, axis, angle);
+    Easy_matrix_rotate_quat(m, q);
+}
+inline void Easy_matrix_rotate(__m128 m[4],const __m128 axis_angle) {
+    __m128 q;
+    Easy_quat_axis_angle(q, axis_angle);
     Easy_matrix_rotate_quat(m, q);
 }
 inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) {
@@ -237,14 +301,25 @@ inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) {
         m[2][i] *= z;
     }
 }
-inline void Easy_matrix_copy(__m128 dest[4], __m128 src[4]) {
-    memcpy(dest, src, 16 * sizeof(float));
+inline void Easy_matrix_copy(__m128 dest[4],const __m128 src[4]) 
+{
+	_asm
+	{
+		movups xmm0,src[0]
+		movups xmm1,src[0]
+		movups xmm2,src[0]
+		movups xmm3,src[0]
+		movups dest[0],xmm0
+		movups dest[1],xmm1
+		movups dest[2],xmm2
+		movups dest[3],xmm3
+	}
 }
 inline void Easy_matrix_copy(float dest[4][4], float src[4][4]) {
     memcpy(dest, src, 16 * sizeof(float));
 }
 //http://www.devmaster.net/forums/showthread.php?t=14569
-static const __m128 one = _mm_set_ps1(1.0f);
+
 inline __m128 _mm_dot_ps(__m128 v1, __m128 v2)
 {
 	__m128 mul0,swp0,add0,swp1,add1;
