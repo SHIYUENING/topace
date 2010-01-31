@@ -16,11 +16,34 @@ inline void Easy_matrix_identity(float Matrix[4][4])
 {
 	memcpy(Matrix,IdentityMatrix,4*4*sizeof(float));
 }
+inline void Easy_matrix_transpose(float m[4][4]) 
+{
+    int i, j;
+    float swp;
+
+    for (j = 0; j < 4; j++) {
+        for (i = j + 1; i < 4; i++) {
+            swp = m[j][i];
+            m[j][i] = m[i][j];
+            m[i][j] = swp;
+        }
+    }
+}
+inline void Easy_matrix_transpose(__m128 m[4]) 
+{
+	_MM_TRANSPOSE4_PS(m[0],m[1],m[2],m[3]);
+}
 inline void Easy_matrix_translate(float Matrix[4][4], float x, float y, float z)
 {
 	Matrix[3][0] += Matrix[0][0] * x + Matrix[1][0] * y + Matrix[2][0] * z;
 	Matrix[3][1] += Matrix[0][1] * x + Matrix[1][1] * y + Matrix[2][1] * z;
 	Matrix[3][2] += Matrix[0][2] * x + Matrix[1][2] * y + Matrix[2][2] * z;
+}
+inline void Easy_matrix_translate(__m128 Matrix[4], __m128 Pos)
+{
+	Matrix[3].m128_f32[0] += Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2];
+	Matrix[3].m128_f32[1] += Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2];
+	Matrix[3].m128_f32[2] += Matrix[0].m128_f32[2] * Pos.m128_f32[0] + Matrix[1].m128_f32[2] * Pos.m128_f32[1] + Matrix[2].m128_f32[2] * Pos.m128_f32[2];
 }
 inline void Easy_matrix_mult(float Matrix[4][4], float a[4][4], float b[4][4]) {
 
@@ -83,8 +106,80 @@ inline void Easy_matrix_mult(float * Matrix, const float * a, const float * b)
 
 }
 
-inline void Easy_matrix_mult(__m128 Matrix[4], const __m128 a, const __m128 b)
+inline void Easy_matrix_mult(__m128 out[4], const __m128 in1[4], const __m128 in2[4])
 {
+	{
+		__m128 e0 = _mm_shuffle_ps(in2[0], in2[0], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 e1 = _mm_shuffle_ps(in2[0], in2[0], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 e2 = _mm_shuffle_ps(in2[0], in2[0], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 e3 = _mm_shuffle_ps(in2[0], in2[0], _MM_SHUFFLE(3, 3, 3, 3));
+
+		__m128 m0 = _mm_mul_ps(in1[0], e0);
+		__m128 m1 = _mm_mul_ps(in1[1], e1);
+		__m128 m2 = _mm_mul_ps(in1[2], e2);
+		__m128 m3 = _mm_mul_ps(in1[3], e3);
+
+		__m128 a0 = _mm_add_ps(m0, m1);
+		__m128 a1 = _mm_add_ps(m2, m3);
+		__m128 a2 = _mm_add_ps(a0, a1);
+
+		out[0] = a2;
+	}
+
+	{
+		__m128 e0 = _mm_shuffle_ps(in2[1], in2[1], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 e1 = _mm_shuffle_ps(in2[1], in2[1], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 e2 = _mm_shuffle_ps(in2[1], in2[1], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 e3 = _mm_shuffle_ps(in2[1], in2[1], _MM_SHUFFLE(3, 3, 3, 3));
+
+		__m128 m0 = _mm_mul_ps(in1[0], e0);
+		__m128 m1 = _mm_mul_ps(in1[1], e1);
+		__m128 m2 = _mm_mul_ps(in1[2], e2);
+		__m128 m3 = _mm_mul_ps(in1[3], e3);
+
+		__m128 a0 = _mm_add_ps(m0, m1);
+		__m128 a1 = _mm_add_ps(m2, m3);
+		__m128 a2 = _mm_add_ps(a0, a1);
+
+		out[1] = a2;
+	}
+
+	{
+		__m128 e0 = _mm_shuffle_ps(in2[2], in2[2], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 e1 = _mm_shuffle_ps(in2[2], in2[2], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 e2 = _mm_shuffle_ps(in2[2], in2[2], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 e3 = _mm_shuffle_ps(in2[2], in2[2], _MM_SHUFFLE(3, 3, 3, 3));
+
+		__m128 m0 = _mm_mul_ps(in1[0], e0);
+		__m128 m1 = _mm_mul_ps(in1[1], e1);
+		__m128 m2 = _mm_mul_ps(in1[2], e2);
+		__m128 m3 = _mm_mul_ps(in1[3], e3);
+
+		__m128 a0 = _mm_add_ps(m0, m1);
+		__m128 a1 = _mm_add_ps(m2, m3);
+		__m128 a2 = _mm_add_ps(a0, a1);
+
+		out[2] = a2;
+	}
+
+	{
+		//(__m128&)_mm_shuffle_epi32(__m128i&)in2[0], _MM_SHUFFLE(3, 3, 3, 3))
+		__m128 e0 = _mm_shuffle_ps(in2[3], in2[3], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 e1 = _mm_shuffle_ps(in2[3], in2[3], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 e2 = _mm_shuffle_ps(in2[3], in2[3], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 e3 = _mm_shuffle_ps(in2[3], in2[3], _MM_SHUFFLE(3, 3, 3, 3));
+
+		__m128 m0 = _mm_mul_ps(in1[0], e0);
+		__m128 m1 = _mm_mul_ps(in1[1], e1);
+		__m128 m2 = _mm_mul_ps(in1[2], e2);
+		__m128 m3 = _mm_mul_ps(in1[3], e3);
+
+		__m128 a0 = _mm_add_ps(m0, m1);
+		__m128 a1 = _mm_add_ps(m2, m3);
+		__m128 a2 = _mm_add_ps(a0, a1);
+
+		out[3] = a2;
+	}
 }
 inline void Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
     float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
