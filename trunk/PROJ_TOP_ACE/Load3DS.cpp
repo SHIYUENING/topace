@@ -283,6 +283,23 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 
 void CLoad3DS::Render()
 {
+	__m128 TestSSE,TestSSE2;
+	TestSSE.m128_f32[0]=0.1f;
+	TestSSE.m128_f32[1]=0.2f;
+	TestSSE.m128_f32[2]=0.3f;
+	TestSSE.m128_f32[3]=0.0f;
+	TestSSE2.m128_f32[0]=10.0f;
+	TestSSE2.m128_f32[1]=10.0f;
+	TestSSE2.m128_f32[2]=10.0f;
+	TestSSE2.m128_f32[3]=10.0f;
+	float TestFloat[4]={0.1f,0.2f,0.3f,0.0f};
+	float TestFloat2[4]={10.0f,10.0f,10.0f,10.0f};
+	//Easy_vector_scalar_mul(&TestSSE,TestSSE,10.0f);
+	//Easy_vector_sub(&TestSSE,TestSSE,TestSSE);
+	//Easy_vector_cross(&TestSSE,TestSSE2,TestSSE);
+	//Easy_vector_cross(TestFloat,TestFloat2,TestFloat);
+	//Easy_vector_normalize(&TestSSE,TestSSE);
+	//Easy_vector_normalize(TestFloat);
 	if(!Model3ds)
 		return;
 	if(!VBOSupported)
@@ -442,7 +459,7 @@ void inline CLoad3DS::MeshNodeEval(Lib3dsNode *Node,float Frame)
 							0.0f,1.0f,0.0f,0.0f,
 							0.0f,0.0f,1.0f,0.0f,
 							0.0f,0.0f,0.0f,1.0f};
-	Easy_matrix_translate(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
+	Easy_matrix_translate_Internal(NodeMatrix, n->pos[0], n->pos[1], n->pos[2]);
 	Easy_matrix_rotate_quat(NodeMatrix, n->rot);
     Easy_matrix_scale(NodeMatrix, n->scl[0], n->scl[1], n->scl[2]);
 	Easy_matrix_copy(Node->matrix, NodeMatrix);
@@ -764,7 +781,7 @@ void CLoad3DS::CameraNodeEval(Lib3dsNode *Node,float Frame)
 	TestCamera->roll=LCN->roll;
 	TestCamera->fov=LCN->fov;
 	Easy_matrix_identity(Node->matrix);
-	Easy_matrix_translate(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 }
 void CLoad3DS::CameraTGTNodeEval(Lib3dsNode *Node,float Frame)
 {
@@ -779,5 +796,5 @@ void CLoad3DS::CameraTGTNodeEval(Lib3dsNode *Node,float Frame)
 	TestCamera->target[1]=LCN->pos[1];
 	TestCamera->target[2]=LCN->pos[2];
 	Easy_matrix_identity(Node->matrix);
-	Easy_matrix_translate(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 }
