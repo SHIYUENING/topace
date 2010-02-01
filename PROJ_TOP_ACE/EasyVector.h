@@ -13,14 +13,15 @@ inline void Easy_vector_add(float c[3], float a[3], float b[3]) {
         c[i] = a[i] + b[i];
     }
 }
-inline void Easy_vector_add(__m128 c, const __m128 a, const __m128 b) 
+inline void Easy_vector_add(__m128 * c, const __m128 a, const __m128 b) 
 {
 	_asm 
 	{
 		movups xmm0, a
 		movups xmm1, b
 		addps xmm0, xmm1
-		movups c,xmm0
+		mov    ecx, c
+		movups [ecx], xmm0
 	}
 }
 inline void Easy_vector_sub(float c[3], float a[3], float b[3]) 
@@ -31,15 +32,37 @@ inline void Easy_vector_sub(float c[3], float a[3], float b[3])
     }
 }
 
-inline void Easy_vector_sub(__m128 c, const __m128 a, const __m128 b) 
+inline void Easy_vector_sub(__m128 * c, const __m128 a, const __m128 b) 
 {
 	_asm 
 	{
 		movups xmm0, a
 		movups xmm1, b
 		subps xmm0, xmm1
-		movups c,xmm0
+		mov    ecx, c
+		movups [ecx], xmm0
 	}
+}
+inline void Easy_vector_scalar_mul(float out[3],const float inVec[3],const float in)
+{
+	int i;
+    for (i = 0; i < 3; ++i) {
+        out[i] = inVec[i] *in;
+    }
+}
+inline void Easy_vector_scalar_mul(__m128 * outVec,const __m128 inVec,const float in)
+{
+	__m128 scalar;
+	scalar=_mm_set_ps1(in);
+	_asm
+	{
+		movups xmm0, inVec
+		movups xmm1, scalar
+		mulps xmm0, xmm1
+		mov    ecx, outVec
+		movups [ecx], xmm0
+	}
+
 }
 inline void Easy_vector_cross(float c[3], float a[3], float b[3]) 
 {
@@ -79,7 +102,7 @@ inline void Easy_vector_cross(float c[3], float a[3], float b[3])
     c[2] = a[0] * b[1] - a[1] * b[0];
 #endif
 }
-inline void Easy_vector_cross(__m128 OUTc,const __m128 INa,const __m128 INb) 
+inline void Easy_vector_cross(__m128 * OUTc,const __m128 INa,const __m128 INb) 
 {
 	_asm 
 	{
@@ -94,7 +117,8 @@ inline void Easy_vector_cross(__m128 OUTc,const __m128 INa,const __m128 INb)
 		shufps xmm3, xmm3, 0xc9
 		mulps xmm2, xmm3
 		subps xmm0, xmm2
-		movups OUTc, xmm0
+		mov    ecx, OUTc
+		movups [ecx], xmm0
 	}
 }
 inline void Easy_vector_normalize(float c[3]) 
@@ -149,24 +173,26 @@ inline void Easy_vector_normalize(float c[3])
     }
 #endif
 }
-inline void Easy_vector_normalize(__m128 vec)   
+inline void Easy_vector_normalize(__m128 * vecOut,const __m128 vecIn)   
   {   
-  _asm   {    
-  movaps   xmm1,   vec
-  movaps   xmm0,   xmm1   
-  mulps     xmm1,   xmm1   
+	_asm   
+	{    
+	movaps   xmm1,   vecIn
+	movaps   xmm0,   xmm1   
+	mulps     xmm1,   xmm1   
     
-  movaps   xmm2,   xmm1   
-  shufps   xmm2,   xmm1,   0x09   
-  movaps   xmm3,   xmm2   
-  shufps   xmm3,   xmm2,   0x09   
-  addps     xmm1,   xmm2   
-  addps     xmm1,   xmm3   
+	movaps   xmm2,   xmm1   
+	shufps   xmm2,   xmm1,   0x09   
+	movaps   xmm3,   xmm2   
+	shufps   xmm3,   xmm2,   0x09   
+	addps     xmm1,   xmm2   
+	addps     xmm1,   xmm3   
     
-  sqrtps   xmm1,   xmm1   
-  divps     xmm0,   xmm1   
-    
-  movaps   vec,   xmm0   
+	sqrtps   xmm1,   xmm1   
+	divps     xmm0,   xmm1   
+
+	mov    ecx, vecOut
+	movups [ecx], xmm0  
   }   
   } 
 inline void Easy_vector_transform(float c[3], float m[4][4], float a[3]) {
@@ -174,9 +200,9 @@ inline void Easy_vector_transform(float c[3], float m[4][4], float a[3]) {
     c[1] = m[0][1] * a[0] + m[1][1] * a[1] + m[2][1] * a[2] + m[3][1];
     c[2] = m[0][2] * a[0] + m[1][2] * a[1] + m[2][2] * a[2] + m[3][2];
 }
-inline void Easy_vector_transform(__m128 Out, const __m128 Matrix[4], const __m128 Pos) {
-	Out.m128_f32[0] = Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2] + Matrix[3].m128_f32[0];
-	Out.m128_f32[1] = Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2] + Matrix[3].m128_f32[1];
-	Out.m128_f32[2] = Matrix[0].m128_f32[2] * Pos.m128_f32[0] + Matrix[1].m128_f32[2] * Pos.m128_f32[1] + Matrix[2].m128_f32[2] * Pos.m128_f32[2] + Matrix[3].m128_f32[2];
+inline void Easy_vector_transform(__m128 * Out, const __m128 Matrix[4], const __m128 Pos) {
+	Out[0].m128_f32[0] = Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2] + Matrix[3].m128_f32[0];
+	Out[0].m128_f32[1] = Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2] + Matrix[3].m128_f32[1];
+	Out[0].m128_f32[2] = Matrix[0].m128_f32[2] * Pos.m128_f32[0] + Matrix[1].m128_f32[2] * Pos.m128_f32[1] + Matrix[2].m128_f32[2] * Pos.m128_f32[2] + Matrix[3].m128_f32[2];
 }
 #endif
