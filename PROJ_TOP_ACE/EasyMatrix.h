@@ -370,26 +370,31 @@ inline void Easy_matrix_copy(float dest[4][4], float src[4][4]) {
     memcpy(dest, src, 16 * sizeof(float));
 }
 //http://www.devmaster.net/forums/showthread.php?t=14569
-inline void Easy_matrix_mult_vector3X3(const float * m,float v[4])
+inline void Easy_matrix_mult_vector3X3(float v[3],const float * m)
 {
 //	v[0] = m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12]*v[3];
 //	v[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13]*v[3];
 //	v[2] = m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14]*v[3];
 //	v[3] = m[3]*v[0]+m[7]*v[1]+m[11]*v[2]+m[15]*v[3];
 
-	v[0] = m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12];
-	v[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13];
-	v[2] = m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14];
+	float vOut[3];
+	vOut[0] = m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12];
+	vOut[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13];
+	vOut[2] = m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14];
+	v[0]=vOut[0];
+	v[1]=vOut[1];
+	v[2]=vOut[2];
 }
-inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 m[4],const __m128 vIN)
+inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 MatrixIn[4],const __m128 vIN)
 {
 
 	_asm
 	{
-		movups xmm4,m[0]
-		movups xmm5,m[1]
-		movups xmm6,m[2]
-		movups xmm7,m[3]
+		mov edx,MatrixIn
+		movups xmm4,[edx]
+		movups xmm5,[edx+16]
+		movups xmm6,[edx+32]
+		movups xmm7,[edx+48]
 
 		movups xmm0,vIN
 		movups xmm1,xmm0
@@ -414,23 +419,29 @@ inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 m[4],const __
 	}
 
 }
-inline void Easy_matrix_mult_vector4X4(const float * m,float v[4])
+inline void Easy_matrix_mult_vector4X4(float v[4],const float * m)
 {
-	v[0] = m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12]*v[3];
-	v[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13]*v[3];
-	v[2] = m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14]*v[3];
-	v[3] = m[3]*v[0]+m[7]*v[1]+m[11]*v[2]+m[15]*v[3];
+	float vOut[4];
+	vOut[0] = m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12]*v[3];
+	vOut[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13]*v[3];
+	vOut[2] = m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14]*v[3];
+	vOut[3] = m[3]*v[0]+m[7]*v[1]+m[11]*v[2]+m[15]*v[3];
+	v[0]=vOut[0];
+	v[1]=vOut[1];
+	v[2]=vOut[2];
+	v[3]=vOut[3];
 
 }
-inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 m[4],const __m128 vIN)
+inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 MatrixIn[4],const __m128 vIN)
 {
 
 	_asm
 	{
-		movups xmm4,m[0]
-		movups xmm5,m[1]
-		movups xmm6,m[2]
-		movups xmm7,m[3]
+		mov edx,MatrixIn
+		movups xmm4,[edx]
+		movups xmm5,[edx+16]
+		movups xmm6,[edx+32]
+		movups xmm7,[edx+48]
 
 		movups xmm0,vIN
 		movups xmm1,xmm0
@@ -938,6 +949,38 @@ inline void Easy_matrix_float4X4_to_m128X4(__m128 MatrixOut[4],const float * Mat
 	}
 }
 inline void Easy_matrix_m128X4_to_float4X4(float * MatrixOut,const __m128 MatrixIn[4])
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movaps xmm0,[edx]
+		movaps xmm1,[edx+16]
+		movaps xmm2,[edx+32]
+		movaps xmm3,[edx+48]
+		mov edx,MatrixOut
+		movups [edx],xmm0
+		movups [edx+16],xmm1
+		movups [edx+32],xmm2
+		movups [edx+48],xmm3
+	}
+}
+inline void Easy_matrix_copy(__m128 MatrixOut[4],const float * MatrixIn)
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movups xmm0,[edx]
+		movups xmm1,[edx+16]
+		movups xmm2,[edx+32]
+		movups xmm3,[edx+48]
+		mov edx,MatrixOut
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
+	}
+}
+inline void Easy_matrix_copy(float * MatrixOut,const __m128 MatrixIn[4])
 {
 	_asm
 	{
