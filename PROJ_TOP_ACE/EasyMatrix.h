@@ -337,7 +337,7 @@ inline void Easy_matrix_scale(__m128 MatrixOut[4],const __m128 MatrixIn[4], cons
 
 		shufps xmm4,xmm4,0x00
 		shufps xmm5,xmm5,0x55
-		shufps xmm6,xmm6,0xcc
+		shufps xmm6,xmm6,0xaa
 
 		mulps xmm0,xmm4
 		mulps xmm1,xmm5
@@ -397,7 +397,7 @@ inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 m[4],const __
 		//movups xmm3,xmm0
 
 		//shufps xmm3,xmm3,0xff
-		shufps xmm2,xmm2,0xcc
+		shufps xmm2,xmm2,0xaa
 		shufps xmm1,xmm1,0x55
 		shufps xmm0,xmm0,0x00
 
@@ -438,7 +438,7 @@ inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 m[4],const __
 		movups xmm3,xmm0
 
 		shufps xmm3,xmm3,0xff
-		shufps xmm2,xmm2,0xcc
+		shufps xmm2,xmm2,0xaa
 		shufps xmm1,xmm1,0x55
 		shufps xmm0,xmm0,0x00
 
