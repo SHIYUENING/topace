@@ -294,12 +294,22 @@ void CLoad3DS::Render()
 	TestSSE2.m128_f32[3]=10.0f;
 	float TestFloat[4]={0.1f,0.2f,0.3f,0.0f};
 	float TestFloat2[4]={10.0f,10.0f,10.0f,10.0f};
+	//Easy_vector_add(&TestSSE,TestSSE,TestSSE);
 	//Easy_vector_scalar_mul(&TestSSE,TestSSE,10.0f);
 	//Easy_vector_sub(&TestSSE,TestSSE,TestSSE);
 	//Easy_vector_cross(&TestSSE,TestSSE2,TestSSE);
 	//Easy_vector_cross(TestFloat,TestFloat2,TestFloat);
 	//Easy_vector_normalize(&TestSSE,TestSSE);
 	//Easy_vector_normalize(TestFloat);
+	float TestFloatmatrix[4][4];
+	Easy_matrix_identity(TestFloatmatrix);
+	__m128 TestSSEmatrix[4];
+	//TestSSEmatrix[0].m128_f32[0]=0.0f;
+	//TestSSEmatrix[1].m128_f32[0]=0.0f;
+	Easy_matrix_identity(TestSSEmatrix);
+	//TestSSEmatrix[0].m128_f32[0]=0.0f;
+	Easy_matrix_float4X4_to_m128X4(TestSSEmatrix,&TestFloatmatrix[0][0]);
+	Easy_matrix_m128X4_to_float4X4(&TestFloatmatrix[0][0],TestSSEmatrix);
 	if(!Model3ds)
 		return;
 	if(!VBOSupported)
