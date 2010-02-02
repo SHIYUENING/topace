@@ -308,8 +308,10 @@ void CLoad3DS::Render()
 	//TestSSEmatrix[1].m128_f32[0]=0.0f;
 	Easy_matrix_identity(TestSSEmatrix);
 	//TestSSEmatrix[0].m128_f32[0]=0.0f;
-	Easy_matrix_float4X4_to_m128X4(TestSSEmatrix,&TestFloatmatrix[0][0]);
-	Easy_matrix_m128X4_to_float4X4(&TestFloatmatrix[0][0],TestSSEmatrix);
+	//Easy_matrix_float4X4_to_m128X4(TestSSEmatrix,&TestFloatmatrix[0][0]);
+	//Easy_matrix_m128X4_to_float4X4(&TestFloatmatrix[0][0],TestSSEmatrix);
+	Easy_matrix_scale(TestFloatmatrix,0.1f,0.2f,0.3f);
+	Easy_matrix_scale(TestSSEmatrix,TestSSEmatrix,TestSSE);
 	if(!Model3ds)
 		return;
 	if(!VBOSupported)
@@ -712,7 +714,15 @@ void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_fram
 	if(!VBOSupported)
 		return;
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
-		TypeFrame[i]=NodesFrameIn[i];
+	{
+		if(TypeFrame[i]==NodesFrameIn[i])
+			TypeFrameStats[i]=false;
+		else
+		{
+			TypeFrameStats[i]=true;
+			TypeFrame[i]=NodesFrameIn[i];
+		}
+	}
 	float ThisNodematrix[4][4];
 	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
 	glLoadIdentity();
