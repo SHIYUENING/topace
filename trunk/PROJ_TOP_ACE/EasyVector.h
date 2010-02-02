@@ -17,8 +17,8 @@ inline void Easy_vector_add(__m128 * c, const __m128 a, const __m128 b)
 {
 	_asm 
 	{
-		movups xmm0, a
-		movups xmm1, b
+		movaps xmm0, a
+		movaps xmm1, b
 		addps xmm0, xmm1
 		mov    ecx, c
 		movups [ecx], xmm0
@@ -36,8 +36,8 @@ inline void Easy_vector_sub(__m128 * c, const __m128 a, const __m128 b)
 {
 	_asm 
 	{
-		movups xmm0, a
-		movups xmm1, b
+		movaps xmm0, a
+		movaps xmm1, b
 		subps xmm0, xmm1
 		mov    ecx, c
 		movups [ecx], xmm0
@@ -56,8 +56,8 @@ inline void Easy_vector_scalar_mul(__m128 * outVec,const __m128 inVec,const floa
 	scalar=_mm_set_ps1(in);
 	_asm
 	{
-		movups xmm0, inVec
-		movups xmm1, scalar
+		movaps xmm0, inVec
+		movaps xmm1, scalar
 		mulps xmm0, xmm1
 		mov    ecx, outVec
 		movups [ecx], xmm0
@@ -106,8 +106,8 @@ inline void Easy_vector_cross(__m128 * OUTc,const __m128 INa,const __m128 INb)
 {
 	_asm 
 	{
-		movups xmm0, INa
-		movups xmm1, INb
+		movaps xmm0, INa
+		movaps xmm1, INb
 		movaps xmm2, xmm0
 		movaps xmm3, xmm1
 		shufps xmm0, xmm0, 0xc9

@@ -13,10 +13,10 @@ static const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
 									0.0f,0.0f,1.0f,0.0f,
 									0.0f,0.0f,0.0f,1.0f};
 static const __m128 one = _mm_set_ps1(1.0f);
-static const __m128 Matrix0 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
-static const __m128 Matrix1 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
-static const __m128 Matrix2 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
-static const __m128 Matrix3 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
+static const __m128 IdentityMatrix0 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
+static const __m128 IdentityMatrix1 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
+static const __m128 IdentityMatrix2 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
+static const __m128 IdentityMatrix3 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
  
 inline void Easy_matrix_identity(float Matrix[4][4])
 {
@@ -26,15 +26,22 @@ inline void Easy_matrix_identity(__m128 Matrix[4])
 {
 	_asm
 	{
-		movups xmm0,Matrix0
-		movups xmm1,Matrix1
-		movups xmm2,Matrix2
-		movups xmm3,Matrix3
-		movups Matrix[0],xmm0
-		movups Matrix[1],xmm1
-		movups Matrix[2],xmm2
-		movups Matrix[3],xmm3
+		movaps xmm0,IdentityMatrix0
+		movaps xmm1,IdentityMatrix1
+		movaps xmm2,IdentityMatrix2
+		movaps xmm3,IdentityMatrix3
+		mov edx,Matrix;
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
 	}
+	/*
+	Matrix[0] = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	Matrix[1] = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
+	Matrix[2] = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
+	Matrix[3] = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
+	*/
 }
 inline void Easy_matrix_transpose(float m[4][4]) 
 {
@@ -59,7 +66,7 @@ inline void Easy_matrix_translate_Internal(float Matrix[4][4], float x, float y,
 	Matrix[3][1] += Matrix[0][1] * x + Matrix[1][1] * y + Matrix[2][1] * z;
 	Matrix[3][2] += Matrix[0][2] * x + Matrix[1][2] * y + Matrix[2][2] * z;
 }
-inline void Easy_matrix_translate_Internal(__m128 Matrix[4], __m128 Pos)
+inline void Easy_matrix_translate_Internal(__m128 Matrix[4], const __m128 Pos)
 {
 	Matrix[3].m128_f32[0] += Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2];
 	Matrix[3].m128_f32[1] += Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2];
@@ -71,7 +78,7 @@ inline void Easy_matrix_translate_External(float Matrix[4][4], float x, float y,
 	Matrix[3][1] += y ;
 	Matrix[3][2] += z ;
 }
-inline void Easy_matrix_translate_External(__m128 Matrix[4], __m128 Pos)
+inline void Easy_matrix_translate_External(__m128 Matrix[4], const __m128 Pos)
 {
 	Matrix[3].m128_f32[0] += Pos.m128_f32[0];
 	Matrix[3].m128_f32[1] += Pos.m128_f32[1];
@@ -304,7 +311,8 @@ inline void Easy_matrix_rotate(__m128 m[4],const __m128 axis_angle) {
     Easy_quat_axis_angle(q, axis_angle);
     Easy_matrix_rotate_quat(m, q);
 }
-inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) {
+inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) 
+{
     int i;
 
     for (i = 0; i < 4; i++) {
@@ -313,18 +321,49 @@ inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) {
         m[2][i] *= z;
     }
 }
-inline void Easy_matrix_copy(__m128 dest[4],const __m128 src[4]) 
+inline void Easy_matrix_scale(__m128 MatrixOut[4],const __m128 MatrixIn[4], const __m128 VecIn) 
 {
 	_asm
 	{
-		movups xmm0,src[0]
-		movups xmm1,src[1]
-		movups xmm2,src[2]
-		movups xmm3,src[3]
-		movups dest[0],xmm0
-		movups dest[1],xmm1
-		movups dest[2],xmm2
-		movups dest[3],xmm3
+		mov edx,MatrixIn
+		movaps xmm0,[edx]
+		movaps xmm1,[edx+16]
+		movaps xmm2,[edx+32]
+		movaps xmm3,[edx+48]
+
+		movaps xmm4,VecIn
+		movaps xmm5,xmm4
+		movaps xmm6,xmm4
+
+		shufps xmm4,xmm4,0x00
+		shufps xmm5,xmm5,0x55
+		shufps xmm6,xmm6,0xcc
+
+		mulps xmm0,xmm4
+		mulps xmm1,xmm5
+		mulps xmm2,xmm6
+
+		mov edx,MatrixOut
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
+	}
+}
+inline void Easy_matrix_copy(__m128 MatrixOut[4],const __m128 MatrixIn[4]) 
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movups xmm0,[edx]
+		movups xmm1,[edx+16]
+		movups xmm2,[edx+32]
+		movups xmm3,[edx+48]
+		mov edx,MatrixOut
+		movups [edx],xmm0
+		movups [edx+16],xmm1
+		movups [edx+32],xmm2
+		movups [edx+48],xmm3
 	}
 }
 inline void Easy_matrix_copy(float dest[4][4], float src[4][4]) {
@@ -342,7 +381,7 @@ inline void Easy_matrix_mult_vector3X3(const float * m,float v[4])
 	v[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13];
 	v[2] = m[2]*v[0]+m[6]*v[1]+m[10]*v[2]+m[14];
 }
-inline void Easy_matrix_mult_vector3X3(const __m128 m[4],__m128 v)
+inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 m[4],const __m128 vIN)
 {
 
 	_asm
@@ -352,7 +391,7 @@ inline void Easy_matrix_mult_vector3X3(const __m128 m[4],__m128 v)
 		movups xmm6,m[2]
 		movups xmm7,m[3]
 
-		movups xmm0,v
+		movups xmm0,vIN
 		movups xmm1,xmm0
 		movups xmm2,xmm0
 		//movups xmm3,xmm0
@@ -370,7 +409,8 @@ inline void Easy_matrix_mult_vector3X3(const __m128 m[4],__m128 v)
 		addps xmm0,xmm1
 		addps xmm0,xmm2
 		addps xmm0,xmm7//addps xmm0,xmm3
-		movups v,xmm0
+		mov    ecx, vOut
+		movups [ecx], xmm0
 	}
 
 }
@@ -382,7 +422,7 @@ inline void Easy_matrix_mult_vector4X4(const float * m,float v[4])
 	v[3] = m[3]*v[0]+m[7]*v[1]+m[11]*v[2]+m[15]*v[3];
 
 }
-inline void Easy_matrix_mult_vector4X4(const __m128 m[4],__m128 v)
+inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 m[4],const __m128 vIN)
 {
 
 	_asm
@@ -392,7 +432,7 @@ inline void Easy_matrix_mult_vector4X4(const __m128 m[4],__m128 v)
 		movups xmm6,m[2]
 		movups xmm7,m[3]
 
-		movups xmm0,v
+		movups xmm0,vIN
 		movups xmm1,xmm0
 		movups xmm2,xmm0
 		movups xmm3,xmm0
@@ -410,7 +450,8 @@ inline void Easy_matrix_mult_vector4X4(const __m128 m[4],__m128 v)
 		addps xmm0,xmm1
 		addps xmm0,xmm2
 		addps xmm0,xmm3
-		movups v,xmm0
+		mov    ecx, vOut
+		movups [ecx], xmm0
 	}
 
 }
@@ -880,5 +921,36 @@ inline void Easy_matrix_camera(float matrix[4][4], float pos[3], float tgt[3], f
     Easy_matrix_mult(&matrix[0][0], &matrix[0][0], &M[0][0]);
     Easy_matrix_translate_Internal(matrix, -pos[0], -pos[1], -pos[2]);
 }
-
+inline void Easy_matrix_float4X4_to_m128X4(__m128 MatrixOut[4],const float * MatrixIn)
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movups xmm0,[edx]
+		movups xmm1,[edx+16]
+		movups xmm2,[edx+32]
+		movups xmm3,[edx+48]
+		mov edx,MatrixOut
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
+	}
+}
+inline void Easy_matrix_m128X4_to_float4X4(float * MatrixOut,const __m128 MatrixIn[4])
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movaps xmm0,[edx]
+		movaps xmm1,[edx+16]
+		movaps xmm2,[edx+32]
+		movaps xmm3,[edx+48]
+		mov edx,MatrixOut
+		movups [edx],xmm0
+		movups [edx+16],xmm1
+		movups [edx+32],xmm2
+		movups [edx+48],xmm3
+	}
+}
 #endif
