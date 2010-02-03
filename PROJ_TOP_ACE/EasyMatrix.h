@@ -321,11 +321,11 @@ inline void Easy_matrix_scale(float m[4][4], float x, float y, float z)
         m[2][i] *= z;
     }
 }
-inline void Easy_matrix_scale(__m128 MatrixOut[4],const __m128 MatrixIn[4], const __m128 VecIn) 
+inline void Easy_matrix_scale(__m128 MatrixOut[4], const __m128 VecIn) 
 {
 	_asm
 	{
-		mov edx,MatrixIn
+		mov edx,MatrixOut
 		movaps xmm0,[edx]
 		movaps xmm1,[edx+16]
 		movaps xmm2,[edx+32]
