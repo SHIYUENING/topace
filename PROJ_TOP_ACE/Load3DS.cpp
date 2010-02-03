@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>	
 #include "Load3DS.h"
-#include "EasyMatrix.h"
 CLoad3DS::CLoad3DS(void)
 : isRAM(false)
 , isVRAM(false)
@@ -700,6 +699,13 @@ void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_fram
 	//Easy_vector_cross(TestFloat,TestFloat2,TestFloat);
 	//Easy_vector_normalize(&TestSSE,TestSSE);
 	//Easy_vector_normalize(TestFloat);
+	__m128 TestSSEnorm2;
+	TestSSEnorm2.m128_f32[0]=2.0f;
+	TestSSEnorm2.m128_f32[1]=2.0f;
+	TestSSEnorm2.m128_f32[2]=2.0f;
+	TestSSEnorm2.m128_f32[3]=0.0f;
+	float Testfloatnorm2;
+	Easy_vector_norm2(&TestSSEnorm2,TestSSEnorm2);
 	float TestFloatmatrix[4][4]=
 	{
 		1,2,3,4,

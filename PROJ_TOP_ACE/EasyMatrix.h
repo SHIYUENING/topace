@@ -483,15 +483,15 @@ inline void Easy_matrix_copy(__m128 MatrixOut[4],const __m128 MatrixIn[4])
 	_asm
 	{
 		mov edx,MatrixIn
-		movups xmm0,[edx]
-		movups xmm1,[edx+16]
-		movups xmm2,[edx+32]
-		movups xmm3,[edx+48]
+		movaps xmm0,[edx]
+		movaps xmm1,[edx+16]
+		movaps xmm2,[edx+32]
+		movaps xmm3,[edx+48]
 		mov edx,MatrixOut
-		movups [edx],xmm0
-		movups [edx+16],xmm1
-		movups [edx+32],xmm2
-		movups [edx+48],xmm3
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
 	}
 }
 inline void Easy_matrix_copy(float dest[4][4], float src[4][4]) {
@@ -517,14 +517,14 @@ inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 MatrixIn[4],c
 	_asm
 	{
 		mov edx,MatrixIn
-		movups xmm4,[edx]
-		movups xmm5,[edx+16]
-		movups xmm6,[edx+32]
-		movups xmm7,[edx+48]
+		movaps xmm4,[edx]
+		movaps xmm5,[edx+16]
+		movaps xmm6,[edx+32]
+		movaps xmm7,[edx+48]
 
-		movups xmm0,vIN
-		movups xmm1,xmm0
-		movups xmm2,xmm0
+		movaps xmm0,vIN
+		movaps xmm1,xmm0
+		movaps xmm2,xmm0
 		//movups xmm3,xmm0
 
 		//shufps xmm3,xmm3,0xff
@@ -541,7 +541,7 @@ inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 MatrixIn[4],c
 		addps xmm0,xmm2
 		addps xmm0,xmm7//addps xmm0,xmm3
 		mov    ecx, vOut
-		movups [ecx], xmm0
+		movaps [ecx], xmm0
 	}
 
 }
@@ -558,15 +558,15 @@ inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 MatrixIn[4],c
 	_asm
 	{
 		mov edx,MatrixIn
-		movups xmm4,[edx]
-		movups xmm5,[edx+16]
-		movups xmm6,[edx+32]
-		movups xmm7,[edx+48]
+		movaps xmm4,[edx]
+		movaps xmm5,[edx+16]
+		movaps xmm6,[edx+32]
+		movaps xmm7,[edx+48]
 
-		movups xmm0,vIN
-		movups xmm1,xmm0
-		movups xmm2,xmm0
-		movups xmm3,xmm0
+		movaps xmm0,vIN
+		movaps xmm1,xmm0
+		movaps xmm2,xmm0
+		movaps xmm3,xmm0
 
 		shufps xmm3,xmm3,0xff
 		shufps xmm2,xmm2,0xaa
@@ -582,7 +582,7 @@ inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 MatrixIn[4],c
 		addps xmm0,xmm2
 		addps xmm0,xmm3
 		mov    ecx, vOut
-		movups [ecx], xmm0
+		movaps [ecx], xmm0
 	}
 
 }
@@ -671,7 +671,7 @@ inline void _mm_mul_matrix(__m128 in1[4], __m128 in2[4], __m128 out[4])
 		out[3] = a2;
 	}
 }
-inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
+inline void Easy_matrix_inv(__m128 const MatrixIn[4], __m128 MatrixOut[4])
 {
 	__m128 Fac0;
 	{
@@ -680,13 +680,13 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		//	valType SubFactor06 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
 		//	valType SubFactor13 = m[1][2] * m[2][3] - m[2][2] * m[1][3];
 
-		__m128 Swp0a = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(3, 3, 3, 3));
-		__m128 Swp0b = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 Swp0a = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(3, 3, 3, 3));
+		__m128 Swp0b = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(2, 2, 2, 2));
 
-		__m128 Swp00 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 Swp00 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(2, 2, 2, 2));
 		__m128 Swp01 = _mm_shuffle_ps(Swp0a, Swp0a, _MM_SHUFFLE(2, 0, 0, 0));
 		__m128 Swp02 = _mm_shuffle_ps(Swp0b, Swp0b, _MM_SHUFFLE(2, 0, 0, 0));
-		__m128 Swp03 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(3, 3, 3, 3));
+		__m128 Swp03 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(3, 3, 3, 3));
 
 		__m128 Mul00 = _mm_mul_ps(Swp00, Swp01);
 		__m128 Mul01 = _mm_mul_ps(Swp02, Swp03);
@@ -695,6 +695,14 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		bool stop = true;
 	}
 
+	//__asm
+	//{
+	//	mov edx,MatrixIn
+	//	movaps xmm4,[edx]
+	//	movaps xmm5,[edx+16]
+	//	movaps xmm6,[edx+32]
+	//	movaps xmm7,[edx+48]
+	//}
 	__m128 Fac1;
 	{
 		//	valType SubFactor01 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
@@ -702,13 +710,13 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		//	valType SubFactor07 = m[1][1] * m[3][3] - m[3][1] * m[1][3];
 		//	valType SubFactor14 = m[1][1] * m[2][3] - m[2][1] * m[1][3];
 
-		__m128 Swp0a = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(3, 3, 3, 3));
-		__m128 Swp0b = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 Swp0a = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(3, 3, 3, 3));
+		__m128 Swp0b = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(1, 1, 1, 1));
 
-		__m128 Swp00 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 Swp00 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(1, 1, 1, 1));
 		__m128 Swp01 = _mm_shuffle_ps(Swp0a, Swp0a, _MM_SHUFFLE(2, 0, 0, 0));
 		__m128 Swp02 = _mm_shuffle_ps(Swp0b, Swp0b, _MM_SHUFFLE(2, 0, 0, 0));
-		__m128 Swp03 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(3, 3, 3, 3));
+		__m128 Swp03 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(3, 3, 3, 3));
 
 		__m128 Mul00 = _mm_mul_ps(Swp00, Swp01);
 		__m128 Mul01 = _mm_mul_ps(Swp02, Swp03);
@@ -725,13 +733,13 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		//	valType SubFactor08 = m[1][1] * m[3][2] - m[3][1] * m[1][2];
 		//	valType SubFactor15 = m[1][1] * m[2][2] - m[2][1] * m[1][2];
 
-		__m128 Swp0a = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(2, 2, 2, 2));
-		__m128 Swp0b = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 Swp0a = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 Swp0b = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(1, 1, 1, 1));
 
-		__m128 Swp00 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 Swp00 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(1, 1, 1, 1));
 		__m128 Swp01 = _mm_shuffle_ps(Swp0a, Swp0a, _MM_SHUFFLE(2, 0, 0, 0));
 		__m128 Swp02 = _mm_shuffle_ps(Swp0b, Swp0b, _MM_SHUFFLE(2, 0, 0, 0));
-		__m128 Swp03 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 Swp03 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(2, 2, 2, 2));
 
 		__m128 Mul00 = _mm_mul_ps(Swp00, Swp01);
 		__m128 Mul01 = _mm_mul_ps(Swp02, Swp03);
@@ -747,13 +755,13 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		//	valType SubFactor09 = m[1][0] * m[3][3] - m[3][0] * m[1][3];
 		//	valType SubFactor16 = m[1][0] * m[2][3] - m[2][0] * m[1][3];
 
-		__m128 Swp0a = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(3, 3, 3, 3));
-		__m128 Swp0b = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 Swp0a = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(3, 3, 3, 3));
+		__m128 Swp0b = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(0, 0, 0, 0));
 
-		__m128 Swp00 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 Swp00 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(0, 0, 0, 0));
 		__m128 Swp01 = _mm_shuffle_ps(Swp0a, Swp0a, _MM_SHUFFLE(2, 0, 0, 0));
 		__m128 Swp02 = _mm_shuffle_ps(Swp0b, Swp0b, _MM_SHUFFLE(2, 0, 0, 0));
-		__m128 Swp03 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(3, 3, 3, 3));
+		__m128 Swp03 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(3, 3, 3, 3));
 
 		__m128 Mul00 = _mm_mul_ps(Swp00, Swp01);
 		__m128 Mul01 = _mm_mul_ps(Swp02, Swp03);
@@ -769,13 +777,13 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		//	valType SubFactor10 = m[1][0] * m[3][2] - m[3][0] * m[1][2];
 		//	valType SubFactor17 = m[1][0] * m[2][2] - m[2][0] * m[1][2];
 
-		__m128 Swp0a = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(2, 2, 2, 2));
-		__m128 Swp0b = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 Swp0a = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 Swp0b = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(0, 0, 0, 0));
 
-		__m128 Swp00 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 Swp00 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(0, 0, 0, 0));
 		__m128 Swp01 = _mm_shuffle_ps(Swp0a, Swp0a, _MM_SHUFFLE(2, 0, 0, 0));
 		__m128 Swp02 = _mm_shuffle_ps(Swp0b, Swp0b, _MM_SHUFFLE(2, 0, 0, 0));
-		__m128 Swp03 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(2, 2, 2, 2));
+		__m128 Swp03 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(2, 2, 2, 2));
 
 		__m128 Mul00 = _mm_mul_ps(Swp00, Swp01);
 		__m128 Mul01 = _mm_mul_ps(Swp02, Swp03);
@@ -791,13 +799,13 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 		//	valType SubFactor12 = m[1][0] * m[3][1] - m[3][0] * m[1][1];
 		//	valType SubFactor18 = m[1][0] * m[2][1] - m[2][0] * m[1][1];
 
-		__m128 Swp0a = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(1, 1, 1, 1));
-		__m128 Swp0b = _mm_shuffle_ps(in[3], in[2], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 Swp0a = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 Swp0b = _mm_shuffle_ps(MatrixIn[3], MatrixIn[2], _MM_SHUFFLE(0, 0, 0, 0));
 
-		__m128 Swp00 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(0, 0, 0, 0));
+		__m128 Swp00 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(0, 0, 0, 0));
 		__m128 Swp01 = _mm_shuffle_ps(Swp0a, Swp0a, _MM_SHUFFLE(2, 0, 0, 0));
 		__m128 Swp02 = _mm_shuffle_ps(Swp0b, Swp0b, _MM_SHUFFLE(2, 0, 0, 0));
-		__m128 Swp03 = _mm_shuffle_ps(in[2], in[1], _MM_SHUFFLE(1, 1, 1, 1));
+		__m128 Swp03 = _mm_shuffle_ps(MatrixIn[2], MatrixIn[1], _MM_SHUFFLE(1, 1, 1, 1));
 
 		__m128 Mul00 = _mm_mul_ps(Swp00, Swp01);
 		__m128 Mul01 = _mm_mul_ps(Swp02, Swp03);
@@ -813,28 +821,28 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 	// m[0][0]
 	// m[0][0]
 	// m[0][0]
-	__m128 Temp0 = _mm_shuffle_ps(in[1], in[0], _MM_SHUFFLE(0, 0, 0, 0));
+	__m128 Temp0 = _mm_shuffle_ps(MatrixIn[1], MatrixIn[0], _MM_SHUFFLE(0, 0, 0, 0));
 	__m128 Vec0 = _mm_shuffle_ps(Temp0, Temp0, _MM_SHUFFLE(2, 2, 2, 0));
 
 	// m[1][1]
 	// m[0][1]
 	// m[0][1]
 	// m[0][1]
-	__m128 Temp1 = _mm_shuffle_ps(in[1], in[0], _MM_SHUFFLE(1, 1, 1, 1));
+	__m128 Temp1 = _mm_shuffle_ps(MatrixIn[1], MatrixIn[0], _MM_SHUFFLE(1, 1, 1, 1));
 	__m128 Vec1 = _mm_shuffle_ps(Temp1, Temp1, _MM_SHUFFLE(2, 2, 2, 0));
 
 	// m[1][2]
 	// m[0][2]
 	// m[0][2]
 	// m[0][2]
-	__m128 Temp2 = _mm_shuffle_ps(in[1], in[0], _MM_SHUFFLE(2, 2, 2, 2));
+	__m128 Temp2 = _mm_shuffle_ps(MatrixIn[1], MatrixIn[0], _MM_SHUFFLE(2, 2, 2, 2));
 	__m128 Vec2 = _mm_shuffle_ps(Temp2, Temp2, _MM_SHUFFLE(2, 2, 2, 0));
 
 	// m[1][3]
 	// m[0][3]
 	// m[0][3]
 	// m[0][3]
-	__m128 Temp3 = _mm_shuffle_ps(in[1], in[0], _MM_SHUFFLE(3, 3, 3, 3));
+	__m128 Temp3 = _mm_shuffle_ps(MatrixIn[1], MatrixIn[0], _MM_SHUFFLE(3, 3, 3, 3));
 	__m128 Vec3 = _mm_shuffle_ps(Temp3, Temp3, _MM_SHUFFLE(2, 2, 2, 0));
 
 	// col0
@@ -893,15 +901,15 @@ inline void Easy_matrix_inv(__m128 const in[4], __m128 out[4])
 	//						+ m[0][1] * Inverse[1][0] 
 	//						+ m[0][2] * Inverse[2][0] 
 	//						+ m[0][3] * Inverse[3][0];
-	__m128 Det0 = _mm_dot_ps(in[0], Row2);
+	__m128 Det0 = _mm_dot_ps(MatrixIn[0], Row2);
 	__m128 Rcp0 = _mm_div_ps(one, Det0);
 	//__m128 Rcp0 = _mm_rcp_ps(Det0);
 
 	//	Inverse /= Determinant;
-	out[0] = _mm_mul_ps(Inv0, Rcp0);
-	out[1] = _mm_mul_ps(Inv1, Rcp0);
-	out[2] = _mm_mul_ps(Inv2, Rcp0);
-	out[3] = _mm_mul_ps(Inv3, Rcp0);
+	MatrixOut[0] = _mm_mul_ps(Inv0, Rcp0);
+	MatrixOut[1] = _mm_mul_ps(Inv1, Rcp0);
+	MatrixOut[2] = _mm_mul_ps(Inv2, Rcp0);
+	MatrixOut[3] = _mm_mul_ps(Inv3, Rcp0);
 }
 
 inline void Easy_matrix_inv(float m[4][4]) 
