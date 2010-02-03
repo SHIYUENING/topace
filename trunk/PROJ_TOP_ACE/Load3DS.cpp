@@ -283,47 +283,7 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 
 void CLoad3DS::Render()
 {
-	__m128 TestSSE,TestSSE2;
-	TestSSE.m128_f32[0]=1.0f;
-	TestSSE.m128_f32[1]=2.0f;
-	TestSSE.m128_f32[2]=3.0f;
-	TestSSE.m128_f32[3]=4.0f;
-	TestSSE2.m128_f32[0]=10.0f;
-	TestSSE2.m128_f32[1]=10.0f;
-	TestSSE2.m128_f32[2]=10.0f;
-	TestSSE2.m128_f32[3]=10.0f;
-	float TestFloat[4]={1.0f,2.0f,3.0f,4.0f};
-	float TestFloat2[4]={10.0f,10.0f,10.0f,10.0f};
-	//Easy_vector_add(&TestSSE,TestSSE,TestSSE);
-	//Easy_vector_scalar_mul(&TestSSE,TestSSE,10.0f);
-	//Easy_vector_sub(&TestSSE,TestSSE,TestSSE);
-	//Easy_vector_cross(&TestSSE,TestSSE2,TestSSE);
-	//Easy_vector_cross(TestFloat,TestFloat2,TestFloat);
-	//Easy_vector_normalize(&TestSSE,TestSSE);
-	//Easy_vector_normalize(TestFloat);
-	float TestFloatmatrix[4][4]=
-	{
-		1,2,3,4,
-		5,6,7,8,
-		9,10,11,12,
-		13,14,15,16
-	};
-	Easy_matrix_transpose(TestFloatmatrix);
-	//Easy_matrix_identity(TestFloatmatrix);
-	__m128 TestSSEmatrix[4];
-	//TestSSEmatrix[0].m128_f32[0]=0.0f;
-	//TestSSEmatrix[1].m128_f32[0]=0.0f;
-	Easy_matrix_identity(TestSSEmatrix);
-	//TestSSEmatrix[0].m128_f32[0]=0.0f;
-	Easy_matrix_float4X4_to_m128X4(TestSSEmatrix,&TestFloatmatrix[0][0]);
-	//Easy_matrix_m128X4_to_float4X4(&TestFloatmatrix[0][0],TestSSEmatrix);
-	//Easy_matrix_scale(TestFloatmatrix,0.1f,0.2f,0.3f);
-	//Easy_matrix_scale(TestSSEmatrix,TestSSEmatrix,TestSSE);
-	
-	//for(int i=0;i<10000;i++)
-		Easy_matrix_mult_vector4X4(TestFloat,&TestFloatmatrix[0][0]);
-	//for(int i=0;i<10000;i++)
-		Easy_matrix_mult_vector4X4(&TestSSE2,TestSSEmatrix,TestSSE);
+
 	if(!Model3ds)
 		return;
 	if(!VBOSupported)
@@ -721,6 +681,55 @@ void inline CLoad3DS::loadTex(char * filename)
 
 void CLoad3DS::ModelMatrix(float NodesFrameIn[MAX_TYPE_3DS_NODE],float test_frame)
 {
+
+	__m128 TestSSE,TestSSE2;
+	TestSSE.m128_f32[0]=1.0f;
+	TestSSE.m128_f32[1]=2.0f;
+	TestSSE.m128_f32[2]=3.0f;
+	TestSSE.m128_f32[3]=4.0f;
+	TestSSE2.m128_f32[0]=10.0f;
+	TestSSE2.m128_f32[1]=10.0f;
+	TestSSE2.m128_f32[2]=10.0f;
+	TestSSE2.m128_f32[3]=10.0f;
+	float TestFloat[4]={1.0f,2.0f,3.0f,4.0f};
+	float TestFloat2[4]={10.0f,10.0f,10.0f,10.0f};
+	//Easy_vector_add(&TestSSE,TestSSE,TestSSE);
+	//Easy_vector_scalar_mul(&TestSSE,TestSSE,10.0f);
+	//Easy_vector_sub(&TestSSE,TestSSE,TestSSE);
+	//Easy_vector_cross(&TestSSE,TestSSE2,TestSSE);
+	//Easy_vector_cross(TestFloat,TestFloat2,TestFloat);
+	//Easy_vector_normalize(&TestSSE,TestSSE);
+	//Easy_vector_normalize(TestFloat);
+	float TestFloatmatrix[4][4]=
+	{
+		1,2,3,4,
+		5,6,7,8,
+		9,10,11,12,
+		13,14,15,16
+	};
+	Easy_matrix_transpose(TestFloatmatrix);
+	glGetFloatv(GL_MODELVIEW_MATRIX,&TestFloatmatrix[0][0]);
+	//Easy_matrix_identity(TestFloatmatrix);
+	__m128 TestSSEmatrix[4];
+	__m128 TestSSEmatrix2[4];
+	//TestSSEmatrix[0].m128_f32[0]=0.0f;
+	//TestSSEmatrix[1].m128_f32[0]=0.0f;
+	Easy_matrix_identity(TestSSEmatrix);
+	Easy_matrix_identity(TestSSEmatrix2);
+	//TestSSEmatrix[0].m128_f32[0]=0.0f;
+	Easy_matrix_float4X4_to_m128X4(TestSSEmatrix,&TestFloatmatrix[0][0]);
+	//Easy_matrix_transpose(TestSSEmatrix);
+	//Easy_matrix_m128X4_to_float4X4(&TestFloatmatrix[0][0],TestSSEmatrix);
+	//for(int i=0;i<1000000;i++)
+	//Easy_matrix_scale(TestFloatmatrix,0.1f,0.2f,0.3f);
+	//Easy_matrix_scale(TestSSEmatrix2,TestSSE);
+	
+	//for(int i=0;i<10000;i++)
+		//Easy_matrix_mult_vector4X4(TestFloat,&TestFloatmatrix[0][0]);
+	//for(int i=0;i<10000;i++)
+		//Easy_matrix_mult_vector4X4(&TestSSE2,TestSSEmatrix,TestSSE);
+
+
 	if(!Model3ds)
 		return;
 	if(!VBOSupported)

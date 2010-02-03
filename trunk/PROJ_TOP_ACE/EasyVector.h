@@ -179,20 +179,20 @@ inline void Easy_vector_normalize(__m128 * vecOut,const __m128 vecIn)
 	{    
 	movaps   xmm1,   vecIn
 	movaps   xmm0,   xmm1   
-	mulps     xmm1,   xmm1   
+	mulps	 xmm1,   xmm1   
     
 	movaps   xmm2,   xmm1   
 	shufps   xmm2,   xmm1,   0x09   
 	movaps   xmm3,   xmm2   
 	shufps   xmm3,   xmm2,   0x09   
-	addps     xmm1,   xmm2   
-	addps     xmm1,   xmm3   
+	addps	 xmm1,   xmm2   
+	addps    xmm1,   xmm3   
     
 	sqrtps   xmm1,   xmm1   
-	divps     xmm0,   xmm1   
+	divps    xmm0,   xmm1   
 
-	mov    ecx, vecOut
-	movups [ecx], xmm0  
+	mov		 ecx,    vecOut
+	movups	 [ecx],  xmm0  
   }   
   } 
 inline void Easy_vector_transform(float c[3], float m[4][4], float a[3]) {
@@ -200,9 +200,39 @@ inline void Easy_vector_transform(float c[3], float m[4][4], float a[3]) {
     c[1] = m[0][1] * a[0] + m[1][1] * a[1] + m[2][1] * a[2] + m[3][1];
     c[2] = m[0][2] * a[0] + m[1][2] * a[1] + m[2][2] * a[2] + m[3][2];
 }
-inline void Easy_vector_transform(__m128 * Out, const __m128 Matrix[4], const __m128 Pos) {
-	Out[0].m128_f32[0] = Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2] + Matrix[3].m128_f32[0];
-	Out[0].m128_f32[1] = Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2] + Matrix[3].m128_f32[1];
-	Out[0].m128_f32[2] = Matrix[0].m128_f32[2] * Pos.m128_f32[0] + Matrix[1].m128_f32[2] * Pos.m128_f32[1] + Matrix[2].m128_f32[2] * Pos.m128_f32[2] + Matrix[3].m128_f32[2];
+inline void Easy_vector_transform(__m128 * vOut, const __m128 MatrixIn[4], const __m128 vIN) {
+	//Out[0].m128_f32[0] = Matrix[0].m128_f32[0] * Pos.m128_f32[0] + Matrix[1].m128_f32[0] * Pos.m128_f32[1] + Matrix[2].m128_f32[0] * Pos.m128_f32[2] + Matrix[3].m128_f32[0];
+	//Out[0].m128_f32[1] = Matrix[0].m128_f32[1] * Pos.m128_f32[0] + Matrix[1].m128_f32[1] * Pos.m128_f32[1] + Matrix[2].m128_f32[1] * Pos.m128_f32[2] + Matrix[3].m128_f32[1];
+	//Out[0].m128_f32[2] = Matrix[0].m128_f32[2] * Pos.m128_f32[0] + Matrix[1].m128_f32[2] * Pos.m128_f32[1] + Matrix[2].m128_f32[2] * Pos.m128_f32[2] + Matrix[3].m128_f32[2];
+	_asm
+	{
+		mov edx,MatrixIn
+		movups xmm4,[edx]
+		movups xmm5,[edx+16]
+		movups xmm6,[edx+32]
+		movups xmm7,[edx+48]
+
+		movups xmm0,vIN
+		movups xmm1,xmm0
+		movups xmm2,xmm0
+		//movups xmm3,xmm0
+
+		//shufps xmm3,xmm3,0xff
+		shufps xmm2,xmm2,0xaa
+		shufps xmm1,xmm1,0x55
+		shufps xmm0,xmm0,0x00
+
+		mulps xmm0,xmm4
+		mulps xmm1,xmm5
+		mulps xmm2,xmm6
+		//mulps xmm3,xmm7
+
+		addps xmm0,xmm1
+		addps xmm0,xmm2
+		addps xmm0,xmm7//addps xmm0,xmm3
+		mov    ecx, vOut
+		movups [ecx], xmm0
+	}
+
 }
 #endif
