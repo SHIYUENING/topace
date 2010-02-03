@@ -173,6 +173,32 @@ inline void Easy_vector_normalize(float c[3])
     }
 #endif
 }
+inline void Easy_vector_norm2(float * lenOut,float vecIn[3])
+{
+	*lenOut=(float)sqrt(vecIn[0] * vecIn[0] + vecIn[1] * vecIn[1] + vecIn[2] * vecIn[2]);
+}
+inline void Easy_vector_norm2(__m128 * lenOut,const __m128 vecIn)
+{
+	_asm   
+	{    
+	movaps   xmm0,   vecIn 
+	movaps	 xmm1,   xmm0 
+	mulps	 xmm1,   xmm0   
+    
+	movaps   xmm2,   xmm1   
+	movaps   xmm3,   xmm1  
+	//shufps   xmm1,   xmm1,   0x55 
+	shufps   xmm2,   xmm2,   0x55  
+	shufps   xmm3,   xmm2,   0xaa   
+	addps	 xmm1,   xmm2   
+	addps    xmm1,   xmm3   
+	sqrtps   xmm1,   xmm1  
+	//movss    eax,    xmm1
+
+	mov		 ecx,    lenOut
+	movups	     [ecx],  xmm1  
+  }   
+}
 inline void Easy_vector_normalize(__m128 * vecOut,const __m128 vecIn)   
   {   
 	_asm   
