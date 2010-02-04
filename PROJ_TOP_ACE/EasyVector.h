@@ -337,20 +337,14 @@ inline void Easy_vector_copy(__m128 * vecOut, __m128 vecIn)
 }
 inline void Easy_vector_copy(float vecOut[3], __m128 vecIn)
 {
-	__asm
-	{
-		movaps xmm0,vecIn
-		mov ecx,vecOut
-		movups [ecx],xmm0
-	}
+	vecOut[0]=vecIn.m128_f32[0];
+	vecOut[1]=vecIn.m128_f32[1];
+	vecOut[2]=vecIn.m128_f32[2];
 }
-inline void Easy_vector_copy(__m128 vecOut, float vecIn[3])
+inline void Easy_vector_copy(__m128 * vecOut, float vecIn[3])
 {
-	__asm
-	{
-		mov ecx,vecIn
-		movups xmm0,[ecx]
-		movaps vecOut,xmm0
-	}
+	vecOut->m128_f32[0]=vecIn[0];
+	vecOut->m128_f32[1]=vecIn[1];
+	vecOut->m128_f32[2]=vecIn[2];
 }
 #endif
