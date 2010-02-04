@@ -517,6 +517,20 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 		{
 			if(Material->texture1_map.user_id<(unsigned int)TextureMapNum)
 				glBindTexture(GL_TEXTURE_2D, TextureMap[Material->texture1_map.user_id].TexID);
+
+			glPushMatrix();
+				glMatrixMode(GL_TEXTURE);
+				if(TextureMap[Material->texture1_map.user_id].TexType==IS_DDS)
+				{
+					float textureMatrix[4][4];
+					Easy_matrix_identity(textureMatrix);
+					textureMatrix[1][1]=-1.0f;
+					glLoadMatrixf(&textureMatrix[0][0]);
+				}
+				else
+					glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW);
+			glPopMatrix();
 		}
 		
 	}
@@ -736,6 +750,12 @@ void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
 		glMultMatrixf(&Node->matrix[0][0]);  
 		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
 	}
+	if(Node->type==LIB3DS_NODE_OMNILIGHT)
+	{
+		int XXX;
+		XXX=123;
+	}
+	
 
 	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
 	{  
