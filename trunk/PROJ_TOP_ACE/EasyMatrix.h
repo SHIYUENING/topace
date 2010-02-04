@@ -545,7 +545,7 @@ inline void Easy_matrix_mult_vector3X3(__m128 * vOut ,const __m128 MatrixIn[4],c
 	}
 
 }
-inline void Easy_matrix_mult_vector4X4(float vOut[4],const float * m,const float v[3])
+inline void Easy_matrix_mult_vector4X4(float vOut[4],const float * m,const float v[4])
 {
 	vOut[0] = m[0]*v[0]+m[4]*v[1]+m[8]*v[2]+m[12]*v[3];
 	vOut[1] = m[1]*v[0]+m[5]*v[1]+m[9]*v[2]+m[13]*v[3];

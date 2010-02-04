@@ -295,6 +295,7 @@ void CLoad3DS::Render()
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
 
+	SetLightsPos();
 	//CameraMatrix();
 
 	//Model3ds->nodes
@@ -752,8 +753,9 @@ void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
 	}
 	if(Node->type==LIB3DS_NODE_OMNILIGHT)
 	{
-		int XXX;
-		XXX=123;
+		OmniLightNodeEval(Node,TypeFrame[0]);
+		glMultMatrixf(&Node->matrix[0][0]);  
+		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
 	}
 	
 
@@ -816,4 +818,63 @@ void CLoad3DS::CameraTGTNodeEval(Lib3dsNode *Node,float Frame)
 	TestCamera->target[2]=Test_matrix_camera_Tgt[2];
 	Easy_matrix_identity(Node->matrix);
 	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+}
+void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
+{
+	if(!(Model3ds->lights))
+		return;
+	if(Model3ds->nlights<=0)
+		return;	
+	Lib3dsOmnilightNode *LCN = (Lib3dsOmnilightNode*)Node;
+	lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
+	lib3ds_track_eval_vector(&LCN->color_track, LCN->color, Frame);
+	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+	float matrix_OmniLightPos[3];
+	Easy_matrix_mult_vector3X3(matrix_OmniLightPos,&Node->matrix[0][0],LCN->pos);
+	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+	if(strcmp(Node->name,"Omni01")==0)
+	{
+
+		OmniLightPos[0].m128_f32[0]=matrix_OmniLightPos[0];
+		OmniLightPos[0].m128_f32[1]=matrix_OmniLightPos[1];
+		OmniLightPos[0].m128_f32[2]=matrix_OmniLightPos[2];
+		OmniLightPos[0].m128_f32[3]=0.0f;
+		glEnable(GL_LIGHT0);
+		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
+		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
+		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
+		GLfloat mat_shininess[]={100.0f};
+		glLightfv(GL_LIGHT0,GL_SPECULAR,mat_specular);
+		glLightfv(GL_LIGHT0,GL_AMBIENT,mat_ambient);
+		glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_diffuse);
+		glLightfv(GL_LIGHT0,GL_SHININESS,mat_shininess);
+	}
+	if(strcmp(Node->name,"Omni02")==0)
+	{
+		OmniLightPos[1].m128_f32[0]=matrix_OmniLightPos[0];
+		OmniLightPos[1].m128_f32[1]=matrix_OmniLightPos[1];
+		OmniLightPos[1].m128_f32[2]=matrix_OmniLightPos[2];
+		OmniLightPos[1].m128_f32[3]=0.0f;
+		glEnable(GL_LIGHT1);
+		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
+		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
+		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
+		GLfloat mat_shininess[]={100.0f};
+		glLightfv(GL_LIGHT1,GL_SPECULAR,mat_specular);
+		glLightfv(GL_LIGHT1,GL_AMBIENT,mat_ambient);
+		glLightfv(GL_LIGHT1,GL_DIFFUSE,mat_diffuse);
+		glLightfv(GL_LIGHT1,GL_SHININESS,mat_shininess);
+	}
+}
+
+void CLoad3DS::SetLightsPos(void)
+{
+	float LightPosWorld[4];
+	Easy_vector_copy(LightPosWorld,OmniLightPos[0]);
+	LightPosWorld[3]=1.0f;
+	glLightfv(GL_LIGHT0,GL_POSITION,LightPosWorld);
+
+	Easy_vector_copy(LightPosWorld,OmniLightPos[1]);
+	LightPosWorld[3]=1.0f;
+	glLightfv(GL_LIGHT1,GL_POSITION,LightPosWorld);
 }
