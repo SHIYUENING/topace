@@ -177,6 +177,11 @@ inline void Easy_vector_norm2(float * lenOut,float vecIn[3])
 {
 	*lenOut=(float)sqrt(vecIn[0] * vecIn[0] + vecIn[1] * vecIn[1] + vecIn[2] * vecIn[2]);
 }
+inline float Easy_vector_norm2(float vecIn[3]) 
+{
+    return((float)sqrt(vecIn[0]*vecIn[0] + vecIn[1]*vecIn[1] + vecIn[2]*vecIn[2]));
+}
+
 inline void Easy_vector_norm2(__m128 * lenOut,const __m128 vecIn)
 {
 	_asm   
@@ -190,14 +195,39 @@ inline void Easy_vector_norm2(__m128 * lenOut,const __m128 vecIn)
 	//shufps   xmm1,   xmm1,   0x55 
 	shufps   xmm2,   xmm2,   0x55  
 	shufps   xmm3,   xmm2,   0xaa   
-	addps	 xmm1,   xmm2   
-	addps    xmm1,   xmm3   
-	sqrtps   xmm1,   xmm1  
+	addss	 xmm1,   xmm2   
+	addss    xmm1,   xmm3   
+	sqrtss   xmm1,   xmm1  
 	//movss    eax,    xmm1
 
 	mov		 ecx,    lenOut
-	movups	     [ecx],  xmm1  
+	movaps	     [ecx],  xmm1  
   }   
+}
+inline float Easy_vector_norm2(__m128 vecIn) 
+{
+	_asm   
+	{    
+	movaps   xmm0,   vecIn 
+	movaps	 xmm1,   xmm0 
+	mulps	 xmm1,   xmm0   
+    
+	movaps   xmm2,   xmm1   
+	movaps   xmm3,   xmm1  
+	//shufps   xmm1,   xmm1,   0x55 
+	shufps   xmm2,   xmm2,   0x55  
+	shufps   xmm3,   xmm2,   0xaa   
+	addss	 xmm1,   xmm2   
+	addss    xmm1,   xmm3   
+	
+	sqrtss   xmm1,   xmm1  
+	movaps	 vecIn,	 xmm1
+	//movss    eax,    xmm1
+
+	//mov		 ecx,    lenOut
+	//movups	     [ecx],  xmm1  
+	} 
+	return(vecIn.m128_f32[0]);
 }
 inline void Easy_vector_normalize(__m128 * vecOut,const __m128 vecIn)   
   {   
@@ -260,5 +290,67 @@ inline void Easy_vector_transform(__m128 * vOut, const __m128 MatrixIn[4], const
 		movups [ecx], xmm0
 	}
 
+}
+inline float Easy_vector_dot(float a[3], float b[3]) {
+    return(a[0]*b[0] + a[1]*b[1] + a[2]*b[2]);
+}
+inline float Easy_vector_dot(__m128 v1, __m128 v2)
+{
+	__asm
+	{
+	  movaps   xmm0,   v1   
+	  movaps   xmm1,   v2  
+	  mulps	   xmm0,   xmm1
+	  movaps   xmm1,xmm0
+	  movaps   xmm2,xmm0
+	  shufps   xmm0,xmm0,0x00
+	  shufps   xmm1,xmm1,0x55
+	  shufps   xmm2,xmm2,0xaa
+	  addps  xmm0,xmm1 
+	  addps  xmm0,xmm2 
+	  movaps v1,xmm0
+
+	}
+//	__m128 mul0,swp0,add0,swp1,add1;
+//	 mul0 = _mm_mul_ps(v1, v2);
+//	 swp0 = _mm_shuffle_ps(mul0, mul0, _MM_SHUFFLE(2, 3, 0, 1));
+//	 add0 = _mm_add_ps(mul0, swp0);
+//	 swp1 = _mm_shuffle_ps(add0, add0, _MM_SHUFFLE(0, 1, 2, 3));
+//	 add1 = _mm_add_ps(add0, swp1);
+
+	return v1.m128_f32[0];
+}
+inline void Easy_vector_copy(float vecOut[3], float vecIn[3])
+{
+	vecOut[0]=vecIn[0];
+	vecOut[1]=vecIn[1];
+	vecOut[2]=vecIn[2];
+}
+inline void Easy_vector_copy(__m128 * vecOut, __m128 vecIn)
+{
+	__asm
+	{
+		movaps xmm0,vecIn
+		mov ecx,vecOut
+		movaps [ecx],xmm0
+	}
+}
+inline void Easy_vector_copy(float vecOut[3], __m128 vecIn)
+{
+	__asm
+	{
+		movaps xmm0,vecIn
+		mov ecx,vecOut
+		movups [ecx],xmm0
+	}
+}
+inline void Easy_vector_copy(__m128 vecOut, float vecIn[3])
+{
+	__asm
+	{
+		mov ecx,vecIn
+		movups xmm0,[ecx]
+		movaps vecOut,xmm0
+	}
 }
 #endif
