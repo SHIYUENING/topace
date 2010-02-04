@@ -1124,4 +1124,75 @@ inline void Easy_matrix_copy(float * MatrixOut,const __m128 MatrixIn[4])
 		movups [edx+48],xmm3
 	}
 }
+inline void Test_matrix()
+{
+	__m128 TestSSE=_mm_set_ps(4.0f,3.0f,2.0f,1.0f);
+	__m128 TestSSE2=_mm_set_ps(10.0f,10.0f,10.0f,10.0f);
+	float TestFloat[4]={1.0f,2.0f,3.0f,4.0f};
+	float TestFloat2[4]={10.0f,10.0f,10.0f,10.0f};
+	float TestGet1,TestGet2;
+	float TestFloatmatrix[4][4]=
+	{
+		1,2,3,4,
+		5,6,7,8,
+		9,10,11,12,
+		13,14,15,16
+	};
+	float TestFloatmatrix2[4][4];
+	float TestFloatmatrix3[4][4];
+	__m128 TestSSEmatrix[4];
+	__m128 TestSSEmatrix2[4];
+	__m128 TestSSEmatrix3[4];
+	//Easy_vector_add(&TestSSE,TestSSE,TestSSE);
+	//Easy_vector_scalar_mul(&TestSSE,TestSSE,10.0f);
+	//Easy_vector_sub(&TestSSE,TestSSE,TestSSE);
+	//Easy_vector_cross(&TestSSE,TestSSE2,TestSSE);
+	//Easy_vector_cross(TestFloat,TestFloat2,TestFloat);
+	//Easy_vector_normalize(&TestSSE,TestSSE);
+	//Easy_vector_normalize(TestFloat);
+	//__m128 TestSSEnorm2;
+	//TestSSEnorm2.m128_f32[0]=2.0f;
+	//TestSSEnorm2.m128_f32[1]=2.0f;
+	//TestSSEnorm2.m128_f32[2]=2.0f;
+	//TestSSEnorm2.m128_f32[3]=0.0f;
+	//float Testfloatnorm2;
+	
+	//Easy_vector_norm2(&TestSSE,TestSSEnorm2);
+	//Testfloatnorm2=Easy_vector_norm2(TestSSEnorm2);
+
+	Easy_matrix_transpose(TestFloatmatrix);
+//	glGetFloatv(GL_MODELVIEW_MATRIX,&TestFloatmatrix2[0][0]);
+	//Easy_matrix_identity(TestFloatmatrix);
+
+	//TestSSEmatrix[0].m128_f32[0]=0.0f;
+	//TestSSEmatrix[1].m128_f32[0]=0.0f;
+	//Easy_matrix_identity(TestSSEmatrix);
+//	Easy_matrix_identity(TestSSEmatrix2);
+	//TestSSEmatrix[0].m128_f32[0]=0.0f;
+//	Easy_matrix_float4X4_to_m128X4(TestSSEmatrix,&TestFloatmatrix[0][0]);
+//	Easy_matrix_float4X4_to_m128X4(TestSSEmatrix2,&TestFloatmatrix2[0][0]);
+
+	
+	//Easy_matrix_mult(TestFloatmatrix3,TestFloatmatrix2,TestFloatmatrix);
+	//for(int i=0;i<100000;i++)
+	//Easy_matrix_mult(TestSSEmatrix3,TestSSEmatrix2,TestSSEmatrix);
+	//Easy_matrix_transpose(TestSSEmatrix);
+	//Easy_matrix_m128X4_to_float4X4(&TestFloatmatrix[0][0],TestSSEmatrix);
+	//for(int i=0;i<1000000;i++)
+	//Easy_matrix_scale(TestFloatmatrix,0.1f,0.2f,0.3f);
+	//Easy_matrix_scale(TestSSEmatrix2,TestSSE);
+
+	//Easy_matrix_translate_Internal(TestFloatmatrix,1.0f,2.0f,3.0f);
+	
+	//Easy_matrix_translate_Internal(TestSSEmatrix,TestSSE);
+	//for(int i=0;i<10000;i++)
+		//Easy_matrix_mult_vector4X4(TestFloat,&TestFloatmatrix[0][0]);
+	//for(int i=0;i<10000;i++)
+		//Easy_matrix_mult_vector4X4(&TestSSE2,TestSSEmatrix,TestSSE);
+
+	TestGet1=Easy_vector_dot(TestFloat,TestFloat2);
+	TestGet2=Easy_vector_dot(TestSSE,TestSSE2);
+
+
+}
 #endif
