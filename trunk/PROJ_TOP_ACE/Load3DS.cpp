@@ -16,6 +16,7 @@ CLoad3DS::CLoad3DS(void)
 //, DiffuseTexID(0)
 , TextureMap(NULL)
 , TextureMapNum(0)
+, LightLoaded(0)
 {
 }
 
@@ -186,6 +187,11 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		return false;
 	for (Lib3dsNode *pNode=Node->childs; pNode!=0; pNode=pNode->next)
 		LoadNode(pNode);
+	if(Node->type==LIB3DS_NODE_OMNILIGHT)
+	{
+		Node->user_id=LightLoaded;
+		LightLoaded=LightLoaded+1;
+	}
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return false;
 	if(strcmp(Node->name,"$$$DUMMY")==0)
@@ -308,7 +314,7 @@ void CLoad3DS::Render()
 	if((TotelVertices<=0)||(TotelMeshs<=0)||(!isVRAM))
 		return;
 
-	SetLightsPos();
+	
 	//CameraMatrix();
 
 	//Model3ds->nodes
@@ -854,7 +860,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightPos[0].m128_f32[2]=matrix_OmniLightPos[2];
 		OmniLightPos[0].m128_f32[3]=0.0f;
 		glEnable(GL_LIGHT0);
-		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
+		GLfloat mat_specular[]={0.5f*LCN->color[0],0.5f*LCN->color[1],0.5f*LCN->color[2],1.0f};
 		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
 		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
 		GLfloat mat_shininess[]={100.0f};
@@ -870,7 +876,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightPos[1].m128_f32[2]=matrix_OmniLightPos[2];
 		OmniLightPos[1].m128_f32[3]=0.0f;
 		glEnable(GL_LIGHT1);
-		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
+		GLfloat mat_specular[]={0.5f*LCN->color[0],0.5f*LCN->color[1],0.5f*LCN->color[2],1.0f};
 		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
 		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
 		GLfloat mat_shininess[]={100.0f};
@@ -881,8 +887,9 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 	}
 }
 
-void CLoad3DS::SetLightsPos(void)
+void CLoad3DS::SetLightsPos(bool UseShader)
 {
+
 	float LightPosWorld[4],LightPosEye[4],ThisNodematrix[4][4];
 	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
 	glLoadIdentity();
@@ -892,6 +899,7 @@ void CLoad3DS::SetLightsPos(void)
 	Easy_matrix_mult_vector3X3(LightPosEye,&ThisNodematrix[0][0],LightPosWorld);
 	LightPosEye[3]=1.0f;
 
+	if(!UseShader)
 	glLightfv(GL_LIGHT0,GL_POSITION,LightPosEye);
 
 	Easy_vector_copy(LightPosWorld,OmniLightPos[1]);
@@ -899,6 +907,7 @@ void CLoad3DS::SetLightsPos(void)
 	Easy_matrix_mult_vector3X3(LightPosEye,&ThisNodematrix[0][0],LightPosWorld);
 	LightPosEye[3]=1.0f;
 
+	if(!UseShader)
 	glLightfv(GL_LIGHT1,GL_POSITION,LightPosEye);
 	glLoadMatrixf(&ThisNodematrix[0][0]);
 }
