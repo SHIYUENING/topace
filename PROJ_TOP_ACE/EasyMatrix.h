@@ -1142,11 +1142,11 @@ inline void Test_matrix()
 		9,10,11,12,
 		13,14,15,16
 	};
-	float TestFloatmatrix2[4][4];
-	float TestFloatmatrix3[4][4];
-	__m128 TestSSEmatrix[4];
-	__m128 TestSSEmatrix2[4];
-	__m128 TestSSEmatrix3[4];
+//	float TestFloatmatrix2[4][4];
+//	float TestFloatmatrix3[4][4];
+//	__m128 TestSSEmatrix[4];
+//	__m128 TestSSEmatrix2[4];
+//	__m128 TestSSEmatrix3[4];
 	//Easy_vector_add(&TestSSE,TestSSE,TestSSE);
 	//Easy_vector_scalar_mul(&TestSSE,TestSSE,10.0f);
 	//Easy_vector_sub(&TestSSE,TestSSE,TestSSE);
