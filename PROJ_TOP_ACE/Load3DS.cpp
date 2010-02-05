@@ -641,6 +641,8 @@ void inline CLoad3DS::GetNodeType(int NodeID,const char * NodeName)
 			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_GR]=true;
 		if((NodeName[i]=='M')&&(NodeName[i+1]=='H'))
 			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_MH]=true;
+		if((NodeName[i]=='D')&&(NodeName[i+1]=='M'))
+			VBOIDs[NodeID].NodeType[TYPE_3DS_NODE_DM]=true;
 	}
 	if(firstFlagLen+4>=NodeNameLen)
 		return;
@@ -851,7 +853,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightPos[0].m128_f32[1]=matrix_OmniLightPos[1];
 		OmniLightPos[0].m128_f32[2]=matrix_OmniLightPos[2];
 		OmniLightPos[0].m128_f32[3]=0.0f;
-		//glEnable(GL_LIGHT0);
+		glEnable(GL_LIGHT0);
 		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
 		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
 		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
@@ -867,7 +869,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightPos[1].m128_f32[1]=matrix_OmniLightPos[1];
 		OmniLightPos[1].m128_f32[2]=matrix_OmniLightPos[2];
 		OmniLightPos[1].m128_f32[3]=0.0f;
-		//glEnable(GL_LIGHT1);
+		glEnable(GL_LIGHT1);
 		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
 		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
 		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
