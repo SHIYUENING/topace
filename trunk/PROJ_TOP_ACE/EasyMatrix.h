@@ -12,6 +12,10 @@ static const float IdentityMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
 										 0.0f,1.0f,0.0f,0.0f,
 										 0.0f,0.0f,1.0f,0.0f,
 										 0.0f,0.0f,0.0f,1.0f};
+static const float IdentityDDSTexMatrix[4][4]={1.0f,0.0f,0.0f,0.0f,
+											 0.0f,-1.0f,0.0f,0.0f,
+											 0.0f,0.0f,1.0f,0.0f,
+											 0.0f,0.0f,0.0f,1.0f};
 static const __m128 one = _mm_set_ps1(1.0f);
 static const __m128 IdentityMatrix0 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
 static const __m128 IdentityMatrix1 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);

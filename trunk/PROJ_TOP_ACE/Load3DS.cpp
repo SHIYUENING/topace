@@ -232,6 +232,19 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		VBOIDs[Node->user_id].mat_specular[1]=Material->specular[1];
 		VBOIDs[Node->user_id].mat_specular[2]=Material->specular[2];
 		VBOIDs[Node->user_id].mat_specular[3]=1.0f;
+		//if(Material->self_illum_flag)
+		//{
+			VBOIDs[Node->user_id].mat_emission[0]=Material->diffuse[0]*Material->self_illum;
+			VBOIDs[Node->user_id].mat_emission[1]=Material->diffuse[1]*Material->self_illum;
+			VBOIDs[Node->user_id].mat_emission[2]=Material->diffuse[2]*Material->self_illum;
+		//}
+		//else
+		//{
+		//	VBOIDs[Node->user_id].mat_emission[0]=0.0f;
+		//	VBOIDs[Node->user_id].mat_emission[1]=0.0f;
+		//	VBOIDs[Node->user_id].mat_emission[2]=0.0f;
+		//}
+		VBOIDs[Node->user_id].mat_emission[3]=1.0f;
 		VBOIDs[Node->user_id].mat_shininess=pow(2, 10 * Material->shininess - 1)*10.0f;
 	}
 
@@ -500,6 +513,7 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 		glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,ModelNode.mat_specular);
 		glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,ModelNode.mat_ambient);
 		glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,ModelNode.mat_diffuse);
+		glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,ModelNode.mat_emission);
 		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&ModelNode.mat_shininess);
 
 		Lib3dsMaterial *Material = Model3ds->materials[ModelNode.MaterialID];
@@ -519,19 +533,17 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 			if(Material->texture1_map.user_id<(unsigned int)TextureMapNum)
 				glBindTexture(GL_TEXTURE_2D, TextureMap[Material->texture1_map.user_id].TexID);
 
-			glPushMatrix();
 				glMatrixMode(GL_TEXTURE);
 				if(TextureMap[Material->texture1_map.user_id].TexType==IS_DDS)
 				{
-					float textureMatrix[4][4];
-					Easy_matrix_identity(textureMatrix);
-					textureMatrix[1][1]=-1.0f;
-					glLoadMatrixf(&textureMatrix[0][0]);
+					//float textureMatrix[4][4];
+					//Easy_matrix_identity(textureMatrix);
+					//textureMatrix[1][1]=-1.0f;
+					glLoadMatrixf(&IdentityDDSTexMatrix[0][0]);
 				}
 				else
 					glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW);
-			glPopMatrix();
 		}
 		
 	}
@@ -839,7 +851,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightPos[0].m128_f32[1]=matrix_OmniLightPos[1];
 		OmniLightPos[0].m128_f32[2]=matrix_OmniLightPos[2];
 		OmniLightPos[0].m128_f32[3]=0.0f;
-		glEnable(GL_LIGHT0);
+		//glEnable(GL_LIGHT0);
 		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
 		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
 		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
@@ -855,7 +867,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightPos[1].m128_f32[1]=matrix_OmniLightPos[1];
 		OmniLightPos[1].m128_f32[2]=matrix_OmniLightPos[2];
 		OmniLightPos[1].m128_f32[3]=0.0f;
-		glEnable(GL_LIGHT1);
+		//glEnable(GL_LIGHT1);
 		GLfloat mat_specular[]={1.0f*LCN->color[0],1.0f*LCN->color[1],1.0f*LCN->color[2],1.0f};
 		GLfloat mat_ambient[]={0.1f,0.1f,0.1f,1.0f};
 		GLfloat mat_diffuse[]={0.7f*LCN->color[0],0.7f*LCN->color[1],0.7f*LCN->color[2],1.0f};
@@ -869,12 +881,22 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 
 void CLoad3DS::SetLightsPos(void)
 {
-	float LightPosWorld[4];
+	float LightPosWorld[4],LightPosEye[4],ThisNodematrix[4][4];
+	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+	glLoadIdentity();
+	
 	Easy_vector_copy(LightPosWorld,OmniLightPos[0]);
 	LightPosWorld[3]=1.0f;
-	glLightfv(GL_LIGHT0,GL_POSITION,LightPosWorld);
+	Easy_matrix_mult_vector3X3(LightPosEye,&ThisNodematrix[0][0],LightPosWorld);
+	LightPosEye[3]=1.0f;
+
+	glLightfv(GL_LIGHT0,GL_POSITION,LightPosEye);
 
 	Easy_vector_copy(LightPosWorld,OmniLightPos[1]);
 	LightPosWorld[3]=1.0f;
-	glLightfv(GL_LIGHT1,GL_POSITION,LightPosWorld);
+	Easy_matrix_mult_vector3X3(LightPosEye,&ThisNodematrix[0][0],LightPosWorld);
+	LightPosEye[3]=1.0f;
+
+	glLightfv(GL_LIGHT1,GL_POSITION,LightPosEye);
+	glLoadMatrixf(&ThisNodematrix[0][0]);
 }
