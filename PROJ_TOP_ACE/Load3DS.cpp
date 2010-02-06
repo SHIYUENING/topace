@@ -17,6 +17,7 @@ CLoad3DS::CLoad3DS(void)
 , TextureMap(NULL)
 , TextureMapNum(0)
 , LightLoaded(0)
+, OmniLightNodes(NULL)
 {
 }
 
@@ -53,6 +54,8 @@ bool CLoad3DS::Loadfile(char * filename)
 
 	loadTex(filename);
 
+	if(Model3ds->nlights>0)
+		OmniLightNodes = new tLightNodes[Model3ds->nlights];
 
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 		TypeFrame[i]=0.0f;
@@ -113,6 +116,8 @@ bool CLoad3DS::LoadToVRAM(void)
 
 void inline CLoad3DS::Del_RAM(void)
 {
+	if(OmniLightNodes)
+		delete[] OmniLightNodes;
 	if(Model3ds)
 		lib3ds_file_free(Model3ds);
 	Model3ds=NULL;
@@ -852,6 +857,19 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 	float matrix_OmniLightPos[3];
 	Easy_matrix_mult_vector3X3(matrix_OmniLightPos,&Node->matrix[0][0],LCN->pos);
 	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+	if(OmniLightNodes&&((int)Node->user_id<Model3ds->nlights))
+	{
+		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[0]=matrix_OmniLightPos[0];
+		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[1]=matrix_OmniLightPos[1];
+		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[2]=matrix_OmniLightPos[2];
+		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[3]=1.0f;
+
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[0]=LCN->color[0];
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[1]=LCN->color[1];
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[2]=LCN->color[2];
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[3]=1.0f;
+
+	}
 	if(strcmp(Node->name,"Omni01")==0)
 	{
 
