@@ -16,7 +16,7 @@ CLoad3DS::CLoad3DS(void)
 //, DiffuseTexID(0)
 , TextureMap(NULL)
 , TextureMapNum(0)
-, LightLoaded(0)
+, OmniLightLoaded(0)
 , OmniLightNodes(NULL)
 {
 }
@@ -194,8 +194,8 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		LoadNode(pNode);
 	if(Node->type==LIB3DS_NODE_OMNILIGHT)
 	{
-		Node->user_id=LightLoaded;
-		LightLoaded=LightLoaded+1;
+		Node->user_id=OmniLightLoaded;
+		OmniLightLoaded=OmniLightLoaded+1;
 	}
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return false;
@@ -762,28 +762,35 @@ void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
 				break;
 		}
 		MeshNodeEval(Node,TypeFrame[TypeFrameID]);
-		glMultMatrixf(&Node->matrix[0][0]); 
+		//glMultMatrixf(&Node->matrix[0][0]); 
 	}
 	if(Node->type==LIB3DS_NODE_CAMERA)
 	{
 		CameraNodeEval(Node,TypeFrame[0]);
-		glMultMatrixf(&Node->matrix[0][0]); 
-		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]); 
+		//glMultMatrixf(&Node->matrix[0][0]); 
+		//glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]); 
 	}
 	if(Node->type==LIB3DS_NODE_CAMERA_TARGET)
 	{
 		CameraTGTNodeEval(Node,TypeFrame[0]);
-		glMultMatrixf(&Node->matrix[0][0]);  
-		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+		//glMultMatrixf(&Node->matrix[0][0]);  
+		//glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
 	}
 	if(Node->type==LIB3DS_NODE_OMNILIGHT)
 	{
 		OmniLightNodeEval(Node,TypeFrame[0]);
-		glMultMatrixf(&Node->matrix[0][0]);  
-		glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+		//glMultMatrixf(&Node->matrix[0][0]);  
+		//glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+	}
+	if(Node->type==LIB3DS_NODE_SPOTLIGHT)
+	{
+		SpotLightNodeEval(Node,TypeFrame[0]);
+		//glMultMatrixf(&Node->matrix[0][0]);  
+		//glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
 	}
 	
-
+	glMultMatrixf(&Node->matrix[0][0]); 
+	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]); 
 	for (Lib3dsNode * pNode=Node->childs; pNode!=0; pNode=pNode->next)
 	{  
 		float ThisNodematrix[4][4];
@@ -904,7 +911,13 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		glLightfv(GL_LIGHT1,GL_SHININESS,mat_shininess);
 	}*/
 }
-
+void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
+{
+	if(!(Model3ds->lights))
+		return;
+	if(Model3ds->nlights<=0)
+		return;
+}
 void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 {
 	Easy_vector_copy(&ModelAmbientLightColot,Model3ds->ambient);
@@ -915,12 +928,12 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,ThisNodematrix[0]);
 	glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&ThisNodematrixM[0]);
 	glLoadIdentity();
-	for(int i=0;i<LightLoaded+lightBase;i++)
+	for(int i=0;i<OmniLightLoaded+lightBase;i++)
 	{
 		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
 		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
 	}
-	for(int i=0;i<LightLoaded+lightBase;i++)
+	for(int i=0;i<OmniLightLoaded+lightBase;i++)
 	{
 		glEnable(GL_LIGHT0+i);
 		if(UseShader)
