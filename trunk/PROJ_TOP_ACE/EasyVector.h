@@ -341,10 +341,11 @@ inline void Easy_vector_copy(float vecOut[3], __m128 vecIn)
 	vecOut[1]=vecIn.m128_f32[1];
 	vecOut[2]=vecIn.m128_f32[2];
 }
-inline void Easy_vector_copy(__m128 * vecOut, float vecIn[3])
+inline void Easy_vector_copy(__m128 * vecOut, float vecIn[3],float w=1.0f)
 {
 	vecOut->m128_f32[0]=vecIn[0];
 	vecOut->m128_f32[1]=vecIn[1];
 	vecOut->m128_f32[2]=vecIn[2];
+	vecOut->m128_f32[3]=w;
 }
 #endif

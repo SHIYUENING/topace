@@ -870,7 +870,7 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		OmniLightNodes[Node->user_id].LightColor.m128_f32[3]=1.0f;
 
 	}
-	if(strcmp(Node->name,"Omni01")==0)
+	/*if(strcmp(Node->name,"Omni01")==0)
 	{
 
 		OmniLightPos[0].m128_f32[0]=matrix_OmniLightPos[0];
@@ -902,16 +902,40 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		glLightfv(GL_LIGHT1,GL_AMBIENT,mat_ambient);
 		glLightfv(GL_LIGHT1,GL_DIFFUSE,mat_diffuse);
 		glLightfv(GL_LIGHT1,GL_SHININESS,mat_shininess);
-	}
+	}*/
 }
 
-void CLoad3DS::SetLightsPos(bool UseShader)
+void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 {
+	Easy_vector_copy(&ModelAmbientLightColot,Model3ds->ambient);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,(float *)&ModelAmbientLightColot);
 
-	float LightPosWorld[4],LightPosEye[4],ThisNodematrix[4][4];
-	glGetFloatv(GL_MODELVIEW_MATRIX,&ThisNodematrix[0][0]);
+//	float LightPosWorld[4],LightPosEye[4],ThisNodematrix[4][4];
+	__m128 ThisNodematrixM[4];
+	//glGetFloatv(GL_MODELVIEW_MATRIX,ThisNodematrix[0]);
+	glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&ThisNodematrixM[0]);
 	glLoadIdentity();
-	
+	for(int i=0;i<LightLoaded+lightBase;i++)
+	{
+		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
+		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
+	}
+	for(int i=0;i<LightLoaded+lightBase;i++)
+	{
+		glEnable(GL_LIGHT0+i);
+		if(UseShader)
+		{
+		}
+		else
+		{
+			glLightfv(GL_LIGHT0+i,GL_POSITION,(float *)&OmniLightNodes[i].LightEyePos);
+			glLightfv(GL_LIGHT0+i,GL_SPECULAR,(float *)&OmniLightNodes[i].LightColor);
+			glLightfv(GL_LIGHT0+i,GL_DIFFUSE,(float *)&OmniLightNodes[i].LightColor);
+			if(i>=8)
+				break;
+		}
+	}
+	/*
 	Easy_vector_copy(LightPosWorld,OmniLightPos[0]);
 	LightPosWorld[3]=1.0f;
 	Easy_matrix_mult_vector3X3(LightPosEye,&ThisNodematrix[0][0],LightPosWorld);
@@ -926,6 +950,6 @@ void CLoad3DS::SetLightsPos(bool UseShader)
 	LightPosEye[3]=1.0f;
 
 	if(!UseShader)
-	glLightfv(GL_LIGHT1,GL_POSITION,LightPosEye);
-	glLoadMatrixf(&ThisNodematrix[0][0]);
+	glLightfv(GL_LIGHT1,GL_POSITION,LightPosEye);*/
+	glLoadMatrixf((float *)&ThisNodematrixM[0]);
 }
