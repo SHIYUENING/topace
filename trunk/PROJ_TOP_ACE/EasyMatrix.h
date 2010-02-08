@@ -35,10 +35,10 @@ inline void Easy_matrix_identity(__m128 Matrix[4])
 		movaps xmm2,IdentityMatrix2
 		movaps xmm3,IdentityMatrix3
 		mov edx,Matrix;
-		movaps [edx],xmm0
-		movaps [edx+16],xmm1
-		movaps [edx+32],xmm2
-		movaps [edx+48],xmm3
+		movups [edx],xmm0
+		movups [edx+16],xmm1
+		movups [edx+32],xmm2
+		movups [edx+48],xmm3
 	}
 	/*
 	Matrix[0] = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
