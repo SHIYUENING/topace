@@ -16,8 +16,10 @@ CLoad3DS::CLoad3DS(void)
 //, DiffuseTexID(0)
 , TextureMap(NULL)
 , TextureMapNum(0)
-, OmniLightLoaded(0)
+, OmniLightNum(0)
+, SpotLightNum(0)
 , OmniLightNodes(NULL)
+, SpotLightNodes(NULL)
 {
 }
 
@@ -54,8 +56,10 @@ bool CLoad3DS::Loadfile(char * filename)
 
 	loadTex(filename);
 
-	if(Model3ds->nlights>0)
-		OmniLightNodes = new tLightNodes[Model3ds->nlights];
+	//if(Model3ds->nlights>0)
+	//	OmniLightNodes = (tLightNodes *) _aligned_malloc (Model3ds->nlights*sizeof(tLightNodes),16);
+		//OmniLightNodes = new tLightNodes[Model3ds->nlights];
+	InitLight();
 
 	for(int i=0;i<MAX_TYPE_3DS_NODE;i++)
 		TypeFrame[i]=0.0f;
@@ -117,7 +121,18 @@ bool CLoad3DS::LoadToVRAM(void)
 void inline CLoad3DS::Del_RAM(void)
 {
 	if(OmniLightNodes)
-		delete[] OmniLightNodes;
+	{
+		_aligned_free(OmniLightNodes);
+		//delete[] OmniLightNodes;
+		OmniLightNodes = NULL;
+		OmniLightNum = 0;
+	}
+	if(SpotLightNodes)
+	{
+		_aligned_free(SpotLightNodes);
+		SpotLightNodes = NULL;
+		SpotLightNum = 0;
+	}
 	if(Model3ds)
 		lib3ds_file_free(Model3ds);
 	Model3ds=NULL;
@@ -194,8 +209,63 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 		LoadNode(pNode);
 	if(Node->type==LIB3DS_NODE_OMNILIGHT)
 	{
-		Node->user_id=OmniLightLoaded;
-		OmniLightLoaded=OmniLightLoaded+1;
+		Lib3dsLight * TmpLight;
+		for(int i=0;i<Model3ds->nlights;i++)
+		{
+			TmpLight = Model3ds->lights[i];
+			if(!TmpLight->spot_light)
+			{
+				if(strcmp(Node->name,TmpLight->name)==0)
+				{
+					Node->user_id=TmpLight->user_id;
+					break;
+				}
+			}
+		}
+//		Node->user_id=OmniLightLoaded;
+//		OmniLightLoaded=OmniLightLoaded+1;
+	}
+	if(Node->type==LIB3DS_NODE_SPOTLIGHT)
+	{
+		Lib3dsLight * TmpLight;
+		for(int i=0;i<Model3ds->nlights;i++)
+		{
+			TmpLight = Model3ds->lights[i];
+			if(TmpLight->spot_light)
+			{
+				if(strcmp(Node->name,TmpLight->name)==0)
+				{
+					Node->user_id=TmpLight->user_id;
+					//Easy_vector_copy(SpotLightNodes[Node->user_id].,
+					break;
+				}
+			}
+		}
+	}
+	if(Node->type==LIB3DS_NODE_SPOTLIGHT_TARGET)
+	{
+		Lib3dsLight * TmpLight;
+		char ThisNodeName[64];
+		strcpy(ThisNodeName,Node->name);
+		for(int i=0;i<64;i++)
+		{
+			if(ThisNodeName[i]=='.')
+				ThisNodeName[i]=0;
+			if(ThisNodeName[i]==0)
+				break;
+		}
+		for(int i=0;i<Model3ds->nlights;i++)
+		{
+			TmpLight = Model3ds->lights[i];
+			if(TmpLight->spot_light)
+			{
+				if(strcmp(ThisNodeName,TmpLight->name)==0)
+				{
+					Node->user_id=TmpLight->user_id;
+					break;
+				}
+			}
+		}
 	}
 	if(Node->type!=LIB3DS_NODE_MESH_INSTANCE)
 		return false;
@@ -917,6 +987,20 @@ void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
 		return;
 	if(Model3ds->nlights<=0)
 		return;
+	Lib3dsSpotlightNode *LCN = (Lib3dsSpotlightNode*)Node;
+	lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
+	lib3ds_track_eval_vector(&LCN->color_track, LCN->color, Frame);
+	lib3ds_track_eval_float(&LCN->hotspot_track, &LCN->hotspot, Frame);
+	lib3ds_track_eval_float(&LCN->falloff_track, &LCN->falloff, Frame);
+	lib3ds_track_eval_float(&LCN->roll_track, &LCN->roll, Frame);
+	Easy_matrix_identity(Node->matrix);
+	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+	Easy_vector_copy(&SpotLightNodes[Node->user_id].LightColor,LCN->color);
+	//float CutOff=(LCN->hotspot+LCN->falloff)/2.0f;
+	SpotLightNodes[Node->user_id].SpotSet.m128_f32[0]=(LCN->hotspot+LCN->falloff)/2.0f;
+	SpotLightNodes[Node->user_id].SpotSet.m128_f32[1]=LCN->hotspot;
+	SpotLightNodes[Node->user_id].SpotSet.m128_f32[2]=LCN->falloff;
+	SpotLightNodes[Node->user_id].SpotSet.m128_f32[3]=(LCN->hotspot+LCN->falloff)/LCN->falloff;
 }
 void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 {
@@ -928,12 +1012,12 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,ThisNodematrix[0]);
 	glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&ThisNodematrixM[0]);
 	glLoadIdentity();
-	for(int i=0;i<OmniLightLoaded+lightBase;i++)
+	for(int i=0;i<OmniLightNum+lightBase;i++)
 	{
 		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
 		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
 	}
-	for(int i=0;i<OmniLightLoaded+lightBase;i++)
+	for(int i=0;i<OmniLightNum+lightBase;i++)
 	{
 		glEnable(GL_LIGHT0+i);
 		if(UseShader)
@@ -965,4 +1049,32 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 	if(!UseShader)
 	glLightfv(GL_LIGHT1,GL_POSITION,LightPosEye);*/
 	glLoadMatrixf((float *)&ThisNodematrixM[0]);
+}
+
+void CLoad3DS::InitLight(void)
+{
+	if(!Model3ds)
+		return;
+	if(Model3ds->nlights<=0)
+		return;
+
+	Lib3dsLight * TmpLight;
+	for(int i=0;i<Model3ds->nlights;i++)
+	{
+		TmpLight = Model3ds->lights[i];
+		if(TmpLight->spot_light)
+		{
+			TmpLight->user_id=SpotLightNum;
+			SpotLightNum=SpotLightNum+1;
+		}
+		else
+		{
+			TmpLight->user_id=OmniLightNum;
+			OmniLightNum=OmniLightNum+1;
+		}
+	}
+	
+	OmniLightNodes = (tLightNodes *) _aligned_malloc (OmniLightNum*sizeof(tLightNodes),16);
+	SpotLightNodes = (tLightNodes *) _aligned_malloc (SpotLightNum*sizeof(tLightNodes),16);
+	
 }
