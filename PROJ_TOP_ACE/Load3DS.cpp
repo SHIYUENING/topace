@@ -936,14 +936,15 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 	if(OmniLightNodes&&((int)Node->user_id<Model3ds->nlights))
 	{
-		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[0]=matrix_OmniLightPos[0];
-		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[1]=matrix_OmniLightPos[1];
-		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[2]=matrix_OmniLightPos[2];
-		OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[3]=1.0f;
-
-		OmniLightNodes[Node->user_id].LightColor.m128_f32[0]=LCN->color[0];
-		OmniLightNodes[Node->user_id].LightColor.m128_f32[1]=LCN->color[1];
-		OmniLightNodes[Node->user_id].LightColor.m128_f32[2]=LCN->color[2];
+		Easy_vector_copy(&OmniLightNodes[Node->user_id].LightWorldPos,matrix_OmniLightPos);
+		//OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[0]=matrix_OmniLightPos[0];
+		//OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[1]=matrix_OmniLightPos[1];
+		//OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[2]=matrix_OmniLightPos[2];
+		//OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[3]=1.0f;
+		//Easy_vector_copy(OmniLightNodes[Node->user_id].LightColor,
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[0]=LCN->color[0]*0.3f;
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[1]=LCN->color[1]*0.3f;
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[2]=LCN->color[2]*0.3f;
 		OmniLightNodes[Node->user_id].LightColor.m128_f32[3]=1.0f;
 
 	}
@@ -993,6 +994,11 @@ void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
 	lib3ds_track_eval_float(&LCN->hotspot_track, &LCN->hotspot, Frame);
 	lib3ds_track_eval_float(&LCN->falloff_track, &LCN->falloff, Frame);
 	lib3ds_track_eval_float(&LCN->roll_track, &LCN->roll, Frame);
+	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+	float LCN_SpotLightPos[3];
+	Easy_matrix_mult_vector3X3(LCN_SpotLightPos,&Node->matrix[0][0],LCN->pos);
+	Easy_vector_copy(&SpotLightNodes[Node->user_id].LightWorldPos,LCN_SpotLightPos);
+
 	Easy_matrix_identity(Node->matrix);
 	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 	Easy_vector_copy(&SpotLightNodes[Node->user_id].LightColor,LCN->color);
@@ -1001,6 +1007,9 @@ void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[1]=LCN->hotspot;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[2]=LCN->falloff;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[3]=(LCN->hotspot+LCN->falloff)/LCN->falloff;
+
+	
+
 }
 void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 {
@@ -1012,24 +1021,41 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,ThisNodematrix[0]);
 	glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&ThisNodematrixM[0]);
 	glLoadIdentity();
-	for(int i=0;i<OmniLightNum+lightBase;i++)
+/*	for(int i=0;i<OmniLightNum+lightBase;i++)
 	{
 		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
 		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
-	}
-	for(int i=0;i<OmniLightNum+lightBase;i++)
+	}*/
+	for(int i=0;i<OmniLightNum;i++)
 	{
-		glEnable(GL_LIGHT0+i);
+		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
+		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
 		if(UseShader)
 		{
 		}
 		else
 		{
-			glLightfv(GL_LIGHT0+i,GL_POSITION,(float *)&OmniLightNodes[i].LightEyePos);
-			glLightfv(GL_LIGHT0+i,GL_SPECULAR,(float *)&OmniLightNodes[i].LightColor);
-			glLightfv(GL_LIGHT0+i,GL_DIFFUSE,(float *)&OmniLightNodes[i].LightColor);
-			if(i>=8)
-				break;
+			if((i+lightBase)<8)
+			{
+				glEnable(GL_LIGHT0+i+lightBase);
+				glLightfv(GL_LIGHT0+i+lightBase,GL_POSITION,(float *)&OmniLightNodes[i].LightEyePos);
+				glLightfv(GL_LIGHT0+i+lightBase,GL_SPECULAR,(float *)&OmniLightNodes[i].LightColor);
+				glLightfv(GL_LIGHT0+i+lightBase,GL_DIFFUSE,(float *)&OmniLightNodes[i].LightColor);
+			}
+		}
+	}
+	for(int i=0;i<OmniLightNum;i++)
+	{
+		Easy_matrix_mult_vector3X3(&SpotLightNodes[i].LightEyePos,ThisNodematrixM,SpotLightNodes[i].LightWorldPos);
+		SpotLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
+		if(UseShader)
+		{
+		}
+		else
+		{
+			if((i+lightBase+OmniLightNum)<8)
+			{
+			}
 		}
 	}
 	/*
