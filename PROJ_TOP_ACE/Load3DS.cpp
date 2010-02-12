@@ -858,6 +858,10 @@ void CLoad3DS::NodeMatrix(Lib3dsNode *Node)
 		//glMultMatrixf(&Node->matrix[0][0]);  
 		//glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
 	}
+	if(Node->type==LIB3DS_NODE_SPOTLIGHT_TARGET)
+	{
+		SpotLightTGTNodeEval(Node,TypeFrame[0]);
+	}
 	
 	glMultMatrixf(&Node->matrix[0][0]); 
 	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]); 
@@ -1011,6 +1015,22 @@ void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
 	
 
 }
+void CLoad3DS::SpotLightTGTNodeEval(Lib3dsNode *Node,float Frame)
+{
+	if(!(Model3ds->lights))
+		return;
+	if(Model3ds->nlights<=0)
+		return;
+	Lib3dsSpotlightNode *LCN = (Lib3dsSpotlightNode*)Node;
+	lib3ds_track_eval_vector(&LCN->pos_track, LCN->pos, Frame);
+	glGetFloatv(GL_MODELVIEW_MATRIX,&Node->matrix[0][0]);
+	float LCN_SpotLightTGTPos[3];
+	Easy_matrix_mult_vector3X3(LCN_SpotLightTGTPos,&Node->matrix[0][0],LCN->pos);
+	Easy_vector_copy(&SpotLightNodes[Node->user_id].SpotTGTWorldPos,LCN_SpotLightTGTPos);
+	Easy_matrix_identity(Node->matrix);
+	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
+
+}
 void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 {
 	Easy_vector_copy(&ModelAmbientLightColot,Model3ds->ambient);
@@ -1044,10 +1064,19 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 			}
 		}
 	}
-	for(int i=0;i<OmniLightNum;i++)
+	for(int i=0;i<SpotLightNum;i++)
 	{
 		Easy_matrix_mult_vector3X3(&SpotLightNodes[i].LightEyePos,ThisNodematrixM,SpotLightNodes[i].LightWorldPos);
+		Easy_matrix_mult_vector3X3(&SpotLightNodes[i].SpotTGTEyePos,ThisNodematrixM,SpotLightNodes[i].SpotTGTWorldPos);
 		SpotLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
+		SpotLightNodes[i].SpotTGTEyePos.m128_f32[3]=1.0f;
+		Easy_vector_sub(&SpotLightNodes[i].SpotEyeDirection,SpotLightNodes[i].SpotTGTEyePos,SpotLightNodes[i].LightEyePos);
+		Easy_vector_normalize(&SpotLightNodes[i].SpotEyeDirection,SpotLightNodes[i].SpotEyeDirection);
+		/*glLineWidth(7.0);
+		glBegin(GL_LINES);
+		glVertex3fv((float *)&SpotLightNodes[i].LightEyePos);
+		glVertex3fv((float *)&SpotLightNodes[i].SpotTGTEyePos);
+		glEnd();*/
 		if(UseShader)
 		{
 		}
@@ -1055,6 +1084,13 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 		{
 			if((i+lightBase+OmniLightNum)<8)
 			{
+				glEnable(GL_LIGHT0+i+lightBase+OmniLightNum);
+				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_POSITION,(float *)&SpotLightNodes[i].LightEyePos);
+				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPECULAR,(float *)&SpotLightNodes[i].LightColor);
+				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_DIFFUSE,(float *)&SpotLightNodes[i].LightColor);
+				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_DIRECTION,(float *)&SpotLightNodes[i].SpotEyeDirection);
+				//glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_EXPONENT,(float *)&OmniLightNodes[i].SpotEyeDirection.m128_f32[3]);
+				glLightf(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_CUTOFF,SpotLightNodes[i].SpotSet.m128_f32[0]);
 			}
 		}
 	}
