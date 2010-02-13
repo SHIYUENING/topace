@@ -1089,7 +1089,7 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPECULAR,(float *)&SpotLightNodes[i].LightColor);
 				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_DIFFUSE,(float *)&SpotLightNodes[i].LightColor);
 				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_DIRECTION,(float *)&SpotLightNodes[i].SpotEyeDirection);
-				//glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_EXPONENT,(float *)&OmniLightNodes[i].SpotEyeDirection.m128_f32[3]);
+				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_EXPONENT,(float *)&OmniLightNodes[i].SpotEyeDirection.m128_f32[3]);
 				glLightf(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_CUTOFF,SpotLightNodes[i].SpotSet.m128_f32[0]);
 			}
 		}
