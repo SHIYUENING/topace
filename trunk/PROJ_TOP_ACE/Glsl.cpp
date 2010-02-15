@@ -7,8 +7,7 @@ int GlslVer = 0;
 //GLhandleARB GLSL_ATC;
 GLhandleARB g_PhoneLight;
 GLhandleARB g_PhoneLight_Vertex;
-GLhandleARB g_PhoneLight_Pixel_Singe;
-GLhandleARB g_PhoneLight_Pixel_Multi;
+GLhandleARB g_PhoneLight_Pixel;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -108,7 +107,29 @@ void InitGLSL()
 	//glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Pixel );
 	//GetGLSLLinkSTATUS( GLSL_ATC );
 
+	g_PhoneLight_Vertex = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Vertex.vs",GL_VERTEX_SHADER_ARB);
+	g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
+	g_PhoneLight = glCreateProgramObjectARB();
+	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Vertex );
+	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
+	GetGLSLLinkSTATUS( g_PhoneLight );
 
+}
+void GLSL_Enable_PhoneLight(float* LightColor,float* LightPosEye)
+{
+	if(GlslVer<=0)
+		return;
+	glUseProgramObjectARB( g_PhoneLight );
+	glUniform1i(glGetUniformLocation(g_PhoneLight,"DiffuseTex"),0);
+	glUniform4fv(glGetUniformLocation(g_PhoneLight,"LightColor"),1,LightColor);
+	glUniform4fv(glGetUniformLocation(g_PhoneLight,"LightPosEye"),1,LightPosEye);
+	//glUniform1i(glGetUniformLocation(GLSL_ATC,"Tex_ATC"),0); 
+}
+void GLSL_Disable()
+{
+	if(GlslVer<=0)
+		return;
+	glUseProgramObjectARB( NULL );
 }
 /*
 void GLSL_Enable_ATC()

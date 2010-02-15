@@ -420,6 +420,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Shader"
+			>
+			<File
+				RelativePath=".\data\shader\Glsl_PhoneLight_Pixel.ps"
+				>
+			</File>
+			<File
+				RelativePath=".\data\shader\Glsl_PhoneLight_Vertex.vs"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
