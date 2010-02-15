@@ -285,6 +285,17 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 
 	GetNodeType(Node->user_id,&Node->name[0]);
 
+	if(VBOIDs[Node->user_id].NodeType[TYPE_3DS_NODE_DM])
+	{
+		VBOIDs[Node->user_id].ColorID=0;
+		VBOIDs[Node->user_id].MaterialID=-1;
+		VBOIDs[Node->user_id].NormalID=0;
+		VBOIDs[Node->user_id].TangentID=0;
+		VBOIDs[Node->user_id].TexCoordID=0;
+		VBOIDs[Node->user_id].VerticeID=0;
+		VBOIDs[Node->user_id].VerticeNum=0;
+	}
+
 	float * VBOverticesBuffer=new float[Mesh->nfaces*3*3*4];
 	float (* VBONormalsBuffer)[3]=(float(*)[3])new float[Mesh->nfaces*3*3*4];
 	float * VBOTexCoordBuffer=NULL;
