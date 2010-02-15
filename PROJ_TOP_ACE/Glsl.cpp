@@ -2,18 +2,22 @@
 #include <stdio.h>	
 #include <windows.h>
 int GlslVer = 0;
-GLhandleARB	g_GLSL_ATC_Pixel;
-GLhandleARB	g_GLSL_ATC_Vertex;
-GLhandleARB GLSL_ATC;
+//GLhandleARB	g_GLSL_ATC_Pixel;
+//GLhandleARB	g_GLSL_ATC_Vertex;
+//GLhandleARB GLSL_ATC;
+GLhandleARB g_PhoneLight;
+GLhandleARB g_PhoneLight_Vertex;
+GLhandleARB g_PhoneLight_Pixel_Singe;
+GLhandleARB g_PhoneLight_Pixel_Multi;
 unsigned char *readShaderFile( const char *fileName )
 {
- FILE *file = fopen( fileName, "r" );
+	FILE *file = fopen( fileName, "r" );
 
- if( file == NULL )
- {
- MessageBox( NULL, "Cannot open shader file!", "ERROR",MB_OK | MB_ICONEXCLAMATION );
-    return 0;
- }
+	if( file == NULL )
+	{
+		MessageBox( NULL, "Cannot open shader file!", "ERROR",MB_OK | MB_ICONEXCLAMATION );
+		return 0;
+	}
 
 	unsigned int filesize = 0;
 	while (!feof(file))
@@ -24,21 +28,21 @@ unsigned char *readShaderFile( const char *fileName )
 	filesize--;
 	rewind(file);
 
- if( filesize== 0 )
- {
- MessageBox( NULL, "Cannot get file stats for shader file!", "ERROR",MB_OK | MB_ICONEXCLAMATION );
- return 0;
- }
+	if( filesize== 0 )
+	{
+		MessageBox( NULL, "Cannot get file stats for shader file!", "ERROR",MB_OK | MB_ICONEXCLAMATION );
+		return 0;
+	}
 
- unsigned char *buffer = new unsigned char[filesize+1];
+	unsigned char *buffer = new unsigned char[filesize+1];
 
-  int bytes = fread( buffer, 1, filesize, file );
+	int bytes = fread( buffer, 1, filesize, file );
 
- buffer[bytes] = 0;
+	buffer[bytes] = 0;
 
-  fclose( file );
+	fclose( file );
 
-  return buffer;
+	return buffer;
 }
 
 GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObject)
@@ -97,15 +101,16 @@ void InitGLSL()
 	else
 		return;
 
-	g_GLSL_ATC_Vertex = GLSL_CompileShader("shaders/glsl/Alpha_TO_Coverage.vs",GL_VERTEX_SHADER_ARB);
-	g_GLSL_ATC_Pixel = GLSL_CompileShader("shaders/glsl/Alpha_TO_Coverage.ps",GL_FRAGMENT_SHADER_ARB);
-	GLSL_ATC = glCreateProgramObjectARB();
-	glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Vertex );
-	glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Pixel );
-	GetGLSLLinkSTATUS( GLSL_ATC );
+	//g_GLSL_ATC_Vertex = GLSL_CompileShader("shaders/glsl/Alpha_TO_Coverage.vs",GL_VERTEX_SHADER_ARB);
+	//g_GLSL_ATC_Pixel = GLSL_CompileShader("shaders/glsl/Alpha_TO_Coverage.ps",GL_FRAGMENT_SHADER_ARB);
+	//GLSL_ATC = glCreateProgramObjectARB();
+	//glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Vertex );
+	//glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Pixel );
+	//GetGLSLLinkSTATUS( GLSL_ATC );
 
 
 }
+/*
 void GLSL_Enable_ATC()
 {
 	if(GlslVer<=0)
@@ -119,3 +124,4 @@ void GLSL_Disable_ATC()
 		return;
 	glUseProgramObjectARB( NULL );
 }
+*/
