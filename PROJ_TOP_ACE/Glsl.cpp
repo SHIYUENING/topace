@@ -7,8 +7,7 @@ int GlslVer = 0;
 //GLhandleARB GLSL_ATC;
 GLhandleARB g_PhoneLight;
 GLhandleARB g_PhoneLight_Vertex;
-GLhandleARB g_PhoneLight_Pixel_Singe;
-GLhandleARB g_PhoneLight_Pixel_Multi;
+GLhandleARB g_PhoneLight_Pixel;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -84,7 +83,7 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	return true;
 }
 
-void InitGLSL()
+void InitGLSL(int LightSet)
 {
 /*	GLint glMaxVERTEX_UNIFORM_COMPONENTS=0;
 	glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS,&glMaxVERTEX_UNIFORM_COMPONENTS);
@@ -101,6 +100,12 @@ void InitGLSL()
 	else
 		return;
 
+	if(LightSet<2)
+	{
+		GlslVer=0;
+		return;
+	}
+
 	//g_GLSL_ATC_Vertex = GLSL_CompileShader("shaders/glsl/Alpha_TO_Coverage.vs",GL_VERTEX_SHADER_ARB);
 	//g_GLSL_ATC_Pixel = GLSL_CompileShader("shaders/glsl/Alpha_TO_Coverage.ps",GL_FRAGMENT_SHADER_ARB);
 	//GLSL_ATC = glCreateProgramObjectARB();
@@ -109,16 +114,30 @@ void InitGLSL()
 	//GetGLSLLinkSTATUS( GLSL_ATC );
 
 	g_PhoneLight_Vertex = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Vertex.vs",GL_VERTEX_SHADER_ARB);
-	g_PhoneLight_Pixel_Singe = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);
+
+	switch (LightSet)
+	{
+		//case 1: g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
+		default : g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
+	}
 	g_PhoneLight = glCreateProgramObjectARB();
 	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Vertex );
-	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Pixel_Singe );
+	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
 	GetGLSLLinkSTATUS( g_PhoneLight );
 
 }
-void GLSL_Enable_PhoneLight()
+void DeinitGLSL()
 {
-	if(GlslVer<=0)
+	if(GlslVer<100)
+		return;
+	glDetachObjectARB( g_PhoneLight, g_PhoneLight_Vertex );
+	glDetachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
+	glDeleteObjectARB(g_PhoneLight_Vertex);
+	glDeleteObjectARB(g_PhoneLight_Pixel);
+}
+void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
+{
+	if(GlslVer<100)
 		return;
 	glUseProgramObjectARB( g_PhoneLight );
 	glUniform1i(glGetUniformLocation(g_PhoneLight,"DiffuseTex"),0);
@@ -128,7 +147,7 @@ void GLSL_Enable_PhoneLight()
 }
 void GLSL_Disable()
 {
-	if(GlslVer<=0)
+	if(GlslVer<100)
 		return;
 	glUseProgramObjectARB( NULL );
 }
