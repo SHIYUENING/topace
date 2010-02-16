@@ -424,7 +424,7 @@
 			Name="Shader"
 			>
 			<File
-				RelativePath=".\data\shader\Glsl_PhoneLight_Pixel.ps"
+				RelativePath=".\data\shader\Glsl_PhoneLight_Pixel_Singe.ps"
 				>
 			</File>
 			<File
