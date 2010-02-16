@@ -5,6 +5,7 @@ int GlslVer = 0;
 //GLhandleARB	g_GLSL_ATC_Pixel;
 //GLhandleARB	g_GLSL_ATC_Vertex;
 //GLhandleARB GLSL_ATC;
+int GLSLLightSet=0;
 GLhandleARB g_PhoneLight;
 GLhandleARB g_PhoneLight_Vertex;
 GLhandleARB g_PhoneLight_Pixel;
@@ -100,6 +101,7 @@ void InitGLSL(int LightSet)
 	else
 		return;
 
+	GLSLLightSet = LightSet;
 	if(LightSet<2)
 	{
 		GlslVer=0;
@@ -117,7 +119,8 @@ void InitGLSL(int LightSet)
 
 	switch (LightSet)
 	{
-		//case 1: g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
+		case 2: g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
+		case 3: g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Multi.ps",GL_FRAGMENT_SHADER_ARB);break;
 		default : g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
 	}
 	g_PhoneLight = glCreateProgramObjectARB();
@@ -137,10 +140,12 @@ void DeinitGLSL()
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
+	int LightNums[2]={OmniLightNum,SpotLightNum};
 	if(GlslVer<100)
 		return;
 	glUseProgramObjectARB( g_PhoneLight );
 	glUniform1i(glGetUniformLocation(g_PhoneLight,"DiffuseTex"),0);
+	glUniform2iv(glGetUniformLocation(g_PhoneLight,"LightNums"),1,LightNums); 
 	//glUniform4fv(glGetUniformLocation(g_PhoneLight,"LightColor"),1,LightColor);
 	//glUniform4fv(glGetUniformLocation(g_PhoneLight,"LightPosEye"),1,LightPosEye);
 	//glUniform1i(glGetUniformLocation(GLSL_ATC,"Tex_ATC"),0); 
