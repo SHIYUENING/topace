@@ -67,9 +67,9 @@ void main()
 		DiffuseColor += LightVal.x * gl_FrontLightProduct[i].diffuse ;
 		SpecularColor += LightVal.y * gl_FrontLightProduct[i].specular ;
 	}
-	gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[2].ambient + gl_FrontLightModelProduct.sceneColor + DiffuseColor) ;
+	gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[2].ambient + gl_FrontLightModelProduct.sceneColor + DiffuseColor +SpecularColor*4) ;
 	gl_FragColor.w=DiffuseTexColor.w;
-	gl_FragColor+=SpecularColor;
+	//gl_FragColor+=SpecularColor;
 	
 	//gl_FragColor.xyz=Normal;
 	//gl_FragColor = DiffuseTexColor;
