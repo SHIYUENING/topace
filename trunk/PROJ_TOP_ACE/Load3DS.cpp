@@ -1042,7 +1042,7 @@ void CLoad3DS::SpotLightTGTNodeEval(Lib3dsNode *Node,float Frame)
 	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 
 }
-void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
+void CLoad3DS::SetLightsPos(int lightBase)
 {
 	Easy_vector_copy(&ModelAmbientLightColot,Model3ds->ambient);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,(float *)&ModelAmbientLightColot);
@@ -1052,28 +1052,20 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,ThisNodematrix[0]);
 	glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&ThisNodematrixM[0]);
 	glLoadIdentity();
-/*	for(int i=0;i<OmniLightNum+lightBase;i++)
-	{
-		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
-		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
-	}*/
+
 	for(int i=0;i<OmniLightNum;i++)
 	{
 		Easy_matrix_mult_vector3X3(&OmniLightNodes[i].LightEyePos,ThisNodematrixM,OmniLightNodes[i].LightWorldPos);
 		OmniLightNodes[i].LightEyePos.m128_f32[3]=1.0f;
-		if(UseShader)
+
+		if((i+lightBase)<8)
 		{
+			glEnable(GL_LIGHT0+i+lightBase);
+			glLightfv(GL_LIGHT0+i+lightBase,GL_POSITION,(float *)&OmniLightNodes[i].LightEyePos);
+			glLightfv(GL_LIGHT0+i+lightBase,GL_SPECULAR,(float *)&OmniLightNodes[i].LightColor);
+			glLightfv(GL_LIGHT0+i+lightBase,GL_DIFFUSE,(float *)&OmniLightNodes[i].LightColor);
 		}
-		else
-		{
-			if((i+lightBase)<8)
-			{
-				glEnable(GL_LIGHT0+i+lightBase);
-				glLightfv(GL_LIGHT0+i+lightBase,GL_POSITION,(float *)&OmniLightNodes[i].LightEyePos);
-				glLightfv(GL_LIGHT0+i+lightBase,GL_SPECULAR,(float *)&OmniLightNodes[i].LightColor);
-				glLightfv(GL_LIGHT0+i+lightBase,GL_DIFFUSE,(float *)&OmniLightNodes[i].LightColor);
-			}
-		}
+		
 	}
 	for(int i=0;i<SpotLightNum;i++)
 	{
@@ -1088,22 +1080,18 @@ void CLoad3DS::SetLightsPos(bool UseShader,int lightBase)
 		glVertex3fv((float *)&SpotLightNodes[i].LightEyePos);
 		glVertex3fv((float *)&SpotLightNodes[i].SpotTGTEyePos);
 		glEnd();*/
-		if(UseShader)
+
+		if((i+lightBase+OmniLightNum)<8)
 		{
+			glEnable(GL_LIGHT0+i+lightBase+OmniLightNum);
+			glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_POSITION,(float *)&SpotLightNodes[i].LightEyePos);
+			glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPECULAR,(float *)&SpotLightNodes[i].LightColor);
+			glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_DIFFUSE,(float *)&SpotLightNodes[i].LightColor);
+			glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_DIRECTION,(float *)&SpotLightNodes[i].SpotEyeDirection);
+			glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_EXPONENT,(float *)&OmniLightNodes[i].SpotEyeDirection.m128_f32[3]);
+			glLightf(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_CUTOFF,SpotLightNodes[i].SpotSet.m128_f32[0]);
 		}
-		else
-		{
-			if((i+lightBase+OmniLightNum)<8)
-			{
-				glEnable(GL_LIGHT0+i+lightBase+OmniLightNum);
-				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_POSITION,(float *)&SpotLightNodes[i].LightEyePos);
-				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPECULAR,(float *)&SpotLightNodes[i].LightColor);
-				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_DIFFUSE,(float *)&SpotLightNodes[i].LightColor);
-				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_DIRECTION,(float *)&SpotLightNodes[i].SpotEyeDirection);
-				glLightfv(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_EXPONENT,(float *)&OmniLightNodes[i].SpotEyeDirection.m128_f32[3]);
-				glLightf(GL_LIGHT0+i+lightBase+OmniLightNum,GL_SPOT_CUTOFF,SpotLightNodes[i].SpotSet.m128_f32[0]);
-			}
-		}
+		
 	}
 	/*
 	Easy_vector_copy(LightPosWorld,OmniLightPos[0]);
