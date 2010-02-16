@@ -46,20 +46,33 @@ void main()
 {
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, gl_TexCoord[0].xy);
 	vec2 LightVal=vec2(0.0,0.0);
+	vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
-	for(int i=0;i<LightNums.x;i++)
+	for(int i=0;i<8;i++)
 	{
+		if(i<LightNums.x)
+		{
+			LightVal=OmniLight (gl_LightSource[i].position);
+		}
+		else
+		{
+			if(i<(LightNums.x+LightNums.y))
+			{
+				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
+			}
+		}
+		
+		AmbientColor += gl_FrontLightProduct[i].ambient;
+		DiffuseColor += LightVal.x * gl_FrontLightProduct[i].diffuse ;
+		SpecularColor += LightVal.y * gl_FrontLightProduct[i].specular ;
 	}
-	//OmniLightVal = OmniLight (gl_LightSource[2].position);
-	LightVal = SpotLight(gl_LightSource[2].position,gl_LightSource[2].spotDirection,gl_LightSource[2].spotCosCutoff,gl_LightSource[2].spotExponent);
-	DiffuseColor = LightVal.x * gl_FrontLightProduct[2].diffuse ;
-	SpecularColor = LightVal.y * gl_FrontLightProduct[2].specular ;
 	gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[2].ambient + gl_FrontLightModelProduct.sceneColor + DiffuseColor) ;
 	gl_FragColor.w=DiffuseTexColor.w;
-	gl_FragColor=gl_FragColor+ SpecularColor;
+	gl_FragColor+=SpecularColor;
 	
 	//gl_FragColor.xyz=Normal;
 	//gl_FragColor = DiffuseTexColor;
     return;
 } 
+

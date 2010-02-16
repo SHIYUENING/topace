@@ -1021,7 +1021,7 @@ void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[0]=LCN->hotspot/2.0f;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[1]=LCN->hotspot;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[2]=LCN->falloff;
-	SpotLightNodes[Node->user_id].SpotSet.m128_f32[3]=LCN->falloff/2.0f;
+	SpotLightNodes[Node->user_id].SpotSet.m128_f32[3]=LCN->falloff/1.5f;
 
 	
 
