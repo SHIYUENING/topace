@@ -5,6 +5,7 @@
 #define NO_TEX 0
 #define IS_DDS 1
 #define IS_TGA 2
+#define IS_DEF 3
 
 class Textures
 {
@@ -23,5 +24,7 @@ public:
 	CDDS *DDSfile;
 	TGA *TGAfile;
 	bool UseAlpha;
+	bool LoadDefTex(void);
+
 };
 #endif

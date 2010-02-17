@@ -1,4 +1,7 @@
 #include"Textures.h"
+
+bool DEFTEXLoaded=false;
+unsigned int DEFTEXID=0;
 Textures::Textures(void)
 :TexType(0)
 ,TexID(0)
@@ -18,6 +21,28 @@ Textures::~Textures(void)
 		delete TGAfile;
 	TGAfile=NULL;
 	TexID=0;
+}
+bool Textures::LoadDefTex(void)
+{
+	if(DEFTEXLoaded)
+	{
+		TexID=DEFTEXID;
+		TexType=IS_DEF;
+		return true;
+	}
+	unsigned char DefTexData[64*64*4];
+	for(int i=0;i<64*64*4;i++)
+		DefTexData[i]=255;
+
+	glGenTextures(1, &DEFTEXID);
+	glBindTexture(GL_TEXTURE_2D, DEFTEXID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 64, 64, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, DefTexData);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	DEFTEXLoaded=true;
+	TexID=DEFTEXID;
+	TexType=IS_DEF;
+	return true;
 }
 bool Textures::loadfile(char * filename)
 {
@@ -63,6 +88,8 @@ unsigned int Textures::LoadToVRAM(int TexParameter)
 	{
 		if(TGAfile!=NULL)
 			TexID=TGAfile->LoadTGA_RAMtoVRAM(TexParameter);
+		else
+			LoadDefTex();
 	}
 	return TexID;
 }
@@ -128,4 +155,12 @@ void Textures::Del_VRAM()
 		if(TGAfile!=NULL)
 			TGAfile->DelTGA_VRAM();
 	}
+	if(DEFTEXLoaded)
+	{
+		DEFTEXLoaded=false;
+		if(DEFTEXID!=0)
+			glDeleteTextures(1, &DEFTEXID);
+		DEFTEXID=0;
+	}
 }
+

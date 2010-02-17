@@ -45,6 +45,8 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 void main()
 {
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, gl_TexCoord[0].xy);
+	//if(DiffuseTexColor.x<0)
+//	DiffuseTexColor=vec4(1.0,1.0,1.0,1.0);
 	vec2 LightVal=vec2(0.0,0.0);
 	vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
@@ -67,7 +69,7 @@ void main()
 		DiffuseColor += LightVal.x * gl_FrontLightProduct[i].diffuse ;
 		SpecularColor += LightVal.y * gl_FrontLightProduct[i].specular ;
 	}
-	gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[2].ambient + gl_FrontLightModelProduct.sceneColor + DiffuseColor +SpecularColor*4) ;
+	gl_FragColor = DiffuseTexColor * (AmbientColor + gl_FrontLightModelProduct.sceneColor + DiffuseColor +SpecularColor*4) ;
 	gl_FragColor.w=DiffuseTexColor.w;
 	//gl_FragColor+=SpecularColor;
 	
