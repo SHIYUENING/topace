@@ -150,6 +150,8 @@ void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPushMatrix();										// Store The Projection Matrix
 	glLoadIdentity();									// Reset The Projection Matrix
