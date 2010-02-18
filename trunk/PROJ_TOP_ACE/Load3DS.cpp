@@ -20,6 +20,7 @@ CLoad3DS::CLoad3DS(void)
 , SpotLightNum(0)
 , OmniLightNodes(NULL)
 , SpotLightNodes(NULL)
+, OnlySelfIllum(false)
 {
 }
 
@@ -609,6 +610,9 @@ void inline CLoad3DS::RenderNodeMesh(tModelNodes ModelNode)
 		glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&ModelNode.mat_shininess);
 
 		Lib3dsMaterial *Material = Model3ds->materials[ModelNode.MaterialID];
+		if(OnlySelfIllum&&(Material->self_illum<0.85f))
+			return;
+		//Material->self_illum
 		if(Material->two_sided)
 			glDisable(GL_CULL_FACE);
 		else
@@ -1075,11 +1079,11 @@ void CLoad3DS::SetLightsPos(int lightBase)
 		SpotLightNodes[i].SpotTGTEyePos.m128_f32[3]=1.0f;
 		Easy_vector_sub(&SpotLightNodes[i].SpotEyeDirection,SpotLightNodes[i].SpotTGTEyePos,SpotLightNodes[i].LightEyePos);
 		Easy_vector_normalize(&SpotLightNodes[i].SpotEyeDirection,SpotLightNodes[i].SpotEyeDirection);
-		glLineWidth(7.0);
-		glBegin(GL_LINES);
-		glVertex3fv((float *)&SpotLightNodes[i].LightEyePos);
-		glVertex3fv((float *)&SpotLightNodes[i].SpotTGTEyePos);
-		glEnd();
+//		glLineWidth(7.0);
+//		glBegin(GL_LINES);
+//		glVertex3fv((float *)&SpotLightNodes[i].LightEyePos);
+//		glVertex3fv((float *)&SpotLightNodes[i].SpotTGTEyePos);
+//		glEnd();
 
 		if((i+lightBase+OmniLightNum)<8)
 		{

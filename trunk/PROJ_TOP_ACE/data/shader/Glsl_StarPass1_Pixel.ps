@@ -1,0 +1,35 @@
+uniform sampler2D StarTex1;
+void main()
+{
+	float dw=1.0/256.0;
+    vec2 Tpos;
+    vec4 color;
+    Tpos=vec2(-dw,0.0);
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*5.0) * 0.1;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*4.0) * 0.22;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*3.0) * 0.358;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*2.0) * 0.523;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos) * 0.843;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy ) * 1.0;
+    Tpos.x = dw;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos) * 0.843;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*2.0) * 0.523;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*3.0) * 0.358;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*4.0) * 0.22;
+    color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*5.0) * 0.1;
+    
+    //Tpos=vec2(0.0,dw*0.5);
+   // color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*2.0) * 0.5;
+    //Tpos=vec2(0.0,-dw*0.5);
+    //color += texture2D(StarTex1,gl_TexCoord[0].xy+Tpos*2.0) * 0.5;
+    
+   // color.w=color.w*0.2;
+   // color.xyz = color.xyz*2.0;
+   // color.w=min(0.5,color.w);
+    //color.w = 1.0;
+     color.rg = color.rg*0.2;
+     color.b = color.b*0.275;
+    color.w = 1.0;
+    gl_FragColor = color;
+    return;
+}
