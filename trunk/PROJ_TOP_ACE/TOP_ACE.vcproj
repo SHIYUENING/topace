@@ -250,6 +250,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FBO.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Font2D.cpp"
 				>
 			</File>
@@ -360,6 +364,10 @@
 			</File>
 			<File
 				RelativePath=".\EasyVector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FBO.h"
 				>
 			</File>
 			<File

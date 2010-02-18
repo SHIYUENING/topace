@@ -81,8 +81,8 @@ void ToggleFullscreen (GL_Window* window)								// Toggle Fullscreen/Windowed
 
 void ReshapeGL (int width, int height)									// Reshape The Window When It's Moved Or Resized
 {
-	WindowWidth=width;
-	WindowHeight=height;
+	GameSet.winW=WindowWidth=width;
+	GameSet.winH=WindowHeight=height;
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
