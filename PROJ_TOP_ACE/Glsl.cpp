@@ -9,6 +9,10 @@ int GLSLLightSet=0;
 GLhandleARB g_PhoneLight;
 GLhandleARB g_PhoneLight_Vertex;
 GLhandleARB g_PhoneLight_Pixel;
+GLhandleARB g_StarPass1;
+GLhandleARB g_StarPass1_Pixel;
+GLhandleARB g_StarPass0;
+GLhandleARB g_StarPass0_Pixel;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -128,6 +132,17 @@ void InitGLSL(int LightSet)
 	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
 	GetGLSLLinkSTATUS( g_PhoneLight );
 
+	g_StarPass1_Pixel = GLSL_CompileShader("data/shader/Glsl_StarPass1_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
+	g_StarPass1 = glCreateProgramObjectARB();
+
+	glAttachObjectARB( g_StarPass1, g_StarPass1_Pixel );
+	GetGLSLLinkSTATUS( g_StarPass1 );
+
+	g_StarPass0_Pixel = GLSL_CompileShader("data/shader/Glsl_StarPass0_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
+	g_StarPass0 = glCreateProgramObjectARB();
+
+	glAttachObjectARB( g_StarPass0, g_StarPass0_Pixel );
+	GetGLSLLinkSTATUS( g_StarPass0 );
 }
 void DeinitGLSL()
 {
@@ -137,6 +152,12 @@ void DeinitGLSL()
 	glDetachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
 	glDeleteObjectARB(g_PhoneLight_Vertex);
 	glDeleteObjectARB(g_PhoneLight_Pixel);
+
+	glDetachObjectARB( g_StarPass1, g_StarPass1_Pixel );
+	glDeleteObjectARB(g_StarPass1_Pixel);
+
+	glDetachObjectARB( g_StarPass0, g_StarPass0_Pixel );
+	glDeleteObjectARB(g_StarPass0_Pixel);
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
@@ -155,6 +176,20 @@ void GLSL_Disable()
 	if(GlslVer<100)
 		return;
 	glUseProgramObjectARB( NULL );
+}
+void GLSL_Enable_StarPass1()
+{
+	if(GlslVer<100)
+		return;
+	glUseProgramObjectARB( g_StarPass1 );
+	glUniform1i(glGetUniformLocation(g_StarPass1,"StarTex1"),0);
+}
+void GLSL_Enable_StarPass0()
+{
+	if(GlslVer<100)
+		return;
+	glUseProgramObjectARB( g_StarPass0 );
+	glUniform1i(glGetUniformLocation(g_StarPass0,"StarTex1"),0);
 }
 /*
 void GLSL_Enable_ATC()

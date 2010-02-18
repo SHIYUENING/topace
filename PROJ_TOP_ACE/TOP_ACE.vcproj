@@ -443,6 +443,10 @@
 				RelativePath=".\data\shader\Glsl_PhoneLight_Vertex.vs"
 				>
 			</File>
+			<File
+				RelativePath=".\data\shader\Glsl_StarPass1_Pixel.ps"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
