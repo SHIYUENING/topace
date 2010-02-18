@@ -1018,7 +1018,7 @@ void CLoad3DS::SpotLightNodeEval(Lib3dsNode *Node,float Frame)
 	Easy_matrix_translate_Internal(Node->matrix, LCN->pos[0], LCN->pos[1], LCN->pos[2]);
 	Easy_vector_copy(&SpotLightNodes[Node->user_id].LightColor,LCN->color);
 	//float CutOff=(LCN->hotspot+LCN->falloff)/2.0f;
-	SpotLightNodes[Node->user_id].SpotSet.m128_f32[0]=LCN->hotspot/2.0f;
+	SpotLightNodes[Node->user_id].SpotSet.m128_f32[0]=LCN->hotspot;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[1]=LCN->hotspot;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[2]=LCN->falloff;
 	SpotLightNodes[Node->user_id].SpotSet.m128_f32[3]=LCN->falloff/1.5f;
@@ -1075,11 +1075,11 @@ void CLoad3DS::SetLightsPos(int lightBase)
 		SpotLightNodes[i].SpotTGTEyePos.m128_f32[3]=1.0f;
 		Easy_vector_sub(&SpotLightNodes[i].SpotEyeDirection,SpotLightNodes[i].SpotTGTEyePos,SpotLightNodes[i].LightEyePos);
 		Easy_vector_normalize(&SpotLightNodes[i].SpotEyeDirection,SpotLightNodes[i].SpotEyeDirection);
-		/*glLineWidth(7.0);
+		glLineWidth(7.0);
 		glBegin(GL_LINES);
 		glVertex3fv((float *)&SpotLightNodes[i].LightEyePos);
 		glVertex3fv((float *)&SpotLightNodes[i].SpotTGTEyePos);
-		glEnd();*/
+		glEnd();
 
 		if((i+lightBase+OmniLightNum)<8)
 		{
@@ -1139,3 +1139,4 @@ void CLoad3DS::InitLight(void)
 	SpotLightNodes = (tLightNodes *) _aligned_malloc (SpotLightNum*sizeof(tLightNodes),16);
 	
 }
+
