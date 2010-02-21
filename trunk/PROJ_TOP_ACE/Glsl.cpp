@@ -13,6 +13,16 @@ GLhandleARB g_StarPass1;
 GLhandleARB g_StarPass1_Pixel;
 GLhandleARB g_StarPass0;
 GLhandleARB g_StarPass0_Pixel;
+
+GLhandleARB	g_GLSLBloomW_pixel;
+GLhandleARB	g_GLSLBloomH_pixel;
+GLhandleARB	g_GLSLBloomMap_pixel;
+GLhandleARB	g_GLSLToneMapping_pixel;
+
+GLhandleARB GLSL_DrawBloomW;
+GLhandleARB GLSL_DrawBloomH;
+GLhandleARB GLSL_ToneMapping;
+GLhandleARB GLSL_DrawBloomMap;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -143,6 +153,29 @@ void InitGLSL(int LightSet)
 
 	glAttachObjectARB( g_StarPass0, g_StarPass0_Pixel );
 	GetGLSLLinkSTATUS( g_StarPass0 );
+
+	GLSL_DrawBloomW = glCreateProgramObjectARB();
+	GLSL_DrawBloomH = glCreateProgramObjectARB();
+	GLSL_DrawBloomMap = glCreateProgramObjectARB();
+	GLSL_ToneMapping = glCreateProgramObjectARB();
+
+	g_GLSLBloomW_pixel = GLSL_CompileShader("data/shader/BloomW_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLBloomH_pixel = GLSL_CompileShader("data/shader/BloomH_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLBloomMap_pixel = GLSL_CompileShader("data/shader/BloomMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLToneMapping_pixel = GLSL_CompileShader("data/shader/ToneMapping_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+
+	glAttachObjectARB( GLSL_DrawBloomW, g_GLSLBloomW_pixel );
+	glAttachObjectARB( GLSL_DrawBloomH, g_GLSLBloomH_pixel );
+	glAttachObjectARB( GLSL_DrawBloomMap, g_GLSLBloomMap_pixel );
+	glAttachObjectARB( GLSL_ToneMapping, g_GLSLToneMapping_pixel );
+
+	GetGLSLLinkSTATUS( GLSL_DrawBloomW);
+	GetGLSLLinkSTATUS( GLSL_DrawBloomH);
+	GetGLSLLinkSTATUS( GLSL_DrawBloomMap);
+	GetGLSLLinkSTATUS( GLSL_ToneMapping);
+
+	
+
 }
 void DeinitGLSL()
 {
@@ -158,6 +191,16 @@ void DeinitGLSL()
 
 	glDetachObjectARB( g_StarPass0, g_StarPass0_Pixel );
 	glDeleteObjectARB(g_StarPass0_Pixel);
+
+	glDetachObjectARB( GLSL_DrawBloomW, g_GLSLBloomW_pixel );
+	glDetachObjectARB( GLSL_DrawBloomH, g_GLSLBloomH_pixel );
+	glDetachObjectARB( GLSL_DrawBloomMap, g_GLSLBloomMap_pixel );
+	glDetachObjectARB( GLSL_ToneMapping, g_GLSLToneMapping_pixel );
+
+	glDeleteObjectARB( g_GLSLBloomW_pixel );
+	glDeleteObjectARB( g_GLSLBloomH_pixel );
+	glDeleteObjectARB( g_GLSLBloomMap_pixel );
+	glDeleteObjectARB( g_GLSLToneMapping_pixel );
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
@@ -206,3 +249,28 @@ void GLSL_Disable_ATC()
 	glUseProgramObjectARB( NULL );
 }
 */
+void DrawBloomMapGLSL(int WinW,int WinH)
+{
+	glUseProgramObjectARB( GLSL_DrawBloomMap );
+	glUniform1i(glGetUniformLocation(GLSL_DrawBloomMap,"texColor"),0);
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"AveLum"),0.23f);
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"imgW"),(float)WinW);
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap,"imgH"),(float)WinH);
+}
+void DrawBloomWGLSL(int WinW)
+{
+	glUseProgramObjectARB( GLSL_DrawBloomW );
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomW,"_imgW1"),(float)WinW);
+	glUniform1i(glGetUniformLocation(GLSL_DrawBloomW,"_texSrc1"),0);
+}
+void DrawBloomHGLSL(int WinH)
+{
+	glUseProgramObjectARB( GLSL_DrawBloomH );
+	glUniform1f(glGetUniformLocation(GLSL_DrawBloomH,"_imgH1"),(float)WinH);
+	glUniform1i(glGetUniformLocation(GLSL_DrawBloomH,"_texSrc1"),0);
+}
+void ToneMappingGLSL()
+{
+	glUseProgramObjectARB( GLSL_ToneMapping );
+	glUniform1i(glGetUniformLocation(GLSL_ToneMapping,"_texSrc1"),0);
+}
