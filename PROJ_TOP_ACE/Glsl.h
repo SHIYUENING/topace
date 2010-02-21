@@ -9,4 +9,8 @@ void GLSL_Enable_PhoneLight(int OmniLightNum=1,int SpotLightNum=0);
 void GLSL_Disable();
 void GLSL_Enable_StarPass0();
 void GLSL_Enable_StarPass1();
+void DrawBloomMapGLSL(int WinW,int WinH);
+void DrawBloomWGLSL(int WinW);
+void DrawBloomHGLSL(int WinH);
+void ToneMappingGLSL();
 #endif

@@ -5,6 +5,11 @@ GLuint ScreemTexDepth=0;
 GLuint StarTex1=0;
 GLuint StarTex2=0;
 GLuint StarTexDepth=0;
+
+GLuint BloomTex1=0;
+GLuint BloomTex2=0;
+GLuint BloomTexDepth=0;
+
 bool SuppotFBO=false;
 int ScreemTexW=0;
 int ScreemTexH=0;
@@ -79,6 +84,10 @@ GLuint InitFBO(int winW,int winH)
 	ScreemTex=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
 	ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 
+	BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+	BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+	BloomTexDepth=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+
 	StarTex1=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
 	StarTex2=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
 	StarTexDepth=InitTex2D(StarTexSizeX, StarTexSizeY,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
@@ -108,11 +117,18 @@ void DeinitFBO()
 		glDeleteTextures(1,&StarTex2);
 	if(StarTexDepth)
 		glDeleteTextures(1,&StarTexDepth);
+
+	if(BloomTex1)
+		glDeleteTextures(1,&BloomTex1);
+	if(BloomTex2)
+		glDeleteTextures(1,&BloomTex2);
+	if(BloomTexDepth)
+		glDeleteTextures(1,&BloomTexDepth);
 }
 void TestTexFBO()
 {
 	glEnable( GL_TEXTURE_2D );
-	glEnable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_TEXTURE);
@@ -125,14 +141,14 @@ void TestTexFBO()
 	glPushMatrix();	
 	glLoadIdentity();
 	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
-		glBindTexture(GL_TEXTURE_2D, StarTex1);
+		glBindTexture(GL_TEXTURE_2D, BloomTex1);
 
 		//glColor3f(0.1f,0.1f,1.0f);
 		//glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 		//glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,ScreemTexH);
-				glTexCoord2f(1.0f,	1.0f);	glVertex2i(ScreemTexW ,ScreemTexH);
+				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,ScreemTexH/2);
+				glTexCoord2f(1.0f,	1.0f);	glVertex2i(ScreemTexW ,ScreemTexH/2);
 				glTexCoord2f(1.0f,	0.0f);	glVertex2i(ScreemTexW, 0);
 				glTexCoord2f(0.0f,	0.0f);	glVertex2i( 0, 0);
 			glEnd();
@@ -145,6 +161,85 @@ void TestTexFBO()
 	glEnable(GL_DEPTH_TEST);
 	glEnable( GL_BLEND );
 	glEnable( GL_CULL_FACE );
+}
+void FBOS_BLOOM()
+{
+	glBindTexture(GL_TEXTURE_2D, ScreemTex);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0 ,FBOWinW, FBOWinH, 0);
+	//glBindTexture(GL_TEXTURE_2D, BloomTex1);
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
+	CheckFBOError();
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, BloomTexDepth, 0);
+	CheckFBOError();
+
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glClear (GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+	glViewport(0,0,ScreemTexW/8, ScreemTexH/8);
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);					
+	glPushMatrix();	
+	glLoadIdentity();
+	glOrtho(0,ScreemTexW/8,0,ScreemTexH/8,-1,1);
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();	
+	glLoadIdentity();
+
+	DrawBloomMapGLSL(FBOWinW,FBOWinH);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+			glEnd();
+
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
+	CheckFBOError();
+	glBindTexture(GL_TEXTURE_2D, BloomTex1);
+	DrawBloomWGLSL(FBOWinW);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+			glEnd();
+	
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
+	glBindTexture(GL_TEXTURE_2D, BloomTex2);
+	DrawBloomHGLSL(FBOWinH);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+			glEnd();
+	
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+	glBindTexture(GL_TEXTURE_2D, BloomTex1);
+	
+	glEnable( GL_BLEND );
+	ToneMappingGLSL();
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+			glEnd();
+
+	GLSL_Disable();
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();	
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_DEPTH_TEST);
+	
 }
 void FBOS_Star_Begin()
 {
@@ -220,7 +315,7 @@ void FBOS_Star_End()
 				glTexCoord2f(0.0f,	0.0f);	glVertex2i( 0, 0);
 			glEnd();
 
-	glEnable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
 	CheckFBOError();
