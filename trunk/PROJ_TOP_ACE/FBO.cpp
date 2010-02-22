@@ -63,7 +63,7 @@ GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	return Tex2DID;
 }
-GLuint InitFBO(int winW,int winH)
+GLuint InitFBO(int winW,int winH,int BloomSet)
 {
 	FBOWinW=winW;
 	FBOWinH=winH;
@@ -79,14 +79,50 @@ GLuint InitFBO(int winW,int winH)
 		SuppotFBO=false;
 		return 0;
 	}
+	
 	glGenFramebuffersEXT(1, &FBOID);
 //	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	ScreemTex=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
 	ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 
-	BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-	BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-	BloomTexDepth=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+	
+	if(BloomSet>0)
+	{
+		GLuint BloomTexFormatISet=GL_RGBA8;
+		GLuint BloomTexDataTypeSet=GL_UNSIGNED_BYTE;
+		if(BloomSet==2)
+		{
+			BloomTexFormatISet=GL_RGBA16F_ARB;
+			BloomTexDataTypeSet=GL_FLOAT;
+			
+			if(glewIsSupported("GL_ATI_texture_float"))
+			{
+				BloomTexFormatISet=GL_RGBA_FLOAT16_ATI;
+			}
+			if(glewIsSupported("GL_NV_float_buffer"))
+			{
+				BloomTexFormatISet=GL_FLOAT_RGBA16_NV;
+			}
+		}
+		if(BloomSet==3)
+		{
+			BloomTexFormatISet=GL_RGBA32F_ARB;
+			BloomTexDataTypeSet=GL_FLOAT;
+			
+			if(glewIsSupported("GL_ATI_texture_float"))
+			{
+				BloomTexFormatISet=GL_RGBA_FLOAT32_ATI;
+			}
+			if(glewIsSupported("GL_NV_float_buffer"))
+			{
+				BloomTexFormatISet=GL_FLOAT_RGBA32_NV;
+			}
+		}
+		BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,BloomTexDataTypeSet);
+		BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,BloomTexDataTypeSet);
+		BloomTexDepth=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+	}
+
 
 	StarTex1=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
 	StarTex2=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
