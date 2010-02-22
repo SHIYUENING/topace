@@ -19,7 +19,7 @@ void main()
     color += texture2D(_texSrc1,gl_TexCoord[0].xy+Tpos*4.0) * 0.22;
     color += texture2D(_texSrc1,gl_TexCoord[0].xy+Tpos*5.0) * 0.1;
     color = color/5.0;
-    color.w = 1.0;
+   // color.w = 1.0;
     gl_FragColor = color;
     return;
 }
