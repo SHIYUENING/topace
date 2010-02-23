@@ -89,11 +89,9 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	if(BloomSet>0)
 	{
 		GLuint BloomTexFormatISet=GL_RGBA8;
-		GLuint BloomTexDataTypeSet=GL_UNSIGNED_BYTE;
 		if(BloomSet==2)
 		{
 			BloomTexFormatISet=GL_RGBA16F_ARB;
-			BloomTexDataTypeSet=GL_FLOAT;
 			
 			if(glewIsSupported("GL_ATI_texture_float"))
 			{
@@ -104,10 +102,9 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 				BloomTexFormatISet=GL_FLOAT_RGBA16_NV;
 			}
 		}
-		if(BloomSet==3)
+		if(BloomSet>=3)
 		{
 			BloomTexFormatISet=GL_RGBA32F_ARB;
-			BloomTexDataTypeSet=GL_FLOAT;
 			
 			if(glewIsSupported("GL_ATI_texture_float"))
 			{
@@ -118,8 +115,8 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 				BloomTexFormatISet=GL_FLOAT_RGBA32_NV;
 			}
 		}
-		BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,BloomTexDataTypeSet);
-		BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,BloomTexDataTypeSet);
+		BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
+		BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
 		BloomTexDepth=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 	}
 

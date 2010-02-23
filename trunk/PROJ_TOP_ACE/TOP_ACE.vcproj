@@ -432,6 +432,18 @@
 			Name="Shader"
 			>
 			<File
+				RelativePath=".\data\shader\BloomH_pixel.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\data\shader\BloomMap_pixel.glsl"
+				>
+			</File>
+			<File
+				RelativePath=".\data\shader\BloomW_pixel.glsl"
+				>
+			</File>
+			<File
 				RelativePath=".\data\shader\Glsl_PhoneLight_Pixel_Multi.ps"
 				>
 			</File>
@@ -445,6 +457,10 @@
 			</File>
 			<File
 				RelativePath=".\data\shader\Glsl_StarPass1_Pixel.ps"
+				>
+			</File>
+			<File
+				RelativePath=".\data\shader\ToneMapping_pixel.glsl"
 				>
 			</File>
 		</Filter>
