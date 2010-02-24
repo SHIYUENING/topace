@@ -28,6 +28,7 @@ void loadIniFile()
 		WritePrivateProfileString("GameSet","Light","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Water","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Bloom","0",".\\gameset.ini");
+		WritePrivateProfileString("GameSet","SSAO","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Shadow","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","MoveBlur","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Cloud","0",".\\gameset.ini");
@@ -100,6 +101,7 @@ void loadIniFile()
 		GameSet.Light=GetPrivateProfileInt("GameSet","Light",0,".\\gameset.ini");
 		GameSet.Water=GetPrivateProfileInt("GameSet","Water",0,".\\gameset.ini");
 		GameSet.Bloom=GetPrivateProfileInt("GameSet","Bloom",0,".\\gameset.ini");
+		GameSet.SSAO=GetPrivateProfileInt("GameSet","SSAO",0,".\\gameset.ini");
 		GameSet.Shadow=GetPrivateProfileInt("GameSet","Shadow",0,".\\gameset.ini");
 		GameSet.MoveBlur=GetPrivateProfileInt("GameSet","MoveBlur",0,".\\gameset.ini");
 		GameSet.Cloud=GetPrivateProfileInt("GameSet","Cloud",0,".\\gameset.ini");

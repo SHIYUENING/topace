@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <GL/glew.h>
 #include "Glsl.h"
+#include"IniFile.h"
 #define StarTexSizeX 256
 #define StarTexSizeY 256
 void CheckFBOError();
@@ -14,6 +15,7 @@ void FBOS_BLOOM();
 void FBOS_Star_Begin();
 void FBOS_Star_End();
 void TestTexFBO();
+void FBOS_SSAO();
 
 
 

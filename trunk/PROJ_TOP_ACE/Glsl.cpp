@@ -23,6 +23,9 @@ GLhandleARB GLSL_DrawBloomW;
 GLhandleARB GLSL_DrawBloomH;
 GLhandleARB GLSL_ToneMapping;
 GLhandleARB GLSL_DrawBloomMap;
+
+GLhandleARB g_GLSLSSAOPass0_pixel;
+GLhandleARB GLSL_SSAOPass0;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -174,6 +177,11 @@ void InitGLSL(int LightSet)
 	GetGLSLLinkSTATUS( GLSL_DrawBloomMap);
 	GetGLSLLinkSTATUS( GLSL_ToneMapping);
 
+	GLSL_SSAOPass0 = glCreateProgramObjectARB();
+	g_GLSLSSAOPass0_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass0.ps",GL_FRAGMENT_SHADER_ARB);
+	glAttachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
+	GetGLSLLinkSTATUS( GLSL_SSAOPass0);
+	
 	
 
 }
@@ -273,4 +281,10 @@ void ToneMappingGLSL()
 {
 	glUseProgramObjectARB( GLSL_ToneMapping );
 	glUniform1i(glGetUniformLocation(GLSL_ToneMapping,"_texSrc1"),0);
+}
+void SSAOPass0()
+{
+	glUseProgramObjectARB(GLSL_SSAOPass0);
+	glUniform1i(glGetUniformLocation(GLSL_SSAOPass0,"DepthTex"),0);
+	
 }

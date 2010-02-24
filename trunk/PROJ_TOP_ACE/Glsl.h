@@ -13,4 +13,5 @@ void DrawBloomMapGLSL(int WinW,int WinH);
 void DrawBloomWGLSL(int WinW);
 void DrawBloomHGLSL(int WinH);
 void ToneMappingGLSL();
+void SSAOPass0();
 #endif
