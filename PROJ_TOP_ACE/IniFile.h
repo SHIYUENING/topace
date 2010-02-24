@@ -37,6 +37,7 @@ struct tGameSet
 	int Light;
 	int Water;
 	int Bloom;
+	int SSAO;
 	int Shadow;
 	int MoveBlur;
 	int Cloud;

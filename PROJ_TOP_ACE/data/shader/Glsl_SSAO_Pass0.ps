@@ -1,0 +1,14 @@
+uniform sampler2D DepthTex;
+void main()
+{
+//Zn/( 1-zDepth*( Zf - Zn ) /Zf)=wDepth
+//	float 10/( 1-0.5*( 1000 - 10 ) /1000)
+	float Zn = 5.0;
+	float Zf = 1000.0;
+	float zDepth = texture2D(DepthTex, gl_TexCoord[0].xy).r;
+	float wDepth = Zn/( 1.0-zDepth*( Zf - Zn ) /Zf);
+	wDepth=wDepth/Zf;
+    gl_FragColor = vec4(wDepth,wDepth,wDepth,1.0);
+    //gl_FragColor =vec4(1.0,1.0,1.0,1.0);
+    return;
+}

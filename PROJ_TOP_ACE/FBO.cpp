@@ -10,6 +10,10 @@ GLuint BloomTex1=0;
 GLuint BloomTex2=0;
 GLuint BloomTexDepth=0;
 
+GLuint SSAOTex1=0;
+GLuint SSAOTex2=0;
+
+extern tGameSet GameSet;
 bool SuppotFBO=false;
 int ScreemTexW=0;
 int ScreemTexH=0;
@@ -79,42 +83,28 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		SuppotFBO=false;
 		return 0;
 	}
-	
+
+
+	if(GameSet.SSAO>0)
+	{
+		SSAOTex1=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+		SSAOTex2=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+	}
 	glGenFramebuffersEXT(1, &FBOID);
 //	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	ScreemTex=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-	ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+	ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 
 	
 	if(BloomSet>0)
 	{
 		GLuint BloomTexFormatISet=GL_RGBA8;
 		if(BloomSet==2)
-		{
 			BloomTexFormatISet=GL_RGBA16F_ARB;
-			
-			if(glewIsSupported("GL_ATI_texture_float"))
-			{
-				BloomTexFormatISet=GL_RGBA_FLOAT16_ATI;
-			}
-			if(glewIsSupported("GL_NV_float_buffer"))
-			{
-				BloomTexFormatISet=GL_FLOAT_RGBA16_NV;
-			}
-		}
+
 		if(BloomSet>=3)
-		{
 			BloomTexFormatISet=GL_RGBA32F_ARB;
-			
-			if(glewIsSupported("GL_ATI_texture_float"))
-			{
-				BloomTexFormatISet=GL_RGBA_FLOAT32_ATI;
-			}
-			if(glewIsSupported("GL_NV_float_buffer"))
-			{
-				BloomTexFormatISet=GL_FLOAT_RGBA32_NV;
-			}
-		}
+
 		BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
 		BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
 		BloomTexDepth=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
@@ -157,6 +147,11 @@ void DeinitFBO()
 		glDeleteTextures(1,&BloomTex2);
 	if(BloomTexDepth)
 		glDeleteTextures(1,&BloomTexDepth);
+
+	if(SSAOTex1)
+		glDeleteTextures(1,&SSAOTex1);
+	if(SSAOTex2)
+		glDeleteTextures(1,&SSAOTex2);
 }
 void TestTexFBO()
 {
@@ -174,14 +169,14 @@ void TestTexFBO()
 	glPushMatrix();	
 	glLoadIdentity();
 	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
-		glBindTexture(GL_TEXTURE_2D, BloomTex1);
+		glBindTexture(GL_TEXTURE_2D, SSAOTex1);
 
 		//glColor3f(0.1f,0.1f,1.0f);
 		//glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 		//glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,ScreemTexH/2);
-				glTexCoord2f(1.0f,	1.0f);	glVertex2i(ScreemTexW ,ScreemTexH/2);
+				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,ScreemTexH);
+				glTexCoord2f(1.0f,	1.0f);	glVertex2i(ScreemTexW ,ScreemTexH);
 				glTexCoord2f(1.0f,	0.0f);	glVertex2i(ScreemTexW, 0);
 				glTexCoord2f(0.0f,	0.0f);	glVertex2i( 0, 0);
 			glEnd();
@@ -204,8 +199,8 @@ void FBOS_BLOOM()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
 	CheckFBOError();
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, BloomTexDepth, 0);
-	CheckFBOError();
+	//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, BloomTexDepth, 0);
+	//CheckFBOError();
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glClear (GL_COLOR_BUFFER_BIT);
@@ -432,4 +427,47 @@ void FBOS_Star_End()
 	glEnable(GL_DEPTH_TEST);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
+}
+void FBOS_SSAO()
+{
+	glBindTexture(GL_TEXTURE_2D, ScreemTexDepth);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 0, 0 ,ScreemTexW, ScreemTexH, 0);
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, SSAOTex1, 0);
+	CheckFBOError();
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+	glViewport(0,0,ScreemTexW, ScreemTexH);
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_PROJECTION);					
+	glPushMatrix();	
+	glLoadIdentity();
+	glOrtho(0,ScreemTexW,0,ScreemTexH,-1,1);
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();	
+	glLoadIdentity();
+
+	float TCX=float(FBOWinW)/float(ScreemTexW);
+	float TCY=float(FBOWinH)/float(ScreemTexH);
+	SSAOPass0();
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
+				glTexCoord2f(TCX,0.0f);glVertex2i( ScreemTexW,0);
+				glTexCoord2f(TCX,TCY);glVertex2i( ScreemTexW, ScreemTexH);
+				glTexCoord2f(0.0f,TCY);glVertex2i(0, ScreemTexH);
+			glEnd();
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+
+	GLSL_Disable();
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();	
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_DEPTH_TEST);
 }
