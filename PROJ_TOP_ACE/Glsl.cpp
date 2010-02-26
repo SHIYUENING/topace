@@ -26,6 +26,9 @@ GLhandleARB GLSL_DrawBloomMap;
 
 GLhandleARB g_GLSLSSAOPass0_pixel;
 GLhandleARB GLSL_SSAOPass0;
+GLhandleARB g_GLSLSSAOPass1_pixel;
+GLhandleARB GLSL_SSAOPass1;
+
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -182,7 +185,10 @@ void InitGLSL(int LightSet)
 	glAttachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
 	GetGLSLLinkSTATUS( GLSL_SSAOPass0);
 	
-	
+	GLSL_SSAOPass1 = glCreateProgramObjectARB();
+	g_GLSLSSAOPass1_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass1.ps",GL_FRAGMENT_SHADER_ARB);
+	glAttachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
+	GetGLSLLinkSTATUS( GLSL_SSAOPass1);
 
 }
 void DeinitGLSL()
@@ -209,6 +215,11 @@ void DeinitGLSL()
 	glDeleteObjectARB( g_GLSLBloomH_pixel );
 	glDeleteObjectARB( g_GLSLBloomMap_pixel );
 	glDeleteObjectARB( g_GLSLToneMapping_pixel );
+
+	glDetachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
+	glDeleteObjectARB( g_GLSLSSAOPass0_pixel);
+	glDetachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
+	glDeleteObjectARB( g_GLSLSSAOPass1_pixel);
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
@@ -286,5 +297,12 @@ void SSAOPass0()
 {
 	glUseProgramObjectARB(GLSL_SSAOPass0);
 	glUniform1i(glGetUniformLocation(GLSL_SSAOPass0,"DepthTex"),0);
+	
+}
+void SSAOPass1(float SSAOset[4])
+{
+	glUseProgramObjectARB(GLSL_SSAOPass1);
+	glUniform1i(glGetUniformLocation(GLSL_SSAOPass1,"DepthTex"),0);
+	glUniform4fv(glGetUniformLocation(GLSL_SSAOPass1,"SSAOset"),1,SSAOset);
 	
 }

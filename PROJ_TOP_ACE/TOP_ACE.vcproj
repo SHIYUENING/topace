@@ -460,6 +460,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\data\shader\Glsl_SSAO_Pass1.ps"
+				>
+			</File>
+			<File
 				RelativePath=".\data\shader\Glsl_StarPass1_Pixel.ps"
 				>
 			</File>
