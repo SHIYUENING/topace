@@ -1,0 +1,125 @@
+/*
+uniform sampler2D DepthTex;
+void main()
+{
+//Zn/( 1-zDepth*( Zf - Zn ) /Zf)=wDepth
+//	float 10/( 1-0.5*( 1000 - 10 ) /1000)
+	float Zn = 5.0;
+	float Zf = 1000.0;
+	float zDepth = texture2D(DepthTex, gl_TexCoord[0].xy).r;
+	float wDepth = Zn/( 1.0-zDepth*( Zf - Zn ) /Zf);
+	wDepth=wDepth/Zf;
+    gl_FragColor = vec4(wDepth,wDepth,wDepth,1.0);
+    //gl_FragColor =vec4(1.0,1.0,1.0,1.0);
+    return;
+}
+*/
+uniform sampler2D DepthTex;
+uniform vec4 SSAOset;
+
+float readDepth( in vec2 coord ) {
+	return SSAOset.z/( 1.0- texture2D( DepthTex, coord ).x * ( SSAOset.w - SSAOset.z ) /SSAOset.w);	
+}
+
+
+float cDepths( in float depth1, in float depth2, in float depthm )
+{
+	float aoo= min(1.0,max(0.0,-(depth1+depth2-depthm*2.0)-1.75));
+	aoo*=min(1.0,max(0.0,20.0-abs(depth1-depth2)));
+	return aoo;
+}
+void main(void)
+{	
+	vec2 texCoord=gl_TexCoord[0].xy;
+	float depth = readDepth( texCoord );
+	float pw = 1.0 / (SSAOset.x+depth-SSAOset.z);
+	float ph = 1.0 / (SSAOset.y+depth-SSAOset.z);
+
+
+	
+	float aoscale=1.0;
+	float dp1;
+	float dp2;
+	float aod = 0.0;
+	
+	
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth);
+	
+	dp1=readDepth( vec2(texCoord.x-pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x+pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth);
+	
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y));
+	aod+=cDepths(dp1,dp2,depth);
+	
+	dp1=readDepth( vec2(texCoord.x,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth);
+
+
+	
+	pw*=2.0;
+	ph*=2.0;
+	aoscale*=1.15;
+	
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x-pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x+pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	pw*=2.0;
+	ph*=2.0;
+	aoscale*=1.15;
+	
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x-pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x+pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	pw*=2.0;
+	ph*=2.0;
+	aoscale*=1.15;
+	
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x-pw,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x+pw,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+
+	dp1=readDepth( vec2(texCoord.x+pw,texCoord.y));
+	dp2=readDepth( vec2(texCoord.x-pw,texCoord.y));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	dp1=readDepth( vec2(texCoord.x,texCoord.y+ph));
+	dp2=readDepth( vec2(texCoord.x,texCoord.y-ph));
+	aod+=cDepths(dp1,dp2,depth)/aoscale;
+	
+	gl_FragColor = vec4(aod/16.0) ;
+}

@@ -440,30 +440,42 @@ void FBOS_SSAO()
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
-	glViewport(0,0,ScreemTexW, ScreemTexH);
+	glViewport(0,0,FBOWinW, FBOWinH);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);					
 	glPushMatrix();	
 	glLoadIdentity();
-	glOrtho(0,ScreemTexW,0,ScreemTexH,-1,1);
+	glOrtho(0,FBOWinW,0,FBOWinH,-1,1);
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();	
 	glLoadIdentity();
 
 	float TCX=float(FBOWinW)/float(ScreemTexW);
 	float TCY=float(FBOWinH)/float(ScreemTexH);
-	SSAOPass0();
+	float SSAOset[4]={float(FBOWinW),float(FBOWinH),5.0f,1000.0f};
+	SSAOPass1(SSAOset);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(TCX,0.0f);glVertex2i( ScreemTexW,0);
-				glTexCoord2f(TCX,TCY);glVertex2i( ScreemTexW, ScreemTexH);
-				glTexCoord2f(0.0f,TCY);glVertex2i(0, ScreemTexH);
+				glTexCoord2f(TCX,0.0f);glVertex2i( FBOWinW,0);
+				glTexCoord2f(TCX,TCY);glVertex2i( FBOWinW, FBOWinH);
+				glTexCoord2f(0.0f,TCY);glVertex2i(0, FBOWinH);
 			glEnd();
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
 
 	GLSL_Disable();
+	//glEnable( GL_BLEND );
+	glBlendFunc(GL_ZERO,GL_ONE_MINUS_SRC_ALPHA   );
+	glBindTexture(GL_TEXTURE_2D, SSAOTex1);
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
+				glTexCoord2f(TCX,0.0f);glVertex2i( FBOWinW,0);
+				glTexCoord2f(TCX,TCY);glVertex2i( FBOWinW, FBOWinH);
+				glTexCoord2f(0.0f,TCY);glVertex2i(0, FBOWinH);
+			glEnd();
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();	
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
