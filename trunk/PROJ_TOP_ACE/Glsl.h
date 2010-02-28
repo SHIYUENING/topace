@@ -15,4 +15,8 @@ void DrawBloomHGLSL(int WinH);
 void ToneMappingGLSL();
 void SSAOPass0();
 void SSAOPass1(float SSAOset[4]);
+void InitBlurTex();
+void DeinitBlurTex();
+void BlurTex(int Size,bool WorH);
+
 #endif

@@ -1,0 +1,26 @@
+
+uniform sampler2D BlurTex;
+uniform vec2 BlurTexSet;
+void main()
+{
+    vec2 Tpos;
+    vec4 color;
+    Tpos=BlurTexSet;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*5.0) * 0.1;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*4.0) * 0.22;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*3.0) * 0.358;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*2.0) * 0.523;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos) * 0.843;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy ) * 1.0;
+    Tpos.x = -BlurTexSet.x;
+    Tpos.y = -BlurTexSet.y;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos) * 0.843;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*2.0) * 0.523;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*3.0) * 0.358;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*4.0) * 0.22;
+    color += texture2D(BlurTex,gl_TexCoord[0].xy+Tpos*5.0) * 0.1;
+    color = color/5.0;
+   // color.w = 1.0;
+    gl_FragColor = color;
+    return;
+}
