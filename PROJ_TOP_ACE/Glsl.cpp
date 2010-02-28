@@ -29,6 +29,9 @@ GLhandleARB GLSL_SSAOPass0;
 GLhandleARB g_GLSLSSAOPass1_pixel;
 GLhandleARB GLSL_SSAOPass1;
 
+GLhandleARB g_BlurTex_pixel;
+GLhandleARB GLSL_BlurTex;
+
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -190,6 +193,7 @@ void InitGLSL(int LightSet)
 	glAttachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
 	GetGLSLLinkSTATUS( GLSL_SSAOPass1);
 
+	InitBlurTex();
 }
 void DeinitGLSL()
 {
@@ -199,12 +203,15 @@ void DeinitGLSL()
 	glDetachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
 	glDeleteObjectARB(g_PhoneLight_Vertex);
 	glDeleteObjectARB(g_PhoneLight_Pixel);
+	glDeleteObjectARB(g_PhoneLight);
 
 	glDetachObjectARB( g_StarPass1, g_StarPass1_Pixel );
 	glDeleteObjectARB(g_StarPass1_Pixel);
+	glDeleteObjectARB(g_StarPass1);
 
 	glDetachObjectARB( g_StarPass0, g_StarPass0_Pixel );
 	glDeleteObjectARB(g_StarPass0_Pixel);
+	glDeleteObjectARB(g_StarPass0);
 
 	glDetachObjectARB( GLSL_DrawBloomW, g_GLSLBloomW_pixel );
 	glDetachObjectARB( GLSL_DrawBloomH, g_GLSLBloomH_pixel );
@@ -215,11 +222,19 @@ void DeinitGLSL()
 	glDeleteObjectARB( g_GLSLBloomH_pixel );
 	glDeleteObjectARB( g_GLSLBloomMap_pixel );
 	glDeleteObjectARB( g_GLSLToneMapping_pixel );
+	glDeleteObjectARB( GLSL_DrawBloomW );
+	glDeleteObjectARB( GLSL_DrawBloomH );
+	glDeleteObjectARB( GLSL_DrawBloomMap );
+	glDeleteObjectARB( GLSL_ToneMapping );
 
 	glDetachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
 	glDeleteObjectARB( g_GLSLSSAOPass0_pixel);
+	glDeleteObjectARB( GLSL_SSAOPass0);
 	glDetachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
 	glDeleteObjectARB( g_GLSLSSAOPass1_pixel);
+	glDeleteObjectARB( GLSL_SSAOPass1);
+
+	DeinitBlurTex();
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
@@ -305,4 +320,29 @@ void SSAOPass1(float SSAOset[4])
 	glUniform1i(glGetUniformLocation(GLSL_SSAOPass1,"DepthTex"),0);
 	glUniform4fv(glGetUniformLocation(GLSL_SSAOPass1,"SSAOset"),1,SSAOset);
 	
+}
+void InitBlurTex()
+{
+	GLSL_BlurTex = glCreateProgramObjectARB();
+	g_BlurTex_pixel = GLSL_CompileShader("data/shader/BlurTex.ps",GL_FRAGMENT_SHADER_ARB);
+	glAttachObjectARB( GLSL_BlurTex, g_BlurTex_pixel);
+	GetGLSLLinkSTATUS( GLSL_BlurTex);
+}
+void DeinitBlurTex()
+{
+	glDetachObjectARB( GLSL_BlurTex, g_BlurTex_pixel);
+	glDeleteObjectARB( g_BlurTex_pixel);
+	glDeleteObjectARB( GLSL_BlurTex );
+}
+void BlurTex(int Size,bool WorH)
+{
+	float BlurTexSet[2]={0.0f,0.0f};
+	if(WorH)
+		BlurTexSet[0]=1.0f/float(Size);
+	else
+		BlurTexSet[1]=1.0f/float(Size);
+	glUseProgramObjectARB(GLSL_BlurTex);
+	glUniform1i(glGetUniformLocation(GLSL_BlurTex,"BlurTex"),0);
+	glUniform2fv(glGetUniformLocation(GLSL_BlurTex,"BlurTexSet"),1,BlurTexSet);
+
 }
