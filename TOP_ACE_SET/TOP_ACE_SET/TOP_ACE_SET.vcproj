@@ -194,7 +194,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Key.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\KeyBoardSet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\KeyMapDlg.cpp"
 				>
 			</File>
 			<File
@@ -256,7 +264,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Key.h"
+				>
+			</File>
+			<File
 				RelativePath=".\KeyBoardSet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KeyMapDlg.h"
 				>
 			</File>
 			<File

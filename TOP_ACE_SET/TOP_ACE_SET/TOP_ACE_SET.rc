@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 拞崙岅 (P.R.C.) resources
+// 中文(中华人民共和国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -219,44 +219,21 @@ IDD_DIALOG_KEYBOARDSET DIALOGEX 0, 0, 241, 311
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "操作上",IDC_STATIC,7,12,25,8
-    LTEXT           "操作下",IDC_STATIC,7,32,25,8
-    LTEXT           "操作左",IDC_STATIC,7,52,25,8
-    LTEXT           "操作右",IDC_STATIC,7,72,25,8
-    LTEXT           "视角上",IDC_STATIC,116,13,25,8
-    LTEXT           "视角下",IDC_STATIC,116,32,25,8
-    LTEXT           "视角左",IDC_STATIC,116,52,25,8
-    LTEXT           "视角右",IDC_STATIC,116,72,25,8
-    LTEXT           "加速",IDC_STATIC,7,92,17,8
-    LTEXT           "减速",IDC_STATIC,7,112,17,8
-    LTEXT           "垂尾左转",IDC_STATIC,7,132,33,8
-    LTEXT           "垂尾右转",IDC_STATIC,7,152,33,8
-    LTEXT           "主武器",IDC_STATIC,116,92,25,8
-    LTEXT           "副武器",IDC_STATIC,116,112,25,8
-    LTEXT           "地图",IDC_STATIC,116,132,17,8
-    LTEXT           "锁定",IDC_STATIC,116,152,17,8
-    LTEXT           "选择",IDC_STATIC,7,172,17,8
-    LTEXT           "开始",IDC_STATIC,7,192,17,8
-    LTEXT           "视角复位",IDC_STATIC,116,172,33,8
-    EDITTEXT        IDC_EDIT_KEYBOARD5,156,7,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD6,156,26,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD7,156,46,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD8,156,66,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD13,156,86,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD14,156,106,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD15,156,126,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD16,156,146,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD19,156,166,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD1,50,7,48,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD2,50,26,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD3,50,46,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD4,50,66,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD9,50,86,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD10,50,106,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD11,50,126,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD12,50,146,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD17,50,166,48,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT_KEYBOARD18,50,186,48,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_LIST1,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,172,216
+END
+
+IDD_DIALOG_KEYMAP DIALOGEX 0, 0, 159, 66
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT1,43,23,66,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "确定",IDOK,46,43,50,14
+    PUSHBUTTON      "取消",IDCANCEL,102,43,50,14
+    EDITTEXT        IDC_EDIT2,43,7,66,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "清除",IDC_BUTTON1,111,23,41,14
+    LTEXT           "当前按键",IDC_STATIC,7,10,33,8
+    LTEXT           "新按键",IDC_STATIC,7,25,25,8
 END
 
 
@@ -345,12 +322,20 @@ BEGIN
         HORZGUIDE, 80
         HORZGUIDE, 100
         HORZGUIDE, 120
+        HORZGUIDE, 126
         HORZGUIDE, 140
         HORZGUIDE, 160
         HORZGUIDE, 180
         HORZGUIDE, 200
-        HORZGUIDE, 220
         HORZGUIDE, 240
+    END
+
+    IDD_DIALOG_KEYMAP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 152
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 59
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -465,12 +450,12 @@ BEGIN
     AFX_IDS_SCTASKLIST      "激活任务列表"
 END
 
-#endif    // 拞崙岅 (P.R.C.) resources
+#endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// 塸岅 (暷崙) resources
+// 英语(美国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -498,7 +483,7 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
 END
 
-#endif    // 塸岅 (暷崙) resources
+#endif    // 英语(美国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -516,8 +501,8 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE 4, 2
 #pragma code_page(936)
-#include "res\TOP_ACE_SET.rc2"  // 旕 Microsoft Visual C++ ??揑?尮
-#include "l.CHS\afxres.rc"          // ?弝?審
+#include "res\TOP_ACE_SET.rc2"  // ?? Microsoft Visual C++ ?狆???????
+#include "l.CHS\afxres.rc"          // ????鮠?
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

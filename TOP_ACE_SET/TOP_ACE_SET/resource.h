@@ -12,6 +12,7 @@
 #define IDD_DIALOG1                     132
 #define IDD_DIALOG_SET_SOUND            132
 #define IDD_DIALOG_KEYBOARDSET          133
+#define IDD_DIALOG_KEYMAP               134
 #define IDC_TAB1                        1000
 #define IDC_BUTTON1                     1001
 #define IDC_BUTTON2                     1002
@@ -67,14 +68,15 @@
 #define IDC_EDIT_KEY1                   1036
 #define IDC_EDIT_KEY2                   1037
 #define IDC_EDIT3                       1038
+#define IDC_LIST1                       1039
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1039
+#define _APS_NEXT_CONTROL_VALUE         1040
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
