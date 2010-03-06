@@ -47,7 +47,7 @@ bool CLoad3DS::Loadfile(char * filename)
 		isRAM=false;
 		return false;
 	}
-	TotelMeshs=Model3ds->nmeshes+2;
+	TotelMeshs=Model3ds->nmeshes+3;
 	if(!TotelMeshs)
 	{
 		Error=ERROR_NO_MESH;
@@ -282,6 +282,7 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	if(MeshLoadNum>=TotelMeshs)
 		return false;  
 
+	MeshLoadNum=MeshLoadNum+1;
 	Node->user_id=MeshLoadNum;
 
 	GetNodeType(Node->user_id,&Node->name[0]);
@@ -382,7 +383,7 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 	Easy_matrix_copy(VBOIDs[Node->user_id].MeshMatrix, Mesh->matrix);   
 	Easy_matrix_inv(VBOIDs[Node->user_id].MeshMatrix); 
 	
-	MeshLoadNum=MeshLoadNum+1;
+	
 	return true;
 }
 

@@ -24,7 +24,7 @@ float readDepth( in vec2 coord ) {
 
 float cDepths( in float depth1, in float depth2, in float depthm ,in float bais)
 {
-	float aoo= min(1.0,max(0.0,-(depth1+depth2-depthm*2.0)-0.00075));
+	float aoo= min(1.0,max(0.0,-(depth1+depth2-depthm*2.0)-0.5));
 	aoo*=min(1.0,max(0.0,3.0*bais-abs(depth1-depth2)));
 	return aoo;
 }

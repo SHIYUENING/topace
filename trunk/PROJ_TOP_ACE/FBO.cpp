@@ -453,7 +453,7 @@ void FBOS_SSAO()
 
 	float TCX=float(FBOWinW)/float(ScreemTexW);
 	float TCY=float(FBOWinH)/float(ScreemTexH);
-	float SSAOset[4]={float(FBOWinW),float(FBOWinH),5.0f,1000.0f};
+	float SSAOset[4]={float(FBOWinW),float(FBOWinH),5.0f,100000.0f};
 	SSAOPass1(SSAOset);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);

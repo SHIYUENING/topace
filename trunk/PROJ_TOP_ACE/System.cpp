@@ -86,7 +86,7 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	glLoadIdentity ();													// Reset The Projection Matrix
-	gluPerspective(50, (float)width/(float)height, 5.0,  1000.0);
+	gluPerspective(50, (float)width/(float)height, 5.0,  100000.0f);
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
 }
