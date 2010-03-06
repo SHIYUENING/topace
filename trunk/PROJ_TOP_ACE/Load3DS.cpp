@@ -962,9 +962,9 @@ void CLoad3DS::OmniLightNodeEval(Lib3dsNode *Node,float Frame)
 		//OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[2]=matrix_OmniLightPos[2];
 		//OmniLightNodes[Node->user_id].LightWorldPos.m128_f32[3]=1.0f;
 		//Easy_vector_copy(OmniLightNodes[Node->user_id].LightColor,
-		OmniLightNodes[Node->user_id].LightColor.m128_f32[0]=LCN->color[0]*0.3f;
-		OmniLightNodes[Node->user_id].LightColor.m128_f32[1]=LCN->color[1]*0.3f;
-		OmniLightNodes[Node->user_id].LightColor.m128_f32[2]=LCN->color[2]*0.3f;
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[0]=LCN->color[0];
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[1]=LCN->color[1];
+		OmniLightNodes[Node->user_id].LightColor.m128_f32[2]=LCN->color[2];
 		OmniLightNodes[Node->user_id].LightColor.m128_f32[3]=1.0f;
 
 	}
@@ -1069,6 +1069,7 @@ void CLoad3DS::SetLightsPos(int lightBase)
 			glLightfv(GL_LIGHT0+i+lightBase,GL_POSITION,(float *)&OmniLightNodes[i].LightEyePos);
 			glLightfv(GL_LIGHT0+i+lightBase,GL_SPECULAR,(float *)&OmniLightNodes[i].LightColor);
 			glLightfv(GL_LIGHT0+i+lightBase,GL_DIFFUSE,(float *)&OmniLightNodes[i].LightColor);
+			glLightfv(GL_LIGHT0+i+lightBase,GL_AMBIENT,(float *)&OmniLightNodes[i].LightColor);
 		}
 		
 	}
