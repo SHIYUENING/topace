@@ -277,6 +277,8 @@ bool CLoad3DS::LoadNode(Lib3dsNode *Node)
 
 	Lib3dsMesh *Mesh=lib3ds_file_mesh_for_node(Model3ds,Node);
 
+	if(!Mesh)
+		return false;
 	if(!Mesh->vertices)
 		return false;            //if no vertices ,Nothing to do.
 	if(MeshLoadNum>=TotelMeshs)
