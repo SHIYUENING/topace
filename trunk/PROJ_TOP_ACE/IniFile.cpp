@@ -24,6 +24,7 @@ void loadIniFile()
 		WritePrivateProfileString("GameSet","SYNC","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","LOW","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","AA","0",".\\gameset.ini");
+		WritePrivateProfileString("GameSet","AF","1",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","FPS","60",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Light","0",".\\gameset.ini");
 		WritePrivateProfileString("GameSet","Water","0",".\\gameset.ini");
@@ -97,6 +98,7 @@ void loadIniFile()
 		else
 			GameSet.LOW=false;
 		GameSet.AA=GetPrivateProfileInt("GameSet","AA",0,".\\gameset.ini");
+		GameSet.AF=float(GetPrivateProfileInt("GameSet","AF",1,".\\gameset.ini"));
 		GameSet.FPS=GetPrivateProfileInt("GameSet","FPS",60,".\\gameset.ini");
 		GameSet.Light=GetPrivateProfileInt("GameSet","Light",0,".\\gameset.ini");
 		GameSet.Water=GetPrivateProfileInt("GameSet","Water",0,".\\gameset.ini");

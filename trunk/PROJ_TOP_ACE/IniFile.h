@@ -33,6 +33,7 @@ struct tGameSet
 	bool SYNC;
 	bool LOW;
 	int AA;
+	float AF;
 	int FPS;
 	int Light;
 	int Water;

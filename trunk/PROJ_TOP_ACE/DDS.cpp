@@ -1,5 +1,5 @@
 #include "DDS.h"
-
+GLfloat CDDS::AFNum=1.0f;
 CDDS::CDDS(void)
 :g_compressedTextureID(0)
 ,pDDSImageData(NULL)
@@ -191,6 +191,9 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
 
 		}
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); 
+		if(((TexParameter==GL_LINEAR_MIPMAP_LINEAR)||(TexParameter==0))&&(nNumMipMaps>1))
+			if(CDDS::AFNum>1.0f)
+				glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, CDDS::AFNum ); 
 
         int nSize;
         int nOffset = 0; 
@@ -246,4 +249,12 @@ void CDDS::DelDDS_VRAM()
 		glDeleteTextures(1, &g_compressedTextureID);
 	g_compressedTextureID=0;
 	isVRAM=false;
+}
+void CDDS::SetAFNum(GLfloat AFSet)
+{
+	if (!glewIsSupported("GL_EXT_texture_filter_anisotropic"))
+		return;
+	GLfloat AFMAX=1.0f;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&AFMAX);
+	CDDS::AFNum=max(1.0f,min(AFSet,AFMAX));
 }
