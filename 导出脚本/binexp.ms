@@ -265,7 +265,7 @@ if(sceneMaterials.count>0) then
 		WriteString w sceneMaterials[i].name
 		for j= sceneMaterials[i].name.count to 0x1e do
 		(
-			WriteLong w 0
+			WriteByte w 0
 		)
 
 		WriteByte w sceneMaterials[i].ambient.r
