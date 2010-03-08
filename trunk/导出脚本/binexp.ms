@@ -1,8 +1,13 @@
-fn expfile = 
+fn yus a b=
+(
+	return a-(a/b)*b
+)
+
+fn expfile debugon = 
 (
 --/*
 out_name = GetSaveFileName \
-	types:"暂时先用TXT(*.txt)|*.txt|其他类型(*.*)|*.*|"
+	types:"TOP_ACE模型文件|*.tam|其他类型(*.*)|*.*|"
 --*/
 
 --out_name="L:\\TOP ACE\\Export\22.txt"
@@ -11,7 +16,7 @@ if out_name != undefined then
 w = fopen out_name "w+"
 
 (
-	WriteString w "HEAD"
+	WriteString w "TAM"
 	fseek w 4 #seek_set 
 	filesize=ftell w
 	WriteLong w 0
@@ -20,23 +25,20 @@ w = fopen out_name "w+"
 	
 	WriteLong w 5	
 	meshAddr=ftell w
-	--format "meshAddr=%\n"  meshAddr
 	WriteLong w -1
 	matsAddr=ftell w
-	--format "matsAddr=%\n"  matsAddr
 	WriteLong w -1
 	boneAddr=ftell w
-	--format "boneAddr=%\n"  boneAddr
 	WriteLong w -1
 	
 	lghtAddr=ftell w
-	--format "lghtAddr=%\n"  lghtAddr
 	WriteLong w -1
 	cmerAddr=ftell w
-	--format "cmerAddr=%\n"  cmerAddr
 	WriteLong w -1
 	WriteLong w 0
 	WriteLong w 0
+	
+	
 )
 
 (
@@ -178,6 +180,15 @@ if(umeshs.count>0) then
 			WriteByte w 0
 		)
 
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 		-------vert---------
 		nowaddr=ftell w
 		
@@ -190,7 +201,7 @@ if(umeshs.count>0) then
 			WriteFloat w (getVert umeshs[i] v)[1]
 			WriteFloat w (getVert umeshs[i] v)[2]
 			WriteFloat w (getVert umeshs[i] v)[3]
-			WriteFloat w 0.0
+			WriteFloat w 1.0
 		)
 
 		-------Normal---------
@@ -205,7 +216,7 @@ if(umeshs.count>0) then
 			WriteFloat w (getNormal umeshs[i] v)[1]
 			WriteFloat w (getNormal umeshs[i] v)[2]
 			WriteFloat w (getNormal umeshs[i] v)[3]
-			WriteFloat w 1.0
+			WriteFloat w 0.0
 		)
 		
 		-------tex---------
@@ -226,7 +237,11 @@ if(umeshs.count>0) then
 			(
 				WriteFloat w 0.0
 				WriteFloat w 0.0
-				format "%:贴图坐标 % 错误，已跳过\n" umeshs[i].name v
+				if(debugon) then
+				(
+					format "%:贴图坐标 % 错误，已跳过\n" umeshs[i].name v
+				)
+				--
 			)
 		)
 
@@ -409,7 +424,10 @@ if(ubones.count>0) then
 			tidx=findItem rootboneidx i
 			if(tidx==rootboneidx.count) then
 			(
-				WriteLong w rootboneidx[1]
+				if(tidx!=1) then
+					WriteLong w rootboneidx[1]
+				else
+					WriteLong w 0
 			)
 			else
 			(
@@ -421,7 +439,10 @@ if(ubones.count>0) then
 			tidx=findItem ubones[i].parent.children ubones[i]
 			if(tidx==ubones[i].parent.children.count) then
 			(
-				WriteLong w  (findItem ubones ubones[i].parent.children[1])
+				if(tidx!=1) then
+					WriteLong w  (findItem ubones ubones[i].parent.children[1])
+				else
+					WriteLong w 0
 			)
 			else
 			(
@@ -452,36 +473,41 @@ if(ubones.count>0) then
 			crotation=ubones[i].parent.rotation - ubones[i].rotation
 			cscale=ubones[i].scale
 		)
+		WriteLong w -1
+		WriteLong w -1
+		WriteLong w -1
+		
+		--0x20
 		--位置
 		WriteFloat w cpos[1]
 		WriteFloat w cpos[2]
 		WriteFloat w cpos[3]
 		WriteFloat w 0
+		
+		--0x30
 		--旋转
 		WriteFloat w crotation.x
 		WriteFloat w crotation.y
 		WriteFloat w crotation.z
 		WriteFloat w crotation.w
+		
+		--0x40
 		--缩放
 		WriteFloat w cscale[1]
 		WriteFloat w cscale[2]
 		WriteFloat w cscale[3]
 		WriteFloat w 1
 		
+		--0x50
 		WriteLong w 3
 		poskeyaddr=ftell w
 		WriteLong w -1
 		rotkeyaddr=ftell w
 		WriteLong w -1
-
-		--0x20
 		sclkeyaddr=ftell w
 		WriteLong w -1
-		WriteLong w 0
-		WriteLong w 0
-		WriteLong w 0
-
-		--0x30
+		
+		--0x60
 		WriteString w ubones[i].name
 		for j=ubones[i].name.count to 0x1e do
 		(
@@ -516,9 +542,18 @@ if(ubones.count>0) then
 			)
 		
 			--帧
-			lastaddr=#(0)
+			lastaddr=#(-1)
 			for j=1 to maxidx do
 			(
+				nowaddr=(ftell w)+8
+				if((yus nowaddr 16)!=0) then
+				(
+					wnull=16-(yus nowaddr 16)
+					for temnul= 1 to wnull do
+					(
+						WriteByte w -1
+					)
+				)
 				nowaddr=ftell w
 			append lastaddr nowaddr
 
@@ -591,9 +626,18 @@ if(ubones.count>0) then
 		)
 		
 		--帧
-		lastaddr=#(0)
+		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
+			nowaddr=(ftell w)+8
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
 			nowaddr=ftell w
 			append lastaddr nowaddr
 
@@ -665,9 +709,18 @@ if(ubones.count>0) then
 		)
 		
 		--帧
-		lastaddr=#(0)
+		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
+			nowaddr=(ftell w)+8
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
 			nowaddr=ftell w
 			append lastaddr nowaddr
 
@@ -706,7 +759,7 @@ if(ubones.count>0) then
 			WriteFloat w tmprr[1]
 			WriteFloat w tmprr[2]
 			WriteFloat w tmprr[3]
-			WriteFloat w 1.0
+			WriteFloat w 0.0
 		)
 		)
 
@@ -816,7 +869,7 @@ if(ulights.count>0) then
 		)
 		
 		--帧
-		lastaddr=#(0)
+		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
 			nowaddr=ftell w
@@ -890,7 +943,7 @@ if(ulights.count>0) then
 		)
 		
 		--帧
-		lastaddr=#(0)
+		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
 			nowaddr=ftell w
@@ -1008,10 +1061,10 @@ rollout TOP_ACE_MODEL_Exporter "TOP ACE 模型导出器"
 (
 label lab1 "TOP ACE 模型导出器(测试)" height:17
 button theButton "导出" width:77 height:25
-
+checkbox debugon "显示贴图坐标错误信息" 
 on theButton pressed do 
 (
-	expfile()
+	expfile debugon.checked
 	Messagebox "完成"
 )
 
@@ -1019,4 +1072,4 @@ on theButton pressed do
 
 
 
-createDialog TOP_ACE_MODEL_Exporter 170 60
+createDialog TOP_ACE_MODEL_Exporter 170 80
