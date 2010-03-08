@@ -196,5 +196,10 @@ public:
 	bool isRAM;
 	bool isVRAM;
 	bool UseAlpha;
+
+	static GLfloat AFNum;
+	static void SetAFNum(GLfloat AFSet=1.0f);
 };
+
+
 #endif
