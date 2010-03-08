@@ -296,7 +296,7 @@ if(sceneMaterials.count>0) then
 		if((classof sceneMaterials[i].diffusemap)==Bitmaptexture) then
 		(
 			WriteString w (filenameFromPath sceneMaterials[i].diffusemap.fileName)
-			for j=sceneMaterials[i].diffusemap.fileName.count to 0x3e do
+			for j=(filenameFromPath sceneMaterials[i].diffusemap.fileName).count to 0x3e do
 			(
 				WriteByte w 0
 			)
@@ -312,7 +312,7 @@ if(sceneMaterials.count>0) then
 		if((classof sceneMaterials[i].specularMap)==Bitmaptexture) then
 		(
 			WriteString w (filenameFromPath sceneMaterials[i].specularMap.fileName)
-			for j=sceneMaterials[i].specularMap.fileName.count to 0x3e do
+			for j=(filenameFromPath sceneMaterials[i].specularMap.fileName).count to 0x3e do
 			(
 				WriteByte w 0
 			)
@@ -328,7 +328,7 @@ if(sceneMaterials.count>0) then
 		if((classof sceneMaterials[i].reflectionMap)==Bitmaptexture) then
 		(
 			WriteString w (filenameFromPath sceneMaterials[i].reflectionMap.fileName)
-			for j=sceneMaterials[i].reflectionMap.fileName.count to 0x3e do
+			for j=(filenameFromPath sceneMaterials[i].reflectionMap.fileName).count to 0x3e do
 			(
 				WriteByte w 0
 			)
@@ -346,7 +346,7 @@ if(sceneMaterials.count>0) then
 			if((classof sceneMaterials[i].bumpMap.normal_map)==Bitmaptexture) then
 			(
 				WriteString w (filenameFromPath sceneMaterials[i].bumpMap.normal_map.fileName)
-				for j=sceneMaterials[i].bumpMap.normal_map.fileName.count to 0x3e do
+				for j=(filenameFromPath sceneMaterials[i].bumpMap.normal_map.fileName).count to 0x3e do
 				(
 					WriteByte w 0
 				)
