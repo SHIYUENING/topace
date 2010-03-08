@@ -702,7 +702,7 @@ if(ubones.count>0) then
 				WriteLong w lastaddr[j]
 			)
 			WriteLong w ubones[i].scale.controller.keys[j].time
-			tmprr=ubones[i].scale.controller.keys[i].value
+			tmprr=ubones[i].scale.controller.keys[j].value
 			WriteFloat w tmprr[1]
 			WriteFloat w tmprr[2]
 			WriteFloat w tmprr[3]
