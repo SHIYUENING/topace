@@ -329,6 +329,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\TopAceModel.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -412,6 +416,10 @@
 			</File>
 			<File
 				RelativePath=".\Tga.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TopAceModel.h"
 				>
 			</File>
 		</Filter>
