@@ -74,6 +74,12 @@ w = fopen out_name "w+"
 		append ucameras g
 	)
 	--*/
+	
+	WriteLong w umeshs.count
+	WriteLong w sceneMaterials.count
+	WriteLong w ubones.count
+	WriteLong w ulights.count
+	WriteLong w ucameras.count
 )
 
 --------/MESH--------------
@@ -87,7 +93,7 @@ if(umeshs.count>0) then
 
 	matidx=0
 
-	WriteLong w umeshs.count
+	--WriteLong w umeshs.count
 	obj=#()
 	for i=1 to umeshs.count do
 	(
@@ -171,8 +177,8 @@ if(umeshs.count>0) then
 		fptr=ftell w
 		WriteLong w -1
 		WriteLong w umeshs[i].numfaces
-		WriteLong w 0
-		WriteLong w 0
+		WriteLong w umeshs[i].numverts
+		WriteLong w -1
 
 		WriteString w umeshs[i].name
 		for j= umeshs[i].name.count to 0x1e do
@@ -395,7 +401,7 @@ if(ubones.count>0) then
 	WriteLong w nowaddr
 	fseek w nowaddr #seek_set
 
-	WriteLong w ubones.count
+	--WriteLong w ubones.count
 	rootboneidx=#()
 	baddr=#()
 	for i=1 to ubones.count do
@@ -776,7 +782,7 @@ if(ulights.count>0) then
 	WriteLong w nowaddr
 	fseek w nowaddr #seek_set
 
-	WriteLong w ulights.count
+	--WriteLong w ulights.count
 	lgtaddrs=#()
 	for i=1 to ulights.count do
 	(
