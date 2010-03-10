@@ -566,7 +566,7 @@ void Draw (void)												// Draw The Scene
 	// ENDROACH
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
-	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
+	glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The View	
 	
 	//MFighter.Reset();
@@ -603,8 +603,10 @@ void Draw (void)												// Draw The Scene
 		MFighter=ViewPos.UDMplane;
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
+	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_CULL_FACE);
 	DrawSky(MFighter);
-	
 	
 	//glDisable(GL_TEXTURE_2D);
 	//glEnable(GL_LIGHTING);
