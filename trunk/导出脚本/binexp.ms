@@ -35,8 +35,8 @@ w = fopen out_name "w+"
 	WriteLong w -1
 	cmerAddr=ftell w
 	WriteLong w -1
-	WriteLong w 0
-	WriteLong w 0
+	--WriteLong w 0
+	--WriteLong w 0
 	
 	
 )
@@ -80,6 +80,8 @@ w = fopen out_name "w+"
 	WriteLong w ubones.count
 	WriteLong w ulights.count
 	WriteLong w ucameras.count
+	
+	WriteLong w 0
 )
 
 --------/MESH--------------
@@ -100,10 +102,19 @@ if(umeshs.count>0) then
 		append obj (ftell w)
 		WriteLong w -1
 	)
-
+	
 	i=0
 	for i=1 to umeshs.count do
 	(
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 		nowaddr=ftell w
 		
 		fseek w obj[i] #seek_set
@@ -271,6 +282,15 @@ if(umeshs.count>0) then
 if(sceneMaterials.count>0) then
 (
 	nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
+	nowaddr=ftell w
 	
 	fseek w matsAddr #seek_set
 	WriteLong w nowaddr
@@ -278,6 +298,15 @@ if(sceneMaterials.count>0) then
 
 	for i=1 to sceneMaterials.count do
 	(
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 		WriteLong w 0
 		WriteLong w 0
 		WriteLong w i
@@ -288,7 +317,59 @@ if(sceneMaterials.count>0) then
 		(
 			WriteByte w 0
 		)
+	
+		if((classof sceneMaterials[1])!=Standardmaterial) then
+		(
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255 
+	
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255 
 
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255 
+
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255
+			WriteByte w 255 
+
+			WriteFloat w 0
+			WriteFloat w 0
+			WriteFloat w 0
+			WriteFloat w 0.0 
+
+			for j=1 to 0x40 do
+			(
+				WriteByte w 0
+			)
+
+
+			for j=1 to 0x40 do
+			(
+				WriteByte w 0
+			)
+
+
+			for j=1 to 0x40 do
+			(
+				WriteByte w 0
+			)
+
+
+			for j=1 to 0x40 do
+			(
+				WriteByte w 0
+			)
+		)
+		else
+		(
 		WriteByte w sceneMaterials[i].ambient.r
 		WriteByte w sceneMaterials[i].ambient.g
 		WriteByte w sceneMaterials[i].ambient.b
@@ -387,6 +468,7 @@ if(sceneMaterials.count>0) then
 				WriteByte w 0
 			)
 		)
+		)
 
 	)
 )
@@ -395,6 +477,15 @@ if(sceneMaterials.count>0) then
 sliderTime=0
 if(ubones.count>0) then
 (
+	nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 	nowaddr=ftell w
 	
 	fseek w boneAddr #seek_set
@@ -415,6 +506,15 @@ if(ubones.count>0) then
 	)
 	for i=1 to ubones.count do
 	(
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 		nowaddr=ftell w
 		
 		fseek w baddr[i] #seek_set
@@ -775,6 +875,15 @@ if(ubones.count>0) then
 --------/LIGHT--------------
 if(ulights.count>0) then
 (
+	nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 	lighttype=#(#omni,#freeSpot,#targetSpot,#freeDirect,#targetDirect)
 	nowaddr=ftell w
 	
@@ -792,6 +901,15 @@ if(ulights.count>0) then
 
 	for i=1 to ulights.count do
 	(
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 		nowaddr=ftell w
 		
 		fseek w lgtaddrs[i] #seek_set
@@ -996,6 +1114,15 @@ if(ulights.count>0) then
 --------/CAMERA--------------
 if(ucameras.count>0) then
 (
+	nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 	cameratype=#(#target,#free)
 	nowaddr=ftell w
 	
@@ -1015,6 +1142,15 @@ if(ucameras.count>0) then
 
 	for i=1 to ucameras.count do
 	(
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
 		/*
 		nowaddr=ftell w
 		
