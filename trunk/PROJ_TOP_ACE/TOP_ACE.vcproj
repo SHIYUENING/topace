@@ -333,6 +333,10 @@
 				RelativePath=".\TopAceModel.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\ViewInput.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -420,6 +424,10 @@
 			</File>
 			<File
 				RelativePath=".\TopAceModel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ViewInput.h"
 				>
 			</File>
 		</Filter>
