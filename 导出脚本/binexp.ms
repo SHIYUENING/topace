@@ -7,7 +7,7 @@ fn expfile debugon =
 (
 --/*
 out_name = GetSaveFileName \
-	types:"TOP_ACE模型文件|*.tam|其他类型(*.*)|*.*|"
+	types:"TOP_ACE model|*.tam|other(*.*)|*.*|"
 --*/
 
 --out_name="L:\\TOP ACE\\Export\22.txt"
@@ -177,7 +177,7 @@ if(umeshs.count>0) then
 		)
 
 		------------------------
-		WriteLong w 4 --obj内数据数量?
+		WriteLong w 4 --obj
 		vptr=ftell w
 		WriteLong w -1
 		vnptr=ftell w
@@ -256,7 +256,7 @@ if(umeshs.count>0) then
 				WriteFloat w 0.0
 				if(debugon) then
 				(
-					format "%:贴图坐标 % 错误，已跳过\n" umeshs[i].name v
+					format "%:tex % error丆skiped\n" umeshs[i].name v
 				)
 				--
 			)
@@ -318,7 +318,7 @@ if(sceneMaterials.count>0) then
 			WriteByte w 0
 		)
 	
-		if((classof sceneMaterials[1])!=Standardmaterial) then
+		if getNumSubMtls sceneMaterials[i] >0  then
 		(
 			WriteByte w 255
 			WriteByte w 255
@@ -584,21 +584,18 @@ if(ubones.count>0) then
 		WriteLong w -1
 		
 		--0x20
-		--位置
 		WriteFloat w cpos[1]
 		WriteFloat w cpos[2]
 		WriteFloat w cpos[3]
 		WriteFloat w 0
 		
 		--0x30
-		--旋转
 		WriteFloat w crotation.x
 		WriteFloat w crotation.y
 		WriteFloat w crotation.z
 		WriteFloat w crotation.w
 		
 		--0x40
-		--缩放
 		WriteFloat w cscale[1]
 		WriteFloat w cscale[2]
 		WriteFloat w cscale[3]
@@ -621,7 +618,6 @@ if(ubones.count>0) then
 		)
 
 	--pos
-		--动画	
 		nowaddr=ftell w
 		if(ubones[i].Position.controller.keys.count>0) then
 		(
@@ -647,7 +643,6 @@ if(ubones.count>0) then
 				WriteLong w 0
 			)
 		
-			--帧
 			lastaddr=#(-1)
 			for j=1 to maxidx do
 			(
@@ -705,7 +700,6 @@ if(ubones.count>0) then
 		)
 		
 	--rot
-		--动画	
 		nowaddr=ftell w
 		if(ubones[i].rotation.controller.keys.count>0) then
 		(
@@ -731,7 +725,6 @@ if(ubones.count>0) then
 			WriteLong w 0
 		)
 		
-		--帧
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
@@ -787,8 +780,7 @@ if(ubones.count>0) then
 		)
 		)
 
-	--scl
-		--动画	
+	--scl	
 		nowaddr=ftell w
 		if(ubones[i].scale.controller.keys.count>0) then
 		(
@@ -814,7 +806,6 @@ if(ubones.count>0) then
 			WriteLong w 0
 		)
 		
-		--帧
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
@@ -966,7 +957,6 @@ if(ulights.count>0) then
 		WriteLong w -1
 
 	--color
-		--动画
 		nowaddr=ftell w
 		if(ulights[i].RGB.controller!=undefined) then
 		(
@@ -992,7 +982,6 @@ if(ulights.count>0) then
 			WriteLong w 0
 		)
 		
-		--帧
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
@@ -1038,7 +1027,6 @@ if(ulights.count>0) then
 		)
 
 	--hotspotaddr
-		--动画
 		nowaddr=ftell w
 		if(ulights[i].type==#targetSpot or ulights[i].type==#freeSpot) then
 		(
@@ -1066,7 +1054,6 @@ if(ulights.count>0) then
 			WriteLong w 0
 		)
 		
-		--帧
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
@@ -1198,16 +1185,16 @@ FClose w
 )
 
 
-rollout TOP_ACE_MODEL_Exporter "TOP ACE 模型导出器" 
+rollout TOP_ACE_MODEL_Exporter "TOP ACE Model" 
 
 (
-label lab1 "TOP ACE 模型导出器(测试)" height:17
-button theButton "导出" width:77 height:25
-checkbox debugon "显示贴图坐标错误信息" 
+label lab1 "TOP ACE Model" height:17
+button theButton "exporter" width:77 height:25
+checkbox debugon "show tex pos error" 
 on theButton pressed do 
 (
 	expfile debugon.checked
-	Messagebox "完成"
+	Messagebox "over"
 )
 
 )
