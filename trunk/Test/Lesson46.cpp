@@ -82,6 +82,10 @@ Missledata ViewPos;
 Transform ViewTo;
 double Getrotation(Transform& Input);
 extern int menuid=0;
+
+bool isMAXSIZEWIN=false;
+
+int _RenderMode =GL_FILL;
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -443,6 +447,16 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		TerminateApplication (g_window);
 	if(menuid==ID_MENU_OPEN_WIN)
 		OpenSelectWindow();
+	if(menuid==ID_MENU_FULLS)
+	{
+		
+		if(isMAXSIZEWIN)
+			ShowWindow (g_window->hWnd, SW_NORMAL);
+		else
+			ShowWindow (g_window->hWnd, SW_SHOWMAXIMIZED);
+		isMAXSIZEWIN=!isMAXSIZEWIN;
+	}
+	menuid=0;
 	LockFPS();
 }
 void DrawSky(Transform viewSky,float ne=0.0)
