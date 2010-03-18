@@ -587,3 +587,15 @@ bool OpenSelectWindow()
 	menuid=0;
 	return true;
 }
+INT_PTR CALLBACK LineWidthDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+	UNREFERENCED_PARAMETER( lParam );
+	switch( msg )
+	{
+		case WM_DESTROY:
+            // Cleanup everything
+            KillTimer( hDlg, 0 );
+            return TRUE;
+	}
+    return FALSE; // Message not handled 
+}

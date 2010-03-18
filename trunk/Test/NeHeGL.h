@@ -76,4 +76,5 @@ extern int mouse_x;
 extern int mouse_y;
 extern int menuid;
 INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
+INT_PTR CALLBACK LineWidthDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
 #endif												// GL_FRAMEWORK__INCLUDED

@@ -456,6 +456,14 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 			ShowWindow (g_window->hWnd, SW_SHOWMAXIMIZED);
 		isMAXSIZEWIN=!isMAXSIZEWIN;
 	}
+	if(menuid==ID_MENU_FILL)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+	}
+	if(menuid==ID__MENU_FRAME)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	}
 	menuid=0;
 	LockFPS();
 }
