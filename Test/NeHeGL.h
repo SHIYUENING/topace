@@ -30,6 +30,8 @@
 
 #include <windows.h>								// Header File For Windows
 #include "resource.h"
+#include"IniFile.h"
+#include "Sound.h"
 typedef struct {									// Structure For Keyboard Stuff
 	BOOL keyDown [256];								// Holds TRUE / FALSE For Each Key
 } Keys;												// Keys
@@ -72,9 +74,11 @@ void Update (DWORD milliseconds);					// Perform Motion Updates
 void Draw (void);									// Perform All Your Scene Drawing
 
 bool OpenSelectWindow();
+void SetFog();
 extern int mouse_x;
 extern int mouse_y;
 extern int menuid;
 INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
 INT_PTR CALLBACK LineWidthDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
+INT_PTR CALLBACK SetFogDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam );
 #endif												// GL_FRAMEWORK__INCLUDED

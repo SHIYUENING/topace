@@ -80,7 +80,7 @@
 				OutputFile=".\Release/Lesson46.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Library"
+				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Lib;..\Src\Sound\Library"
 				ProgramDatabaseFile=".\Release/Lesson46.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -176,7 +176,7 @@
 				OutputFile=".\Debug/Lesson46.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Library"
+				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Lib;..\Src\Sound\Library"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/Lesson46.pdb"
 				SubSystem="2"
@@ -241,6 +241,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\IniFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Lesson46.cpp"
 				>
 				<FileConfiguration
@@ -301,6 +305,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Sound.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TGALoader.cpp"
 				>
 			</File>
@@ -323,6 +331,10 @@
 			</File>
 			<File
 				RelativePath=".\DDS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IniFile.h"
 				>
 			</File>
 			<File
@@ -355,6 +367,10 @@
 			</File>
 			<File
 				RelativePath=".\SkyBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Sound.h"
 				>
 			</File>
 			<File

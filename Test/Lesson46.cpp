@@ -25,7 +25,7 @@
 bool domulti = false;
 bool doangle = true;
 // ENDROACH
-
+#define MAXCAMS 15
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
@@ -36,7 +36,7 @@ bool doangle = true;
 #ifndef CDS_FULLSCREEN											// CDS_FULLSCREEN Is Not Defined By Some
 #define CDS_FULLSCREEN 4										// Compilers. By Defining It This Way,
 #endif															// We Can Avoid Errors
-LARGE_INTEGER t1,t2,feq,t3;
+LARGE_INTEGER t1,t2,feq,t3,t4;
 GL_Window*	g_window;
 Keys*		g_keys;
 int			g_nFPS = 0, g_nFrames = 0;							// FPS and FPS Counter
@@ -78,6 +78,8 @@ float globalAmbientGL[4]={0.3f,0.3f,0.3f,1.0f};
 float lightColor[4]={0.7f,0.7f,0.7f,1.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 CMd5Camera CMd5CameraTest;
+CMd5Camera Md5Cameras[MAXCAMS];
+int InMd5Camera=0;
 Missledata ViewPos;
 Transform ViewTo;
 double Getrotation(Transform& Input);
@@ -86,6 +88,22 @@ extern int menuid=0;
 bool isMAXSIZEWIN=false;
 
 int _RenderMode =GL_FILL;
+extern tSystemSet SystemSet;
+extern HINSTANCE hIns;
+void SetFog()
+{
+	float FogColor[4]={
+		float(SystemSet.FogColorR)/255.0f,
+		float(SystemSet.FogColorG)/255.0f,
+		float(SystemSet.FogColorB)/255.0f,
+		1.0f};
+	glFogi(GL_FOG_MODE,GL_EXP2);
+	glFogfv(GL_FOG_COLOR,FogColor);
+	glFogf(GL_FOG_DENSITY,float(SystemSet.FogDensity)/100000.0f);
+	glHint(GL_FOG_HINT,GL_NICEST);
+	glFogf(GL_FOG_START,1.0f);
+	glFogf(GL_FOG_END,10000.0f);
+}
 void BuildFont()								// Build Our Font Display List
 {
 
@@ -144,6 +162,7 @@ void glPrints(int x, int y, int winW,int winH,char *string)	// Where The Printin
 }
 void DrawFPS()
 {
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	glEnable(GL_BLEND);
 	if( GetTickCount() - g_dwLastFPS >= 1000 )					// When A Second Has Passed...
 	{
@@ -333,6 +352,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	m_VBMD = new CLoadVBMD;
 	m_VBMD->m_IsSupportFBO=true;
 
+	InitSound();
 	loadmodels();
 	//angle=-90.0f;
 	posX=posY=posZ=0;
@@ -347,7 +367,16 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	//CMd5CameraTest.LoadCamera("Data/123.md5camera");
 	CMd5CameraTest.LoadCamera(LoadCameraName);
-	
+	Md5Cameras[1].LoadCamera("Data/1.md5camera");
+	Md5Cameras[2].LoadCamera("Data/2.md5camera");
+	Md5Cameras[3].LoadCamera("Data/3.md5camera");
+	Md5Cameras[4].LoadCamera("Data/4.md5camera");
+	Md5Cameras[5].LoadCamera("Data/5.md5camera");
+	Md5Cameras[6].LoadCamera("Data/6.md5camera");
+	Md5Cameras[7].LoadCamera("Data/7.md5camera");
+	Md5Cameras[8].LoadCamera("Data/8.md5camera");
+	Md5Cameras[9].LoadCamera("Data/9.md5camera");
+	Md5Cameras[10].LoadCamera("Data/10.md5camera");
 
 	g_window	= window;
 	g_keys		= keys;
@@ -375,6 +404,8 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,globalAmbientGL);
 	glLightfv(GL_LIGHT1,GL_DIFFUSE,lightColor);
 	glLightfv(GL_LIGHT1,GL_SPECULAR,lightColor);
+	glLineWidth(float(SystemSet.LineWidth));
+	SetFog();
 	ViewPos.UDMplane.Reset();
 	ViewPos.UDMplane.TranslateInternal(Vector3d(1979.6632,-583.7316,-1310.2708));
 	ViewPos.TurnTo(Vector3d(1849.3800,-580.2999,-1313.8549));
@@ -391,6 +422,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
+	DeinitSound();
 }
 
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
@@ -458,11 +490,113 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	}
 	if(menuid==ID_MENU_FILL)
 	{
+		_RenderMode=GL_FILL;
 		glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	}
 	if(menuid==ID__MENU_FRAME)
 	{
+		_RenderMode=GL_LINE;
 		glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	}
+	if(menuid==ID__MENU_FRAME_WIDTH)
+	{
+		DialogBox( hIns, MAKEINTRESOURCE( IDD_DIALOG_FRAME_WIDTH ), g_window->hWnd, LineWidthDlgProc );
+	}
+	if(menuid==ID_MENU_FOG_SET)
+	{
+		DialogBox( hIns, MAKEINTRESOURCE( IDD_DIALOG_SET_FOG ), g_window->hWnd, SetFogDlgProc );
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_1)
+	{
+		InMd5Camera=1;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_2)
+	{
+		InMd5Camera=2;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_3)
+	{
+		InMd5Camera=3;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_4)
+	{
+		InMd5Camera=4;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_5)
+	{
+		InMd5Camera=5;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_6)
+	{
+		InMd5Camera=6;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_7)
+	{
+		InMd5Camera=7;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_8)
+	{
+		InMd5Camera=8;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_9)
+	{
+		InMd5Camera=9;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_ROAMING_ROUTE_10)
+	{
+		InMd5Camera=10;
+		QueryPerformanceCounter(&t4);
+		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+	}
+	if(menuid==ID_MENU_BGM_1)
+	{
+		PlaySound1();
+	}
+	if(menuid==ID_MENU_BGM_2)
+	{
+		PlaySound2();
+	}
+	if(menuid==ID_MENU_BGM_3)
+	{
+		PlaySound3();
 	}
 	menuid=0;
 	LockFPS();
@@ -582,7 +716,11 @@ void Draw (void)												// Draw The Scene
 	glLightfv(GL_LIGHT1,GL_POSITION,lightPosition);
 	// ROACH
 	QueryPerformanceCounter(&t3);
-	CMd5CameraTest.Play(double(t3.QuadPart)/double(feq.QuadPart));
+	if(InMd5Camera>=1)
+	{
+		Md5Cameras[InMd5Camera].Play(double(t3.QuadPart)/double(feq.QuadPart));
+	}
+	//CMd5CameraTest.Play(double(t3.QuadPart)/double(feq.QuadPart));
 	if(domulti)
 		glEnable(GL_MULTISAMPLE_ARB);							// Enable Our Multisampling
 	// ENDROACH
@@ -594,9 +732,12 @@ void Draw (void)												// Draw The Scene
 	//MFighter.Reset();
 	
 	ViewPos.UDMplane.Reset();
-	ViewPos.UDMplane.Translate(Vector3d(CMd5CameraTest.CameraPos[0],CMd5CameraTest.CameraPos[2],-CMd5CameraTest.CameraPos[1]));
+	if(InMd5Camera>=1)
+	{
+		ViewPos.UDMplane.Translate(Vector3d(Md5Cameras[InMd5Camera].CameraPos[0],Md5Cameras[InMd5Camera].CameraPos[2],-Md5Cameras[InMd5Camera].CameraPos[1]));
 
-	ViewPos.TurnTo(Vector3d(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]));
+		ViewPos.TurnTo(Vector3d(Md5Cameras[InMd5Camera].CameraView[0],Md5Cameras[InMd5Camera].CameraView[2],-Md5Cameras[InMd5Camera].CameraView[1]));
+	}
 	ViewPos.UDPstate.NextState();
 	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
 
@@ -621,13 +762,14 @@ void Draw (void)												// Draw The Scene
 	MFighter.RotateInternal(Vector3d(CRad(Updown), 0.0f, 0.0f));
 	MFighter.RotateInternal(Vector3d(0.0f, -CRad(angle), 0.0f));
 	MFighter.TranslateInternal(Vector3d(posX,-posY,posZ));
-	if(CMd5CameraTest.numFrames>0)
+	if(InMd5Camera>=1)
 		MFighter=ViewPos.UDMplane;
     MView = (MWorld * MFighter).Invert();
 	glLoadMatrixd(MView.Matrix4());
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_CULL_FACE);
+	glEnable(GL_FOG);
 	DrawSky(MFighter);
 	
 	//glDisable(GL_TEXTURE_2D);
@@ -635,6 +777,7 @@ void Draw (void)												// Draw The Scene
 	//glEnable(GL_LIGHT1);
 	glDisable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
+	glPolygonMode(GL_FRONT_AND_BACK,_RenderMode);
 	for(int i=0;i<ModelNumLoaded;i++)
 	{
 		if(i==(ModelNumLoaded-ModelAlphaNumLoaded))
@@ -659,6 +802,7 @@ void Draw (void)												// Draw The Scene
 	glDepthMask(GL_TRUE);
 	glEnable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_FOG);
 	//glPushMatrix();	
 	//glTranslated(CMd5CameraTest.CameraView[0],CMd5CameraTest.CameraView[2],-CMd5CameraTest.CameraView[1]);
 	//m_VBMD->ShowVBMD(ballModelID);
