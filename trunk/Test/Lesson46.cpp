@@ -79,6 +79,7 @@ float lightColor[4]={0.7f,0.7f,0.7f,1.0f};
 float lightPosition[]= { 0.0f, 0.0f, 2.0f };
 CMd5Camera CMd5CameraTest;
 CMd5Camera Md5Cameras[MAXCAMS];
+CMd5Camera Md5CamerasT[MAXCAMS];
 int InMd5Camera=0;
 Missledata ViewPos;
 Transform ViewTo;
@@ -378,6 +379,17 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	Md5Cameras[9].LoadCamera("Data/9.md5camera");
 	Md5Cameras[10].LoadCamera("Data/10.md5camera");
 
+	Md5CamerasT[1].LoadCamera("Data/1t.md5camera");
+	Md5CamerasT[2].LoadCamera("Data/2t.md5camera");
+	Md5CamerasT[3].LoadCamera("Data/3t.md5camera");
+	Md5CamerasT[4].LoadCamera("Data/4t.md5camera");
+	Md5CamerasT[5].LoadCamera("Data/5t.md5camera");
+	Md5CamerasT[6].LoadCamera("Data/6t.md5camera");
+	Md5CamerasT[7].LoadCamera("Data/7t.md5camera");
+	Md5CamerasT[8].LoadCamera("Data/8t.md5camera");
+	Md5CamerasT[9].LoadCamera("Data/9t.md5camera");
+	Md5CamerasT[10].LoadCamera("Data/10t.md5camera");
+
 	g_window	= window;
 	g_keys		= keys;
 
@@ -511,7 +523,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=1;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_2)
@@ -519,7 +534,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=2;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_3)
@@ -527,7 +545,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=3;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_4)
@@ -535,7 +556,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=4;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_5)
@@ -543,7 +567,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=5;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_6)
@@ -551,7 +578,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=6;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_7)
@@ -559,7 +589,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=7;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_8)
@@ -567,7 +600,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=8;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_9)
@@ -575,7 +611,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=9;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_ROAMING_ROUTE_10)
@@ -583,7 +622,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		InMd5Camera=10;
 		QueryPerformanceCounter(&t4);
 		Md5Cameras[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
+		Md5CamerasT[InMd5Camera].StartTime=double(t4.QuadPart)/double(feq.QuadPart);
 		if(Md5Cameras[InMd5Camera].numFrames==0)
+			InMd5Camera=0;
+		if(Md5CamerasT[InMd5Camera].numFrames==0)
 			InMd5Camera=0;
 	}
 	if(menuid==ID_MENU_BGM_1)
@@ -719,6 +761,7 @@ void Draw (void)												// Draw The Scene
 	if(InMd5Camera>=1)
 	{
 		Md5Cameras[InMd5Camera].Play(double(t3.QuadPart)/double(feq.QuadPart));
+		Md5CamerasT[InMd5Camera].Play(double(t3.QuadPart)/double(feq.QuadPart));
 	}
 	//CMd5CameraTest.Play(double(t3.QuadPart)/double(feq.QuadPart));
 	if(domulti)
@@ -736,7 +779,7 @@ void Draw (void)												// Draw The Scene
 	{
 		ViewPos.UDMplane.Translate(Vector3d(Md5Cameras[InMd5Camera].CameraPos[0],Md5Cameras[InMd5Camera].CameraPos[2],-Md5Cameras[InMd5Camera].CameraPos[1]));
 
-		ViewPos.TurnTo(Vector3d(Md5Cameras[InMd5Camera].CameraView[0],Md5Cameras[InMd5Camera].CameraView[2],-Md5Cameras[InMd5Camera].CameraView[1]));
+		ViewPos.TurnTo(Vector3d(Md5CamerasT[InMd5Camera].CameraPos[0],Md5CamerasT[InMd5Camera].CameraPos[2],-Md5CamerasT[InMd5Camera].CameraPos[1]));
 	}
 	ViewPos.UDPstate.NextState();
 	ViewPos.UDMplane.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
