@@ -589,9 +589,27 @@ bool OpenSelectWindow()
 }
 INT_PTR CALLBACK LineWidthDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam )
 {
+	TCHAR tchar_LineWidth[128];
+	tchar_LineWidth[127]=0;
 	UNREFERENCED_PARAMETER( lParam );
 	switch( msg )
 	{
+		case WM_INITDIALOG:
+			SetWindowText( GetDlgItem( hDlg, IDC_EDIT_FRAME_WIDTH ), tchar_LineWidth );
+			return TRUE;
+		case WM_COMMAND:
+            switch( LOWORD( wParam ) )
+            {
+
+				case IDC_BUTTON1:
+                    EndDialog( hDlg, 0 );
+					GetWindowText( GetDlgItem( hDlg, IDC_EDIT_FRAME_WIDTH ), tchar_LineWidth ,127);
+                    return TRUE;
+				case IDCANCEL:
+                    EndDialog( hDlg, 0 );
+                    return TRUE;
+            }
+
 		case WM_DESTROY:
             // Cleanup everything
             KillTimer( hDlg, 0 );
