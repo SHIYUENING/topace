@@ -256,7 +256,7 @@ if(umeshs.count>0) then
 				WriteFloat w 0.0
 				if(debugon) then
 				(
-					format "%:tex % errorCskiped\n" umeshs[i].name v
+					format "%:tex % error,skiped\n" umeshs[i].name v
 				)
 				--
 			)
@@ -318,7 +318,7 @@ if(sceneMaterials.count>0) then
 			WriteByte w 0
 		)
 	
-		if getNumSubMtls sceneMaterials[i] >0  then
+		if((classof sceneMaterials[1])!=Standardmaterial) then
 		(
 			WriteByte w 255
 			WriteByte w 255
@@ -618,6 +618,7 @@ if(ubones.count>0) then
 		)
 
 	--pos
+		--donghua	
 		nowaddr=ftell w
 		if(ubones[i].Position.controller.keys.count>0) then
 		(
@@ -643,10 +644,11 @@ if(ubones.count>0) then
 				WriteLong w 0
 			)
 		
+			--frame
 			lastaddr=#(-1)
 			for j=1 to maxidx do
 			(
-				nowaddr=(ftell w)+8
+				nowaddr=(ftell w)--+8
 				if((yus nowaddr 16)!=0) then
 				(
 					wnull=16-(yus nowaddr 16)
@@ -700,6 +702,7 @@ if(ubones.count>0) then
 		)
 		
 	--rot
+		--donghua	
 		nowaddr=ftell w
 		if(ubones[i].rotation.controller.keys.count>0) then
 		(
@@ -725,10 +728,11 @@ if(ubones.count>0) then
 			WriteLong w 0
 		)
 		
+		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
-			nowaddr=(ftell w)+8
+			nowaddr=(ftell w)--+8
 			if((yus nowaddr 16)!=0) then
 			(
 				wnull=16-(yus nowaddr 16)
@@ -780,7 +784,8 @@ if(ubones.count>0) then
 		)
 		)
 
-	--scl	
+	--scl
+		--donghua
 		nowaddr=ftell w
 		if(ubones[i].scale.controller.keys.count>0) then
 		(
@@ -806,10 +811,11 @@ if(ubones.count>0) then
 			WriteLong w 0
 		)
 		
+		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
-			nowaddr=(ftell w)+8
+			nowaddr=(ftell w)--+8
 			if((yus nowaddr 16)!=0) then
 			(
 				wnull=16-(yus nowaddr 16)
@@ -955,8 +961,28 @@ if(ulights.count>0) then
 		WriteLong w -1
 		hotspotaddr=ftell w
 		WriteLong w -1
+		WriteLong w -1
+		
+		--0x50
+		lpos=ulights[i].pos
+		lrotation=ulights[i].rotation
+		
+		--pos
+		WriteFloat w lpos[1]
+		WriteFloat w lpos[2]
+		WriteFloat w lpos[3]
+		WriteFloat w 0
+		
+		--0x60
+		--rot
+		WriteFloat w lrotation.x
+		WriteFloat w lrotation.y
+		WriteFloat w lrotation.z
+		WriteFloat w lrotation.w
+		
 
 	--color
+		--donghua
 		nowaddr=ftell w
 		if(ulights[i].RGB.controller!=undefined) then
 		(
@@ -982,6 +1008,7 @@ if(ulights.count>0) then
 			WriteLong w 0
 		)
 		
+		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
@@ -1027,6 +1054,7 @@ if(ulights.count>0) then
 		)
 
 	--hotspotaddr
+		--donghua
 		nowaddr=ftell w
 		if(ulights[i].type==#targetSpot or ulights[i].type==#freeSpot) then
 		(
@@ -1054,6 +1082,7 @@ if(ulights.count>0) then
 			WriteLong w 0
 		)
 		
+		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
@@ -1174,6 +1203,23 @@ if(ucameras.count>0) then
 		(
 			WriteByte w 0
 		)
+		
+		--0x40
+		lpos=ucameras[i].pos
+		lrotation=inverse ucameras[i].transform.rotation
+		
+		--pos
+		WriteFloat w lpos[1]
+		WriteFloat w lpos[2]
+		WriteFloat w lpos[3]
+		WriteFloat w 0
+		
+		--0x50
+		--rot
+		WriteFloat w lrotation.x
+		WriteFloat w lrotation.y
+		WriteFloat w lrotation.z
+		WriteFloat w lrotation.w
 	)
 )
 nowaddr=ftell w
@@ -1188,13 +1234,13 @@ FClose w
 rollout TOP_ACE_MODEL_Exporter "TOP ACE Model" 
 
 (
-label lab1 "TOP ACE Model" height:17
-button theButton "exporter" width:77 height:25
+label lab1 "TOP ACE Model(TEST)" height:17
+button theButton "exporter width:77 height:25
 checkbox debugon "show tex pos error" 
 on theButton pressed do 
 (
 	expfile debugon.checked
-	Messagebox "over"
+	Messagebox "Finished"
 )
 
 )
