@@ -451,14 +451,14 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(g_keys->keyDown ['S'] == TRUE)
 		posZ=+movespeed;
 	if(g_keys->keyDown [VK_LEFT] == TRUE)
-		angle=-1.0f;
+		angle=-1.5f;
 	if(g_keys->keyDown [VK_RIGHT] == TRUE)
-		angle=+1.0f;
+		angle=+1.5f;
 	if(g_keys->keyDown [VK_UP] == TRUE)
-		Updown=-1.0f;
+		Updown=-1.5f;
 		//posY=-5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown [VK_DOWN] == TRUE)
-		Updown=+1.0f;
+		Updown=+1.5f;
 		//posY=+5.0f*(1.0f*doangle+0.05f);
 	/*if(g_keys->keyDown ['Z'] == TRUE)
 		posZ=-10.0f;
@@ -860,7 +860,8 @@ void Draw (void)												// Draw The Scene
 	// ROACH
 	if(domulti)
 		glDisable(GL_MULTISAMPLE_ARB);
-	glColor3f(1.0f,1.0f,1.0f);
+	glColor3f(1.0f,0.5f,0.0f);
 	DrawFPS();
+	glColor3f(1.0f,1.0f,1.0f);
 	// ENDROACH
 }
