@@ -318,7 +318,7 @@ if(sceneMaterials.count>0) then
 			WriteByte w 0
 		)
 	
-		if((classof sceneMaterials[1])!=Standardmaterial) then
+		if((classof sceneMaterials[i])!=Standardmaterial) then
 		(
 			WriteByte w 255
 			WriteByte w 255
@@ -1235,7 +1235,7 @@ rollout TOP_ACE_MODEL_Exporter "TOP ACE Model"
 
 (
 label lab1 "TOP ACE Model(TEST)" height:17
-button theButton "exporter width:77 height:25
+button theButton "exporter" width:77 height:25
 checkbox debugon "show tex pos error" 
 on theButton pressed do 
 (
