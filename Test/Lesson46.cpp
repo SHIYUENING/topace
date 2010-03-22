@@ -91,6 +91,10 @@ bool isMAXSIZEWIN=false;
 int _RenderMode =GL_FILL;
 extern tSystemSet SystemSet;
 extern HINSTANCE hIns;
+CDDS ReadMeTex;
+bool isDrawReadMeTex=false;
+bool UseSence=true;
+int SenceNum=0;
 void SetFog()
 {
 	float FogColor[4]={
@@ -135,6 +139,33 @@ void BuildFont()								// Build Our Font Display List
 			glTranslated(10.0f,0.0f,0.0f);						// Move To The Right Of The Character
 		glEndList();									// Done Building The Display List
 	}													// Loop Until All 256 Are Built
+}
+void DrawReadme()
+{
+	if(!isDrawReadMeTex)
+		return;
+	glBindTexture(GL_TEXTURE_2D, ReadMeTex.g_compressedTextureID);			// Select Our Font Texture
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,winwidth,0,winheight,-1,1);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,512);
+				glTexCoord2f(1.0f,	1.0f);	glVertex2i(512 ,512);
+				glTexCoord2f(1.0f,	0.0f);	glVertex2i(512, 0);
+				glTexCoord2f(0.0f,	0.0f);	glVertex2i( 0, 0);
+			glEnd();
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 }
 void glPrints(int x, int y, int winW,int winH,char *string)	// Where The Printing Happens
 {
@@ -366,6 +397,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	CDDS loadDDS;
 	SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
 
+	ReadMeTex.loadCompressedTexture("Data/readme.dds",GL_LINEAR);
 	//CMd5CameraTest.LoadCamera("Data/123.md5camera");
 	CMd5CameraTest.LoadCamera(LoadCameraName);
 	Md5Cameras[1].LoadCamera("Data/1.md5camera");
@@ -431,7 +463,16 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	CMd5CameraTest.StartTime=double(t1.QuadPart)/double(feq.QuadPart);
 	return TRUE;												// Return TRUE (Initialization Successful)
 }
-
+void SetCam(Vector3d Pos,Vector3d Tpos)
+{
+	ViewPos.UDMplane.Reset();
+	ViewPos.UDMplane.TranslateInternal(Pos);
+	ViewPos.TurnTo(Tpos);
+	ViewPos.UDPstate.NextState();
+	MFighter=ViewPos.UDMplane;
+	MFighter.RotateInternal(Vector3d(0.0f, CRad(180.0f), 0.0f));
+	MFighter.RotateInternal(Vector3d(0.0f,0.0f ,- CRad(Getrotation(MFighter))));
+}
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
 	DeinitSound();
@@ -640,6 +681,71 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	{
 		PlaySound3();
 	}
+	if(menuid==ID_40031)
+	{
+		isDrawReadMeTex=!isDrawReadMeTex;
+	}
+	if(menuid==ID_MENU_ROAMING_SCENE_1)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(1974.1 ,-571.056 ,-1314.86),Vector3d(1822.22 ,-576.522 ,-1286.59));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_2)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(2018.82 ,-558.228 ,-956.967),Vector3d(1933.39 ,-557.79 ,-932.265));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_3)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(1634.25 ,-412.181 ,1305.57),Vector3d(1387.05 ,-450.88 ,787.698));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_4)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(-988.271 ,-137.959 ,421.266),Vector3d(-988.271 ,-137.959 ,421.266));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_5)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(973.94 ,-403.52 ,240.215),Vector3d(336.267 ,-426.86 ,400.856));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_6)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(1974.1 ,-571.056 ,-1314.86),Vector3d(1822.22 ,-576.522 ,-1286.59));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_7)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(-211.127 ,-549.864 ,-168.501),Vector3d(-233.653 ,-549.864 ,-161.012));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_8)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(-230.3 ,-556.198 ,-166.662),Vector3d(-244.503 ,-556.278 ,-162.667));
+	}
+	if(menuid==ID_MENU_ROAMING_SCENE_9)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(-318.782 ,-563.464 ,-135.023),Vector3d(-254.623 ,-563.485 ,-158.523));
+	}
+
+	if(menuid==ID_MENU_ROAMING_SCENE_10)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(-318.782 ,-563.464 ,-135.023),Vector3d(-254.623 ,-563.485 ,-158.523));
+	}
+
+
+
 	menuid=0;
 	LockFPS();
 }
@@ -851,7 +957,10 @@ void Draw (void)												// Draw The Scene
 	//m_VBMD->ShowVBMD(ballModelID);
 	//glPopMatrix();
 
-	DrawUI();
+	//DrawUI();
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	DrawReadme();
 	if(!doangle)
 		angle-=0.5f;
 
