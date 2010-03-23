@@ -297,9 +297,12 @@ if(umeshs.count>0) then
 
 		for v=1 to umeshs[i].numfaces do
 		(
-			WriteLong w (getFace umeshs[i] v)[1]-1
-			WriteLong w (getFace umeshs[i] v)[2]-1	
-			WriteLong w (getFace umeshs[i] v)[3]-1
+			VTUN=(getFace umeshs[i] v)[1]-1
+			WriteLong w VTUN
+			VTUN=(getFace umeshs[i] v)[2]-1
+			WriteLong w VTUN
+			VTUN=(getFace umeshs[i] v)[3]-1
+			WriteLong w VTUN
 		)
 	)
 )
