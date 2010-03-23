@@ -3,7 +3,7 @@ fn yus a b=
 	return a-(a/b)*b
 )
 
-fn expfile debugon = 
+fn expfile debugon flip= 
 (
 --/*
 out_name = GetSaveFileName \
@@ -213,12 +213,25 @@ if(umeshs.count>0) then
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
 
-		for v=1 to umeshs[i].numverts do
+		if(flip) then
 		(
-			WriteFloat w (getVert umeshs[i] v)[1]
-			WriteFloat w (getVert umeshs[i] v)[2]
-			WriteFloat w (getVert umeshs[i] v)[3]
-			WriteFloat w 1.0
+			for v=1 to umeshs[i].numverts do
+			(
+				WriteFloat w (getVert umeshs[i] v)[1]
+				WriteFloat w (getVert umeshs[i] v)[3]
+				WriteFloat w (getVert umeshs[i] v)[2]
+				WriteFloat w 1.0
+			)
+		)
+		else
+		(
+			for v=1 to umeshs[i].numverts do
+			(
+				WriteFloat w (getVert umeshs[i] v)[1]
+				WriteFloat w (getVert umeshs[i] v)[2]
+				WriteFloat w (getVert umeshs[i] v)[3]
+				WriteFloat w 1.0
+			)
 		)
 
 		-------Normal---------
@@ -228,12 +241,25 @@ if(umeshs.count>0) then
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
 
-		for v=1 to umeshs[i].numverts do
+		if(flip) then
 		(
-			WriteFloat w (getNormal umeshs[i] v)[1]
-			WriteFloat w (getNormal umeshs[i] v)[2]
-			WriteFloat w (getNormal umeshs[i] v)[3]
-			WriteFloat w 0.0
+			for v=1 to umeshs[i].numverts do
+			(
+				WriteFloat w (getNormal umeshs[i] v)[1]
+				WriteFloat w (getNormal umeshs[i] v)[3]
+				WriteFloat w (getNormal umeshs[i] v)[2]
+				WriteFloat w 0.0
+			)
+		)
+		else
+		(
+			for v=1 to umeshs[i].numverts do
+			(
+				WriteFloat w (getNormal umeshs[i] v)[1]
+				WriteFloat w (getNormal umeshs[i] v)[2]
+				WriteFloat w (getNormal umeshs[i] v)[3]
+				WriteFloat w 0.0
+			)
 		)
 		
 		-------tex---------
@@ -1237,9 +1263,10 @@ rollout TOP_ACE_MODEL_Exporter "TOP ACE Model"
 label lab1 "TOP ACE Model(TEST)" height:17
 button theButton "exporter" width:77 height:25
 checkbox debugon "show tex pos error" 
+checkbox flipyz "flip YZ" 
 on theButton pressed do 
 (
-	expfile debugon.checked
+	expfile debugon.checked flipyz.checked
 	Messagebox "Finished"
 )
 
