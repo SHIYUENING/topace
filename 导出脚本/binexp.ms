@@ -1274,4 +1274,4 @@ on theButton pressed do
 
 
 
-createDialog TOP_ACE_MODEL_Exporter 170 80
+createDialog TOP_ACE_MODEL_Exporter 170 100
