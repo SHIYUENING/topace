@@ -154,7 +154,7 @@ if(umeshs.count>0) then
 			(
 				if(j<=bonnum) then
 				(
-					WriteLong w (findItem ubones (skinOps.GetBoneName umeshs[i].modifiers[#Skin] j 1))
+					WriteLong w (findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] j 1)))
 				)
 				else
 				(
@@ -648,7 +648,7 @@ if(ubones.count>0) then
 			lastaddr=#(-1)
 			for j=1 to maxidx do
 			(
-				nowaddr=(ftell w)--+8
+				nowaddr=(ftell w)+8
 				if((yus nowaddr 16)!=0) then
 				(
 					wnull=16-(yus nowaddr 16)
@@ -658,7 +658,7 @@ if(ubones.count>0) then
 					)
 				)
 				nowaddr=ftell w
-			append lastaddr nowaddr
+			append lastaddr (nowaddr-8)
 
 				if(j==1) then
 				(
@@ -667,12 +667,12 @@ if(ubones.count>0) then
 					(
 						for ti=0 to (int)(ubones[i].Position.controller.keys[j].time) do
 						(
-							WriteLong w nowaddr
+							WriteLong w (nowaddr-8)
 						)
 					)
 					else
 					(
-						WriteLong w nowaddr
+						WriteLong w (nowaddr-8)
 					)
 					fseek w nowaddr #seek_set
 
@@ -732,7 +732,7 @@ if(ubones.count>0) then
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
-			nowaddr=(ftell w)--+8
+			nowaddr=(ftell w)+8
 			if((yus nowaddr 16)!=0) then
 			(
 				wnull=16-(yus nowaddr 16)
@@ -742,7 +742,7 @@ if(ubones.count>0) then
 				)
 			)
 			nowaddr=ftell w
-			append lastaddr nowaddr
+			append lastaddr (nowaddr-8)
 
 			if(j==1) then
 			(
@@ -751,12 +751,12 @@ if(ubones.count>0) then
 				(
 					for ti=0 to (int)(ubones[i].rotation.controller.keys[j].time) do
 					(
-						WriteLong w nowaddr
+						WriteLong w (nowaddr-8)
 					)
 				)
 				else
 				(
-					WriteLong w nowaddr
+					WriteLong w (nowaddr-8)
 				)
 				fseek w nowaddr #seek_set
 
@@ -768,7 +768,7 @@ if(ubones.count>0) then
 				--tmpadr=ReadLong w
 				for ti=(int)(ubones[i].rotation.controller.keys[j-1].time+1) to (int)(ubones[i].rotation.controller.keys[j].time) do
 				(
-					WriteLong w nowaddr
+					WriteLong w (nowaddr-8)
 				)
 				fseek w nowaddr #seek_set
 
@@ -815,7 +815,7 @@ if(ubones.count>0) then
 		lastaddr=#(-1)
 		for j=1 to maxidx do
 		(
-			nowaddr=(ftell w)--+8
+			nowaddr=(ftell w)+8
 			if((yus nowaddr 16)!=0) then
 			(
 				wnull=16-(yus nowaddr 16)
@@ -825,7 +825,7 @@ if(ubones.count>0) then
 				)
 			)
 			nowaddr=ftell w
-			append lastaddr nowaddr
+			append lastaddr (nowaddr-8)
 
 			if(j==1) then
 			(
@@ -834,12 +834,12 @@ if(ubones.count>0) then
 				(
 					for ti=0 to (int)(ubones[i].scale.controller.keys[j].time) do
 					(
-						WriteLong w nowaddr
+						WriteLong w (nowaddr-8)
 					)
 				)
 				else
 				(
-					WriteLong w nowaddr
+					WriteLong w (nowaddr-8)
 				)
 				fseek w nowaddr #seek_set
 
