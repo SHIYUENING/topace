@@ -381,6 +381,9 @@ void loadmodels()
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
 {
 	glewInit();
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5);
+	glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);	
+	SwapBuffers (window->hDC);
 	m_VBMD = new CLoadVBMD;
 	m_VBMD->m_IsSupportFBO=true;
 
@@ -437,7 +440,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	glShadeModel(GL_SMOOTH);									// Select Smooth Shading
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
+							// Set The Clear Color To Black
 	glEnable(GL_TEXTURE_2D);
 
 
@@ -875,7 +878,7 @@ void Draw (void)												// Draw The Scene
 	// ENDROACH
 
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
-	glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);		// Clear Screen And Depth Buffer
+	glClear (GL_DEPTH_BUFFER_BIT);		// Clear Screen And Depth Buffer
 	glLoadIdentity();											// Reset The View	
 	
 	//MFighter.Reset();

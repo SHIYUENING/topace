@@ -21,6 +21,7 @@ CLoad3DS::CLoad3DS(void)
 , OmniLightNodes(NULL)
 , SpotLightNodes(NULL)
 , OnlySelfIllum(false)
+, Model3ds(NULL)
 {
 }
 
