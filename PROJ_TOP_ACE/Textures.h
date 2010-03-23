@@ -26,5 +26,8 @@ public:
 	bool UseAlpha;
 	bool LoadDefTex(void);
 
+	static GLuint DefineTexID;
+	static void LoadDefineTex();
+
 };
 #endif
