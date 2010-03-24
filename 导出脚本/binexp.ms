@@ -617,7 +617,11 @@ if(ubones.count>0) then
 			crotation=ubones[i].parent.rotation - ubones[i].rotation
 			cscale=ubones[i].scale
 		)
-		WriteLong w -1
+		
+		if(ubones[i].parent==undefined) then
+			WriteLong w 0
+		else
+			WriteLong w (findItem ubones ubones[i].parent)
 		WriteLong w -1
 		WriteLong w -1
 		
