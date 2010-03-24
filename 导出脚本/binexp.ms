@@ -609,13 +609,13 @@ if(ubones.count>0) then
 		if(ubones[i].parent==undefined) then
 		(
 			cpos=ubones[i].pos
-			crotation=ubones[i].rotation
+			crotation=normalize ubones[i].rotation
 			cscale=ubones[i].scale
 		)
 		else
 		(
 			cpos=ubones[i].parent.pos - ubones[i].pos
-			crotation=ubones[i].parent.rotation - ubones[i].rotation
+			crotation=normalize (ubones[i].parent.rotation - ubones[i].rotation)
 			cscale=ubones[i].scale
 		)
 		
@@ -867,7 +867,7 @@ if(ubones.count>0) then
 			)
 			tempt=ubones[i].rotation.controller.keys[j].time
 			WriteLong w tempt
-			tmprr=((EulerAngles (at time tempt animate on ubones[i].rotation.controller.x_rotation) (at time tempt animate on ubones[i].rotation.controller.y_rotation) (at time tempt animate on ubones[i].rotation.controller.z_rotation)) as quat)
+			tmprr=normalize ((EulerAngles (at time tempt animate on ubones[i].rotation.controller.x_rotation) (at time tempt animate on ubones[i].rotation.controller.y_rotation) (at time tempt animate on ubones[i].rotation.controller.z_rotation)) as quat)
 
 			WriteFloat w tmprr.x
 			if(flip) then
@@ -1083,7 +1083,7 @@ if(ulights.count>0) then
 		--0x50
 		lpos=ulights[i].pos
 		--lrotation=ulights[i].rotation
-		lrotation=inverse ulights[i].transform.rotation
+		lrotation=normalize (inverse ulights[i].transform.rotation)
 		
 		--pos
 		WriteFloat w lpos[1]
@@ -1362,7 +1362,7 @@ if(ucameras.count>0) then
 		
 		--0x40
 		lpos=ucameras[i].pos
-		lrotation=inverse ucameras[i].transform.rotation
+		lrotation=normalize (inverse ucameras[i].transform.rotation)
 		
 		--pos
 		WriteFloat w lpos[1]
