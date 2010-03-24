@@ -66,12 +66,15 @@ inline void Easy_quat_normalize(__m128 * QuatOut,const __m128 QuatIn)
 	movaps   xmm0,   xmm1   
 	mulps	 xmm1,   xmm1   
     
+	  
 	movaps   xmm2,   xmm1   
-	shufps   xmm2,   xmm1,   0x09   
-	movaps   xmm3,   xmm2   
-	shufps   xmm3,   xmm2,   0x09   
-	movaps   xmm4,   xmm3   
-	shufps   xmm4,   xmm3,   0x09  
+	movaps   xmm3,   xmm1   
+	movaps   xmm4,   xmm1   
+
+	shufps   xmm1,   xmm1,   0x00 
+	shufps   xmm2,   xmm2,   0x55   
+	shufps   xmm3,   xmm3,   0xaa   
+	shufps   xmm4,   xmm4,   0xff  
 
 	addps	 xmm1,   xmm2   
 	addps    xmm1,   xmm3  
