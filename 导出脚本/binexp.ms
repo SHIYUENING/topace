@@ -297,12 +297,9 @@ if(umeshs.count>0) then
 
 		for v=1 to umeshs[i].numfaces do
 		(
-			VTUN=(getFace umeshs[i] v)[1]-1
-			WriteLong w VTUN
-			VTUN=(getFace umeshs[i] v)[2]-1
-			WriteLong w VTUN
-			VTUN=(getFace umeshs[i] v)[3]-1
-			WriteLong w VTUN
+			WriteLong w ((getFace umeshs[i] v)[1]-1)
+			WriteLong w ((getFace umeshs[i] v)[2]-1)	
+			WriteLong w ((getFace umeshs[i] v)[3]-1)
 		)
 	)
 )
@@ -614,20 +611,44 @@ if(ubones.count>0) then
 		
 		--0x20
 		WriteFloat w cpos[1]
+		if(flip) then
+		(
+		WriteFloat w cpos[3]
+		WriteFloat w cpos[2]
+		)
+		else
+		(
 		WriteFloat w cpos[2]
 		WriteFloat w cpos[3]
+		)
 		WriteFloat w 0
 		
 		--0x30
 		WriteFloat w crotation.x
-		WriteFloat w crotation.y
-		WriteFloat w crotation.z
+		if(flip) then
+		(
+			WriteFloat w crotation.z
+			WriteFloat w crotation.y
+		)
+		else
+		(
+			WriteFloat w crotation.y
+			WriteFloat w crotation.z
+		)
 		WriteFloat w crotation.w
 		
 		--0x40
 		WriteFloat w cscale[1]
+		if(flip) then
+		(
+		WriteFloat w cscale[3]
+		WriteFloat w cscale[2]
+		)
+		else
+		(
 		WriteFloat w cscale[2]
 		WriteFloat w cscale[3]
+		)
 		WriteFloat w 1
 		
 		--0x50
@@ -672,7 +693,15 @@ if(ubones.count>0) then
 			(
 				WriteLong w 0
 			)
-		
+			nowaddr=(ftell w)
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
 			--frame
 			lastaddr=#(-1)
 			for j=1 to maxidx do
@@ -713,7 +742,7 @@ if(ubones.count>0) then
 					--tmpadr=ReadLong w
 					for ti=(int)(ubones[i].Position.controller.keys[j-1].time+1) to (int)(ubones[i].Position.controller.keys[j].time) do
 					(
-						WriteLong w nowaddr
+						WriteLong w (nowaddr-8)
 					)
 					fseek w nowaddr #seek_set
 	
@@ -721,8 +750,16 @@ if(ubones.count>0) then
 				)
 				WriteLong w ubones[i].Position.controller.keys[j].time
 				WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.x_position)
-				WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position)
-				WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position)
+				if(flip) then
+				(
+					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position)
+					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position)
+				)
+				else
+				(
+					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position)
+					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position)
+				)
 				WriteFloat w 0.0
 			)
 		)
@@ -756,7 +793,15 @@ if(ubones.count>0) then
 		(
 			WriteLong w 0
 		)
-		
+		nowaddr=(ftell w)
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
 		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
@@ -806,9 +851,18 @@ if(ubones.count>0) then
 			tempt=ubones[i].rotation.controller.keys[j].time
 			WriteLong w tempt
 			tmprr=((EulerAngles (at time tempt animate on ubones[i].rotation.controller.x_rotation) (at time tempt animate on ubones[i].rotation.controller.y_rotation) (at time tempt animate on ubones[i].rotation.controller.z_rotation)) as quat)
+
 			WriteFloat w tmprr.x
-			WriteFloat w tmprr.y
-			WriteFloat w tmprr.z
+			if(flip) then
+			(
+				WriteFloat w tmprr.z
+				WriteFloat w tmprr.y
+			)
+			else
+			(
+				WriteFloat w tmprr.y
+				WriteFloat w tmprr.z
+			)
 			WriteFloat w tmprr.w
 		)
 		)
@@ -839,6 +893,15 @@ if(ubones.count>0) then
 		(
 			WriteLong w 0
 		)
+			nowaddr=(ftell w)
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
 		
 		--frame
 		lastaddr=#(-1)
@@ -880,7 +943,7 @@ if(ubones.count>0) then
 				--tmpadr=ReadLong w
 				for ti=(int)(ubones[i].scale.controller.keys[j-1].time+1) to (int)(ubones[i].scale.controller.keys[j].time) do
 				(
-					WriteLong w nowaddr
+					WriteLong w (nowaddr-8)
 				)
 				fseek w nowaddr #seek_set
 
@@ -889,8 +952,16 @@ if(ubones.count>0) then
 			WriteLong w ubones[i].scale.controller.keys[j].time
 			tmprr=ubones[i].scale.controller.keys[j].value
 			WriteFloat w tmprr[1]
-			WriteFloat w tmprr[2]
-			WriteFloat w tmprr[3]
+			if(flip) then
+			(
+				WriteFloat w tmprr[3]
+				WriteFloat w tmprr[2]
+			)
+			else
+			(
+				WriteFloat w tmprr[2]
+				WriteFloat w tmprr[3]
+			)
 			WriteFloat w 0.0
 		)
 		)
@@ -994,19 +1065,36 @@ if(ulights.count>0) then
 		
 		--0x50
 		lpos=ulights[i].pos
-		lrotation=ulights[i].rotation
+		--lrotation=ulights[i].rotation
+		lrotation=inverse ulights[i].transform.rotation
 		
 		--pos
 		WriteFloat w lpos[1]
-		WriteFloat w lpos[2]
-		WriteFloat w lpos[3]
+		if(flip) then
+		(
+			WriteFloat w lpos[3]
+			WriteFloat w lpos[2]
+		)
+		else
+		(
+			WriteFloat w lpos[2]
+			WriteFloat w lpos[3]
+		)
 		WriteFloat w 0
 		
 		--0x60
 		--rot
 		WriteFloat w lrotation.x
-		WriteFloat w lrotation.y
-		WriteFloat w lrotation.z
+		if(flip) then
+		(
+			WriteFloat w lrotation.z
+			WriteFloat w lrotation.y
+		)
+		else
+		(
+			WriteFloat w lrotation.y
+			WriteFloat w lrotation.z
+		)
 		WriteFloat w lrotation.w
 		
 
@@ -1036,7 +1124,17 @@ if(ulights.count>0) then
 		(
 			WriteLong w 0
 		)
-		
+		/*
+			nowaddr=(ftell w)
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
+		--*/
 		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
@@ -1111,6 +1209,18 @@ if(ulights.count>0) then
 			WriteLong w 0
 		)
 		
+		/*
+		
+			nowaddr=(ftell w)
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
+		--*/
 		--frame
 		lastaddr=#(-1)
 		for j=1 to maxidx do
@@ -1239,15 +1349,31 @@ if(ucameras.count>0) then
 		
 		--pos
 		WriteFloat w lpos[1]
+		if(flip) then
+		(
+		WriteFloat w lpos[3]
+		WriteFloat w lpos[2]
+		)
+		else
+		(
 		WriteFloat w lpos[2]
 		WriteFloat w lpos[3]
+		)
 		WriteFloat w 0
 		
 		--0x50
 		--rot
 		WriteFloat w lrotation.x
-		WriteFloat w lrotation.y
-		WriteFloat w lrotation.z
+		if(flip) then
+		(
+			WriteFloat w lrotation.z
+			WriteFloat w lrotation.y
+		)
+		else
+		(
+			WriteFloat w lrotation.y
+			WriteFloat w lrotation.z
+		)
 		WriteFloat w lrotation.w
 	)
 )
