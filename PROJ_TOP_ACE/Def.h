@@ -3,5 +3,5 @@
 
 
 #define USE_SSE 1
-
+#define LIB3DS_EPSILON (1e-5)
 #endif

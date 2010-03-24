@@ -43,6 +43,45 @@ inline void Easy_quat_axis_angle(__m128 c, const __m128 axis_angle)
         c.m128_f32[3] = (float)cos(omega);
     }
 }
+inline void Easy_quat_normalize(float c[4]) {
+    double l, m;
 
+    l = sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2] + c[3] * c[3]);
+    if (fabs(l) < LIB3DS_EPSILON) {
+        c[0] = c[1] = c[2] = 0.0f;
+        c[3] = 1.0f;
+    } else {
+        int i;
+        m = 1.0f / l;
+        for (i = 0; i < 4; ++i) {
+            c[i] = (float)(c[i] * m);
+        }
+    }
+}
+inline void Easy_quat_normalize(__m128 * QuatOut,const __m128 QuatIn)
+{
+	_asm   
+	{    
+	movaps   xmm1,   QuatIn
+	movaps   xmm0,   xmm1   
+	mulps	 xmm1,   xmm1   
+    
+	movaps   xmm2,   xmm1   
+	shufps   xmm2,   xmm1,   0x09   
+	movaps   xmm3,   xmm2   
+	shufps   xmm3,   xmm2,   0x09   
+	movaps   xmm4,   xmm3   
+	shufps   xmm4,   xmm3,   0x09  
 
+	addps	 xmm1,   xmm2   
+	addps    xmm1,   xmm3  
+	addps    xmm1,   xmm4
+    
+	sqrtps   xmm1,   xmm1   
+	divps    xmm0,   xmm1   
+
+	mov		 ecx,    QuatOut
+	movups	 [ecx],  xmm0  
+  } 
+}
 #endif

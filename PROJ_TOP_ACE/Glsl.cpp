@@ -1,37 +1,38 @@
 #include "Glsl.h"
 #include <stdio.h>	
 #include <windows.h>
+#include"IniFile.h"
 int GlslVer = 0;
 //GLhandleARB	g_GLSL_ATC_Pixel;
 //GLhandleARB	g_GLSL_ATC_Vertex;
 //GLhandleARB GLSL_ATC;
 int GLSLLightSet=0;
-GLhandleARB g_PhoneLight;
-GLhandleARB g_PhoneLight_Vertex;
-GLhandleARB g_PhoneLight_Pixel;
-GLhandleARB g_StarPass1;
-GLhandleARB g_StarPass1_Pixel;
-GLhandleARB g_StarPass0;
-GLhandleARB g_StarPass0_Pixel;
+GLhandleARB g_PhoneLight=0;
+GLhandleARB g_PhoneLight_Vertex=0;
+GLhandleARB g_PhoneLight_Pixel=0;
+GLhandleARB g_StarPass1=0;
+GLhandleARB g_StarPass1_Pixel=0;
+GLhandleARB g_StarPass0=0;
+GLhandleARB g_StarPass0_Pixel=0;
 
-GLhandleARB	g_GLSLBloomW_pixel;
-GLhandleARB	g_GLSLBloomH_pixel;
-GLhandleARB	g_GLSLBloomMap_pixel;
-GLhandleARB	g_GLSLToneMapping_pixel;
+GLhandleARB	g_GLSLBloomW_pixel=0;
+GLhandleARB	g_GLSLBloomH_pixel=0;
+GLhandleARB	g_GLSLBloomMap_pixel=0;
+GLhandleARB	g_GLSLToneMapping_pixel=0;
 
-GLhandleARB GLSL_DrawBloomW;
-GLhandleARB GLSL_DrawBloomH;
-GLhandleARB GLSL_ToneMapping;
-GLhandleARB GLSL_DrawBloomMap;
+GLhandleARB GLSL_DrawBloomW=0;
+GLhandleARB GLSL_DrawBloomH=0;
+GLhandleARB GLSL_ToneMapping=0;
+GLhandleARB GLSL_DrawBloomMap=0;
 
-GLhandleARB g_GLSLSSAOPass0_pixel;
-GLhandleARB GLSL_SSAOPass0;
-GLhandleARB g_GLSLSSAOPass1_pixel;
-GLhandleARB GLSL_SSAOPass1;
+GLhandleARB g_GLSLSSAOPass0_pixel=0;
+GLhandleARB GLSL_SSAOPass0=0;
+GLhandleARB g_GLSLSSAOPass1_pixel=0;
+GLhandleARB GLSL_SSAOPass1=0;
 
-GLhandleARB g_BlurTex_pixel;
-GLhandleARB GLSL_BlurTex;
-
+GLhandleARB g_BlurTex_pixel=0;
+GLhandleARB GLSL_BlurTex=0;
+extern tGameSet GameSet;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -183,15 +184,18 @@ void InitGLSL(int LightSet)
 	GetGLSLLinkSTATUS( GLSL_DrawBloomMap);
 	GetGLSLLinkSTATUS( GLSL_ToneMapping);
 
-	GLSL_SSAOPass0 = glCreateProgramObjectARB();
-	g_GLSLSSAOPass0_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass0.ps",GL_FRAGMENT_SHADER_ARB);
-	glAttachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
-	GetGLSLLinkSTATUS( GLSL_SSAOPass0);
-	
-	GLSL_SSAOPass1 = glCreateProgramObjectARB();
-	g_GLSLSSAOPass1_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass1.ps",GL_FRAGMENT_SHADER_ARB);
-	glAttachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
-	GetGLSLLinkSTATUS( GLSL_SSAOPass1);
+	if(GameSet.SSAO>0)
+	{
+		GLSL_SSAOPass0 = glCreateProgramObjectARB();
+		g_GLSLSSAOPass0_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass0.ps",GL_FRAGMENT_SHADER_ARB);
+		glAttachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
+		GetGLSLLinkSTATUS( GLSL_SSAOPass0);
+		
+		GLSL_SSAOPass1 = glCreateProgramObjectARB();
+		g_GLSLSSAOPass1_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass1.ps",GL_FRAGMENT_SHADER_ARB);
+		glAttachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
+		GetGLSLLinkSTATUS( GLSL_SSAOPass1);
+	}
 
 	InitBlurTex();
 }
