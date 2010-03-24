@@ -130,7 +130,8 @@ if(umeshs.count>0) then
 		)
 		else
 			WriteLong w 0
-
+		
+		bonnum=0
 		if(umeshs[i].modifiers[#Skin]!=undefined) then
 		(
 			select umeshs[i]
