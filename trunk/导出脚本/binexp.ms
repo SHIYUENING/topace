@@ -171,10 +171,22 @@ if(umeshs.count>0) then
 			)
 		)
 
-		for j = 1 to 4 do
+		--0x30---------------
+		WriteByte w bonnum
+		if(bonnum>1) then
 		(
-			WriteLong w 0
+			WriteByte w 1
 		)
+		else
+		(
+			WriteByte w 0
+		)
+		WriteByte w -1
+		WriteByte w -1
+		
+		WriteLong w -1
+		WriteLong w -1
+		WriteLong w -1
 
 		------------------------
 		WriteLong w 4 --obj
