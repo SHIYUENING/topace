@@ -81,10 +81,10 @@ void KeyUpdate ()								// Perform Motion Updates Here
 		TerminateApplication (g_window);						// Terminate The Program
 	}
 
-	if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
-	{
-		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
-	}
+	//if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
+	//{
+	//	ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
+	//}
 	if(g_keys->keyDown [VK_PRIOR] == TRUE)
 		moveZ=moveZ+1.0f;
 	if(g_keys->keyDown [VK_NEXT] == TRUE)
