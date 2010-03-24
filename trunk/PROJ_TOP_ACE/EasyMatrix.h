@@ -1195,8 +1195,8 @@ inline void Test_matrix()
 	//for(int i=0;i<10000;i++)
 		//Easy_matrix_mult_vector4X4(&TestSSE2,TestSSEmatrix,TestSSE);
 
-	//TestGet1=Easy_vector_dot(TestFloat,TestFloat2);
-	//TestGet2=Easy_vector_dot(TestSSE,TestSSE2);
+	TestGet1=Easy_vector_dot(TestFloat,TestFloat2);
+	TestGet2=Easy_vector_dot(TestSSE,TestSSE2);
 
 
 
