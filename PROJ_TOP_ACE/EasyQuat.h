@@ -87,4 +87,15 @@ inline void Easy_quat_normalize(__m128 * QuatOut,const __m128 QuatIn)
 	movups	 [ecx],  xmm0  
   } 
 }
+inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
+{
+	_asm   
+	{
+		PUSHAD
+
+
+
+		POPAD
+	}
+}
 #endif
