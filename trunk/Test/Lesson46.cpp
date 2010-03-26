@@ -155,10 +155,10 @@ void DrawReadme()
 	glLoadIdentity();									// Reset The Modelview Matrix
 	
 			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,512);
-				glTexCoord2f(1.0f,	1.0f);	glVertex2i(512 ,512);
-				glTexCoord2f(1.0f,	0.0f);	glVertex2i(512, 0);
-				glTexCoord2f(0.0f,	0.0f);	glVertex2i( 0, 0);
+				glTexCoord2f(0.0f,	1.0f);	glVertex2i( (winwidth-512)/2,(winheight-512)/2+512);
+				glTexCoord2f(1.0f,	1.0f);	glVertex2i((winwidth-512)/2+512 ,(winheight-512)/2+512);
+				glTexCoord2f(1.0f,	0.0f);	glVertex2i((winwidth-512)/2+512, (winheight-512)/2+0);
+				glTexCoord2f(0.0f,	0.0f);	glVertex2i( (winwidth-512)/2, (winheight-512)/2+0);
 			glEnd();
 
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
@@ -683,6 +683,10 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(menuid==ID_MENU_BGM_3)
 	{
 		PlaySound3();
+	}
+	if(menuid==ID_MENU_BGM_STOP)
+	{
+		StopSound();
 	}
 	if(menuid==ID_40031)
 	{
