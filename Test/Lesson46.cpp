@@ -713,42 +713,44 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(menuid==ID_MENU_ROAMING_SCENE_4)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(-988.271 ,-137.959 ,421.266),Vector3d(-988.271 ,-137.959 ,421.266));
+		//SetCam(Vector3d(-988.271 ,-137.959 ,421.266),Vector3d(-988.271 ,-137.959 ,421.266));
+		SetCam(Vector3d(973.94 ,-403.52 ,240.215),Vector3d(336.267 ,-426.86 ,400.856));
 	}
 
 	if(menuid==ID_MENU_ROAMING_SCENE_5)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(973.94 ,-403.52 ,240.215),Vector3d(336.267 ,-426.86 ,400.856));
+		SetCam(Vector3d(-988.271 ,137.959 ,-421.266),Vector3d(-1140.5 ,-106.263 ,-813.717));
 	}
 
 	if(menuid==ID_MENU_ROAMING_SCENE_6)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(1974.1 ,-571.056 ,-1314.86),Vector3d(1822.22 ,-576.522 ,-1286.59));
+		//SetCam(Vector3d(1974.1 ,-571.056 ,-1314.86),Vector3d(1822.22 ,-576.522 ,-1286.59));
+		SetCam(Vector3d(-211.127 ,-549.864 ,-168.501),Vector3d(-233.653 ,-549.864 ,-161.012));
 	}
 
 	if(menuid==ID_MENU_ROAMING_SCENE_7)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(-211.127 ,-549.864 ,-168.501),Vector3d(-233.653 ,-549.864 ,-161.012));
+		SetCam(Vector3d(-230.3 ,-556.198 ,-166.662),Vector3d(-244.503 ,-556.278 ,-162.667));
 	}
 
 	if(menuid==ID_MENU_ROAMING_SCENE_8)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(-230.3 ,-556.198 ,-166.662),Vector3d(-244.503 ,-556.278 ,-162.667));
+		SetCam(Vector3d(-318.782 ,-563.464 ,-135.023),Vector3d(-254.623 ,-563.485 ,-158.523));
 	}
 	if(menuid==ID_MENU_ROAMING_SCENE_9)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(-318.782 ,-563.464 ,-135.023),Vector3d(-254.623 ,-563.485 ,-158.523));
+		SetCam(Vector3d(-242.752 ,-558.432 ,-152.891),Vector3d(-232.269 ,-558.151 ,-125.493));
 	}
 
 	if(menuid==ID_MENU_ROAMING_SCENE_10)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(-318.782 ,-563.464 ,-135.023),Vector3d(-254.623 ,-563.485 ,-158.523));
+		SetCam(Vector3d(-282.958 ,-553.557 ,-43.5626),Vector3d(-279.114 ,-553.811 ,-41.512));
 	}
 
 
