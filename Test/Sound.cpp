@@ -12,6 +12,7 @@ void InitSound()
 	FMOD_System_CreateSound(sys, "Data/BGM1.mp3", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_CREATECOMPRESSEDSAMPLE, 0, &BGM1);
 	FMOD_System_CreateSound(sys, "Data/BGM2.mp3", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_CREATECOMPRESSEDSAMPLE, 0, &BGM2);
 	FMOD_System_CreateSound(sys, "Data/BGM3.mp3", FMOD_LOOP_NORMAL | FMOD_2D | FMOD_CREATECOMPRESSEDSAMPLE, 0, &BGM3);
+	FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, BGM1, 0, &BGMchannel);
 }
 void DeinitSound()
 {
@@ -34,4 +35,8 @@ void PlaySound3()
 {
 	FMOD_Channel_Stop(BGMchannel);
 	FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, BGM3, 0, &BGMchannel);
+}
+void StopSound()
+{
+	FMOD_Channel_Stop(BGMchannel);
 }

@@ -8,4 +8,5 @@ void DeinitSound();
 void PlaySound1();
 void PlaySound2();
 void PlaySound3();
+void StopSound();
 #endif
