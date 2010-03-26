@@ -77,7 +77,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/Lesson46.exe"
+				OutputFile=".\Release/VR.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\Src\Graphics\lib;..\Src\Sound\Lib;..\Src\Sound\Library"
