@@ -239,7 +239,7 @@ void MD5Model::loadMesh(const char *filename) {
   // calculate vertex positions and normals from information in joints
   buildVerts();
   buildNormals();
-  buildTBNs();
+ // buildTBNs();
   LoadOK=true;
 }
 
