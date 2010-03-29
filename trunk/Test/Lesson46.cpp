@@ -204,11 +204,12 @@ void DrawFPS()
 	}
 	
 	g_nFrames++;											
-	sprintf( szTitle, "%4.8f time,%2.0d FPS MX%4.0d MY%4.0d %4.2f %4.2f %4.2f %4.2f MID:%d" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2),menuid);
+	//sprintf( szTitle, "%4.8f time,%2.0d FPS MX%4.0d MY%4.0d %4.2f %4.2f %4.2f %4.2f MID:%d" ,oneframetime,g_nFPS,mouse_x,mouse_y,angle,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2),menuid);
+	sprintf( szTitle, "%2.0d FPS Move Speed:%4.2f x:%4.2f y:%4.2f z:%4.2f" ,g_nFPS,movespeed,(float)MFighter.RefPos()(0),(float)MFighter.RefPos()(1),(float)MFighter.RefPos()(2));
 	glPrints(0,winheight-16,winwidth,winheight,szTitle);
-	char ShowMoveSpeed[32]={0};
-	sprintf(ShowMoveSpeed,"Move Speed:%4.2f",movespeed);
-	glPrints(0,winheight-32,winwidth,winheight,ShowMoveSpeed);
+	//char ShowMoveSpeed[32]={0};
+	//sprintf(ShowMoveSpeed,"Move Speed:%4.2f",movespeed);
+	//glPrints(0,winheight-32,winwidth,winheight,ShowMoveSpeed);
 	
 }
 void Delay(__int64 Us)
@@ -383,6 +384,33 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glewInit();
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5);
 	glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);	
+	glEnable(GL_TEXTURE_2D);
+	CDDS TitleDDS;
+	TitleDDS.loadCompressedTexture("Data/Title.dds",GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, TitleDDS.g_compressedTextureID);			// Select Our Font Texture
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,winwidth,0,winheight,-1,1);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	
+			glBegin(GL_QUADS);
+				glTexCoord2f(0.0f,	1.0f);	glVertex2i(0,winheight);
+				glTexCoord2f(1.0f,	1.0f);	glVertex2i(winwidth,winheight);
+				glTexCoord2f(1.0f,	0.0f);	glVertex2i(winwidth, 0);
+				glTexCoord2f(0.0f,	0.0f);	glVertex2i(0, 0);
+			glEnd();
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+
 	SwapBuffers (window->hDC);
 	m_VBMD = new CLoadVBMD;
 	m_VBMD->m_IsSupportFBO=true;
@@ -751,6 +779,18 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	{
 		InMd5Camera=0;
 		SetCam(Vector3d(-282.958 ,-553.557 ,-43.5626),Vector3d(-279.114 ,-553.811 ,-41.512));
+	}
+	if(menuid==ID_MOVE_SPEED_LOW)
+	{
+		movespeed=1.0;
+	}
+	if(menuid==ID_MOVE_SPEED_MID)
+	{
+		movespeed=5.0;
+	}
+	if(menuid==ID_MOVE_SPEED_HIGH)
+	{
+		movespeed=25.0;
 	}
 
 
