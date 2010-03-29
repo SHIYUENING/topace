@@ -87,6 +87,30 @@ inline void Easy_quat_normalize(__m128 * QuatOut,const __m128 QuatIn)
 	movups	 [ecx],  xmm0  
   } 
 }
+
+#define assert_16_byte_aligned( pointer ) assert( (((UINT_PTR)(pointer))&15) == 0 ); 
+
+#define ALIGN16( x ) __declspec(align(16)) x 
+
+#define ALIGN4_INIT1( X, I ) ALIGN16( static X[4] = { I, I, I, I } ) 
+
+#define R_SHUFFLE_PS( x, y, z, w ) (( (w) & 3 ) << 6 | ( (z) & 3 ) << 4 | ( (y) & 3 ) << 2 | ( (x) & 3 )) 
+
+ 
+
+#define IEEE_SP_ZERO 0 
+
+#define IEEE_SP_SIGN ((unsigned long) ( 1 << 31 )) 
+
+ 
+
+//ALIGN4_INIT1( unsigned long SIMD_SP_quat2mat_x0, IEEE_SP_ZERO, IEEE_SP_SIGN, IEEE_SP_SIGN, IEEE_SP_SIGN ); 
+
+//ALIGN4_INIT1( unsigned long SIMD_SP_quat2mat_x1, IEEE_SP_SIGN, IEEE_SP_ZERO, IEEE_SP_SIGN, IEEE_SP_SIGN ); 
+
+//ALIGN4_INIT1( unsigned long SIMD_SP_quat2mat_x2, IEEE_SP_ZERO, IEEE_SP_SIGN, IEEE_SP_SIGN, IEEE_SP_SIGN ); 
+static const __m128 SIMD_SP_quat2mat_x0={IEEE_SP_ZERO,IEEE_SP_SIGN,IEEE_SP_SIGN,IEEE_SP_SIGN};
+
 inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 {
 	_asm   
