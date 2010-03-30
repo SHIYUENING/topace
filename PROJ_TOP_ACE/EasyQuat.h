@@ -113,7 +113,7 @@ inline void Easy_quat_normalize(__m128 * QuatOut,const __m128 QuatIn)
 //static const __m128 SIMD_SP_quat2mat_x1={IEEE_SP_SIGN,IEEE_SP_ZERO,IEEE_SP_SIGN,IEEE_SP_SIGN};
 //static const __m128 SIMD_SP_quat2mat_x2={IEEE_SP_ZERO,IEEE_SP_SIGN,IEEE_SP_SIGN,IEEE_SP_SIGN};
 __declspec(align(16)) static const unsigned long SIMD_SP_quat2mat_x0[4] ={IEEE_SP_ZERO, IEEE_SP_SIGN, IEEE_SP_SIGN, IEEE_SP_SIGN};
-__declspec(align(16)) static const unsigned long SIMD_SP_quat2mat_x1[4] ={IEEE_SP_SIGN, IEEE_SP_SIGN, IEEE_SP_SIGN, IEEE_SP_SIGN};
+__declspec(align(16)) static const unsigned long SIMD_SP_quat2mat_x1[4] ={IEEE_SP_SIGN, IEEE_SP_ZERO, IEEE_SP_SIGN, IEEE_SP_SIGN};
 __declspec(align(16)) static const unsigned long SIMD_SP_quat2mat_x2[4] ={IEEE_SP_ZERO, IEEE_SP_SIGN, IEEE_SP_SIGN, IEEE_SP_SIGN};
 static const __m128 SIMD_SP_one = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
 static const __m128 SIMD_SP_one1 = _mm_set_ps(1.0f,1.0f,1.0f,1.0f);
@@ -122,7 +122,7 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 {
 	_asm   
 	{
-		PUSHAD
+	//	PUSHAD
 			mov eax,MatrixOut
 			movaps xmm0,QuatIn
 			movaps xmm6,SIMD_SP_one3
@@ -176,7 +176,7 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 			movaps xmm6,SIMD_SP_one3
 			movaps [eax+3*16+0*4], xmm6
 
-		POPAD
+	//	POPAD
 	}
 }
 #endif
