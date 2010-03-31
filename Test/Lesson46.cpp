@@ -54,6 +54,7 @@ int ModelAlphaNumLoaded=0;
 int ballModelID=0;
 int UImodelTest=0;
 float angle= 0.75f;
+float angleSpeed= 1.0f;
 float Updown= 0.0f;
 float angle2=0.0f;
 double oneframetime=0.0;
@@ -512,6 +513,10 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 void Update (DWORD milliseconds)								// Perform Motion Updates Here
 {
 	Updown=angle=angle2=posX=posY=posZ=0.0f;
+	if(g_keys->keyDown ['X'] == TRUE)
+		posY=+movespeed;
+	if(g_keys->keyDown ['Z'] == TRUE)
+		posY=-movespeed;
 	if(g_keys->keyDown ['A'] == TRUE)
 		posX=-movespeed;
 		//angle=-1.0f;
@@ -523,14 +528,14 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(g_keys->keyDown ['S'] == TRUE)
 		posZ=+movespeed;
 	if(g_keys->keyDown [VK_LEFT] == TRUE)
-		angle=-1.5f;
+		angle=-angleSpeed;
 	if(g_keys->keyDown [VK_RIGHT] == TRUE)
-		angle=+1.5f;
+		angle=+angleSpeed;
 	if(g_keys->keyDown [VK_UP] == TRUE)
-		Updown=-1.5f;
+		Updown=-angleSpeed;
 		//posY=-5.0f*(1.0f*doangle+0.05f);
 	if(g_keys->keyDown [VK_DOWN] == TRUE)
-		Updown=+1.5f;
+		Updown=+angleSpeed;
 		//posY=+5.0f*(1.0f*doangle+0.05f);
 	/*if(g_keys->keyDown ['Z'] == TRUE)
 		posZ=-10.0f;
@@ -557,7 +562,12 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 
 	if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
 	{
-		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
+		//ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
+	}
+	if(g_keys->keyDown [VK_HOME] == TRUE)
+	{
+		InMd5Camera=0;
+		SetCam(Vector3d(1974.1 ,-571.056 ,-1314.86),Vector3d(1822.22 ,-576.522 ,-1286.59));
 	}
 	if(menuid==ID_MENU_EXIT)
 		TerminateApplication (g_window);
@@ -782,15 +792,33 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	}
 	if(menuid==ID_MOVE_SPEED_LOW)
 	{
+		//angleSpeed=1.0;
 		movespeed=1.0;
 	}
 	if(menuid==ID_MOVE_SPEED_MID)
 	{
+		//angleSpeed=2.0;
 		movespeed=5.0;
 	}
 	if(menuid==ID_MOVE_SPEED_HIGH)
 	{
+		//angleSpeed=3.0;
 		movespeed=25.0;
+	}
+	if(menuid==ID_ANGLE_SPEED_LOW)
+	{
+		angleSpeed=1.0;
+		//movespeed=1.0;
+	}
+	if(menuid==ID_ANGLE_SPEED_MID)
+	{
+		angleSpeed=2.0;
+		//movespeed=5.0;
+	}
+	if(menuid==ID_ANGLE_SPEED_HIGH)
+	{
+		angleSpeed=3.0;
+		//movespeed=25.0;
 	}
 
 
