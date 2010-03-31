@@ -47,6 +47,27 @@ inline void Easy_matrix_identity(__m128 Matrix[4])
 	Matrix[3] = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
 	*/
 }
+inline void Easy_matrix_identity(__m128 * Matrix,const unsigned int MatrixNum)
+{
+	_asm
+	{
+		movaps xmm0,IdentityMatrix0
+		movaps xmm1,IdentityMatrix1
+		movaps xmm2,IdentityMatrix2
+		movaps xmm3,IdentityMatrix3
+		mov ecx, MatrixNum
+		mov edx, Matrix
+sse_Loop:
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
+		add edx,64
+		dec ecx
+		jnz sse_Loop
+	}
+	
+}
 inline void Easy_matrix_transpose(float m[4][4]) 
 {
     int i, j;
@@ -392,7 +413,7 @@ inline void Easy_matrix_rotate_quat(float m[4][4], float q[4]) {
 	Easy_matrix_mult(&m[0][0],&m[0][0],&R[0][0]);
 }
 inline void Easy_matrix_rotate_quat(__m128 m[4],const __m128 q) {
-    float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
+ /*   float s, xs, ys, zs, wx, wy, wz, xx, xy, xz, yy, yz, zz, l;
     __m128 R[4];
 
 	l = q.m128_f32[0] * q.m128_f32[0] + q.m128_f32[1] * q.m128_f32[1] + q.m128_f32[2] * q.m128_f32[2] + q.m128_f32[3] * q.m128_f32[3];
@@ -426,7 +447,11 @@ inline void Easy_matrix_rotate_quat(__m128 m[4],const __m128 q) {
     R[2].m128_f32[2] = 1.0f - (xx + yy);
     R[3].m128_f32[0] = R[3].m128_f32[1] = R[3].m128_f32[2] = R[0].m128_f32[3] = R[1].m128_f32[3] = R[2].m128_f32[3] = 0.0f;
     R[3].m128_f32[3] = 1.0f;
-
+*/
+	__m128 q2;
+	__m128 R[4];
+	Easy_quat_normalize(&q2,q);
+	Easy_quat_to_matrix(R,q2);
     //Easy_matrix_mult(m, m, R);
 	Easy_matrix_mult(m,m,R);
 }
