@@ -1224,6 +1224,15 @@ inline void Test_matrix()
 	TestGet2=Easy_vector_dot(TestSSE,TestSSE2);
 
 
+	__m128 testMAT[64];
+	__m128 testJoint[32];
+	for(int i=0;i<16;i++)
+	{
+		testJoint[i*2]=_mm_set_ps(4.0f,3.0f,2.0f,1.0f);
+		testJoint[i*2+1]=IdentityMatrix0;
+	}
+	Easy_matrix_identity(testMAT,4);
+	Easy_Joint_to_matrix(testMAT,testJoint,2);
 
 }
 #endif
