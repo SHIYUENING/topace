@@ -189,7 +189,7 @@ if(umeshs.count>0) then
 		WriteLong w -1
 		WriteLong w -1
 
-		------------------------
+		--0x40-------------------
 		WriteLong w 4 --obj
 		vptr=ftell w
 		WriteLong w -1
@@ -198,12 +198,14 @@ if(umeshs.count>0) then
 		vtptr=ftell w
 		WriteLong w -1
 
+		--0x50-------------------
 		fptr=ftell w
 		WriteLong w -1
 		WriteLong w umeshs[i].numfaces
 		WriteLong w umeshs[i].numverts
 		WriteLong w -1
 
+		--0x60-------------------
 		WriteString w umeshs[i].name
 		for j= umeshs[i].name.count to 0x1e do
 		(
@@ -218,6 +220,53 @@ if(umeshs.count>0) then
 			(
 				WriteByte w -1
 			)
+		)
+		
+		--0x80-------------------
+		if ((isProperty umeshs[i] #castshadow)==false) then
+		(
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			
+			WriteLong w -1
+		)
+		else
+		(
+			if (umeshs[i].castShadow) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (umeshs[i].ReceivingLight) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (umeshs[i].CanRender) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (umeshs[i].cartoon) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (umeshs[i].Wireframe) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (umeshs[i].OneSide) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (umeshs[i].translucented) then
+				WriteLong w 1
+			else
+				WriteLong w 0	
+				
+			WriteLong w -1
 		)
 		-------vert---------
 		nowaddr=ftell w
@@ -682,6 +731,73 @@ if(ubones.count>0) then
 		for j=ubones[i].name.count to 0x1e do
 		(
 			WriteByte w 0
+		)
+		
+		--0x80
+		if ((isProperty ubones[i] #Pitch)==false) then
+		(
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			WriteLong w 0
+			
+			WriteLong w 0
+			WriteLong w 0
+			
+			WriteLong w -1
+			WriteLong w -1
+		)
+		else
+		(
+			if (ubones[i].Pitch) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].Yaw) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].Roll) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].Enginethrust) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].speedbrake) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].gear) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].gearcap) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].missile) then
+				WriteLong w 1
+			else
+				WriteLong w 0
+			if (ubones[i].missiledoor) then
+				WriteLong w 1
+			else
+				WriteLong w 0	
+			if (ubones[i].special) then
+				WriteLong w 1
+			else
+				WriteLong w 0	
+				
+			
+			WriteLong w -1
+			WriteLong w -1
 		)
 
 	--pos
