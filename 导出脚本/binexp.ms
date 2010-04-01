@@ -137,42 +137,11 @@ if(umeshs.count>0) then
 			select umeshs[i]
 			max modify mode
 			bonnum=(skinOps.GetNumberBones umeshs[i].modifiers[#Skin])
-			for j = 1 to 4 do
-			(
-				if(j<=bonnum) then
-				(
-					try
-						WriteFloat w (skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] 1 j)
-					catch
-						WriteFloat w 0
-				)
-				else
-				(
-					WriteFloat w 0
-				)
-			)
-			for j = 1 to 4 do
-			(
-				if(j<=bonnum) then
-				(
-					WriteLong w (findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] j 1)))
-				)
-				else
-				(
-					WriteLong w 0
-				)
-			)
 			deselect umeshs[i]
 		)
-		else
-		(
-			for j = 1 to 8 do
-			(
-				WriteLong w 0
-			)
-		)
 
-		--0x30---------------
+
+		--0x10---------------
 		WriteByte w bonnum
 		if(bonnum>1) then
 		(
@@ -189,7 +158,7 @@ if(umeshs.count>0) then
 		WriteLong w -1
 		WriteLong w -1
 
-		--0x40-------------------
+		--0x20-------------------
 		WriteLong w 4 --obj
 		vptr=ftell w
 		WriteLong w -1
@@ -198,14 +167,15 @@ if(umeshs.count>0) then
 		vtptr=ftell w
 		WriteLong w -1
 
-		--0x50-------------------
+		--0x30-------------------
 		fptr=ftell w
 		WriteLong w -1
 		WriteLong w umeshs[i].numfaces
 		WriteLong w umeshs[i].numverts
+		boneptr=ftell w
 		WriteLong w -1
 
-		--0x60-------------------
+		--0x40-------------------
 		WriteString w umeshs[i].name
 		for j= umeshs[i].name.count to 0x1e do
 		(
@@ -222,7 +192,7 @@ if(umeshs.count>0) then
 			)
 		)
 		
-		--0x80-------------------
+		--0x60-------------------
 		if ((isProperty umeshs[i] #castshadow)==false) then
 		(
 			WriteLong w 0
@@ -362,6 +332,59 @@ if(umeshs.count>0) then
 			WriteLong w ((getFace umeshs[i] v)[1]-1)
 			WriteLong w ((getFace umeshs[i] v)[2]-1)	
 			WriteLong w ((getFace umeshs[i] v)[3]-1)
+		)
+		
+		-------bone---------
+		nowaddr=ftell w
+		if((yus nowaddr 16)!=0) then
+		(
+			wnull=16-(yus nowaddr 16)
+			for temnul= 1 to wnull do
+			(
+				WriteByte w -1
+			)
+		)
+		nowaddr=ftell w
+		
+		fseek w boneptr #seek_set
+		WriteLong w nowaddr
+		fseek w nowaddr #seek_set
+		
+		if(umeshs[i].modifiers[#Skin]!=undefined) then
+		(
+			select umeshs[i]
+			max modify mode
+			bonnum=(skinOps.GetNumberBones umeshs[i].modifiers[#Skin])
+			for v=1 to umeshs[i].numverts do
+			(
+				local j=1
+				local k=1
+				local boneidxs=#(0,0,0,0)
+				while j<=bonnum and k<=4 do
+				(
+					try
+					(
+						WriteFloat w (skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] v j)
+						boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] j 1)))
+						
+						k=k+1
+					)
+					catch
+					(
+						--skip
+					)
+					j=j+1
+				)
+				for j = k to 4 do
+				(
+					WriteFloat w 0
+				)
+				for j = 1 to 4 do
+				(
+						WriteLong w boneidxs[j]
+				)
+			)
+			deselect umeshs[i]
 		)
 	)
 )
