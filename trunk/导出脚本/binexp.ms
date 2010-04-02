@@ -195,47 +195,53 @@ if(umeshs.count>0) then
 		--0x60-------------------
 		if ((isProperty umeshs[i] #castshadow)==false) then
 		(
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
 			
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
+			
+			WriteByte w -1
+			
+			WriteLong w -1
 			WriteLong w -1
 		)
 		else
 		(
 			if (umeshs[i].castShadow) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (umeshs[i].ReceivingLight) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (umeshs[i].CanRender) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (umeshs[i].cartoon) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (umeshs[i].Wireframe) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (umeshs[i].OneSide) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (umeshs[i].translucented) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0	
+				WriteByte w 0	
 				
+			WriteByte w -1	
+			WriteLong w -1
 			WriteLong w -1
 		)
 		-------vert---------
@@ -759,67 +765,71 @@ if(ubones.count>0) then
 		--0x80
 		if ((isProperty ubones[i] #Pitch)==false) then
 		(
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
 			
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
-			WriteLong w 0
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
+			WriteByte w 0
 			
-			WriteLong w 0
-			WriteLong w 0
+			WriteByte w 0
+			WriteByte w 0
 			
-			WriteLong w -1
+			WriteByte w -1
+			WriteByte w -1
+			
 			WriteLong w -1
 		)
 		else
 		(
 			if (ubones[i].Pitch) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].Yaw) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].Roll) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].Enginethrust) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].speedbrake) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].gear) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].gearcap) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].missile) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0
+				WriteByte w 0
 			if (ubones[i].missiledoor) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0	
+				WriteByte w 0	
 			if (ubones[i].special) then
-				WriteLong w 1
+				WriteByte w 1
 			else
-				WriteLong w 0	
+				WriteByte w 0	
 				
 			
-			WriteLong w -1
+			WriteByte w -1
+			WriteByte w -1
+			
 			WriteLong w -1
 		)
 
