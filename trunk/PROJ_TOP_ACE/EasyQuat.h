@@ -118,6 +118,7 @@ __declspec(align(16)) static const unsigned long SIMD_SP_quat2mat_x2[4] ={IEEE_S
 static const __m128 SIMD_SP_one = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
 static const __m128 SIMD_SP_one1 = _mm_set_ps(1.0f,1.0f,1.0f,1.0f);
 static const __m128 SIMD_SP_one3 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+static const __m128 SSE_ONE = _mm_set_ps(1.0f,1.0f,1.0f,1.0f);
 inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 {
 	_asm   
@@ -308,6 +309,28 @@ sse_Loop:
 			dec ecx
 			jnz sse_Loop
 	//	POPAD
+	}
+}
+//QuatOut=QuatIn1*Weight+QuatIn2*(1-Weight);
+inline void Easy_quat_Mix(__m128 * QuatOut,const __m128 QuatIn1,const __m128 QuatIn2,const float Weight)
+{
+	_asm   
+	{
+		movaps xmm1 , SSE_ONE
+		movaps xmm2 , QuatIn1
+		movaps xmm3 , QuatIn2
+		mov eax ,Weight
+		mov ecx ,QuatOut
+		mov [ecx],eax
+		mov [ecx+4],eax
+		mov [ecx+8],eax
+		mov [ecx+12],eax
+		movaps xmm0 , [ecx]
+		subps  xmm1 , xmm0
+		mulps  xmm0 , xmm2
+		mulps  xmm1 , xmm3
+		addps  xmm0 , xmm1
+		movaps [ecx] , xmm0
 	}
 }
 #endif
