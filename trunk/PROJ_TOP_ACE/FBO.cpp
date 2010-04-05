@@ -252,6 +252,7 @@ void FBOS_BLOOM()
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	
 	glEnable( GL_BLEND );
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	ToneMappingGLSL();
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);

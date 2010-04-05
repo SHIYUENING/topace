@@ -56,7 +56,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 
 	glShadeModel(GL_SMOOTH);									// Select Smooth Shading
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.5);						// Set The Clear Color To Black
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);						// Set The Clear Color To Black
 
 	return TRUE;												// Return TRUE (Initialization Successful)
 }
