@@ -81,6 +81,7 @@ w = fopen out_name "w+"
 	WriteLong w ulights.count
 	WriteLong w ucameras.count
 	
+	RootboneAddr=ftell w
 	WriteLong w 0
 )
 
@@ -621,6 +622,14 @@ if(ubones.count>0) then
 			append rootboneidx i
 		)
 	)
+	
+	nowaddr=ftell w
+	fseek w RootboneAddr #seek_set
+	WriteLong w rootboneidx[1]
+	fseek w nowaddr #seek_set
+
+
+	
 	for i=1 to ubones.count do
 	(
 		nowaddr=ftell w
@@ -647,9 +656,10 @@ if(ubones.count>0) then
 			tidx=findItem rootboneidx i
 			if(tidx==rootboneidx.count) then
 			(
+				/*
 				if(tidx!=1) then
 					WriteLong w rootboneidx[1]
-				else
+				else  */
 					WriteLong w 0
 			)
 			else
@@ -662,9 +672,10 @@ if(ubones.count>0) then
 			tidx=findItem ubones[i].parent.children ubones[i]
 			if(tidx==ubones[i].parent.children.count) then
 			(
+				/*
 				if(tidx!=1) then
 					WriteLong w  (findItem ubones ubones[i].parent.children[1])
-				else
+				else*/
 					WriteLong w 0
 			)
 			else
