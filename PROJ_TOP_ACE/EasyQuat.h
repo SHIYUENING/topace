@@ -181,7 +181,7 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 	}
 }
 
-inline void Easy_Joint_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn,const __m128 PosIn)
+inline void Easy_Joint_to_matrix(__m128 * MatrixOut,const __m128 QuatIn,const __m128 PosIn)
 {
 	_asm   
 	{
