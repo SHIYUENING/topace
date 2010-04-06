@@ -56,7 +56,7 @@ bonedef = attributes "TOP ACE Bone Data"
 fn addall= 
 (
 	count=#(0,0)
-	for g in Geometry where (classof g == Editable_mesh) do
+	for g in Geometry where (classof g.baseObject == Editable_mesh) do
 	(
 		if ((isProperty g #castshadow)==false) then
 		(
@@ -65,7 +65,7 @@ fn addall=
 		)
 	)
 	
-	for g in Geometry where (classof g == BoneGeometry) do
+	for g in Geometry where (classof g.baseObject == BoneGeometry) do
 	(
 		if ((isProperty g #Pitch)==false) then
 		(
