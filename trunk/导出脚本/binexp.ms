@@ -48,7 +48,7 @@ w = fopen out_name "w+"
 	ulights=#()
 	ucameras=#()
 
-	for g in Geometry where (classof g == Editable_mesh) do
+	for g in Geometry where (classof g.baseObject == Editable_mesh) do
 	(
 		append umeshs g
 	)
@@ -58,18 +58,18 @@ w = fopen out_name "w+"
 		append mats g.name
 	)
 	*/
-	for g in Geometry where (classof g == BoneGeometry) do
+	for g in Geometry where (classof g.baseObject == BoneGeometry) do
 	(
 		append ubones g
 	)
 	--/*
-	for g in Lights where (classof g != Targetobject) do
+	for g in Lights where (classof g.baseObject != Targetobject) do
 	(
 		append ulights g
 	)
 	--*/
 	--/*
-	for g in Cameras where (classof g != Targetobject) do
+	for g in Cameras where (classof g.baseObject != Targetobject) do
 	(
 		append ucameras g
 	)
