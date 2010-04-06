@@ -728,7 +728,7 @@ if(ubones.count>0) then
 		WriteFloat w cpos[2]
 		WriteFloat w cpos[3]
 		)
-		WriteFloat w 0
+		WriteFloat w 1
 		
 		--0x30
 		WriteFloat w crotation.x
