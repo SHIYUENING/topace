@@ -21,7 +21,7 @@ static const __m128 IdentityMatrix0 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
 static const __m128 IdentityMatrix1 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
 static const __m128 IdentityMatrix2 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
 static const __m128 IdentityMatrix3 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
- 
+static const __m128 IdentityMatrixSSE[4]={IdentityMatrix0,IdentityMatrix1,IdentityMatrix2,IdentityMatrix3};
 inline void Easy_matrix_identity(float Matrix[4][4])
 {
 	memcpy(Matrix,IdentityMatrix,4*4*sizeof(float));
@@ -491,14 +491,17 @@ inline void Easy_matrix_scale(__m128 MatrixOut[4], const __m128 VecIn)
 		movaps xmm4,VecIn
 		movaps xmm5,xmm4
 		movaps xmm6,xmm4
+		movaps xmm7,xmm4
 
 		shufps xmm4,xmm4,0x00
 		shufps xmm5,xmm5,0x55
 		shufps xmm6,xmm6,0xaa
+		shufps xmm7,xmm7,0xff
 
 		mulps xmm0,xmm4
 		mulps xmm1,xmm5
 		mulps xmm2,xmm6
+		mulps xmm3,xmm7
 
 		mov edx,MatrixOut
 		movaps [edx],xmm0
