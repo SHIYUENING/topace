@@ -181,7 +181,7 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 	}
 }
 
-inline void Easy_Joint_to_matrix(__m128 * MatrixOut,const __m128 QuatIn,const __m128 PosIn)
+inline void Easy_Joint_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn,const __m128 PosIn)
 {
 	_asm   
 	{
@@ -189,6 +189,10 @@ inline void Easy_Joint_to_matrix(__m128 * MatrixOut,const __m128 QuatIn,const __
 			mov eax,MatrixOut
 			movaps xmm0,QuatIn
 			movaps xmm6,PosIn
+
+			mov eax,MatrixOut
+			movaps xmm0,QuatIn
+			movaps xmm6,SIMD_SP_one3
 
 			movaps xmm1, xmm0 // xmm1 = x, y, z, w 
 			addps xmm1, xmm1 // xmm1 = x2, y2, z2, w2 
