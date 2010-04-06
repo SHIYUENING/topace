@@ -342,23 +342,24 @@ if(umeshs.count>0) then
 		)
 		
 		-------bone---------
-		nowaddr=ftell w
-		if((yus nowaddr 16)!=0) then
-		(
-			wnull=16-(yus nowaddr 16)
-			for temnul= 1 to wnull do
-			(
-				WriteByte w -1
-			)
-		)
-		nowaddr=ftell w
-		
-		fseek w boneptr #seek_set
-		WriteLong w nowaddr
-		fseek w nowaddr #seek_set
 		
 		if(umeshs[i].modifiers[#Skin]!=undefined) then
 		(
+			nowaddr=ftell w
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
+			nowaddr=ftell w
+			
+			fseek w boneptr #seek_set
+			WriteLong w nowaddr
+			fseek w nowaddr #seek_set
+		
 			select umeshs[i]
 			max modify mode
 			bonnum=(skinOps.GetNumberBones umeshs[i].modifiers[#Skin])
