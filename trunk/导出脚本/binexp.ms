@@ -342,6 +342,16 @@ if(umeshs.count>0) then
 		)
 		
 		-------bone---------
+		local haspartbone=false
+		local fatherid=0
+		if(umeshs[i].parent!=undefined) then
+		(
+			if(classof umeshs[i].parent.baseObject == BoneGeometry) then
+			(
+				haspartbone=true
+				fatherid=(findItem ubones umeshs[i].parent)
+			)
+		)
 		
 		if(umeshs[i].modifiers[#Skin]!=undefined) then
 		(
@@ -393,6 +403,42 @@ if(umeshs.count>0) then
 				)
 			)
 			deselect umeshs[i]
+		)
+		else if(haspartbone==true) then
+		(
+			nowaddr=ftell w
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
+			nowaddr=ftell w
+			
+			fseek w boneptr #seek_set
+			WriteLong w nowaddr
+			fseek w nowaddr #seek_set
+			
+			bonnum=1
+			for v=1 to umeshs[i].numverts do
+			(
+				local j=1
+				local k=1
+				local boneidxs=#(fatherid,0,0,0)
+				
+				WriteFloat w 1
+						
+				for j = 2 to 4 do
+				(
+					WriteFloat w 0
+				)
+				for j = 1 to 4 do
+				(
+						WriteLong w boneidxs[j]
+				)
+			)
 		)
 	)
 )
@@ -1140,7 +1186,7 @@ if(ubones.count>0) then
 				WriteFloat w tmprr[2]
 				WriteFloat w tmprr[3]
 			)
-			WriteFloat w 0.0
+			WriteFloat w 1.0
 		)
 		)
 
