@@ -750,8 +750,8 @@ if(ubones.count>0) then
 		)
 		else
 		(
-			cpos=ubones[i].parent.pos - ubones[i].pos
-			crotation=normalize (ubones[i].parent.rotation - ubones[i].rotation)
+			cpos= ubones[i].pos - ubones[i].parent.pos
+			crotation=normalize ( ubones[i].rotation-ubones[i].parent.rotation)
 			cscale=ubones[i].scale
 		)
 		
@@ -1072,9 +1072,9 @@ if(ubones.count>0) then
 
 				WriteLong w lastaddr[j]
 			)
-			tempt=ubones[i].rotation.controller.keys[j].time
+			local tempt=ubones[i].rotation.controller.keys[j].time
 			WriteLong w tempt
-			tmprr=normalize ((EulerAngles (at time tempt animate on ubones[i].rotation.controller.x_rotation) (at time tempt animate on ubones[i].rotation.controller.y_rotation) (at time tempt animate on ubones[i].rotation.controller.z_rotation)) as quat)
+			local tmprr=inverse (at time tempt animate on ubones[i].rotation.controller.value)
 
 			WriteFloat w tmprr.x
 			if(flip) then
