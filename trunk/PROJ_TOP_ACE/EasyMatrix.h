@@ -529,6 +529,38 @@ inline void Easy_matrix_copy(__m128 MatrixOut[4],const __m128 MatrixIn[4])
 inline void Easy_matrix_copy(float dest[4][4], float src[4][4]) {
     memcpy(dest, src, 16 * sizeof(float));
 }
+inline void Easy_matrix_copy(__m128 MatrixOut[4],const float MatrixIn[4][4]) 
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movups xmm0,[edx]
+		movups xmm1,[edx+16]
+		movups xmm2,[edx+32]
+		movups xmm3,[edx+48]
+		mov edx,MatrixOut
+		movaps [edx],xmm0
+		movaps [edx+16],xmm1
+		movaps [edx+32],xmm2
+		movaps [edx+48],xmm3
+	}
+}
+inline void Easy_matrix_copy(float MatrixOut[4][4],const __m128 MatrixIn[4]) 
+{
+	_asm
+	{
+		mov edx,MatrixIn
+		movaps xmm0,[edx]
+		movaps xmm1,[edx+16]
+		movaps xmm2,[edx+32]
+		movaps xmm3,[edx+48]
+		mov edx,MatrixOut
+		movups [edx],xmm0
+		movups [edx+16],xmm1
+		movups [edx+32],xmm2
+		movups [edx+48],xmm3
+	}
+}
 //http://www.devmaster.net/forums/showthread.php?t=14569
 inline void Easy_matrix_mult_vector3X3(float vOut[3],const float * m,const float v[3])
 {
