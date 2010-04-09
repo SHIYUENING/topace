@@ -190,10 +190,6 @@ inline void Easy_Joint_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn,const _
 			movaps xmm0,QuatIn
 			movaps xmm6,PosIn
 
-			mov eax,MatrixOut
-			movaps xmm0,QuatIn
-			movaps xmm6,SIMD_SP_one3
-
 			movaps xmm1, xmm0 // xmm1 = x, y, z, w 
 			addps xmm1, xmm1 // xmm1 = x2, y2, z2, w2 
 
