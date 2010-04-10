@@ -333,4 +333,73 @@ inline void Easy_quat_Mix(__m128 * QuatOut,const __m128 QuatIn1,const __m128 Qua
 		movaps [ecx] , xmm0
 	}
 }
+#define vec4f_swizzleM(p,q,r,s) ((s)<<6|(r)<<4|(q)<<2|(p))
+#define swiz1m vec4f_swizzleM(3,3,3,3)
+#define swiz2m vec4f_swizzleM(2,0,1,0)
+#define swiz3m vec4f_swizzleM(1,2,0,0)
+#define swiz4m vec4f_swizzleM(3,3,3,1)
+#define swiz5m vec4f_swizzleM(0,1,2,1)
+#define swiz6m vec4f_swizzleM(1,2,0,2)
+#define swiz7m vec4f_swizzleM(2,0,1,2)
+static const int zero=0;
+static const int flipSign=0x80000000;
+static const __m128 quat_mask=_mm_setr_ps( *(float*)&zero,
+*(float*)&zero,
+*(float*)&zero,
+*(float*)&flipSign);
+inline void Easy_quat_Mult(__m128 * QuatOut,const __m128 QuatIn1,const __m128 QuatIn2)
+{
+	_asm   
+	{
+		movaps xmm6,QuatIn1
+		movaps xmm7,QuatIn2
+
+		movaps xmm4,xmm6
+		movaps xmm0,xmm7
+		shufps xmm0,xmm0,swiz1m
+		mulps  xmm4,xmm0//__m128 mul1=_mm_mul_ps(a,swiz1);
+		movaps xmm5,xmm6
+		movaps xmm0,xmm7
+		shufps xmm5,xmm5,swiz2m
+		shufps xmm0,xmm0,swiz3m
+		mulps  xmm5,xmm0//__m128 mul2=_mm_mul_ps(swiz2,swiz3);
+		subps  xmm4,xmm5//__m128 retVal=_mm_sub_ps(mul1,mul2);
+
+		movaps xmm5,xmm6
+		movaps xmm0,xmm7
+		shufps xmm5,xmm5,swiz6m
+		shufps xmm0,xmm0,swiz7m
+		mulps  xmm5,xmm0//__m128 mul4=_mm_mul_ps(swiz6,swiz7);
+		shufps xmm6,xmm6,swiz4m
+		shufps xmm7,xmm7,swiz5m
+		mulps  xmm6,xmm7//__m128 mul3=_mm_mul_ps(swiz4,swiz5);
+		xorps  xmm5,quat_mask//__m128 flip1=_mm_xor_ps(mul4,quat_mask);
+		xorps  xmm6,quat_mask//__m128 flip2=_mm_xor_ps(mul3,quat_mask);
+		addps  xmm5,xmm6//__m128 retVal2=_mm_add_ps(flip1,flip2);
+
+		addps  xmm4,xmm5
+		mov eax,QuatOut
+		movaps [eax] , xmm4
+	}
+}
+#define vec4f_swizzle(v,p,q,r,s) (_mm_shuffle_ps( (v),(v), ((s)<<6|(r)<<4|(q)<<2|(p))))
+inline void  quat_mul(__m128 * QuatOut,__m128 a, __m128 b)
+{
+__m128 swiz1=vec4f_swizzle(b,3,3,3,3);
+__m128 swiz2=vec4f_swizzle(a,2,0,1,0);
+__m128 swiz3=vec4f_swizzle(b,1,2,0,0);
+__m128 swiz4=vec4f_swizzle(a,3,3,3,1);
+__m128 swiz5=vec4f_swizzle(b,0,1,2,1);
+__m128 swiz6=vec4f_swizzle(a,1,2,0,2);
+__m128 swiz7=vec4f_swizzle(b,2,0,1,2);
+__m128 mul4=_mm_mul_ps(swiz6,swiz7);
+__m128 mul3=_mm_mul_ps(swiz4,swiz5);
+__m128 mul2=_mm_mul_ps(swiz2,swiz3);
+__m128 mul1=_mm_mul_ps(a,swiz1);
+__m128 flip1=_mm_xor_ps(mul4,quat_mask);
+__m128 flip2=_mm_xor_ps(mul3,quat_mask);
+__m128 retVal=_mm_sub_ps(mul1,mul2);
+__m128 retVal2=_mm_add_ps(flip1,flip2);
+QuatOut[0]= _mm_add_ps(retVal,retVal2);
+}
 #endif
