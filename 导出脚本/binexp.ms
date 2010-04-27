@@ -891,9 +891,26 @@ if(ubones.count>0) then
 			WriteLong w -1
 		)
 		
+		--0x90
 		WriteFloat w localboneTM.row1[1]
+		WriteFloat w localboneTM.row2[1]
+		WriteFloat w localboneTM.row3[1]
+		WriteFloat w localboneTM.row4[1]
+		
 		WriteFloat w localboneTM.row1[2]
+		WriteFloat w localboneTM.row2[2]
+		WriteFloat w localboneTM.row3[2]
+		WriteFloat w localboneTM.row4[2]
+		
 		WriteFloat w localboneTM.row1[3]
+		WriteFloat w localboneTM.row2[3]
+		WriteFloat w localboneTM.row3[3]
+		WriteFloat w localboneTM.row4[3]
+		
+		WriteFloat w 0
+		WriteFloat w 0
+		WriteFloat w 0
+		WriteFloat w 1
 
 	--pos
 		--donghua	
