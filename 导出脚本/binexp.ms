@@ -742,18 +742,18 @@ if(ubones.count>0) then
 			WriteLong w (findItem ubones ubones[i].children[1])
 		)
 		
-		if(ubones[i].parent==undefined) then
-		(
-			cpos=ubones[i].pos
-			crotation=normalize ubones[i].rotation
-			cscale=ubones[i].scale
-		)
-		else
-		(
-			cpos= ubones[i].pos - ubones[i].parent.pos
-			crotation=normalize ( ubones[i].rotation-ubones[i].parent.rotation)
-			cscale=ubones[i].scale
-		)
+		
+			cpos=in coordsys parent ubones[i].pos
+			crotation=normalize ((at time 0 animate on ubones[i].rotation.controller.value))
+			cscale=in coordsys parent ubones[i].scale
+		
+		----------------------------------------------------------------------
+		local localboneTM=matrix3 0
+		
+		localboneTM+=crotation as matrix3
+		localboneTM.row4+=cpos
+		localboneTM=scale localboneTM cscale
+		
 		
 		if(ubones[i].parent==undefined) then
 			WriteLong w 0
@@ -890,6 +890,10 @@ if(ubones.count>0) then
 			
 			WriteLong w -1
 		)
+		
+		WriteFloat w localboneTM.row1[1]
+		WriteFloat w localboneTM.row1[2]
+		WriteFloat w localboneTM.row1[3]
 
 	--pos
 		--donghua	
