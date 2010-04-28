@@ -892,6 +892,8 @@ if(ubones.count>0) then
 		)
 		
 		--0x90
+		localboneTM=inverse localboneTM
+		
 		WriteFloat w localboneTM.row1[1]
 		WriteFloat w localboneTM.row2[1]
 		WriteFloat w localboneTM.row3[1]
