@@ -40,7 +40,7 @@ w = fopen out_name "w+"
 	
 	
 )
-
+sliderTime=0
 (
 	umeshs=#()
 	--mats=#()
@@ -258,7 +258,7 @@ if(umeshs.count>0) then
 			(
 				WriteFloat w (getVert umeshs[i] v)[1]
 				WriteFloat w (getVert umeshs[i] v)[3]
-				WriteFloat w (getVert umeshs[i] v)[2]
+				WriteFloat w (0-(getVert umeshs[i] v)[2])
 				WriteFloat w 1.0
 			)
 		)
@@ -286,7 +286,7 @@ if(umeshs.count>0) then
 			(
 				WriteFloat w (getNormal umeshs[i] v)[1]
 				WriteFloat w (getNormal umeshs[i] v)[3]
-				WriteFloat w (getNormal umeshs[i] v)[2]
+				WriteFloat w (0-(getNormal umeshs[i] v)[2])
 				WriteFloat w 0.0
 			)
 		)
@@ -639,7 +639,7 @@ if(sceneMaterials.count>0) then
 )
 
 ------------BONE------------/
-sliderTime=0
+
 if(ubones.count>0) then
 (
 	nowaddr=ftell w
@@ -744,14 +744,31 @@ if(ubones.count>0) then
 		
 		
 			cpos=in coordsys parent ubones[i].pos
+			if(ubones[i].parent!=undefined) then
+			(
 			crotation=normalize ((at time 0 animate on ubones[i].rotation.controller.value))
+			)
+			else
+			(
+			crotation=normalize ((ubones[i].transform.rotation))
+			)
 			cscale=in coordsys parent ubones[i].scale
 		
 		----------------------------------------------------------------------
 		local localboneTM=matrix3 0
+		local tmrot=crotation
+		local tttpos=cpos
+		if(flip) then
+		(
+			teule=(quatToEuler crotation)
+			tmrot=(eulerToQuat (EulerAngles teule.x teule.z teule.y))
+			
+			tttpos.y=cpos.z
+			tttpos.z=0-cpos.y
+		)
 		
-		localboneTM+=crotation as matrix3
-		localboneTM.row4+=cpos
+		localboneTM+=tmrot as matrix3
+		localboneTM.row4+=tttpos
 		localboneTM=scale localboneTM cscale
 		
 		
@@ -767,7 +784,7 @@ if(ubones.count>0) then
 		if(flip) then
 		(
 		WriteFloat w cpos[3]
-		WriteFloat w cpos[2]
+		WriteFloat w (0-cpos[2])
 		)
 		else
 		(
@@ -780,8 +797,8 @@ if(ubones.count>0) then
 		WriteFloat w crotation.x
 		if(flip) then
 		(
-			WriteFloat w crotation.z
-			WriteFloat w crotation.y
+			WriteFloat w tmrot.y
+			WriteFloat w tmrot.z
 		)
 		else
 		(
@@ -1004,7 +1021,7 @@ if(ubones.count>0) then
 				if(flip) then
 				(
 					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position)
-					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position)
+					WriteFloat w (0-(at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position))
 				)
 				else
 				(
@@ -1110,8 +1127,10 @@ if(ubones.count>0) then
 			WriteFloat w tmprr.x
 			if(flip) then
 			(
-				WriteFloat w tmprr.z
-				WriteFloat w tmprr.y
+				local teule=(quatToEuler tmprr)
+				local tqat=(eulerToQuat (EulerAngles teule.x teule.z teule.y))
+				WriteFloat w tqat.y
+				WriteFloat w tqat.z
 			)
 			else
 			(
@@ -1332,7 +1351,7 @@ if(ulights.count>0) then
 		if(flip) then
 		(
 			WriteFloat w lpos[3]
-			WriteFloat w lpos[2]
+			WriteFloat w (0-lpos[2])
 		)
 		else
 		(
@@ -1346,8 +1365,10 @@ if(ulights.count>0) then
 		WriteFloat w lrotation.x
 		if(flip) then
 		(
-			WriteFloat w lrotation.z
-			WriteFloat w lrotation.y
+			local teule=(quatToEuler lrotation)
+			local tqat=(eulerToQuat (EulerAngles teule.x teule.z teule.y))
+			WriteFloat w tqat.y
+			WriteFloat w tqat.z
 		)
 		else
 		(
@@ -1611,7 +1632,7 @@ if(ucameras.count>0) then
 		if(flip) then
 		(
 		WriteFloat w lpos[3]
-		WriteFloat w lpos[2]
+		WriteFloat w (0-lpos[2])
 		)
 		else
 		(
@@ -1625,8 +1646,10 @@ if(ucameras.count>0) then
 		WriteFloat w lrotation.x
 		if(flip) then
 		(
-			WriteFloat w lrotation.z
-			WriteFloat w lrotation.y
+			local teule=(quatToEuler lrotation)
+			local tqat=(eulerToQuat (EulerAngles teule.x teule.z teule.y))
+			WriteFloat w tqat.y
+			WriteFloat w tqat.z
 		)
 		else
 		(
