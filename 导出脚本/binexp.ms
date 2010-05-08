@@ -48,7 +48,7 @@ sliderTime=0
 	ulights=#()
 	ucameras=#()
 
-	for g in Geometry where (classof g.baseObject == Editable_mesh) do
+	for g in Geometry where (classof g.baseObject == Editable_mesh or classof g.baseObject == Editable_Poly) do
 	(
 		append umeshs g
 	)
@@ -117,7 +117,7 @@ if(umeshs.count>0) then
 			)
 		)
 		nowaddr=ftell w
-		
+		local temmesh =snapshotAsMesh umeshs[i]
 		fseek w obj[i] #seek_set
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
@@ -171,14 +171,16 @@ if(umeshs.count>0) then
 		--0x30-------------------
 		fptr=ftell w
 		WriteLong w -1
-		WriteLong w umeshs[i].numfaces
-		WriteLong w umeshs[i].numverts
+		WriteLong w temmesh.numfaces
+		WriteLong w temmesh.numverts
 		boneptr=ftell w
 		WriteLong w -1
 
 		--0x40-------------------
+		nowaddr=ftell w
 		WriteString w umeshs[i].name
-		for j= umeshs[i].name.count to 0x1e do
+		nowaddr=ftell w-nowaddr
+		for j= nowaddr to 0x1f do
 		(
 			WriteByte w 0
 		)
@@ -252,23 +254,24 @@ if(umeshs.count>0) then
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
 
+		
 		if(flip) then
 		(
-			for v=1 to umeshs[i].numverts do
+			for v=1 to temmesh.numverts do
 			(
-				WriteFloat w (getVert umeshs[i] v)[1]
-				WriteFloat w (getVert umeshs[i] v)[3]
-				WriteFloat w (0-(getVert umeshs[i] v)[2])
+				WriteFloat w (getVert temmesh v)[1]
+				WriteFloat w (getVert temmesh v)[3]
+				WriteFloat w (0-(getVert temmesh v)[2])
 				WriteFloat w 1.0
 			)
 		)
 		else
 		(
-			for v=1 to umeshs[i].numverts do
+			for v=1 to temmesh.numverts do
 			(
-				WriteFloat w (getVert umeshs[i] v)[1]
-				WriteFloat w (getVert umeshs[i] v)[2]
-				WriteFloat w (getVert umeshs[i] v)[3]
+				WriteFloat w (getVert temmesh v)[1]
+				WriteFloat w (getVert temmesh v)[2]
+				WriteFloat w (getVert temmesh v)[3]
 				WriteFloat w 1.0
 			)
 		)
@@ -282,21 +285,21 @@ if(umeshs.count>0) then
 
 		if(flip) then
 		(
-			for v=1 to umeshs[i].numverts do
+			for v=1 to temmesh.numverts do
 			(
-				WriteFloat w (getNormal umeshs[i] v)[1]
-				WriteFloat w (getNormal umeshs[i] v)[3]
-				WriteFloat w (0-(getNormal umeshs[i] v)[2])
+				WriteFloat w (getNormal temmesh v)[1]
+				WriteFloat w (getNormal temmesh v)[3]
+				WriteFloat w (0-(getNormal temmesh v)[2])
 				WriteFloat w 0.0
 			)
 		)
 		else
 		(
-			for v=1 to umeshs[i].numverts do
+			for v=1 to temmesh.numverts do
 			(
-				WriteFloat w (getNormal umeshs[i] v)[1]
-				WriteFloat w (getNormal umeshs[i] v)[2]
-				WriteFloat w (getNormal umeshs[i] v)[3]
+				WriteFloat w (getNormal temmesh v)[1]
+				WriteFloat w (getNormal temmesh v)[2]
+				WriteFloat w (getNormal temmesh v)[3]
 				WriteFloat w 0.0
 			)
 		)
@@ -308,12 +311,12 @@ if(umeshs.count>0) then
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
 
-		for v=1 to umeshs[i].numverts do
+		for v=1 to temmesh.numverts do
 		(
 			try
 			(
-				WriteFloat w (getTVert umeshs[i] v)[1]
-				WriteFloat w (getTVert umeshs[i] v)[2]
+				WriteFloat w (getTVert temmesh v)[1]
+				WriteFloat w (getTVert temmesh v)[2]
 			)
 			catch
 			(
@@ -334,11 +337,11 @@ if(umeshs.count>0) then
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
 
-		for v=1 to umeshs[i].numfaces do
+		for v=1 to temmesh.numfaces do
 		(
-			WriteLong w ((getFace umeshs[i] v)[1]-1)
-			WriteLong w ((getFace umeshs[i] v)[2]-1)	
-			WriteLong w ((getFace umeshs[i] v)[3]-1)
+			WriteLong w ((getFace temmesh v)[1]-1)
+			WriteLong w ((getFace temmesh v)[2]-1)	
+			WriteLong w ((getFace temmesh v)[3]-1)
 		)
 		
 		-------bone---------
@@ -477,8 +480,11 @@ if(sceneMaterials.count>0) then
 		WriteLong w i
 		WriteLong w 0
 
+		
+		nowaddr=ftell w
 		WriteString w sceneMaterials[i].name
-		for j= sceneMaterials[i].name.count to 0x1e do
+		nowaddr=ftell w-nowaddr
+		for j= nowaddr to 0x1f do
 		(
 			WriteByte w 0
 		)
@@ -831,8 +837,11 @@ if(ubones.count>0) then
 		WriteLong w -1
 		
 		--0x60
+		
+		nowaddr=ftell w
 		WriteString w ubones[i].name
-		for j=ubones[i].name.count to 0x1e do
+		nowaddr=ftell w-nowaddr
+		for j= nowaddr to 0x1f do
 		(
 			WriteByte w 0
 		)
@@ -1326,8 +1335,11 @@ if(ulights.count>0) then
 		WriteLong w 0
 
 		--0x30
+		
+		nowaddr=ftell w
 		WriteString w ulights[i].name
-		for temi= ulights[i].name.count to 0x1e do
+		nowaddr=ftell w-nowaddr
+		for j= nowaddr to 0x1f do
 		(
 			WriteByte w 0
 		)
@@ -1617,8 +1629,10 @@ if(ucameras.count>0) then
 			WriteLong w 0
 
 		--0x20
+		nowaddr=ftell w
 		WriteString w ucameras[i].name
-		for temi= ucameras[i].name.count to 0x1e do
+		nowaddr=ftell w-nowaddr
+		for j= nowaddr to 0x1f do
 		(
 			WriteByte w 0
 		)
