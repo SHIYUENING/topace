@@ -917,6 +917,10 @@ if(ubones.count>0) then
 	--pos
 		--donghua	
 		nowaddr=ftell w
+		if(ubones[i].Position.controller.keys.count==0) then
+		(
+			addNewKey ubones[i].Position.controller.keys 0
+		)
 		if(ubones[i].Position.controller.keys.count>0) then
 		(
 		
@@ -1017,6 +1021,10 @@ if(ubones.count>0) then
 	--rot
 		--donghua	
 		nowaddr=ftell w
+		if(ubones[i].rotation.controller.keys.count==0) then
+		(
+			addNewKey ubones[i].rotation.controller.keys 0
+		)
 		if(ubones[i].rotation.controller.keys.count>0) then
 		(
 		
@@ -1117,6 +1125,10 @@ if(ubones.count>0) then
 	--scl
 		--donghua
 		nowaddr=ftell w
+		if(ubones[i].scale.controller.keys.count==0) then
+		(
+			addNewKey ubones[i].scale.controller.keys 0
+		)
 		if(ubones[i].scale.controller.keys.count>0) then
 		(
 		
