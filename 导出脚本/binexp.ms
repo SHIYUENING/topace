@@ -386,11 +386,15 @@ if(umeshs.count>0) then
 				(
 					try
 					(
-						
-						WriteFloat w (skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] v j)
+						local wegs=(skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] v j)
+						if (wegs!=0) then 
+						(
+						WriteFloat w wegs
 						boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] (skinOps.GetVertexWeightBoneID umeshs[i].modifiers[#Skin] v j) 1)))
-						if((v==182)and umeshs[i].name=="Object06") then print boneidxs
 						k=k+1
+							if(j<bonnum and k ==5) then
+								format "too many weight in : % -- %" umeshs[i].name v
+						)
 					)
 					catch
 					(
