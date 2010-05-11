@@ -48,7 +48,7 @@ GLuint TGA::LoadTGA_RAMtoVRAM(int TexParameter)
 bool TGA::LoadTGA(char * filename)				// Load a TGA file
 {
 	FILE * fTGA;												// File pointer to texture file
-	fTGA = fopen(filename, "rb");								// Open file for reading
+	fopen_s(&fTGA,filename, "rb");								// Open file for reading
 
 	if(fTGA == NULL)											// If it didn't open....
 	{
@@ -71,7 +71,7 @@ bool TGA::LoadTGA(char * filename)				// Load a TGA file
 	GLubyte uTGAcompare[12] = {0,0,2, 0,0,0,0,0,0,0,0,0};	// Uncompressed TGA Header
 	if(memcmp(uTGAcompare, &tgaheader, sizeof(tgaheader)) == 0)				// See if header matches the predefined header of 
 	{																		// an Uncompressed TGA image
-		isRAM=LoadUncompressedTGA(filename, fTGA);						// If so, jump to Uncompressed TGA loading code
+		isRAM=LoadUncompressedTGA(fTGA);						// If so, jump to Uncompressed TGA loading code
 	}
 /*	else if(memcmp(cTGAcompare, &tgaheader, sizeof(tgaheader)) == 0)		// See if header matches the predefined header of
 	{																		// an RLE compressed TGA image
@@ -86,7 +86,48 @@ bool TGA::LoadTGA(char * filename)				// Load a TGA file
 	}
 	return true;															// All went well, continue on
 }
-bool TGA::LoadUncompressedTGA(char * filename, FILE * fTGA)	// Load an uncompressed TGA (note, much of this code is based on NeHe's 
+bool TGA::LoadTGA(wchar_t * filename)				// Load a TGA file
+{
+	FILE * fTGA;												// File pointer to texture file
+	_wfopen_s(&fTGA,filename, L"rb");									// Open file for reading
+
+	if(fTGA == NULL)											// If it didn't open....
+	{
+		//MessageBox(NULL, "Could not open texture file", "ERROR", MB_OK);	// Display an error message
+		TGAerror=TGA_ERROR_NOT_OPEN_FILE;
+		return false;														// Exit function
+	}
+
+	if(fread(&tgaheader, sizeof(TGAHeader), 1, fTGA) == 0)					// Attempt to read 12 byte header from file
+	{
+		//MessageBox(NULL, "Could not read file header", "ERROR", MB_OK);		// If it fails, display an error message 
+		TGAerror=TGA_ERROR_NOT_READ_FILE_HEADER;
+		if(fTGA != NULL)													// Check to seeiffile is still open
+		{
+			fclose(fTGA);													// If it is, close it
+		}
+		return false;														// Exit function
+	}
+
+	GLubyte uTGAcompare[12] = {0,0,2, 0,0,0,0,0,0,0,0,0};	// Uncompressed TGA Header
+	if(memcmp(uTGAcompare, &tgaheader, sizeof(tgaheader)) == 0)				// See if header matches the predefined header of 
+	{																		// an Uncompressed TGA image
+		isRAM=LoadUncompressedTGA(fTGA);						// If so, jump to Uncompressed TGA loading code
+	}
+/*	else if(memcmp(cTGAcompare, &tgaheader, sizeof(tgaheader)) == 0)		// See if header matches the predefined header of
+	{																		// an RLE compressed TGA image
+		LoadCompressedTGA(filename, fTGA);							// If so, jump to Compressed TGA loading code
+	}*/
+	else																	// If header matches neither type
+	{
+		//MessageBox(NULL, "TGA file be type 2 or type 10 ", "Invalid Image", MB_OK);	// Display an error
+		TGAerror=TGA_ERROR_FILE_HEADER_TYPE;
+		fclose(fTGA);
+		return false;																// Exit function
+	}
+	return true;															// All went well, continue on
+}
+bool TGA::LoadUncompressedTGA(FILE * fTGA)	// Load an uncompressed TGA (note, much of this code is based on NeHe's 
 {																			// TGA Loading code nehe.gamedev.net)
 	if(fread(tga.header, sizeof(tga.header), 1, fTGA) == 0)					// Read TGA header
 	{										

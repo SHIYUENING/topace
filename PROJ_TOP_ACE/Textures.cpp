@@ -93,6 +93,40 @@ bool Textures::loadfile(char * filename)
 	}
 	return true;
 }
+bool Textures::loadfile(wchar_t * filename)
+{
+	char LoadFileName[256]={0};
+	
+	DDSfile = new CDDS;
+	sprintf(LoadFileName,"%s.%s",filename,"dds");
+	DDSfile->loadDDSTextureFile(LoadFileName);
+	if((DDSfile->pDDSImageData==NULL)||(DDSfile->DDSerror!=DDS_NO_ERROR))
+	{
+		delete DDSfile;
+		DDSfile = NULL;
+		sprintf(LoadFileName,"%s.%s",filename,"tga");
+		TGAfile = new TGA;
+		TGAfile->LoadTGA(LoadFileName);
+		if((TGAfile->imageData==NULL)||(TGAfile->TGAerror!=TGA_NO_ERROR))
+		{
+			delete TGAfile;
+			TGAfile=NULL;
+			TexType = NO_TEX;
+			return false;
+		}
+		else
+		{
+			UseAlpha=TGAfile->UseAlpha;
+			TexType=IS_TGA;
+		}
+	}
+	else
+	{
+		TexType=IS_DDS;
+		UseAlpha=DDSfile->UseAlpha;
+	}
+	return true;
+}
 unsigned int Textures::LoadToVRAM(int TexParameter)
 {
 	if(DDSfile!=NULL)
