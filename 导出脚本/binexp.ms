@@ -380,14 +380,16 @@ if(umeshs.count>0) then
 			(
 				local j=1
 				local k=1
+				local l=1
 				local boneidxs=#(0,0,0,0)
 				while j<=bonnum and k<=4 do
 				(
 					try
 					(
-						WriteFloat w (skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] v j)
-						boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] j 1)))
 						
+						WriteFloat w (skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] v j)
+						boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] (skinOps.GetVertexWeightBoneID umeshs[i].modifiers[#Skin] v j) 1)))
+						if((v==182)and umeshs[i].name=="Object06") then print boneidxs
 						k=k+1
 					)
 					catch
