@@ -61,7 +61,8 @@ class TGA
 		bool UseAlpha;
 
 		bool LoadTGA(char * filename);
-		bool LoadUncompressedTGA(char * filename, FILE * fTGA);
+		bool LoadTGA(wchar_t * filename);
+		bool LoadUncompressedTGA(FILE * fTGA);
 		//bool LoadCompressedTGA(char * filename, FILE * fTGA);
 		TGAHeader tgaheader;									// TGA header
 		sTGA tga;	

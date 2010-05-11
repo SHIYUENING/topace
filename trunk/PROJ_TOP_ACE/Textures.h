@@ -13,6 +13,7 @@ public:
 	Textures(void);
 	~Textures(void);
 	bool loadfile(char * filename);
+	bool loadfile(wchar_t * filename);
 	unsigned int LoadToVRAM(int TexParameter = 0);
 	bool isRAM();
 	bool isVRAM();
