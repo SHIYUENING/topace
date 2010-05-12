@@ -523,25 +523,25 @@ if(sceneMaterials.count>0) then
 	
 		if((classof sceneMaterials[i])!=Standardmaterial) then
 		(
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255 
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1 
 	
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255 
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1 
 
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255 
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1 
 
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255
-			WriteByte w 255 
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1
+			WriteFloat w 1 
 
 			WriteFloat w 0
 			WriteFloat w 0
@@ -573,24 +573,24 @@ if(sceneMaterials.count>0) then
 		)
 		else
 		(
-		WriteFloat w sceneMaterials[i].ambient.r/255.0
-		WriteFloat w sceneMaterials[i].ambient.g/255.0
-		WriteFloat w sceneMaterials[i].ambient.b/255.0
+		WriteFloat w (sceneMaterials[i].ambient.r/255.0)
+		WriteFloat w (sceneMaterials[i].ambient.g/255.0)
+		WriteFloat w (sceneMaterials[i].ambient.b/255.0)
 		WriteFloat w 0.0
-
-		WriteFloat w sceneMaterials[i].diffuse.r/255.0
-		WriteFloat w sceneMaterials[i].diffuse.g/255.0
-		WriteFloat w sceneMaterials[i].diffuse.b/255.0
+		
+		WriteFloat w (sceneMaterials[i].diffuse.r/255.0)
+		WriteFloat w (sceneMaterials[i].diffuse.g/255.0)
+		WriteFloat w (sceneMaterials[i].diffuse.b/255.0)
 		WriteFloat w 0.0 
 
-		WriteFloat w sceneMaterials[i].specular.r/255.0
-		WriteFloat w sceneMaterials[i].specular.g/255.0
-		WriteFloat w sceneMaterials[i].specular.b/255.0
+		WriteFloat w (sceneMaterials[i].specular.r/255.0)
+		WriteFloat w (sceneMaterials[i].specular.g/255.0)
+		WriteFloat w (sceneMaterials[i].specular.b/255.0)
 		WriteFloat w 0.0 
 
-		WriteFloat w sceneMaterials[i].selfIllumColor.r/255.0
-		WriteFloat w sceneMaterials[i].selfIllumColor.g/255.0
-		WriteFloat w sceneMaterials[i].selfIllumColor.b/255.0
+		WriteFloat w (sceneMaterials[i].selfIllumColor.r/255.0)
+		WriteFloat w (sceneMaterials[i].selfIllumColor.g/255.0)
+		WriteFloat w (sceneMaterials[i].selfIllumColor.b/255.0)
 		WriteFloat w 0.0 
 
 		WriteFloat w sceneMaterials[i].specularLevel
