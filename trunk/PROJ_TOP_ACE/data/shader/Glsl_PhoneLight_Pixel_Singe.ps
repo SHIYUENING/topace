@@ -27,7 +27,7 @@ void main()
 	//gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[0].ambient + gl_FrontLightModelProduct.sceneColor + DiffuseColor) ;
 	//gl_FragColor.w=DiffuseTexColor.w;
 	//gl_FragColor=gl_FragColor+ SpecularColor;
-	gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[0].ambient  + gl_FrontLightModelProduct.sceneColor + DiffuseColor +SpecularColor*4.0)*gl_Color ;
+	gl_FragColor = DiffuseTexColor * (gl_FrontLightProduct[0].ambient  + gl_FrontLightModelProduct.sceneColor + DiffuseColor +SpecularColor)*gl_Color ;
 	gl_FragColor.w=DiffuseTexColor.w;
 	//gl_FragColor.xyz=Normal;
 	//gl_FragColor = DiffuseTexColor;
