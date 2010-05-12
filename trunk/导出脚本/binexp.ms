@@ -48,7 +48,7 @@ sliderTime=0
 	ulights=#()
 	ucameras=#()
 
-	for g in Geometry where (classof g.baseObject == Editable_mesh or classof g.baseObject == Editable_Poly) do
+	for g in Geometry where ((classof g == Editable_mesh or classof g == Editable_Poly) and classof g.baseObject != BoneGeometry ) do
 	(
 		append umeshs g
 	)
@@ -573,25 +573,25 @@ if(sceneMaterials.count>0) then
 		)
 		else
 		(
-		WriteByte w sceneMaterials[i].ambient.r
-		WriteByte w sceneMaterials[i].ambient.g
-		WriteByte w sceneMaterials[i].ambient.b
-		WriteByte w 255 
+		WriteFloat w sceneMaterials[i].ambient.r/255.0
+		WriteFloat w sceneMaterials[i].ambient.g/255.0
+		WriteFloat w sceneMaterials[i].ambient.b/255.0
+		WriteFloat w 0.0
 
-		WriteByte w sceneMaterials[i].diffuse.r
-		WriteByte w sceneMaterials[i].diffuse.g
-		WriteByte w sceneMaterials[i].diffuse.b
-		WriteByte w 255 
+		WriteFloat w sceneMaterials[i].diffuse.r/255.0
+		WriteFloat w sceneMaterials[i].diffuse.g/255.0
+		WriteFloat w sceneMaterials[i].diffuse.b/255.0
+		WriteFloat w 0.0 
 
-		WriteByte w sceneMaterials[i].specular.r
-		WriteByte w sceneMaterials[i].specular.g
-		WriteByte w sceneMaterials[i].specular.b
-		WriteByte w 255 
+		WriteFloat w sceneMaterials[i].specular.r/255.0
+		WriteFloat w sceneMaterials[i].specular.g/255.0
+		WriteFloat w sceneMaterials[i].specular.b/255.0
+		WriteFloat w 0.0 
 
-		WriteByte w sceneMaterials[i].selfIllumColor.r
-		WriteByte w sceneMaterials[i].selfIllumColor.g
-		WriteByte w sceneMaterials[i].selfIllumColor.b
-		WriteByte w 255 
+		WriteFloat w sceneMaterials[i].selfIllumColor.r/255.0
+		WriteFloat w sceneMaterials[i].selfIllumColor.g/255.0
+		WriteFloat w sceneMaterials[i].selfIllumColor.b/255.0
+		WriteFloat w 0.0 
 
 		WriteFloat w sceneMaterials[i].specularLevel
 		WriteFloat w sceneMaterials[i].Glossiness
