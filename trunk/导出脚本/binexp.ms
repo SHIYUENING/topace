@@ -143,6 +143,9 @@ if(umeshs.count>0) then
 
 
 		--0x10---------------
+		if(umeshs[i].parent!=undefined) then
+		WriteByte w 1
+		else
 		WriteByte w bonnum
 		if(bonnum>1) then
 		(
@@ -349,11 +352,19 @@ if(umeshs.count>0) then
 		local fatherid=0
 		if(umeshs[i].parent!=undefined) then
 		(
-			if(classof umeshs[i].parent.baseObject == BoneGeometry) then
+			local tbone=umeshs[i].parent
+			while(tbone.parent!=undefined) do
 			(
+				
+				if((findItem ubones tbone)==0)then
+				append ubones tbone
+				else
+				break
+				
+				tbone=tbone.parent
+			)
 				haspartbone=true
 				fatherid=(findItem ubones umeshs[i].parent)
-			)
 		)
 		
 		if(umeshs[i].modifiers[#Skin]!=undefined) then
@@ -650,6 +661,11 @@ if(sceneMaterials.count>0) then
 	)
 )
 
+nowaddr=ftell w
+	
+	fseek w 0x30 #seek_set
+	WriteLong w ubones.count
+	fseek w nowaddr #seek_set
 ------------BONE------------/
 
 if(ubones.count>0) then
@@ -968,7 +984,7 @@ if(ubones.count>0) then
 				WriteLong w ubones[i].Position.controller.keys[maxidx].time
 				for j=1 to (int)(ubones[i].Position.controller.keys[maxidx].time+1) do
 				(
-					posfaddr[j]=ftell w
+					posfaddr[j]= (ftell w)
 					WriteLong w -1
 				)
 			)
