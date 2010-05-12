@@ -286,6 +286,11 @@ if(umeshs.count>0) then
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
 
+		local flipnormal=[1,1,1]
+		if((in coordsys world umeshs[i].scale.x)<0) then  flipnormal.x=-1
+		if((in coordsys world umeshs[i].scale.y)<0) then  flipnormal.y=-1
+		if((in coordsys world umeshs[i].scale.z)<0) then  flipnormal.z=-1
+		
 		if(flip) then
 		(
 			for v=1 to temmesh.numverts do
@@ -300,9 +305,10 @@ if(umeshs.count>0) then
 		(
 			for v=1 to temmesh.numverts do
 			(
-				WriteFloat w (getNormal temmesh v)[1]
-				WriteFloat w (getNormal temmesh v)[2]
-				WriteFloat w (getNormal temmesh v)[3]
+				local temnor=(normalize ((getNormal temmesh v)))
+				WriteFloat w  (temnor[1] * flipnormal.x)
+				WriteFloat w  (temnor[2] * flipnormal.y)
+				WriteFloat w  (temnor[3] * flipnormal.z)
 				WriteFloat w 0.0
 			)
 		)
@@ -342,9 +348,18 @@ if(umeshs.count>0) then
 
 		for v=1 to temmesh.numfaces do
 		(
+			if(flipnormal.x<0) then
+			(
+			WriteLong w ((getFace temmesh v)[3]-1)	
+			WriteLong w ((getFace temmesh v)[2]-1)
+			WriteLong w ((getFace temmesh v)[1]-1)
+			)
+			else
+			(
 			WriteLong w ((getFace temmesh v)[1]-1)
 			WriteLong w ((getFace temmesh v)[2]-1)	
 			WriteLong w ((getFace temmesh v)[3]-1)
+			)
 		)
 		
 		-------bone---------
