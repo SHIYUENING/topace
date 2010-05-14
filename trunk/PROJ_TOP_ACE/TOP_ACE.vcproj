@@ -302,6 +302,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TexManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Textures.cpp"
 				>
 			</File>
@@ -412,6 +416,10 @@
 			</File>
 			<File
 				RelativePath=".\System.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TexManager.h"
 				>
 			</File>
 			<File

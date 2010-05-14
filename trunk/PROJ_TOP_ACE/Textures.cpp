@@ -95,16 +95,19 @@ bool Textures::loadfile(char * filename)
 }
 bool Textures::loadfile(wchar_t * filename)
 {
-	char LoadFileName[256]={0};
+	TexID=DefineTexID;
+	wchar_t LoadFileName[256]={0};
 	
 	DDSfile = new CDDS;
-	sprintf(LoadFileName,"%s.%s",filename,"dds");
+	swprintf_s(LoadFileName,256,L"%s.%s",filename,L"dds");
+	//sprintf(LoadFileName,L"%s.%s",filename,L"dds");
 	DDSfile->loadDDSTextureFile(LoadFileName);
 	if((DDSfile->pDDSImageData==NULL)||(DDSfile->DDSerror!=DDS_NO_ERROR))
 	{
 		delete DDSfile;
 		DDSfile = NULL;
-		sprintf(LoadFileName,"%s.%s",filename,"tga");
+		swprintf_s(LoadFileName,256,L"%s.%s",filename,L"tga");
+		//sprintf(LoadFileName,"%s.%s",filename,"tga");
 		TGAfile = new TGA;
 		TGAfile->LoadTGA(LoadFileName);
 		if((TGAfile->imageData==NULL)||(TGAfile->TGAerror!=TGA_NO_ERROR))
