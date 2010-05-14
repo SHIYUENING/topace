@@ -175,7 +175,7 @@ if(umeshs.count>0) then
 		fptr=ftell w
 		WriteLong w -1
 		WriteLong w temmesh.numfaces
-		WriteLong w temmesh.numverts
+		WriteLong w (temmesh.numfaces*3)
 		boneptr=ftell w
 		WriteLong w -1
 
@@ -260,7 +260,7 @@ if(umeshs.count>0) then
 		
 		if(flip) then
 		(
-			for v=1 to temmesh.numverts do
+			for v=1 to temmesh.numfaces do
 			(
 				WriteFloat w (getVert temmesh v)[1]
 				WriteFloat w (getVert temmesh v)[3]
@@ -270,11 +270,24 @@ if(umeshs.count>0) then
 		)
 		else
 		(
-			for v=1 to temmesh.numverts do
+			for v=1 to temmesh.numfaces do
 			(
-				WriteFloat w (getVert temmesh v)[1]
-				WriteFloat w (getVert temmesh v)[2]
-				WriteFloat w (getVert temmesh v)[3]
+				local faceidx=getface temmesh v
+				WriteFloat w (getVert temmesh faceidx[1])[1]
+				WriteFloat w (getVert temmesh faceidx[1])[2]
+				WriteFloat w (getVert temmesh faceidx[1])[3]
+				WriteFloat w 1.0
+				
+				
+				WriteFloat w (getVert temmesh faceidx[2])[1]
+				WriteFloat w (getVert temmesh faceidx[2])[2]
+				WriteFloat w (getVert temmesh faceidx[2])[3]
+				WriteFloat w 1.0
+				
+				
+				WriteFloat w (getVert temmesh faceidx[3])[1]
+				WriteFloat w (getVert temmesh faceidx[3])[2]
+				WriteFloat w (getVert temmesh faceidx[3])[3]
 				WriteFloat w 1.0
 			)
 		)
@@ -293,19 +306,43 @@ if(umeshs.count>0) then
 		
 		if(flip) then
 		(
-			for v=1 to temmesh.numverts do
+			for v=1 to temmesh.numfaces do
 			(
-				WriteFloat w (getNormal temmesh v)[1]
-				WriteFloat w (getNormal temmesh v)[3]
-				WriteFloat w (0-(getNormal temmesh v)[2])
+				local faceidx=getface temmesh v
+				WriteFloat w (getNormal temmesh faceidx[1])[1]
+				WriteFloat w (getNormal temmesh faceidx[1])[3]
+				WriteFloat w (0-(getNormal temmesh faceidx[1])[2])
+				WriteFloat w 0.0
+				
+				WriteFloat w (getNormal temmesh faceidx[2])[1]
+				WriteFloat w (getNormal temmesh faceidx[2])[3]
+				WriteFloat w (0-(getNormal temmesh faceidx[2])[2])
+				WriteFloat w 0.0
+				
+				WriteFloat w (getNormal temmesh faceidx[3])[1]
+				WriteFloat w (getNormal temmesh faceidx[3])[3]
+				WriteFloat w (0-(getNormal temmesh faceidx[3])[2])
 				WriteFloat w 0.0
 			)
 		)
 		else
 		(
-			for v=1 to temmesh.numverts do
+			for v=1 to temmesh.numfaces do
 			(
-				local temnor=(normalize ((getNormal temmesh v)))
+				local faceidx=getface temmesh v
+				local temnor=(normalize ((getNormal temmesh faceidx[1])))
+				WriteFloat w  (temnor[1] * flipnormal.x)
+				WriteFloat w  (temnor[2] * flipnormal.y)
+				WriteFloat w  (temnor[3] * flipnormal.z)
+				WriteFloat w 0.0
+					
+				temnor=(normalize ((getNormal temmesh faceidx[2])))
+				WriteFloat w  (temnor[1] * flipnormal.x)
+				WriteFloat w  (temnor[2] * flipnormal.y)
+				WriteFloat w  (temnor[3] * flipnormal.z)
+				WriteFloat w 0.0
+					
+				temnor=(normalize ((getNormal temmesh faceidx[3])))
 				WriteFloat w  (temnor[1] * flipnormal.x)
 				WriteFloat w  (temnor[2] * flipnormal.y)
 				WriteFloat w  (temnor[3] * flipnormal.z)
@@ -319,7 +356,7 @@ if(umeshs.count>0) then
 		fseek w vtptr #seek_set
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
-		
+		/*
 		local facelist=#()
 		for v=1 to temmesh.numfaces do
 		(
@@ -338,6 +375,24 @@ if(umeshs.count>0) then
 			WriteFloat w (getTVert temmesh tvertidxs)[2]
 			
 		)
+		*/
+		
+		for v=1 to temmesh.numfaces do
+		(
+			local tvertidxs=(gettvFace temmesh v)
+			WriteFloat w (getTVert temmesh tvertidxs[1])[1]
+			WriteFloat w (getTVert temmesh tvertidxs[1])[2]
+			
+			
+			WriteFloat w (getTVert temmesh tvertidxs[2])[1]
+			WriteFloat w (getTVert temmesh tvertidxs[2])[2]
+			
+			
+			WriteFloat w (getTVert temmesh tvertidxs[3])[1]
+			WriteFloat w (getTVert temmesh tvertidxs[3])[2]
+			
+		)
+		
 
 		-------face---------
 		nowaddr=ftell w
@@ -350,15 +405,26 @@ if(umeshs.count>0) then
 		(
 			if(flipnormal.x<0) then
 			(
+				/*
 			WriteLong w ((getFace temmesh v)[3]-1)	
 			WriteLong w ((getFace temmesh v)[2]-1)
 			WriteLong w ((getFace temmesh v)[1]-1)
+			*/
+			
+				WriteLong w ((v-1)*3+2)
+				WriteLong w ((v-1)*3+1)
+				WriteLong w ((v-1)*3+1)
 			)
 			else
 			(
+				/*
 			WriteLong w ((getFace temmesh v)[1]-1)
 			WriteLong w ((getFace temmesh v)[2]-1)	
 			WriteLong w ((getFace temmesh v)[3]-1)
+				*/
+				WriteLong w ((v-1)*3+0)
+				WriteLong w ((v-1)*3+1)
+				WriteLong w ((v-1)*3+2)
 			)
 		)
 		
@@ -382,7 +448,43 @@ if(umeshs.count>0) then
 				fatherid=(findItem ubones umeshs[i].parent)
 		)
 		
-		if(umeshs[i].modifiers[#Skin]!=undefined) then
+		 if(haspartbone==true) then
+		(
+			nowaddr=ftell w
+			if((yus nowaddr 16)!=0) then
+			(
+				wnull=16-(yus nowaddr 16)
+				for temnul= 1 to wnull do
+				(
+					WriteByte w -1
+				)
+			)
+			nowaddr=ftell w
+			
+			fseek w boneptr #seek_set
+			WriteLong w nowaddr
+			fseek w nowaddr #seek_set
+			
+			bonnum=1
+			for v=1 to umeshs[i].numverts do
+			(
+				local j=1
+				local k=1
+				local boneidxs=#(fatherid,0,0,0)
+				
+				WriteFloat w 1
+						
+				for j = 2 to 4 do
+				(
+					WriteFloat w 0
+				)
+				for j = 1 to 4 do
+				(
+						WriteLong w boneidxs[j]
+				)
+			)
+		)
+		else if(umeshs[i].modifiers[#Skin]!=undefined) then
 		(
 			nowaddr=ftell w
 			if((yus nowaddr 16)!=0) then
@@ -438,42 +540,6 @@ if(umeshs.count>0) then
 				)
 			)
 			deselect umeshs[i]
-		)
-		else if(haspartbone==true) then
-		(
-			nowaddr=ftell w
-			if((yus nowaddr 16)!=0) then
-			(
-				wnull=16-(yus nowaddr 16)
-				for temnul= 1 to wnull do
-				(
-					WriteByte w -1
-				)
-			)
-			nowaddr=ftell w
-			
-			fseek w boneptr #seek_set
-			WriteLong w nowaddr
-			fseek w nowaddr #seek_set
-			
-			bonnum=1
-			for v=1 to umeshs[i].numverts do
-			(
-				local j=1
-				local k=1
-				local boneidxs=#(fatherid,0,0,0)
-				
-				WriteFloat w 1
-						
-				for j = 2 to 4 do
-				(
-					WriteFloat w 0
-				)
-				for j = 1 to 4 do
-				(
-						WriteLong w boneidxs[j]
-				)
-			)
 		)
 	)
 )
@@ -790,7 +856,7 @@ if(ubones.count>0) then
 			if(ubones[i].parent!=undefined	) then
 			(
 			crotation=normalize ((at time 0 animate on ubones[i].rotation.controller.value))
-				--/*
+				/*
 				if(in coordsys parent ubones[i].scale.x<0) then
 				(
 					local trots=crotation
@@ -1182,7 +1248,7 @@ if(ubones.count>0) then
 
 			if(in coordsys parent ubones[i].scale.x<0) then
 				(
-					--/*
+					/*
 					local trots=tmprr
 					tmprr.w=-trots.x
 					tmprr.z=-trots.y
