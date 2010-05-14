@@ -3,7 +3,7 @@ fn yus a b=
 	return a-(a/b)*b
 )
 
-fn expfile debugon flip= 
+fn expfile flip= 
 (
 --/*
 out_name = GetSaveFileName \
@@ -319,24 +319,24 @@ if(umeshs.count>0) then
 		fseek w vtptr #seek_set
 		WriteLong w nowaddr
 		fseek w nowaddr #seek_set
+		
+		local facelist=#()
+		for v=1 to temmesh.numfaces do
+		(
+			append facelist ((getFace temmesh v)[1])
+			append facelist ((getFace temmesh v)[2])
+			append facelist ((getFace temmesh v)[3])
+		)
 
 		for v=1 to temmesh.numverts do
 		(
-			try
-			(
-				WriteFloat w (getTVert temmesh v)[1]
-				WriteFloat w (getTVert temmesh v)[2]
-			)
-			catch
-			(
-				WriteFloat w 0.0
-				WriteFloat w 0.0
-				if(debugon) then
-				(
-					format "%:tex % error,skiped\n" umeshs[i].name v
-				)
-				--
-			)
+			local faceidxs=(findItem facelist v)
+			local vertinface=((mod (faceidxs-1) 3)+1) as integer
+			faceidxs=((faceidxs-1)/3)+1
+			local tvertidxs=(gettvFace temmesh faceidxs)[vertinface]
+			WriteFloat w (getTVert temmesh tvertidxs)[1]
+			WriteFloat w (getTVert temmesh tvertidxs)[2]
+			
 		)
 
 		-------face---------
@@ -787,9 +787,19 @@ if(ubones.count>0) then
 		
 		
 			cpos=in coordsys parent ubones[i].pos
-			if(ubones[i].parent!=undefined) then
+			if(ubones[i].parent!=undefined	) then
 			(
 			crotation=normalize ((at time 0 animate on ubones[i].rotation.controller.value))
+				--/*
+				if(in coordsys parent ubones[i].scale.x<0) then
+				(
+					local trots=crotation
+					crotation.w=-trots.x
+					crotation.z=-trots.y
+					crotation.y=trots.w
+					crotation.x=trots.z
+				)
+				--*/
 			)
 			else
 			(
@@ -1170,6 +1180,16 @@ if(ubones.count>0) then
 			WriteLong w tempt
 			local tmprr=inverse (at time tempt animate on ubones[i].rotation.controller.value)
 
+			if(in coordsys parent ubones[i].scale.x<0) then
+				(
+					--/*
+					local trots=tmprr
+					tmprr.w=-trots.x
+					tmprr.z=-trots.y
+					tmprr.y=trots.w
+					tmprr.x=trots.z
+					--*/
+				)
 			WriteFloat w tmprr.x
 			if(flip) then
 			(
@@ -1724,11 +1744,10 @@ rollout TOP_ACE_MODEL_Exporter "TOP ACE Model"
 (
 label lab1 "TOP ACE Model(TEST)" height:17
 button theButton "exporter" width:77 height:25
-checkbox debugon "show tex pos error" 
 checkbox flipyz "flip YZ" 
 on theButton pressed do 
 (
-	expfile debugon.checked flipyz.checked
+	expfile flipyz.checked
 	Messagebox "Finished"
 )
 
