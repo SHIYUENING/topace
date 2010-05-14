@@ -483,7 +483,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glLineWidth(float(SystemSet.LineWidth));
 	SetFog();
 	ViewPos.UDMplane.Reset();
-	ViewPos.UDMplane.TranslateInternal(Vector3d(1979.6632,-583.7316,-1310.2708));
+	ViewPos.UDMplane.TranslateInternal(Vector3d(1947.91 ,-585.33 ,-1310.41));
 	ViewPos.TurnTo(Vector3d(1849.3800,-580.2999,-1313.8549));
 	ViewPos.UDPstate.NextState();
 	MFighter=ViewPos.UDMplane;
@@ -733,7 +733,7 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	if(menuid==ID_MENU_ROAMING_SCENE_1)
 	{
 		InMd5Camera=0;
-		SetCam(Vector3d(1974.1 ,-571.056 ,-1314.86),Vector3d(1822.22 ,-576.522 ,-1286.59));
+		SetCam(Vector3d(1947.91 ,-585.33 ,-1310.41),Vector3d(1822.22 ,-576.522 ,-1286.59));
 	}
 
 	if(menuid==ID_MENU_ROAMING_SCENE_2)
