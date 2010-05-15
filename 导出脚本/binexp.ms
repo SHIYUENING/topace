@@ -466,21 +466,25 @@ if(umeshs.count>0) then
 			fseek w nowaddr #seek_set
 			
 			bonnum=1
-			for v=1 to umeshs[i].numverts do
+			for v=1 to umeshs[i].numfaces do
 			(
 				local j=1
 				local k=1
+				local tvertidxs=(getFace temmesh v)
 				local boneidxs=#(fatherid,0,0,0)
 				
-				WriteFloat w 1
-						
-				for j = 2 to 4 do
+				for vv=1 to 3 do
 				(
-					WriteFloat w 0
-				)
-				for j = 1 to 4 do
-				(
-						WriteLong w boneidxs[j]
+					WriteFloat w 1
+							
+					for j = 2 to 4 do
+					(
+						WriteFloat w 0
+					)
+					for j = 1 to 4 do
+					(
+							WriteLong w boneidxs[j]
+					)
 				)
 			)
 		)
@@ -504,39 +508,43 @@ if(umeshs.count>0) then
 			select umeshs[i]
 			max modify mode
 			bonnum=(skinOps.GetNumberBones umeshs[i].modifiers[#Skin])
-			for v=1 to umeshs[i].numverts do
+			for v=1 to umeshs[i].numfaces do
 			(
-				local j=1
-				local k=1
-				local l=1
-				local boneidxs=#(0,0,0,0)
-				while j<=bonnum and k<=4 do
+				local tvertidxs=(getFace temmesh v)
+				for vv=1 to 3 do
 				(
-					try
+					local j=1
+					local k=1
+					local l=1
+					local boneidxs=#(0,0,0,0)
+					while j<=bonnum and k<=4 do
 					(
-						local wegs=(skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] v j)
-						if (wegs!=0) then 
+						try
 						(
-						WriteFloat w wegs
-						boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] (skinOps.GetVertexWeightBoneID umeshs[i].modifiers[#Skin] v j) 1)))
-						k=k+1
-							if(j<bonnum and k ==5) then
-								format "too many weight in : % -- %" umeshs[i].name v
+							local wegs=(skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] tvertidxs[vv] j)
+							if (wegs!=0) then 
+							(
+							WriteFloat w wegs
+							boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] (skinOps.GetVertexWeightBoneID umeshs[i].modifiers[#Skin] tvertidxs[vv] j) 1)))
+							k=k+1
+								if(j<bonnum and k ==5) then
+									format "too many weight in : % -- %" umeshs[i].name tvertidxs[vv]
+							)
 						)
+						catch
+						(
+							--skip
+						)
+						j=j+1
 					)
-					catch
+					for j = k to 4 do
 					(
-						--skip
+						WriteFloat w 0
 					)
-					j=j+1
-				)
-				for j = k to 4 do
-				(
-					WriteFloat w 0
-				)
-				for j = 1 to 4 do
-				(
-						WriteLong w boneidxs[j]
+					for j = 1 to 4 do
+					(
+							WriteLong w boneidxs[j]
+					)
 				)
 			)
 			deselect umeshs[i]
