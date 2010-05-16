@@ -327,7 +327,7 @@ if(umeshs.count>0) then
 		)
 		else
 		(
-			format "\n%\t\n" umeshs[i].name
+			--format "\n%\t\n" umeshs[i].name
 			for v=1 to temmesh.numfaces do
 			(
 				local faceidx=meshop.getFaceRNormals temmesh v
