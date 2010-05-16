@@ -327,26 +327,33 @@ if(umeshs.count>0) then
 		)
 		else
 		(
+			format "\n%\t\n" umeshs[i].name
 			for v=1 to temmesh.numfaces do
 			(
-				local faceidx=getface temmesh v
-				local temnor=(normalize ((getNormal temmesh faceidx[1])))
-				WriteFloat w  (temnor[1] * flipnormal.x)
-				WriteFloat w  (temnor[2] * flipnormal.y)
-				WriteFloat w  (temnor[3] * flipnormal.z)
+				local faceidx=meshop.getFaceRNormals temmesh v
+				--local temnor=(normalize (in coordsys temmesh (getNormal temmesh faceidx[1])))
+				WriteFloat w  (faceidx[1][1] * flipnormal.x)
+				WriteFloat w  (faceidx[1][2] * flipnormal.y)
+				WriteFloat w  (faceidx[1][3] * flipnormal.z)
 				WriteFloat w 0.0
 					
-				temnor=(normalize ((getNormal temmesh faceidx[2])))
-				WriteFloat w  (temnor[1] * flipnormal.x)
-				WriteFloat w  (temnor[2] * flipnormal.y)
-				WriteFloat w  (temnor[3] * flipnormal.z)
+					--format "%\t%\t\n" faceidx[1] temnor
+					
+				--temnor=(normalize ((getNormal temmesh faceidx[2])))
+				WriteFloat w  (faceidx[2][1] * flipnormal.x)
+				WriteFloat w  (faceidx[2][2] * flipnormal.y)
+				WriteFloat w  (faceidx[2][3] * flipnormal.z)
 				WriteFloat w 0.0
 					
-				temnor=(normalize ((getNormal temmesh faceidx[3])))
-				WriteFloat w  (temnor[1] * flipnormal.x)
-				WriteFloat w  (temnor[2] * flipnormal.y)
-				WriteFloat w  (temnor[3] * flipnormal.z)
+					--format "%\t%\t\n" faceidx[2] temnor
+					
+				--temnor=(normalize ((getNormal temmesh faceidx[3])))
+				WriteFloat w  (faceidx[3][1] * flipnormal.x)
+				WriteFloat w  (faceidx[3][2] * flipnormal.y)
+				WriteFloat w  (faceidx[3][3] * flipnormal.z)
 				WriteFloat w 0.0
+					
+					--format "%\t%\t\n" faceidx[3] temnor
 			)
 		)
 		
@@ -1824,7 +1831,10 @@ fseek w 4 #seek_set
 WriteLong w nowaddr
 fflush w
 FClose w
+return true
 )
+else
+return false
 )
 
 
@@ -1840,8 +1850,11 @@ checkbox flipyz "flip YZ"  enabled:false
 	--flipyz.enabled=false
 on theButton pressed do 
 (
-	expfile false worldscale.value
+	local ret=expfile false worldscale.value
+	if(ret) then
 	Messagebox "Finished"
+	else
+	Messagebox "No File Out"
 )
 
 )
