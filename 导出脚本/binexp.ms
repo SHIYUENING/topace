@@ -3,7 +3,7 @@ fn yus a b=
 	return a-(a/b)*b
 )
 
-fn expfile flip= 
+fn expfile flip worldscale= 
 (
 --/*
 out_name = GetSaveFileName \
@@ -273,21 +273,21 @@ if(umeshs.count>0) then
 			for v=1 to temmesh.numfaces do
 			(
 				local faceidx=getface temmesh v
-				WriteFloat w (getVert temmesh faceidx[1])[1]
-				WriteFloat w (getVert temmesh faceidx[1])[2]
-				WriteFloat w (getVert temmesh faceidx[1])[3]
+				WriteFloat w ((getVert temmesh faceidx[1])[1] * worldscale)
+				WriteFloat w ((getVert temmesh faceidx[1])[2] * worldscale)
+				WriteFloat w ((getVert temmesh faceidx[1])[3] * worldscale)
 				WriteFloat w 1.0
 				
 				
-				WriteFloat w (getVert temmesh faceidx[2])[1]
-				WriteFloat w (getVert temmesh faceidx[2])[2]
-				WriteFloat w (getVert temmesh faceidx[2])[3]
+				WriteFloat w ((getVert temmesh faceidx[2])[1] * worldscale)
+				WriteFloat w ((getVert temmesh faceidx[2])[2] * worldscale)
+				WriteFloat w ((getVert temmesh faceidx[2])[3] * worldscale)
 				WriteFloat w 1.0
 				
 				
-				WriteFloat w (getVert temmesh faceidx[3])[1]
-				WriteFloat w (getVert temmesh faceidx[3])[2]
-				WriteFloat w (getVert temmesh faceidx[3])[3]
+				WriteFloat w ((getVert temmesh faceidx[3])[1] * worldscale)
+				WriteFloat w ((getVert temmesh faceidx[3])[2] * worldscale)
+				WriteFloat w ((getVert temmesh faceidx[3])[3] * worldscale)
 				WriteFloat w 1.0
 			)
 		)
@@ -300,9 +300,9 @@ if(umeshs.count>0) then
 		fseek w nowaddr #seek_set
 
 		local flipnormal=[1,1,1]
-		if((in coordsys world umeshs[i].scale.x)<0) then  flipnormal.x=-1
-		if((in coordsys world umeshs[i].scale.y)<0) then  flipnormal.y=-1
-		if((in coordsys world umeshs[i].scale.z)<0) then  flipnormal.z=-1
+		if((in coordsys parent umeshs[i].scale.x)<0) then  flipnormal.x=1
+		if((in coordsys parent umeshs[i].scale.y)<0) then  flipnormal.y=1
+		if((in coordsys parent umeshs[i].scale.z)<0) then  flipnormal.z=1
 		
 		if(flip) then
 		(
@@ -379,17 +379,31 @@ if(umeshs.count>0) then
 		
 		for v=1 to temmesh.numfaces do
 		(
-			local tvertidxs=(gettvFace temmesh v)
-			WriteFloat w (getTVert temmesh tvertidxs[1])[1]
-			WriteFloat w (getTVert temmesh tvertidxs[1])[2]
-			
-			
-			WriteFloat w (getTVert temmesh tvertidxs[2])[1]
-			WriteFloat w (getTVert temmesh tvertidxs[2])[2]
-			
-			
-			WriteFloat w (getTVert temmesh tvertidxs[3])[1]
-			WriteFloat w (getTVert temmesh tvertidxs[3])[2]
+			try
+			(
+				local tvertidxs=(gettvFace temmesh v)
+				WriteFloat w (getTVert temmesh tvertidxs[1])[1]
+				WriteFloat w (getTVert temmesh tvertidxs[1])[2]
+				
+				
+				WriteFloat w (getTVert temmesh tvertidxs[2])[1]
+				WriteFloat w (getTVert temmesh tvertidxs[2])[2]
+				
+				
+				WriteFloat w (getTVert temmesh tvertidxs[3])[1]
+				WriteFloat w (getTVert temmesh tvertidxs[3])[2]
+			)
+			catch
+			(
+				WriteFloat w 0
+				WriteFloat w 0
+				
+				WriteFloat w 0
+				WriteFloat w 0
+				
+				WriteFloat w 0
+				WriteFloat w 0
+			)
 			
 		)
 		
@@ -413,7 +427,7 @@ if(umeshs.count>0) then
 			
 				WriteLong w ((v-1)*3+2)
 				WriteLong w ((v-1)*3+1)
-				WriteLong w ((v-1)*3+1)
+				WriteLong w ((v-1)*3+0)
 			)
 			else
 			(
@@ -861,6 +875,7 @@ if(ubones.count>0) then
 		
 		
 			cpos=in coordsys parent ubones[i].pos
+			cpos=cpos * worldscale
 			if(ubones[i].parent!=undefined	) then
 			(
 			crotation=normalize ((at time 0 animate on ubones[i].rotation.controller.value))
@@ -1147,16 +1162,16 @@ if(ubones.count>0) then
 					WriteLong w lastaddr[j]
 				)
 				WriteLong w ubones[i].Position.controller.keys[j].time
-				WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.x_position)
+				WriteFloat w ((at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.x_position) * worldscale)
 				if(flip) then
 				(
-					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position)
-					WriteFloat w (0-(at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position))
+					WriteFloat w ((at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position) * worldscale)
+					WriteFloat w ((0-(at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position)) * worldscale)
 				)
 				else
 				(
-					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position)
-					WriteFloat w (at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position)
+					WriteFloat w ((at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.y_position) * worldscale)
+					WriteFloat w ((at time ubones[i].Position.controller.keys[j].time animate on ubones[i].position.controller.z_position) * worldscale)
 				)
 				WriteFloat w 0.0
 			)
@@ -1485,7 +1500,7 @@ if(ulights.count>0) then
 		WriteLong w -1
 		
 		--0x50
-		lpos=ulights[i].pos
+		lpos=ulights[i].pos * worldscale
 		--lrotation=ulights[i].rotation
 		lrotation=normalize (inverse ulights[i].transform.rotation)
 		
@@ -1769,7 +1784,7 @@ if(ucameras.count>0) then
 		)
 		
 		--0x40
-		lpos=ucameras[i].pos
+		lpos=ucameras[i].pos * worldscale
 		lrotation=normalize (inverse ucameras[i].transform.rotation)
 		
 		--pos
@@ -1818,10 +1833,14 @@ rollout TOP_ACE_MODEL_Exporter "TOP ACE Model"
 (
 label lab1 "TOP ACE Model(TEST)" height:17
 button theButton "exporter" width:77 height:25
-checkbox flipyz "flip YZ" 
+spinner worldscale "Scale:" range:[0,5555,1] type:#float pos:[27,64]
+checkbox flipyz "flip YZ"  enabled:false
+	
+	--worldscale.pos=[0,0]
+	--flipyz.enabled=false
 on theButton pressed do 
 (
-	expfile flipyz.checked
+	expfile false worldscale.value
 	Messagebox "Finished"
 )
 
