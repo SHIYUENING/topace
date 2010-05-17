@@ -98,7 +98,7 @@ sliderTime=0
 	WriteFloat w 1
 )
 
-local bdbox[2]=#([0,0,0],[0,0,0])
+local bdbox=#([0,0,0],[0,0,0])
 
 --------/MESH--------------
 if(umeshs.count>0) then
