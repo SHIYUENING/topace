@@ -48,6 +48,7 @@ sliderTime=0
 	ulights=#()
 	ucameras=#()
 
+	
 	for g in Geometry where ((classof g == Editable_mesh or classof g == Editable_Poly) and classof g.baseObject != BoneGeometry ) do
 	(
 		append umeshs g
@@ -83,7 +84,21 @@ sliderTime=0
 	
 	RootboneAddr=ftell w
 	WriteLong w 0
+	
+	--0x40
+	WriteFloat w 0
+	WriteFloat w 0
+	WriteFloat w 0
+	WriteFloat w 1
+	
+	--0x50
+	WriteFloat w 0
+	WriteFloat w 0
+	WriteFloat w 0
+	WriteFloat w 1
 )
+
+local bdbox[2]=#([0,0,0],[0,0,0])
 
 --------/MESH--------------
 if(umeshs.count>0) then
@@ -250,6 +265,28 @@ if(umeshs.count>0) then
 			WriteLong w -1
 			WriteLong w -1
 		)
+		
+		--0x70
+		
+		local boundingbox=nodeLocalBoundingBox umeshs[i]
+		WriteFloat w boundingbox[1].x
+		WriteFloat w boundingbox[1].y
+		WriteFloat w boundingbox[1].z
+		WriteFloat w 1
+		
+		WriteFloat w boundingbox[2].x
+		WriteFloat w boundingbox[2].y
+		WriteFloat w boundingbox[2].z
+		WriteFloat w 1
+		
+		if(bdbox[1].x>boundingbox[1].x) then bdbox[1].x=boundingbox[1].x
+		if(bdbox[1].y>boundingbox[1].y) then bdbox[1].y=boundingbox[1].y
+		if(bdbox[1].z>boundingbox[1].z) then bdbox[1].z=boundingbox[1].z
+		
+		if(bdbox[2].x<boundingbox[2].x) then bdbox[2].x=boundingbox[2].x
+		if(bdbox[2].y<boundingbox[2].y) then bdbox[2].y=boundingbox[2].y
+		if(bdbox[2].z<boundingbox[2].z) then bdbox[2].z=boundingbox[2].z
+		
 		-------vert---------
 		nowaddr=ftell w
 		
@@ -571,7 +608,24 @@ if(umeshs.count>0) then
 			deselect umeshs[i]
 		)
 	)
+	nowaddr=ftell w
+		
+	fseek w 0x40 #seek_set
+	WriteFloat w bdbox[1].x
+	WriteFloat w bdbox[1].y
+	WriteFloat w bdbox[1].z
+	WriteFloat w 1
+	
+	
+	WriteFloat w bdbox[2].x
+	WriteFloat w bdbox[2].y
+	WriteFloat w bdbox[2].z
+	WriteFloat w 1
+	
+	fseek w nowaddr #seek_set
 )
+
+
 
 --------------MATS------------/
 if(sceneMaterials.count>0) then
