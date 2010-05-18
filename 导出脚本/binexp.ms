@@ -585,8 +585,8 @@ if(umeshs.count>0) then
 							WriteFloat w wegs
 							boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] (skinOps.GetVertexWeightBoneID umeshs[i].modifiers[#Skin] tvertidxs[vv] j) 1)))
 							k=k+1
-								if(j<bonnum and k ==5) then
-									format "too many weight in : % -- %" umeshs[i].name tvertidxs[vv]
+								if(((skinOps.GetVertexWeightCount $.modifiers[#Skin] tvertidxs[vv])>4) and k ==5) then
+									format "% weight in : % -- %\n" (skinOps.GetVertexWeightCount $.modifiers[#Skin] tvertidxs[vv]) umeshs[i].name (tvertidxs[vv] as integer)
 							)
 						)
 						catch
@@ -1443,8 +1443,9 @@ if(ubones.count>0) then
 
 				WriteLong w lastaddr[j]
 			)
-			WriteLong w ubones[i].scale.controller.keys[j].time
-			tmprr=ubones[i].scale.controller.keys[j].value
+			local tttime=ubones[i].scale.controller.keys[j].time
+			WriteLong w tttime
+			tmprr=at time tttime animate on ubones[i].scale.controller.value
 			WriteFloat w tmprr[1]
 			if(flip) then
 			(
