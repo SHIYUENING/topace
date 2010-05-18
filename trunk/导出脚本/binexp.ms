@@ -580,7 +580,7 @@ if(umeshs.count>0) then
 						try
 						(
 							local wegs=(skinOps.GetVertexWeight umeshs[i].modifiers[#Skin] tvertidxs[vv] j)
-							if (wegs!=0) then 
+							if (wegs>0.001) then 
 							(
 							WriteFloat w wegs
 							boneidxs[k]=(findItem ubones (getNodeByName (skinOps.GetBoneName umeshs[i].modifiers[#Skin] (skinOps.GetVertexWeightBoneID umeshs[i].modifiers[#Skin] tvertidxs[vv] j) 1)))
