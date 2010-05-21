@@ -53,6 +53,7 @@ sliderTime=0
 	(
 		append umeshs g
 	)
+	
 	/*
 	for g in Geometry where (classof g == Editable_mesh)
 	(
@@ -158,7 +159,13 @@ if(umeshs.count>0) then
 
 
 		--0x10---------------
-		if(umeshs[i].parent!=undefined) then
+		local selfmove=false
+		if(umeshs[i].pos.controller.keys.count>0 or umeshs[i].rotation.controller.keys.count>0)then
+		(
+			selfmove=true
+			WriteByte w 1
+		)			
+		else if(umeshs[i].parent!=undefined) then
 		WriteByte w 1
 		else
 		WriteByte w bonnum
@@ -489,7 +496,25 @@ if(umeshs.count>0) then
 		-------bone---------
 		local haspartbone=false
 		local fatherid=0
-		if(umeshs[i].parent!=undefined) then
+		if(selfmove) then
+		(
+			local tbone=umeshs[i]
+			while(tbone.parent!=undefined) do
+			(
+				
+				if((findItem ubones tbone)==0)then
+				append ubones tbone
+				else
+				break
+				
+				tbone=tbone.parent
+			)
+			if((findItem ubones umeshs[i])==0)then
+				append ubones umeshs[i]
+				haspartbone=true
+				fatherid=(findItem ubones umeshs[i])
+		)
+		else if(umeshs[i].parent!=undefined) then
 		(
 			local tbone=umeshs[i].parent
 			while(tbone.parent!=undefined) do
@@ -502,6 +527,8 @@ if(umeshs.count>0) then
 				
 				tbone=tbone.parent
 			)
+			if((findItem ubones umeshs[i].parent)==0)then
+				append ubones umeshs[i].parent
 				haspartbone=true
 				fatherid=(findItem ubones umeshs[i].parent)
 		)
