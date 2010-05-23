@@ -516,7 +516,7 @@ if(umeshs.count>0) then
 		)
 		else if(umeshs[i].parent!=undefined) then
 		(
-			local tbone=umeshs[i].parent
+			local tbone=umeshs[i]
 			while(tbone.parent!=undefined) do
 			(
 				
