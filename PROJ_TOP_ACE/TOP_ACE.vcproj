@@ -338,6 +338,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UnitMath.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ViewInput.cpp"
 				>
 			</File>
@@ -432,6 +436,10 @@
 			</File>
 			<File
 				RelativePath=".\TopAceModel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UnitMath.h"
 				>
 			</File>
 			<File
