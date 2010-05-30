@@ -19,5 +19,10 @@ public:
 	void RotInternal(__m128 QuatRotInternal);
 	void MovExternal(__m128 PosMovExternal);
 	void MovInternal(__m128 PosMovInternal);
+	void SetPos(__m128 Pos);
+	void GetMatrix(__m128 MatrixOut[4]);
+private:
+	bool NewMatrix;
+	
 };
 #endif
