@@ -514,6 +514,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		window.init.isFullScreen = g_createFullScreen;					// Set Init Param Of Window Creation To Fullscreen?
 		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
 		{
+			WritePrivateProfileString("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
+			WritePrivateProfileString("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
 			SwapHdc=window.hDC;
 			
 			if(GameSet.SYNC)
