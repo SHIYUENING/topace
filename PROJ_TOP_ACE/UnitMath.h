@@ -16,5 +16,8 @@ public:
 	__m128 UnitPos;
 	__m128 UnitMatrix[4];
 	void RotExternal(__m128 QuatRotExternal);
+	void RotInternal(__m128 QuatRotInternal);
+	void MovExternal(__m128 PosMovExternal);
+	void MovInternal(__m128 PosMovInternal);
 };
 #endif
