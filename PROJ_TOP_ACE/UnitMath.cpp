@@ -14,12 +14,14 @@ CUnitMath::~CUnitMath(void)
 void CUnitMath::RotExternal(__m128 QuatRotExternal)
 {
 	Easy_quat_Mult(&UnitQuat,UnitQuat,QuatRotExternal);
+	Easy_quat_normalize(&UnitQuat,UnitQuat);
 	NewMatrix=false;
 }
 
 void CUnitMath::RotInternal(__m128 QuatRotInternal)
 {
 	Easy_quat_Mult(&UnitQuat,QuatRotInternal,UnitQuat);
+	Easy_quat_normalize(&UnitQuat,UnitQuat);
 	NewMatrix=false;
 }
 
@@ -55,4 +57,19 @@ void CUnitMath::GetMatrix(__m128 MatrixOut[4])
 	}
 	UnitMatrix[3]=UnitPos;
 	Easy_matrix_copy(MatrixOut,UnitMatrix);
+}
+
+__m128 CUnitMath::GetRelativePos(__m128 TGTPos)
+{
+	if(!NewMatrix)
+	{
+		Easy_quat_to_matrix(UnitMatrix,UnitQuat);
+		NewMatrix=true;
+	}
+	else
+		UnitMatrix[3]=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	Easy_vector_sub(&UnitPosTMP,TGTPos,UnitPos);
+	Easy_matrix_mult_vector3X3(&UnitPosTMP,UnitMatrix,UnitPosTMP);
+	UnitPosTMP.m128_f32[3]=1.0f;
+	return UnitPosTMP;
 }
