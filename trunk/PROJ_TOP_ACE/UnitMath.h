@@ -23,6 +23,8 @@ public:
 	void GetMatrix(__m128 MatrixOut[4]);
 private:
 	bool NewMatrix;
-	
+	__m128 UnitPosTMP;
+public:
+	__m128 GetRelativePos(__m128 TGTPos);
 };
 #endif
