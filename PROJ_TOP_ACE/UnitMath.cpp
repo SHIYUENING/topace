@@ -10,12 +10,25 @@ CUnitMath::CUnitMath(void)
 CUnitMath::~CUnitMath(void)
 {
 }
+void CUnitMath::RotExternal(float angle,float axisX, float axisY, float axisZ)
+{
+	Easy_quat_axis_angle(&UnitPosTMP,axisX,axisY,axisZ,angle);
+	Easy_quat_normalize(&UnitPosTMP,UnitPosTMP);
+	RotExternal(UnitPosTMP);
+}
 
 void CUnitMath::RotExternal(__m128 QuatRotExternal)
 {
 	Easy_quat_Mult(&UnitQuat,UnitQuat,QuatRotExternal);
 	Easy_quat_normalize(&UnitQuat,UnitQuat);
 	NewMatrix=false;
+}
+
+void CUnitMath::RotInternal(float angle,float axisX, float axisY, float axisZ)
+{
+	Easy_quat_axis_angle(&UnitPosTMP,axisX,axisY,axisZ,angle);
+	Easy_quat_normalize(&UnitPosTMP,UnitPosTMP);
+	RotInternal(UnitPosTMP);
 }
 
 void CUnitMath::RotInternal(__m128 QuatRotInternal)
@@ -59,6 +72,17 @@ void CUnitMath::GetMatrix(__m128 MatrixOut[4])
 	Easy_matrix_copy(MatrixOut,UnitMatrix);
 }
 
+void CUnitMath::GetMatrix(float MatrixOut[16])
+{
+	if(!NewMatrix)
+	{
+		Easy_quat_to_matrix(UnitMatrix,UnitQuat);
+		NewMatrix=true;
+	}
+	UnitMatrix[3]=UnitPos;
+	Easy_matrix_copy(MatrixOut,UnitMatrix);
+}
+
 __m128 CUnitMath::GetRelativePos(__m128 TGTPos)
 {
 	if(!NewMatrix)
@@ -72,4 +96,12 @@ __m128 CUnitMath::GetRelativePos(__m128 TGTPos)
 	Easy_matrix_mult_vector3X3(&UnitPosTMP,UnitMatrix,UnitPosTMP);
 	UnitPosTMP.m128_f32[3]=1.0f;
 	return UnitPosTMP;
+}
+
+
+void CUnitMath::Reset(void)
+{
+	UnitQuat=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	NewMatrix=false;
 }
