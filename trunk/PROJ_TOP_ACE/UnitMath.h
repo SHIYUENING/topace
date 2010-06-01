@@ -21,10 +21,14 @@ public:
 	void MovInternal(__m128 PosMovInternal);
 	void SetPos(__m128 Pos);
 	void GetMatrix(__m128 MatrixOut[4]);
+	void GetMatrix(float MatrixOut[16]);
 private:
 	bool NewMatrix;
 	__m128 UnitPosTMP;
 public:
 	__m128 GetRelativePos(__m128 TGTPos);
+	void RotExternal(float angle,float axisX, float axisY, float axisZ);
+	void RotInternal(float angle,float axisX, float axisY, float axisZ);
+	void Reset(void);
 };
 #endif

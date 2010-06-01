@@ -25,22 +25,39 @@ inline void Easy_quat_axis_angle(float c[4], float axis[3], float angle)
         c[3] = (float)cos(omega);
     }
 }
-inline void Easy_quat_axis_angle(__m128 c, const __m128 axis_angle) 
+inline void Easy_quat_axis_angle(__m128 * c, float axisX, float axisY, float axisZ, float angle) 
+{
+	double omega, s;
+    double l;
+
+    l = sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ);
+    if (l < 1e-5) {
+        c[0] =_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+    } else {
+        omega = -0.5 * angle;
+        s = sin(omega) / l;
+        c->m128_f32[0] = (float)s * axisX;
+        c->m128_f32[1] = (float)s * axisY;
+        c->m128_f32[2] = (float)s * axisZ;
+        c->m128_f32[3] = (float)cos(omega);
+    }
+}
+inline void Easy_quat_axis_angle(__m128 * c, const __m128 axis_angle) 
 {
     double omega, s;
     double l;
 
 	l = sqrt(axis_angle.m128_f32[0] * axis_angle.m128_f32[0] + axis_angle.m128_f32[1] * axis_angle.m128_f32[1] + axis_angle.m128_f32[2] * axis_angle.m128_f32[2]);
     if (l < 1e-5) {
-		c.m128_f32[0] = c.m128_f32[1] = c.m128_f32[2] = 0.0f;
-        c.m128_f32[3] = 1.0f;
+		c->m128_f32[0] = c->m128_f32[1] = c->m128_f32[2] = 0.0f;
+        c->m128_f32[3] = 1.0f;
     } else {
         omega = -0.5 * axis_angle.m128_f32[3];
         s = sin(omega) / l;
-        c.m128_f32[0] = (float)s * axis_angle.m128_f32[0];
-        c.m128_f32[1] = (float)s * axis_angle.m128_f32[1];
-        c.m128_f32[2] = (float)s * axis_angle.m128_f32[2];
-        c.m128_f32[3] = (float)cos(omega);
+        c->m128_f32[0] = (float)s * axis_angle.m128_f32[0];
+        c->m128_f32[1] = (float)s * axis_angle.m128_f32[1];
+        c->m128_f32[2] = (float)s * axis_angle.m128_f32[2];
+        c->m128_f32[3] = (float)cos(omega);
     }
 }
 inline void Easy_quat_normalize(float c[4]) {

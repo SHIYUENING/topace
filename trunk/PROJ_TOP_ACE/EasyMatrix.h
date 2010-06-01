@@ -465,7 +465,7 @@ inline void Easy_matrix_rotate(float m[4][4], float angle, float ax, float ay, f
 }
 inline void Easy_matrix_rotate(__m128 m[4],const __m128 axis_angle) {
     __m128 q;
-    Easy_quat_axis_angle(q, axis_angle);
+    Easy_quat_axis_angle(&q, axis_angle);
     Easy_matrix_rotate_quat(m, q);
 }
 inline void Easy_matrix_scale(float m[4][4], float x, float y, float z) 
