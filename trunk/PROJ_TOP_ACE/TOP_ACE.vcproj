@@ -276,6 +276,14 @@
 			<File
 				RelativePath=".\Load3DS.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\LockFPS.cpp"
