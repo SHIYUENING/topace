@@ -100,6 +100,10 @@ void KeyUpdate ()								// Perform Motion Updates Here
 		moveX=moveX+1.0f;
 	if(g_keys->keyDown [VK_LEFT] == TRUE)
 		moveX=moveX-1.0f;
+	if(g_keys->keyDown [VK_HOME] == TRUE)
+	{
+		moveX=moveY=moveZ=0.0f;
+	}
 }
 void ExchangeData (void)
 {

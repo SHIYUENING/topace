@@ -22,7 +22,7 @@
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
-#pragma comment( lib, "lib3ds-2_0.lib" )
+
 #ifdef _DEBUG
 #pragma comment( linker, "/NODEFAULTLIB:LIBCMT.lib")
 #endif

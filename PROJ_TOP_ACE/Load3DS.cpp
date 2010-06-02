@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>	
 #include "Load3DS.h"
+#pragma comment( lib, "lib3ds-2_0.lib" )
 CLoad3DS::CLoad3DS(void)
 : isRAM(false)
 , isVRAM(false)
