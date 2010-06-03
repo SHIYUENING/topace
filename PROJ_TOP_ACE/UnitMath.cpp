@@ -92,8 +92,10 @@ __m128 CUnitMath::GetRelativePos(__m128 TGTPos)
 	}
 	else
 		UnitMatrix[3]=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
-	Easy_vector_sub(&UnitPosTMP,TGTPos,UnitPos);
+
+	Easy_vector_sub(&UnitPosTMP,_mm_set_ps(1.0f,0.0f,0.0f,0.0f),TGTPos);
 	Easy_matrix_mult_vector3X3(&UnitPosTMP,UnitMatrix,UnitPosTMP);
+	Easy_vector_sub(&UnitPosTMP,UnitPos,UnitPosTMP);
 	UnitPosTMP.m128_f32[3]=1.0f;
 	return UnitPosTMP;
 }
