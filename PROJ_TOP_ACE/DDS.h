@@ -188,6 +188,8 @@ public:
 	CDDS(void);
 	~CDDS(void);
 	DDS_IMAGE_DATA *pDDSImageData;
+	void LoadFileT(wchar_t *filename);
+	void LoadFile( unsigned char *FileData ,unsigned int DataSize);
 	void LoadFile( const char *filename );
 	void LoadFile( const wchar_t *filename );
 	unsigned int loadCompressedTexture( GLint TexParameter=0 );
