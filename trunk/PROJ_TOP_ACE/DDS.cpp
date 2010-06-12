@@ -15,6 +15,115 @@ CDDS::~CDDS(void)
 	DelDDS_RAM();
 	DelDDS_VRAM();
 }
+void CDDS::LoadFileT(wchar_t *filename)
+{
+
+	HANDLE   hFile;     
+      
+	hFile   =   CreateFileW(filename,                       //   open   MYFILE.TXT     
+                                  GENERIC_READ,                             //   open   for   reading     
+                                  FILE_SHARE_READ,                       //   share   for   reading     
+                                  NULL,                                             //   no   security     
+                                  OPEN_EXISTING,                           //   existing   file   only     
+                                  FILE_ATTRIBUTE_NORMAL,           //   normal   file     
+                                  NULL);  
+	if   (hFile   ==   INVALID_HANDLE_VALUE)  
+	{
+		CloseHandle(hFile);
+		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
+		return;
+	}
+
+}
+void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
+{
+
+	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
+	{
+		DDSerror=DDS_ERROR_NO_SUPPOT;
+		return;
+	}
+	if((!FileData)||(DataSize==0))
+	{
+		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
+        return ;
+	}
+	if(strncmp( (char *)&FileData[0], "DDS ", 4 ) != 0)
+	{
+		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
+        return ;
+	}
+
+    DDSURFACEDESC2 * ddsd=(DDSURFACEDESC2*)&(FileData[4]);
+
+    int factor;
+    int bufferSize; 
+ 
+
+    pDDSImageData = (DDS_IMAGE_DATA*) malloc(sizeof(DDS_IMAGE_DATA)); 
+
+    memset( pDDSImageData, 0, sizeof(DDS_IMAGE_DATA) ); 
+
+    switch( ddsd->ddpfPixelFormat.dwFourCC )
+    {
+        case FOURCC_DXT1:
+            // DXT1's compression ratio is 8:1
+            pDDSImageData->format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            factor = 2;
+			UseAlpha=false;
+            break; 
+
+        case FOURCC_DXT3:
+            // DXT3's compression ratio is 4:1
+            pDDSImageData->format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+            factor = 4;
+			UseAlpha=true;
+            break; 
+
+        case FOURCC_DXT5:
+            // DXT5's compression ratio is 4:1
+            pDDSImageData->format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+            factor = 4;
+			UseAlpha=true;
+            break; 
+
+        default:
+
+			DDSerror=DDS_ERROR_DDS_FORMAT;
+            return ;
+    } 
+
+    if( ddsd->dwLinearSize == 0 )
+    {
+		DDSerror=DDS_ERROR_DDS_FORMAT;
+		return ;
+    } 
+
+    if( ddsd->dwMipMapCount > 1 )
+        bufferSize = ddsd->dwLinearSize * factor;
+    else
+        bufferSize = ddsd->dwLinearSize; 
+
+	if(DataSize<(bufferSize+4+sizeof(ddsd)))
+	{
+		DDSerror=DDS_ERROR_DDS_FORMAT;
+		return ;
+	}
+
+    pDDSImageData->pixels = &(FileData[4+sizeof(ddsd)]);
+
+    pDDSImageData->width      = ddsd->dwWidth;
+    pDDSImageData->height     = ddsd->dwHeight;
+    pDDSImageData->numMipMaps = ddsd->dwMipMapCount; 
+
+    if( ddsd->ddpfPixelFormat.dwFourCC == FOURCC_DXT1 )
+        pDDSImageData->components = 3;
+    else
+        pDDSImageData->components = 4; 
+
+	isRAM=true;
+    //return pDDSImageData;
+}
 void CDDS::LoadFile( const char *filename )
 {
 
@@ -386,3 +495,5 @@ void CDDS::SetAFNum(GLfloat AFSet)
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT,&AFMAX);
 	CDDS::AFNum=max(1.0f,min(AFSet,AFMAX));
 }
+
+
