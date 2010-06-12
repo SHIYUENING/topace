@@ -15,7 +15,7 @@ CDDS::~CDDS(void)
 	DelDDS_RAM();
 	DelDDS_VRAM();
 }
-void CDDS::loadDDSTextureFile( const char *filename )
+void CDDS::LoadFile( const char *filename )
 {
 
 	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
@@ -37,7 +37,7 @@ void CDDS::loadDDSTextureFile( const char *filename )
     if( pFile == NULL )
     {
        // char str[255];
-       // sprintf( str, "loadDDSTextureFile couldn't find, or failed to load \"%s\"", filename );
+       // sprintf( str, "LoadFile couldn't find, or failed to load \"%s\"", filename );
        // MessageBox( NULL, str, "ERROR", MB_OK|MB_ICONEXCLAMATION );
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
         return ;
@@ -143,7 +143,7 @@ void CDDS::loadDDSTextureFile( const char *filename )
 	isRAM=true;
     //return pDDSImageData;
 }
-void CDDS::loadDDSTextureFile( const wchar_t *filename )
+void CDDS::LoadFile( const wchar_t *filename )
 {
 
 	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
@@ -165,7 +165,7 @@ void CDDS::loadDDSTextureFile( const wchar_t *filename )
     if( pFile == NULL )
     {
        // char str[255];
-       // sprintf( str, "loadDDSTextureFile couldn't find, or failed to load \"%s\"", filename );
+       // sprintf( str, "LoadFile couldn't find, or failed to load \"%s\"", filename );
        // MessageBox( NULL, str, "ERROR", MB_OK|MB_ICONEXCLAMATION );
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
         return ;
@@ -281,7 +281,7 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
     // levels, which are also compressed.
 	//g_compressedTextureID=0;
     //DDS_IMAGE_DATA *pDDSImageData = 
-	//loadDDSTextureFile( filename ); 
+	//LoadFile( filename ); 
 	if(g_compressedTextureID!=0)
 		return g_compressedTextureID;
 

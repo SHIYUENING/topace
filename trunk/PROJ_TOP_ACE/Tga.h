@@ -60,8 +60,8 @@ class TGA
 		bool isVRAM;
 		bool UseAlpha;
 
-		bool LoadTGA(char * filename);
-		bool LoadTGA(wchar_t * filename);
+		bool LoadFile(char * filename);
+		bool LoadFile(wchar_t * filename);
 		bool LoadUncompressedTGA(FILE * fTGA);
 		//bool LoadCompressedTGA(char * filename, FILE * fTGA);
 		TGAHeader tgaheader;									// TGA header

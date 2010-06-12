@@ -45,7 +45,7 @@ GLuint TGA::LoadTGA_RAMtoVRAM(int TexParameter)
 	return this->texID;
 }
 
-bool TGA::LoadTGA(char * filename)				// Load a TGA file
+bool TGA::LoadFile(char * filename)				// Load a TGA file
 {
 	FILE * fTGA;												// File pointer to texture file
 	fopen_s(&fTGA,filename, "rb");								// Open file for reading
@@ -86,7 +86,7 @@ bool TGA::LoadTGA(char * filename)				// Load a TGA file
 	}
 	return true;															// All went well, continue on
 }
-bool TGA::LoadTGA(wchar_t * filename)				// Load a TGA file
+bool TGA::LoadFile(wchar_t * filename)				// Load a TGA file
 {
 	FILE * fTGA;												// File pointer to texture file
 	_wfopen_s(&fTGA,filename, L"rb");									// Open file for reading
