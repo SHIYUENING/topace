@@ -18,10 +18,10 @@ CDDS::~CDDS(void)
 void CDDS::loadDDSTextureFile( const char *filename )
 {
 
-	if((void *)glCompressedTexImage2DARB==NULL)
+	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
 	{
-		DDSerror=DDS_ERROR_INIT;
-		return ;
+		DDSerror=DDS_ERROR_NO_SUPPOT;
+		return;
 	}
    // DDS_IMAGE_DATA *pDDSImageData;
     DDSURFACEDESC2 ddsd;
@@ -146,10 +146,10 @@ void CDDS::loadDDSTextureFile( const char *filename )
 void CDDS::loadDDSTextureFile( const wchar_t *filename )
 {
 
-	if((void *)glCompressedTexImage2DARB==NULL)
+	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
 	{
-		DDSerror=DDS_ERROR_INIT;
-		return ;
+		DDSerror=DDS_ERROR_NO_SUPPOT;
+		return;
 	}
    // DDS_IMAGE_DATA *pDDSImageData;
     DDSURFACEDESC2 ddsd;
