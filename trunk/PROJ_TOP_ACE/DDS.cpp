@@ -7,6 +7,7 @@ CDDS::CDDS(void)
 ,isRAM(false)
 ,isVRAM(false)
 ,UseAlpha(false)
+, DDSFileData(NULL)
 {
 }
 
@@ -33,11 +34,32 @@ void CDDS::LoadFileT(wchar_t *filename)
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
 		return;
 	}
+	DWORD filesize=0;
+	filesize = GetFileSize(hFile,NULL);
+	if(filesize<=0)
+	{
+		CloseHandle(hFile);
+		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
+		return;
+	}
+	DWORD Readedsize=0;
+	DDSFileData = new unsigned char[filesize];
+	BOOL ReadStates=ReadFile(hFile,DDSFileData,filesize,&Readedsize,NULL);
+	if(filesize!=Readedsize)
+	{
+		CloseHandle(hFile);
+		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
+		return;
+	}
+	LoadFile(DDSFileData,Readedsize);
+
+	CloseHandle(hFile);
 
 }
 void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
 {
 
+	DDSFileData=FileData;
 	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
 	{
 		DDSerror=DDS_ERROR_NO_SUPPOT;
@@ -104,13 +126,13 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
     else
         bufferSize = ddsd->dwLinearSize; 
 
-	if(DataSize<(bufferSize+4+sizeof(ddsd)))
+	/*if(DataSize<(bufferSize+4+sizeof(ddsd)))
 	{
 		DDSerror=DDS_ERROR_DDS_FORMAT;
 		return ;
-	}
+	}*/
 
-    pDDSImageData->pixels = &(FileData[4+sizeof(ddsd)]);
+    pDDSImageData->pixels = &(FileData[4+sizeof(DDSURFACEDESC2)]);
 
     pDDSImageData->width      = ddsd->dwWidth;
     pDDSImageData->height     = ddsd->dwHeight;
@@ -394,11 +416,6 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
 	if(g_compressedTextureID!=0)
 		return g_compressedTextureID;
 
-	if((void *)glCompressedTexImage2DARB==NULL)
-	{
-		DDSerror=DDS_ERROR_INIT;
-		return 0;
-	}
     if( pDDSImageData != NULL )
     {
         int nHeight     = pDDSImageData->height;
@@ -467,6 +484,18 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
 } 
 void CDDS::DelDDS_RAM()
 {
+	if(DDSFileData)
+	{
+		delete[] DDSFileData;
+		DDSFileData=NULL;
+		if(pDDSImageData)
+		{
+			free( pDDSImageData );
+			pDDSImageData = NULL;
+		}
+		isRAM=false;
+		return;
+	}
 	if( pDDSImageData != NULL )
     {
         if( pDDSImageData->pixels != NULL )
