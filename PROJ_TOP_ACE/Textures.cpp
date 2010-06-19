@@ -101,7 +101,7 @@ bool Textures::loadfile(wchar_t * filename)
 	DDSfile = new CDDS;
 	swprintf_s(LoadFileName,256,L"%s.%s",filename,L"dds");
 	//sprintf(LoadFileName,L"%s.%s",filename,L"dds");
-	DDSfile->LoadFile(LoadFileName);
+	DDSfile->LoadFileT(LoadFileName);
 	if((DDSfile->pDDSImageData==NULL)||(DDSfile->DDSerror!=DDS_NO_ERROR))
 	{
 		delete DDSfile;
