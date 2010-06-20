@@ -43,15 +43,15 @@ void CDDS::LoadFileT(wchar_t *filename)
 		return;
 	}
 	DWORD Readedsize=0;
-	DDSFileData = new unsigned char[filesize];
-	BOOL ReadStates=ReadFile(hFile,DDSFileData,filesize,&Readedsize,NULL);
+	unsigned char * DDSFileDataT = new unsigned char[filesize];
+	BOOL ReadStates=ReadFile(hFile,DDSFileDataT,filesize,&Readedsize,NULL);
 	if(filesize!=Readedsize)
 	{
 		CloseHandle(hFile);
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
 		return;
 	}
-	LoadFile(DDSFileData,Readedsize);
+	LoadFile(DDSFileDataT,Readedsize);
 
 	CloseHandle(hFile);
 
