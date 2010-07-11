@@ -25,15 +25,18 @@ uniform float4x4 modelViewProj : state.matrix.mvp;
 fragment main(vertex IN,
 			  uniform float	time)
 {
-	float2 fTranslation=float2(time,0.0);
+	float2 fTranslation1=float2(time,0.0);
+	float2 fTranslation2=float2(time*2,0.0);
+	float2 fTranslation3=float2(time*3,0.0);
+	float2 fTranslation4=float2(time*4,0.0);
 	fragment OUT;
 	OUT.position = mul( modelViewProj, IN.position );
 	OUT.color0 = IN.color0;
 	OUT.objectPos2 = IN.position;
-	OUT.TexCoord1=IN.texcoord0       + fTranslation * 2.0;
-	OUT.TexCoord2=IN.texcoord0 * 2.0 + fTranslation * 4.0;
-	OUT.TexCoord3=IN.texcoord0 * 4.0 + fTranslation * 2.0;
-	OUT.TexCoord4=IN.texcoord0 * 8.0 + fTranslation;
+	OUT.TexCoord1=IN.texcoord0       + fTranslation1 * 2.0;
+	OUT.TexCoord2=IN.texcoord0 * 2.0 + fTranslation2 * 4.0;
+	OUT.TexCoord3=IN.texcoord0 * 4.0 + fTranslation3 * 2.0;
+	OUT.TexCoord4=IN.texcoord0 * 8.0 + fTranslation4;
 	OUT.objectPos=OUT.position;
 	return OUT;
 }
