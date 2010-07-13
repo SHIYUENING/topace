@@ -107,3 +107,46 @@ void CUnitMath::Reset(void)
 	UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	NewMatrix=false;
 }
+
+void CUnitMath::PosTo(__m128 TGTPos)
+{
+	__m128 TGTDir,BioTGTDir,DirTMP;
+	Easy_vector_sub(&TGTDir,TGTPos,UnitPos);
+	Easy_vector_copy(&BioTGTDir,TGTDir);
+	Easy_vector_normalize(&TGTDir,TGTDir);
+	BioTGTDir.m128_f32[1]=0.0f;
+	Easy_vector_normalize(&BioTGTDir,BioTGTDir);
+	if((BioTGTDir.m128_f32[0]>=0.0f)&&(BioTGTDir.m128_f32[2]>=0.0f))
+	{
+		DirTMP.m128_f32[0]= BioTGTDir.m128_f32[2];
+		DirTMP.m128_f32[2]=-BioTGTDir.m128_f32[0];
+	}
+	else
+	if((BioTGTDir.m128_f32[0]>=0.0f)&&(BioTGTDir.m128_f32[2]<0.0f))
+	{
+		DirTMP.m128_f32[0]=-BioTGTDir.m128_f32[2];
+		DirTMP.m128_f32[2]= BioTGTDir.m128_f32[0];
+	}
+	else
+	if((BioTGTDir.m128_f32[0]<0.0f)&&(BioTGTDir.m128_f32[2]<0.0f))
+	{
+		DirTMP.m128_f32[0]= BioTGTDir.m128_f32[2];
+		DirTMP.m128_f32[2]=-BioTGTDir.m128_f32[0];
+	}
+	else
+	if((BioTGTDir.m128_f32[0]<0.0f)&&(BioTGTDir.m128_f32[2]>=0.0f))
+	{
+		DirTMP.m128_f32[0]=-BioTGTDir.m128_f32[2];
+		DirTMP.m128_f32[2]= BioTGTDir.m128_f32[0];
+	}
+	Easy_vector_cross(&BioTGTDir,TGTDir,DirTMP);
+	TGTDir.m128_f32[3]=0;
+	DirTMP.m128_f32[3]=0;
+	BioTGTDir.m128_f32[3]=0;
+	UnitMatrix[0]=TGTDir;
+	UnitMatrix[1]=DirTMP;
+	UnitMatrix[2]=BioTGTDir;
+	UnitMatrix[3]=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	NewMatrix=true;
+	Easy_matrix_to_quat(&UnitQuat,UnitMatrix);
+}
