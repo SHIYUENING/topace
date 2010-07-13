@@ -198,6 +198,9 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 	}
 }
 
+inline void Easy_matrix_to_quat(__m128 * QuatOut,__m128 MatrixIn[4])
+{
+}
 inline void Easy_Joint_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn,const __m128 PosIn)
 {
 	_asm   
@@ -402,21 +405,21 @@ inline void Easy_quat_Mult(__m128 * QuatOut,const __m128 QuatIn1,const __m128 Qu
 #define vec4f_swizzle(v,p,q,r,s) (_mm_shuffle_ps( (v),(v), ((s)<<6|(r)<<4|(q)<<2|(p))))
 inline void  quat_mul(__m128 * QuatOut,__m128 a, __m128 b)
 {
-__m128 swiz1=vec4f_swizzle(b,3,3,3,3);
-__m128 swiz2=vec4f_swizzle(a,2,0,1,0);
-__m128 swiz3=vec4f_swizzle(b,1,2,0,0);
-__m128 swiz4=vec4f_swizzle(a,3,3,3,1);
-__m128 swiz5=vec4f_swizzle(b,0,1,2,1);
-__m128 swiz6=vec4f_swizzle(a,1,2,0,2);
-__m128 swiz7=vec4f_swizzle(b,2,0,1,2);
-__m128 mul4=_mm_mul_ps(swiz6,swiz7);
-__m128 mul3=_mm_mul_ps(swiz4,swiz5);
-__m128 mul2=_mm_mul_ps(swiz2,swiz3);
-__m128 mul1=_mm_mul_ps(a,swiz1);
-__m128 flip1=_mm_xor_ps(mul4,quat_mask);
-__m128 flip2=_mm_xor_ps(mul3,quat_mask);
-__m128 retVal=_mm_sub_ps(mul1,mul2);
-__m128 retVal2=_mm_add_ps(flip1,flip2);
-QuatOut[0]= _mm_add_ps(retVal,retVal2);
+	__m128 swiz1=vec4f_swizzle(b,3,3,3,3);
+	__m128 swiz2=vec4f_swizzle(a,2,0,1,0);
+	__m128 swiz3=vec4f_swizzle(b,1,2,0,0);
+	__m128 swiz4=vec4f_swizzle(a,3,3,3,1);
+	__m128 swiz5=vec4f_swizzle(b,0,1,2,1);
+	__m128 swiz6=vec4f_swizzle(a,1,2,0,2);
+	__m128 swiz7=vec4f_swizzle(b,2,0,1,2);
+	__m128 mul4=_mm_mul_ps(swiz6,swiz7);
+	__m128 mul3=_mm_mul_ps(swiz4,swiz5);
+	__m128 mul2=_mm_mul_ps(swiz2,swiz3);
+	__m128 mul1=_mm_mul_ps(a,swiz1);
+	__m128 flip1=_mm_xor_ps(mul4,quat_mask);
+	__m128 flip2=_mm_xor_ps(mul3,quat_mask);
+	__m128 retVal=_mm_sub_ps(mul1,mul2);
+	__m128 retVal2=_mm_add_ps(flip1,flip2);
+	QuatOut[0]= _mm_add_ps(retVal,retVal2);
 }
 #endif
