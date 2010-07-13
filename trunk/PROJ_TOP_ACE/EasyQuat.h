@@ -200,6 +200,10 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 
 inline void Easy_matrix_to_quat(__m128 * QuatOut,__m128 MatrixIn[4])
 {
+	QuatOut->m128_f32[3]=sqrt(max(0,1+MatrixIn[0].m128_f32[0]+MatrixIn[1].m128_f32[1]+MatrixIn[2].m128_f32[2]))/2.0f;
+	QuatOut->m128_f32[0]=(MatrixIn[2].m128_f32[1]-MatrixIn[1].m128_f32[2])/(4*QuatOut->m128_f32[3]);
+	QuatOut->m128_f32[1]=(MatrixIn[0].m128_f32[2]-MatrixIn[2].m128_f32[0])/(4*QuatOut->m128_f32[3]);
+	QuatOut->m128_f32[2]=(MatrixIn[1].m128_f32[0]-MatrixIn[0].m128_f32[1])/(4*QuatOut->m128_f32[3]);
 }
 inline void Easy_Joint_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn,const __m128 PosIn)
 {
