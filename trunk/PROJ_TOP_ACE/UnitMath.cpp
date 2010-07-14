@@ -147,6 +147,7 @@ void CUnitMath::PosTo(__m128 TGTPos)
 
 	NewMatrix=true;
 	Easy_matrix_to_quat(&UnitQuat,UnitMatrix);
+	Easy_quat_to_matrix(UnitMatrix,UnitQuat);
 	
 
 }

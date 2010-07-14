@@ -197,13 +197,62 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 	//	POPAD
 	}
 }
+inline void QuatFromMatrix(float q[4], const float m[16])
+{
+	float           t, s;
+
+	if(m[0] + m[5] + m[10] > 0.0f)
+	{
+		t = m[0] + m[5] + m[10] + 1.0f;
+		s = 0.5f / sqrt(t);
+
+		q[3] = s * t;
+		q[2] = (m[1] - m[4]) * s;
+		q[1] = (m[8] - m[2]) * s;
+		q[0] = (m[6] - m[9]) * s;
+	}
+	else if(m[0] > m[5] && m[0] > m[10])
+	{
+		t = m[0] - m[5] - m[10] + 1.0f;
+		s = 0.5f / sqrt(t);
+
+		q[0] = s * t;
+		q[1] = (m[1] + m[4]) * s;
+		q[2] = (m[8] + m[2]) * s;
+		q[3] = (m[6] - m[9]) * s;
+	}
+	else if(m[5] > m[10])
+	{
+		t = -m[0] + m[5] - m[10] + 1.0f;
+		s = 0.5f / sqrt(t);
+
+		q[1] = s * t;
+		q[0] = (m[1] + m[4]) * s;
+		q[3] = (m[8] - m[2]) * s;
+		q[2] = (m[6] + m[9]) * s;
+	}
+	else
+	{
+		t = -m[0] - m[5] + m[10] + 1.0f;
+		s = 0.5f / sqrt(t);
+
+		q[2] = s * t;
+		q[3] = (m[1] - m[4]) * s;
+		q[0] = (m[8] + m[2]) * s;
+		q[1] = (m[6] + m[9]) * s;
+	}
+
+
+}
 
 inline void Easy_matrix_to_quat(__m128 * QuatOut,__m128 MatrixIn[4])
 {
-	QuatOut->m128_f32[3]=sqrt(max(0,1+MatrixIn[0].m128_f32[0]+MatrixIn[1].m128_f32[1]+MatrixIn[2].m128_f32[2]))/2.0f;
+	/*QuatOut->m128_f32[3]=sqrt(max(0.0000001f,1+MatrixIn[0].m128_f32[0]+MatrixIn[1].m128_f32[1]+MatrixIn[2].m128_f32[2]))/2.0f;
 	QuatOut->m128_f32[0]=(MatrixIn[2].m128_f32[1]-MatrixIn[1].m128_f32[2])/(4*QuatOut->m128_f32[3]);
 	QuatOut->m128_f32[1]=(MatrixIn[0].m128_f32[2]-MatrixIn[2].m128_f32[0])/(4*QuatOut->m128_f32[3]);
-	QuatOut->m128_f32[2]=(MatrixIn[1].m128_f32[0]-MatrixIn[0].m128_f32[1])/(4*QuatOut->m128_f32[3]);
+	QuatOut->m128_f32[2]=(MatrixIn[1].m128_f32[0]-MatrixIn[0].m128_f32[1])/(4*QuatOut->m128_f32[3]);*/
+
+	QuatFromMatrix(QuatOut->m128_f32,&(MatrixIn[0].m128_f32[0]));
 }
 inline void Easy_Joint_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn,const __m128 PosIn)
 {
