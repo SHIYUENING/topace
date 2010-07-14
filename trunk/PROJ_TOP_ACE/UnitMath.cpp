@@ -110,46 +110,43 @@ void CUnitMath::Reset(void)
 
 void CUnitMath::PosTo(__m128 TGTPos)
 {
-	__m128 TGTDir,BioTGTDir,DirTMP;
-	Easy_vector_sub(&TGTDir,TGTPos,UnitPos);
-	Easy_vector_copy(&BioTGTDir,TGTDir);
-	Easy_vector_normalize(&TGTDir,TGTDir);
-	TGTDir.m128_f32[3]=0.0f;
-	BioTGTDir.m128_f32[1]=0.0f;
-	Easy_vector_normalize(&BioTGTDir,BioTGTDir);
-	BioTGTDir.m128_f32[3]=0.0f;
-	if((BioTGTDir.m128_f32[0]>=0.0f)&&(BioTGTDir.m128_f32[2]>=0.0f))
-	{
-		DirTMP.m128_f32[0]= BioTGTDir.m128_f32[2];
-		DirTMP.m128_f32[2]=-BioTGTDir.m128_f32[0];
-	}
-	else
-	if((BioTGTDir.m128_f32[0]>=0.0f)&&(BioTGTDir.m128_f32[2]<0.0f))
-	{
-		DirTMP.m128_f32[0]=-BioTGTDir.m128_f32[2];
-		DirTMP.m128_f32[2]= BioTGTDir.m128_f32[0];
-	}
-	else
-	if((BioTGTDir.m128_f32[0]<0.0f)&&(BioTGTDir.m128_f32[2]<0.0f))
-	{
-		DirTMP.m128_f32[0]= BioTGTDir.m128_f32[2];
-		DirTMP.m128_f32[2]=-BioTGTDir.m128_f32[0];
-	}
-	else
-	if((BioTGTDir.m128_f32[0]<0.0f)&&(BioTGTDir.m128_f32[2]>=0.0f))
-	{
-		DirTMP.m128_f32[0]=-BioTGTDir.m128_f32[2];
-		DirTMP.m128_f32[2]= BioTGTDir.m128_f32[0];
-	}
-	DirTMP.m128_f32[1]=0.0f;
-	Easy_vector_cross(&BioTGTDir,TGTDir,DirTMP);
-	TGTDir.m128_f32[3]=0;
-	DirTMP.m128_f32[3]=0;
-	BioTGTDir.m128_f32[3]=0;
-	UnitMatrix[0]=TGTDir;
-	UnitMatrix[1]=DirTMP;
-	UnitMatrix[2]=BioTGTDir;
+	__m128 vecX,vecY,vecZ,vecNZ,vecTMP;
+	Easy_vector_sub(&vecNZ,TGTPos,UnitPos);
+	Easy_vector_normalize(&vecNZ,vecNZ);
+	vecNZ.m128_f32[3]=0.0f;// vecNZ get
+
+	Easy_vector_copy(&vecTMP,vecNZ);
+	vecTMP.m128_f32[1]=0.0f;
+	Easy_vector_normalize(&vecTMP,vecTMP);
+	vecTMP.m128_f32[3]=0.0f;// vecNZ in xzFace shadow
+
+	vecX.m128_f32[0]=-vecTMP.m128_f32[2];
+	vecX.m128_f32[1]=0.0f;
+	vecX.m128_f32[2]= vecTMP.m128_f32[0];
+	vecX.m128_f32[3]=0.0f;// vecX get
+	
+	Easy_vector_sub(&vecZ,_mm_set_ps(0.0f,0.0f,0.0f,0.0f),vecNZ);
+	//vecZ=vecNZ;
+	vecZ.m128_f32[3]=0.0f;//vecZ=-vecNZ;
+
+	Easy_vector_cross(&vecY,vecX,vecNZ);
+	vecX.m128_f32[3]=0.0f;
+	vecY.m128_f32[3]=0.0f;
+	vecZ.m128_f32[3]=0.0f;
+	Easy_vector_normalize(&vecX,vecX);
+	Easy_vector_normalize(&vecY,vecY);
+	Easy_vector_normalize(&vecZ,vecZ);
+
+	Easy_matrix_identity(UnitMatrix);
+	UnitMatrix[0]=vecX;
+	UnitMatrix[1]=vecY;
+	UnitMatrix[2]=vecZ;
+	//Easy_matrix_transpose(UnitMatrix);
 	UnitMatrix[3]=UnitPos;
+	//Easy_matrix_inv(UnitMatrix,UnitMatrix);
+
 	NewMatrix=true;
 	Easy_matrix_to_quat(&UnitQuat,UnitMatrix);
+	
+
 }
