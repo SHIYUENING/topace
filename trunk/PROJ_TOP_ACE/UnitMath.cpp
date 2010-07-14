@@ -13,7 +13,7 @@ CUnitMath::~CUnitMath(void)
 void CUnitMath::RotExternal(float angle,float axisX, float axisY, float axisZ)
 {
 	Easy_quat_axis_angle(&UnitPosTMP,axisX,axisY,axisZ,-angle*3.1415926f/180.0f);
-	//Easy_quat_normalize(&UnitPosTMP,UnitPosTMP);
+	Easy_quat_normalize(&UnitPosTMP,UnitPosTMP);
 	RotExternal(UnitPosTMP);
 }
 
@@ -27,7 +27,7 @@ void CUnitMath::RotExternal(__m128 QuatRotExternal)
 void CUnitMath::RotInternal(float angle,float axisX, float axisY, float axisZ)
 {
 	Easy_quat_axis_angle(&UnitPosTMP,axisX,axisY,axisZ,-angle*3.1415926f/180.0f);
-	//Easy_quat_normalize(&UnitPosTMP,UnitPosTMP);
+	Easy_quat_normalize(&UnitPosTMP,UnitPosTMP);
 	RotInternal(UnitPosTMP);
 }
 
@@ -141,13 +141,10 @@ void CUnitMath::PosTo(__m128 TGTPos)
 	UnitMatrix[0]=vecX;
 	UnitMatrix[1]=vecY;
 	UnitMatrix[2]=vecZ;
-	//Easy_matrix_transpose(UnitMatrix);
 	UnitMatrix[3]=UnitPos;
-	//Easy_matrix_inv(UnitMatrix,UnitMatrix);
 
 	NewMatrix=true;
 	Easy_matrix_to_quat(&UnitQuat,UnitMatrix);
-	Easy_quat_to_matrix(UnitMatrix,UnitQuat);
-	
+	Easy_quat_normalize(&UnitQuat,UnitQuat);
 
 }
