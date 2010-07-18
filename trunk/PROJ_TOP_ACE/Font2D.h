@@ -8,9 +8,10 @@
 #include <freetype/ftglyph.h>
 #include <freetype/ftoutln.h>
 #include <freetype/fttrigon.h>
-#define MAX_FONT_LIST 64
-#define DEFINE_FONT_W 256
-#define DEFINE_FONT_H 256
+#define MAXNUMX 16
+#define MAX_FONT_LIST MAXNUMX*MAXNUMX
+#define DEFINE_FONT_W 512
+#define DEFINE_FONT_H 512
 struct tFont2Dset
 {
 	int FontSizeW;

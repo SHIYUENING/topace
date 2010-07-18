@@ -12,8 +12,8 @@ CFont2D::CFont2D(void)
 ,FontTexW(DEFINE_FONT_W)
 ,FontTexH(DEFINE_FONT_H)
 ,OnefontData(NULL)
-,OnefontW(DEFINE_FONT_W/8)
-,OnefontH(DEFINE_FONT_W/8)
+,OnefontW(DEFINE_FONT_W/MAXNUMX)
+,OnefontH(DEFINE_FONT_W/MAXNUMX)
 , CharNum(0)
 {
 }
@@ -38,8 +38,8 @@ bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int Fon
 	glEnable( GL_TEXTURE_2D );
 	FontTexW=next_p2(FontW);
 	FontTexH=next_p2(FontH);
-	OnefontW=FontTexW/8;
-	OnefontH=FontTexH/8;
+	OnefontW=FontTexW/MAXNUMX;
+	OnefontH=FontTexH/MAXNUMX;
 
 	FontCharSet=CHARSET;
 	if (FT_Init_FreeType( &library ))
@@ -49,7 +49,7 @@ bool CFont2D::LoadFont(const char * FontName,int FontSizeW,int FontSizeH,int Fon
 	if(FontSizeW<32)
 		FT_Set_Char_Size( face, FontSizeW << 6, FontSizeH << 6, 66, 64);
 	else
-		FT_Set_Pixel_Sizes(face, min(FontSizeW,FontTexW/8), min(FontSizeH,FontTexH/8));
+		FT_Set_Pixel_Sizes(face, min(FontSizeW,FontTexW/MAXNUMX), min(FontSizeH,FontTexH/MAXNUMX));
 	unsigned char* data;
 	data =new unsigned char[FontTexW*FontTexH*2];
 	ZeroMemory(data,FontTexW*FontTexH*2);
@@ -185,12 +185,12 @@ void CFont2D::DrawTXT(int WinW, int WinH, int PosX, int PosY, int SizeW, int Siz
 			glTranslated(WinPosX+PosX,WinPosY-PosY,0);
 		else
 			glTranslated(WinPosX+(WinW-WordNum*SizeW)/2+SizeW/2,WinPosY-PosY,0);
-		float FontTexPosX=(float(i%8))/8.0f;
-		float FontTexPosY=(float(i/8))/8.0f;
+		float FontTexPosX=(float(i%MAXNUMX))/float(MAXNUMX);
+		float FontTexPosY=(float(i/MAXNUMX))/float(MAXNUMX);
 			glBegin(GL_QUADS);
-				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+1.0f/8.0f);	glVertex2i(-thisFontW,-SizeH);
-				glTexCoord2f(FontTexPosX+OneCharWidth[i]/8.0f,	FontTexPosY+1.0f/8.0f);	glVertex2i( 0,-SizeH);
-				glTexCoord2f(FontTexPosX+OneCharWidth[i]/8.0f,	FontTexPosY+0.0f);		glVertex2i( 0, 0);
+				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+1.0f/float(MAXNUMX));	glVertex2i(-thisFontW,-SizeH);
+				glTexCoord2f(FontTexPosX+OneCharWidth[i]/float(MAXNUMX),	FontTexPosY+1.0f/float(MAXNUMX));	glVertex2i( 0,-SizeH);
+				glTexCoord2f(FontTexPosX+OneCharWidth[i]/float(MAXNUMX),	FontTexPosY+0.0f);		glVertex2i( 0, 0);
 				glTexCoord2f(FontTexPosX+0.0f,		FontTexPosY+0.0f);		glVertex2i(-thisFontW, 0);
 			glEnd();
 		
