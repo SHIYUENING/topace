@@ -85,7 +85,7 @@ void CUnitMath::GetMatrix(float MatrixOut[16])
 
 __m128 CUnitMath::GetRelativePos(__m128 TGTPos)
 {
-	if(!NewMatrix)
+	/*if(!NewMatrix)
 	{
 		Easy_quat_to_matrix(UnitMatrix,UnitQuat);
 		NewMatrix=true;
@@ -95,7 +95,15 @@ __m128 CUnitMath::GetRelativePos(__m128 TGTPos)
 
 	Easy_vector_sub(&UnitPosTMP,_mm_set_ps(1.0f,0.0f,0.0f,0.0f),TGTPos);
 	Easy_matrix_mult_vector3X3(&UnitPosTMP,UnitMatrix,UnitPosTMP);
-	Easy_vector_sub(&UnitPosTMP,UnitPos,UnitPosTMP);
+	Easy_vector_sub(&UnitPosTMP,UnitPos,UnitPosTMP);*/
+
+	Easy_quat_to_matrix(UnitMatrix,UnitQuat);
+	NewMatrix=true;
+	UnitMatrix[3]=UnitPos;
+
+	__m128 GetRelativePosMatrix[4];
+	Easy_matrix_inv(UnitMatrix,GetRelativePosMatrix);
+	Easy_matrix_mult_vector4X4(&UnitPosTMP,GetRelativePosMatrix,TGTPos);
 	UnitPosTMP.m128_f32[3]=1.0f;
 	return UnitPosTMP;
 }
@@ -146,5 +154,50 @@ void CUnitMath::PosTo(__m128 TGTPos)
 	NewMatrix=true;
 	Easy_matrix_to_quat(&UnitQuat,UnitMatrix);
 	Easy_quat_normalize(&UnitQuat,UnitQuat);
+
+}
+
+void CUnitMath::PosTo(__m128 TGTPos,float Angle)
+{
+	__m128 RelativePos=GetRelativePos(TGTPos);
+	
+
+	if(abs(RelativePos.m128_f32[0]*3.0f)<abs(RelativePos.m128_f32[2]))
+	{
+		if(RelativePos.m128_f32[1]>0.0f)
+		{
+		}
+		else
+		{
+		}
+	}
+	else
+	{
+		if(RelativePos.m128_f32[1]>0.0f)
+		{
+			if(RelativePos.m128_f32[0]>0.0f)
+				RotInternal(-Angle,0.0f,0.0f,1.0f);
+			else
+				RotInternal( Angle,0.0f,0.0f,1.0f);
+		}
+		else
+		{
+			if(RelativePos.m128_f32[0]>0.0f)
+				RotInternal( Angle,0.0f,0.0f,1.0f);
+			else
+				RotInternal(-Angle,0.0f,0.0f,1.0f);
+		}
+	}
+
+	if((abs(RelativePos.m128_f32[1]*2.0f)<abs(RelativePos.m128_f32[2]))&&(RelativePos.m128_f32[2]<0.0f))
+	{
+	}
+	else
+	{
+		if(RelativePos.m128_f32[1]>=0.0f)
+			RotExternal( Angle,1.0f,0.0f,0.0f);
+		else
+			RotExternal(-Angle,1.0f,0.0f,0.0f);
+	}
 
 }

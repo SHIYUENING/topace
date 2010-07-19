@@ -31,5 +31,6 @@ public:
 	void RotInternal(float angle,float axisX, float axisY, float axisZ);
 	void Reset(void);
 	void PosTo(__m128 TGTPos);
+	void PosTo(__m128 TGTPos,float Angle);
 };
 #endif
