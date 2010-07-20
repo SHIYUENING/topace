@@ -161,7 +161,6 @@ void CUnitMath::PosTo(__m128 TGTPos,float Angle)
 {
 	__m128 RelativePos=GetRelativePos(TGTPos);
 	
-
 	if(abs(RelativePos.m128_f32[0]*3.0f)<abs(RelativePos.m128_f32[2]))
 	{
 		if(RelativePos.m128_f32[1]>0.0f)
