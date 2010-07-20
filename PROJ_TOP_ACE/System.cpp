@@ -604,44 +604,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	isRun=false;
 	return 0;
 }
-/*
-void LockFPS (void)
+void ExchangeData (void)
 {
-	double waitTime=0.0;
-	QueryPerformanceFrequency(&feq);
-	QueryPerformanceCounter(&t2);
-    if (t2.QuadPart >= t1.QuadPart)
-	{
-	    oneframetime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
-		
-    }
-	else
-		return;
-	//QueryPerformanceCounter(&t1);
 
-	double SleepTime=(oneframetimelimit-oneframetime)*1000.0;
-	while(SleepTime>=1.5)
-	{
-		Sleep(max(int(SleepTime-1.0),0));
-		QueryPerformanceFrequency(&feq);
-		QueryPerformanceCounter(&t2);
-		if (t2.QuadPart >= t1.QuadPart)
-			waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
-		else
-			return;
-		SleepTime=(oneframetimelimit-waitTime)*1000.0;
-	}
-	QueryPerformanceFrequency(&feq);
-	QueryPerformanceCounter(&t2);
-    if (t2.QuadPart >= t1.QuadPart)
-	{
-	    waitTime=((double)(t2.QuadPart-t1.QuadPart))/((double)feq.QuadPart);
-		
-    }
-	else
-		return;
-
-	Delay(__int64((oneframetimelimit-waitTime)*1000000));
-	QueryPerformanceCounter(&t1);
 }
-*/

@@ -105,8 +105,3 @@ void KeyUpdate ()								// Perform Motion Updates Here
 		moveX=moveY=moveZ=0.0f;
 	}
 }
-void ExchangeData (void)
-{
-	domultiR=domulti;
-	doangleR=doangle;
-}
