@@ -250,6 +250,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ExchangeThread.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FBO.cpp"
 				>
 			</File>
@@ -388,6 +392,10 @@
 			</File>
 			<File
 				RelativePath=".\EasyVector.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ExchangeThread.h"
 				>
 			</File>
 			<File
