@@ -1,4 +1,4 @@
-#ifndef _EASYMATRIX_H
+﻿#ifndef _EASYMATRIX_H
 #define _EASYMATRIX_H
 #include "Def.h"	
 #include <stdio.h>

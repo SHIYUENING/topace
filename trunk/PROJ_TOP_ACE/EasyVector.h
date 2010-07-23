@@ -1,4 +1,4 @@
-#ifndef _EASYVECTOR_H
+﻿#ifndef _EASYVECTOR_H
 #define _EASYVECTOR_H
 #include "Def.h"	
 #include <stdio.h>			// Header File For Standard Input/Output

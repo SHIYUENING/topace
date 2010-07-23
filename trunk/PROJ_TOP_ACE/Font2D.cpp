@@ -1,4 +1,4 @@
-#include "Font2D.h"
+﻿#include "Font2D.h"
 
 #pragma comment( lib, "freetype2311MT.lib" )
 CFont2D::CFont2D(void)

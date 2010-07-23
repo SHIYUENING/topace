@@ -1,4 +1,4 @@
-#include "LockFPS.h"
+﻿#include "LockFPS.h"
 
 CLockFPS::CLockFPS(void)
 : oneframetimelimit(0.0)

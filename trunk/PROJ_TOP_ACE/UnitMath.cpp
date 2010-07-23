@@ -1,4 +1,4 @@
-#include "UnitMath.h"
+﻿#include "UnitMath.h"
 
 CUnitMath::CUnitMath(void)
 : NewMatrix(false)

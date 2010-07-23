@@ -1,4 +1,4 @@
-#ifndef _TEXMANAGER_H
+﻿#ifndef _TEXMANAGER_H
 #define _TEXMANAGER_H
 #include"Textures.h"
 class CTexManager

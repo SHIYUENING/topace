@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef _FONT2D_H
 #define _FONT2D_H
 #include <windows.h> 

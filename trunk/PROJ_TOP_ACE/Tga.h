@@ -1,4 +1,4 @@
-#ifndef _TGA_H
+﻿#ifndef _TGA_H
 #define _TGA_H
 #include <string.h>	
 #include <stdio.h>										// Standard I/O header 

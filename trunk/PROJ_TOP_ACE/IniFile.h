@@ -1,4 +1,4 @@
-#ifndef _INIFILE_H
+﻿#ifndef _INIFILE_H
 #define _INIFILE_H
 
 #define JOY_KEY_UP 1

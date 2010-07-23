@@ -1,4 +1,4 @@
-#ifndef KEYINPUT_H
+﻿#ifndef KEYINPUT_H
 #define KEYINPUT_H
 #include"IniFile.h"
 struct tKeyInput

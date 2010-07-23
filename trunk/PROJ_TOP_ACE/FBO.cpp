@@ -1,4 +1,4 @@
-#include "FBO.h"	
+﻿#include "FBO.h"	
 GLuint FBOID=0;	
 GLuint ScreemTex=0;
 GLuint ScreemTexDepth=0;

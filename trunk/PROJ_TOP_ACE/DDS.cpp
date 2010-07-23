@@ -1,4 +1,4 @@
-#include "DDS.h"
+﻿#include "DDS.h"
 GLfloat CDDS::AFNum=1.0f;
 CDDS::CDDS(void)
 :g_compressedTextureID(0)
