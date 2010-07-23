@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef _LOCKFPS_H
 #define _LOCKFPS_H
 #include <windows.h>

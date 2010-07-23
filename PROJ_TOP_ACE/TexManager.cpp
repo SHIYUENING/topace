@@ -1,4 +1,4 @@
-#include "TexManager.h"
+﻿#include "TexManager.h"
 
 CTexManager::CTexManager(void)
 : TexArray(NULL)

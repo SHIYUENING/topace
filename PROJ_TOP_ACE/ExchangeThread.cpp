@@ -1,4 +1,4 @@
-#include "ExchangeThread.h"
+﻿#include "ExchangeThread.h"
 CExchangeThread::CExchangeThread(void)
 : ListCount(DEFDATANUM)
 , DataNum(0)

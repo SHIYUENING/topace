@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef _DDS_H
 #define _DDS_H
 //#ifdef _WIN32

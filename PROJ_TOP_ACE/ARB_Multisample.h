@@ -1,4 +1,4 @@
-/*====================================
+﻿/*====================================
 	Name: ARB_multisample.h
 	Author: Colt "MainRoach" McAnlis
 	Date: 4/29/04

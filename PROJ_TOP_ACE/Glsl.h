@@ -1,4 +1,4 @@
-#ifndef _GLSL_H
+﻿#ifndef _GLSL_H
 #define _GLSL_H
 #include <GL/glew.h>
 void InitGLSL(int LightSet=2);

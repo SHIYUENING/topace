@@ -1,4 +1,4 @@
-/***********************************************
+﻿/***********************************************
 *                                              *
 *    Jeff Molofee's Revised OpenGL Basecode    *
 *  Huge Thanks To Maxwell Sayles & Peter Puck  *

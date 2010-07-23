@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef _UNITMATH_H
 #define _UNITMATH_H
 #include "Def.h"	

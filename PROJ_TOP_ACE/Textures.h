@@ -1,4 +1,4 @@
-#ifndef _TEXTURES_H
+﻿#ifndef _TEXTURES_H
 #define _TEXTURES_H
 #include "DDS.h"
 #include "tga.h"

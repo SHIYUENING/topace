@@ -1,4 +1,4 @@
-#include "Glsl.h"
+﻿#include "Glsl.h"
 #include <stdio.h>	
 #include <windows.h>
 #include"IniFile.h"

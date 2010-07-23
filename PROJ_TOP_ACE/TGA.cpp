@@ -1,4 +1,4 @@
-#include "tga.h"
+﻿#include "tga.h"
 
 
 //GLubyte cTGAcompare[12] = {0,0,10,0,0,0,0,0,0,0,0,0};	// Compressed TGA Header

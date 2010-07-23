@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #include "EasyMatrix.h"
 #ifndef _EXCHANGETHREAD_H
 #define _EXCHANGETHREAD_H

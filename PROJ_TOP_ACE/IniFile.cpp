@@ -1,4 +1,4 @@
-#include"IniFile.h"
+﻿#include"IniFile.h"
 #include <windows.h>
 #include <stdio.h>	
 tGameSet GameSet;
