@@ -1,7 +1,8 @@
 ﻿#include "ExchangeThread.h"
+CExchangeThread ThreadDataUpdata,ThreadDataDraw,ThreadDataExchange;
 CExchangeThread::CExchangeThread(void)
 : ListCount(DEFDATANUM)
-, DataNum(0)
+, DataCount(0)
 {
 	DataList = (_UnitData *)_aligned_malloc(sizeof(_UnitData)*ListCount,16);
 }
@@ -30,15 +31,37 @@ bool CExchangeThread::AddListToCount(int Count)
 {
 	return AddListCount(Count-ListCount);
 }
-bool CExchangeThread::AddData(_UnitData * UnitData,int Count)
+bool CExchangeThread::AddOneData(_UnitData * UnitData,int * DataNum)
 {
-	if((!UnitData)||(Count<1))
+	if((!UnitData)||(!DataList))
 		return false;
-	while((DataNum+Count)>=ListCount)
+	for(int ListNumTMP=0;ListNumTMP<ListCount;ListNumTMP++)
 	{
-		AddListCount();
+		if(DataList[ListNumTMP].UnitData_States==_UnitData_States_NoUse)
+		{
+			DataList[ListNumTMP].UnitData_States=_UnitData_States_Use;
+			memcpy_s(&(DataList[ListNumTMP]),sizeof(_UnitData),UnitData,sizeof(_UnitData));
+			if(DataNum)
+				DataNum[0]=ListNumTMP;
+			return true;
+		}
 	}
-	memcpy_s(&(DataList[DataNum]),sizeof(_UnitData)*(ListCount-DataNum),UnitData,sizeof(_UnitData)*Count);
-	DataNum++;
+	if(DataCount>=ListCount)
+	{
+		if(!AddListCount())
+			return false;
+	}
+	memcpy_s(&(DataList[DataCount]),sizeof(_UnitData),UnitData,sizeof(_UnitData));
+	if(DataNum)
+		DataNum[0]=DataCount;
+	DataCount++;
+	return true;
+}
+
+bool CExchangeThread::UpdataOneData(_UnitData * UnitData,int DataNum)
+{
+	if((!UnitData)||(!DataList))
+		return false;
+	memcpy_s(&(DataList[DataNum]),sizeof(_UnitData),UnitData,sizeof(_UnitData));
 	return true;
 }
