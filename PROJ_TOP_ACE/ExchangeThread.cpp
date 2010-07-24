@@ -1,10 +1,54 @@
 ﻿#include "ExchangeThread.h"
 CExchangeThread ThreadDataUpdata,ThreadDataDraw,ThreadDataExchange;
+_ReadingThread_States ReadingThread_States=_ReadingThread_States_NoThread;
+int ReadingThreadWait_Updata=0; 
+int ReadingThreadWait_Draw=0; 
+void ThreadUpdataToExchange()
+{
+	ReadingThreadWait_Updata=0;
+	while(ReadingThread_States==_ReadingThread_States_ThreadExchangeToDraw)
+		ReadingThreadWait_Updata++;
+	ReadingThread_States=_ReadingThread_States_ThreadUpdataToExchange;
+
+	if(ThreadDataUpdata.ListCount>ThreadDataExchange.ListCount)
+	{
+		ThreadDataExchange.AddListToCount(ThreadDataUpdata.ListCount);
+	}
+	memcpy_s(
+		ThreadDataExchange.DataList,
+		sizeof(_UnitData)*ThreadDataExchange.ListCount,
+		ThreadDataUpdata.DataList,
+		sizeof(_UnitData)*ThreadDataUpdata.DataCount);
+	ThreadDataExchange.DataCount=ThreadDataUpdata.DataCount;
+	
+	ReadingThread_States=_ReadingThread_States_NoThread;
+}
+void ThreadExchangeToDraw()
+{
+	ReadingThreadWait_Draw=0;
+	while(ReadingThread_States==_ReadingThread_States_ThreadUpdataToExchange)
+		ReadingThreadWait_Draw++;
+	ReadingThread_States=_ReadingThread_States_ThreadExchangeToDraw;
+	
+	if(ThreadDataExchange.ListCount>ThreadDataDraw.ListCount)
+	{
+		ThreadDataDraw.AddListToCount(ThreadDataExchange.ListCount);
+	}
+	memcpy_s(
+		ThreadDataDraw.DataList,
+		sizeof(_UnitData)*ThreadDataDraw.ListCount,
+		ThreadDataExchange.DataList,
+		sizeof(_UnitData)*ThreadDataExchange.DataCount);
+	ThreadDataDraw.DataCount=ThreadDataExchange.DataCount;
+
+	ReadingThread_States=_ReadingThread_States_NoThread;
+}
 CExchangeThread::CExchangeThread(void)
 : ListCount(DEFDATANUM)
-, DataCount(0)
+, DataCount(1)
 {
 	DataList = (_UnitData *)_aligned_malloc(sizeof(_UnitData)*ListCount,16);
+	DataList[0].UnitData_States=_UnitData_States_Use;
 }
 
 CExchangeThread::~CExchangeThread(void)
@@ -64,4 +108,25 @@ bool CExchangeThread::UpdataOneData(_UnitData * UnitData,int DataNum)
 		return false;
 	memcpy_s(&(DataList[DataNum]),sizeof(_UnitData),UnitData,sizeof(_UnitData));
 	return true;
+}
+
+int CExchangeThread::GetOneUseAbleIndex(void)
+{
+	if(!DataList)
+		return 0;
+	for(int ListNumTMP=0;ListNumTMP<ListCount;ListNumTMP++)
+	{
+		if(DataList[ListNumTMP].UnitData_States==_UnitData_States_NoUse)
+		{
+			DataList[ListNumTMP].UnitData_States=_UnitData_States_Use;
+			return ListNumTMP;
+		}
+	}
+	if(DataCount>=ListCount)
+	{
+		if(!AddListCount())
+			return 0;
+	}
+	DataCount++;
+	return DataCount-1;
 }
