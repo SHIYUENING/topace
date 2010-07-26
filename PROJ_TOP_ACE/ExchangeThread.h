@@ -1,7 +1,8 @@
 ﻿//#pragma once
-#include "EasyMatrix.h"
+
 #ifndef _EXCHANGETHREAD_H
 #define _EXCHANGETHREAD_H
+#include "EasyMatrix.h"
 #define DEFDATANUM 500
 typedef enum _UnitData_States{
 	_UnitData_States_NoUse = 0,
@@ -33,6 +34,6 @@ public:
 	bool UpdataOneData(_UnitData * UnitData,int DataNum);
 	int GetOneUseAbleIndex(void);
 };
-void ThreadUpdataToExchange();
-void ThreadExchangeToDraw();
+void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata);
+void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw);
 #endif

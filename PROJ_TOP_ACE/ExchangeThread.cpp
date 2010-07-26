@@ -1,45 +1,45 @@
 ﻿#include "ExchangeThread.h"
-CExchangeThread ThreadDataUpdata,ThreadDataDraw,ThreadDataExchange;
+CExchangeThread ThreadDataExchange;
 _ReadingThread_States ReadingThread_States=_ReadingThread_States_NoThread;
 int ReadingThreadWait_Updata=0; 
 int ReadingThreadWait_Draw=0; 
-void ThreadUpdataToExchange()
+void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata)
 {
 	ReadingThreadWait_Updata=0;
 	while(ReadingThread_States==_ReadingThread_States_ThreadExchangeToDraw)
 		ReadingThreadWait_Updata++;
 	ReadingThread_States=_ReadingThread_States_ThreadUpdataToExchange;
 
-	if(ThreadDataUpdata.ListCount>ThreadDataExchange.ListCount)
+	if(ThreadDataUpdata->ListCount>ThreadDataExchange.ListCount)
 	{
-		ThreadDataExchange.AddListToCount(ThreadDataUpdata.ListCount);
+		ThreadDataExchange.AddListToCount(ThreadDataUpdata->ListCount);
 	}
 	memcpy_s(
 		ThreadDataExchange.DataList,
 		sizeof(_UnitData)*ThreadDataExchange.ListCount,
-		ThreadDataUpdata.DataList,
-		sizeof(_UnitData)*ThreadDataUpdata.DataCount);
-	ThreadDataExchange.DataCount=ThreadDataUpdata.DataCount;
+		ThreadDataUpdata->DataList,
+		sizeof(_UnitData)*ThreadDataUpdata->DataCount);
+	ThreadDataExchange.DataCount=ThreadDataUpdata->DataCount;
 	
 	ReadingThread_States=_ReadingThread_States_NoThread;
 }
-void ThreadExchangeToDraw()
+void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw)
 {
 	ReadingThreadWait_Draw=0;
 	while(ReadingThread_States==_ReadingThread_States_ThreadUpdataToExchange)
 		ReadingThreadWait_Draw++;
 	ReadingThread_States=_ReadingThread_States_ThreadExchangeToDraw;
 	
-	if(ThreadDataExchange.ListCount>ThreadDataDraw.ListCount)
+	if(ThreadDataExchange.ListCount>ThreadDataDraw->ListCount)
 	{
-		ThreadDataDraw.AddListToCount(ThreadDataExchange.ListCount);
+		ThreadDataDraw->AddListToCount(ThreadDataExchange.ListCount);
 	}
 	memcpy_s(
-		ThreadDataDraw.DataList,
-		sizeof(_UnitData)*ThreadDataDraw.ListCount,
+		ThreadDataDraw->DataList,
+		sizeof(_UnitData)*ThreadDataDraw->ListCount,
 		ThreadDataExchange.DataList,
 		sizeof(_UnitData)*ThreadDataExchange.DataCount);
-	ThreadDataDraw.DataCount=ThreadDataExchange.DataCount;
+	ThreadDataDraw->DataCount=ThreadDataExchange.DataCount;
 
 	ReadingThread_States=_ReadingThread_States_NoThread;
 }

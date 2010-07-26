@@ -13,6 +13,7 @@
 #include "FBO.h"
 #include "UnitMath.h"
 #include "TopAceModel.h"
+#include "ExchangeThread.h"
 bool extern domultiR ;
 bool extern doangleR ;
 float extern angleR;
@@ -40,8 +41,8 @@ CUnitMath ViewUnit;
 CUnitMath UnitMath1;
 float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
-_UnitData UnitDatas[100];
 __m128 MatrixDrawTestUnit[4];
+CExchangeThread ThreadDataDraw;
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -212,14 +213,10 @@ void UnitMatrix()
 void SetCameraMatrix()
 {
 	__m128 MatrixOut[4];
-	int ReadingThreadWait=0;
-	while(ReadingThreadNum==2)
-		ReadingThreadWait++;
-	ReadingThreadNum=1;
-	Easy_matrix_copy(MatrixOut,UnitDatas[0].UnitMatrix);
-	Easy_matrix_copy(MatrixDrawTestUnit,UnitDatas[1].UnitMatrix);
-	ReadingThreadNum=0;
-
+	ThreadExchangeToDraw(&ThreadDataDraw);
+	Easy_matrix_copy(MatrixOut,ThreadDataDraw.DataList[1].Matrix);
+	Easy_matrix_copy(MatrixDrawTestUnit,ThreadDataDraw.DataList[2].Matrix);
+	
 	Easy_matrix_inv(MatrixOut,MatrixOut);
 	glLoadMatrixf(&(MatrixOut[0].m128_f32[0]));
 }
@@ -425,10 +422,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		glEnable(GL_LIGHTING);
 	
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
-	//RenderUnits();
-	//__m128 SetCameraTMP=_mm_set_ps(1.0f,-moveZ,moveY,moveX);
-	
-	//UnitMath1.MovInternal(SetCameraTMP);
 	
 
 	glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
