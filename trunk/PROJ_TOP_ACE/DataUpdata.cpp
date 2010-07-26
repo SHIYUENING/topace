@@ -1,6 +1,7 @@
 ﻿#include "DataUpdata.h"
 #include "KeyInput.h"
 #include "UnitMath.h"
+#include "ExchangeThread.h"
 float angleR=0.0f;
 float Test3dsFrame=0.0f;
 float maxFreme=100.0f;
@@ -14,7 +15,7 @@ float extern moveY;
 float extern moveX;
 float extern PosOrgY;
 float extern PosOrgZ;
-extern _UnitData UnitDatas[100];
+CExchangeThread ThreadDataUpdata;
 void DataUpdata()
 {
 	if(Test3dsFrameSwitch)
@@ -45,13 +46,13 @@ void DataUpdata()
 	UnitMathDraw.UnitPos=TestUnit.UnitPos;
 	UnitMathDraw.UnitQuat=TestUnit.UnitQuat;
 	UnitMathDraw.RotExternal(-90,1.0f,0.0f,0.0f);
-	int ReadingThreadWait=0;
-	while(ReadingThreadNum==1)
-	{
-		ReadingThreadWait++;
-	}
-	ReadingThreadNum=2;
-	TestView.GetMatrix(UnitDatas[0].UnitMatrix);
-	UnitMathDraw.GetMatrix(UnitDatas[1].UnitMatrix);
-	ReadingThreadNum=0;
+
+	ThreadDataUpdata.DataCount=3;
+	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;
+	ThreadDataUpdata.DataList[2].UnitData_States=_UnitData_States_Use;
+	TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
+	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
+
+	ThreadUpdataToExchange(&ThreadDataUpdata);
+
 }
