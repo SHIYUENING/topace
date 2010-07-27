@@ -2,6 +2,9 @@
 
 CUnitMath::CUnitMath(void)
 : NewMatrix(false)
+, TurnX(0)
+, TurnY(0)
+, TurnZ(0)
 {
 	UnitQuat=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
@@ -197,6 +200,52 @@ void CUnitMath::PosTo(__m128 TGTPos,float Angle)
 			RotInternal( Angle,1.0f,0.0f,0.0f);
 		else
 			RotInternal(-Angle,1.0f,0.0f,0.0f);
+	}
+
+}
+
+void CUnitMath::PosToDir(__m128 TGTPos)
+{
+	__m128 RelativePos=GetRelativePos(TGTPos);
+
+	if(abs(RelativePos.m128_f32[0]*10.0f)<abs(RelativePos.m128_f32[2]))
+	{
+		TurnZ=0.0f;
+		if(RelativePos.m128_f32[1]>0.0f)
+		{
+		}
+		else
+		{
+		}
+	}
+	else
+	{
+		if(RelativePos.m128_f32[1]>0.0f)
+		{
+			if(RelativePos.m128_f32[0]>0.0f)
+				TurnZ=-1.0f;//RotInternal(-Angle,0.0f,0.0f,1.0f);
+			else
+				TurnZ= 1.0f;//RotInternal( Angle,0.0f,0.0f,1.0f);
+		}
+		else
+		{
+			if(RelativePos.m128_f32[0]>0.0f)
+				TurnZ= 1.0f;//RotInternal( Angle,0.0f,0.0f,1.0f);
+			else
+				TurnZ=-1.0f;//RotInternal(-Angle,0.0f,0.0f,1.0f);
+		}
+	}
+
+	if((abs(RelativePos.m128_f32[1]*10.0f)<abs(RelativePos.m128_f32[2]))&&(RelativePos.m128_f32[2]<0.0f))
+	{
+		TurnX=0.0f;//
+	}
+	else
+	{
+		if(RelativePos.m128_f32[1]>=0.0f)
+			TurnX= 1.0f;//RotInternal( Angle,1.0f,0.0f,0.0f);
+		else
+			TurnX=-1.0f;//RotInternal(-Angle,1.0f,0.0f,0.0f);
 	}
 
 }
