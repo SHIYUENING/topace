@@ -45,7 +45,7 @@ void DataUpdata()
 	CUnitMath UnitMathDraw;
 	UnitMathDraw.UnitPos=TestUnit.UnitPos;
 	UnitMathDraw.UnitQuat=TestUnit.UnitQuat;
-	UnitMathDraw.RotExternal(-90,1.0f,0.0f,0.0f);
+	UnitMathDraw.RotInternal(-90,1.0f,0.0f,0.0f);
 
 	ThreadDataUpdata.DataCount=3;
 	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;

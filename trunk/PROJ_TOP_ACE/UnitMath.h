@@ -7,10 +7,7 @@
 #include <math.h>
 #include <windows.h>
 #include "EasyMatrix.h"
-/*struct _UnitData
-{
-	__m128 UnitMatrix[4];
-};*/
+
 class CUnitMath
 {
 public:

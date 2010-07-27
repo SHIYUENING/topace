@@ -19,7 +19,7 @@ void CUnitMath::RotExternal(float angle,float axisX, float axisY, float axisZ)
 
 void CUnitMath::RotExternal(__m128 QuatRotExternal)
 {
-	Easy_quat_Mult(&UnitQuat,UnitQuat,QuatRotExternal);
+	Easy_quat_Mult(&UnitQuat,QuatRotExternal,UnitQuat);
 	Easy_quat_normalize(&UnitQuat,UnitQuat);
 	NewMatrix=false;
 }
@@ -33,7 +33,7 @@ void CUnitMath::RotInternal(float angle,float axisX, float axisY, float axisZ)
 
 void CUnitMath::RotInternal(__m128 QuatRotInternal)
 {
-	Easy_quat_Mult(&UnitQuat,QuatRotInternal,UnitQuat);
+	Easy_quat_Mult(&UnitQuat,UnitQuat,QuatRotInternal);
 	Easy_quat_normalize(&UnitQuat,UnitQuat);
 	NewMatrix=false;
 }
@@ -194,9 +194,9 @@ void CUnitMath::PosTo(__m128 TGTPos,float Angle)
 	else
 	{
 		if(RelativePos.m128_f32[1]>=0.0f)
-			RotExternal( Angle,1.0f,0.0f,0.0f);
+			RotInternal( Angle,1.0f,0.0f,0.0f);
 		else
-			RotExternal(-Angle,1.0f,0.0f,0.0f);
+			RotInternal(-Angle,1.0f,0.0f,0.0f);
 	}
 
 }
