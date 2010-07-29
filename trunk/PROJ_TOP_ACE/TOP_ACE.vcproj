@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="gb2312"?>
+<?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
@@ -294,6 +294,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SceneUnits.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\System.cpp"
 				>
 				<FileConfiguration
@@ -432,6 +436,10 @@
 			</File>
 			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneUnits.h"
 				>
 			</File>
 			<File

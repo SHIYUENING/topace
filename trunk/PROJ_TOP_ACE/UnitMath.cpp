@@ -210,7 +210,7 @@ void CUnitMath::PosToDir(__m128 TGTPos)
 
 	if(abs(RelativePos.m128_f32[0]*10.0f)<abs(RelativePos.m128_f32[2]))
 	{
-		TurnZ=0.0f;
+		//TurnZ=0.0f;
 		if(RelativePos.m128_f32[1]>0.0f)
 		{
 		}
@@ -238,7 +238,7 @@ void CUnitMath::PosToDir(__m128 TGTPos)
 
 	if((abs(RelativePos.m128_f32[1]*10.0f)<abs(RelativePos.m128_f32[2]))&&(RelativePos.m128_f32[2]<0.0f))
 	{
-		TurnX=0.0f;//
+		//TurnX=0.0f;//
 	}
 	else
 	{
