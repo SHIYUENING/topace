@@ -294,7 +294,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneUnits.cpp"
+				RelativePath=".\SceneUnit.cpp"
 				>
 			</File>
 			<File
@@ -439,7 +439,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneUnits.h"
+				RelativePath=".\SceneUnit.h"
 				>
 			</File>
 			<File
