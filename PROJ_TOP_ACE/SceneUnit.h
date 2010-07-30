@@ -19,4 +19,10 @@ public:
 	float TurnSPD_R;
 	float Life;
 	unsigned int Status;
+	float TurnSPD_Now;
+	void TurnTo(__m128 TGTPos);
+	void TurnTo(float TGTPos[3]);
+	// AT Think Time
+	float AIThinkTime;
+	float LilfTime;
 };
