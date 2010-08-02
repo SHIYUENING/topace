@@ -410,32 +410,23 @@ void DrawTestLines()
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
-
-
-	//if(domultiR)
-	glEnable(GL_MULTISAMPLE_ARB);
-	
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	glEnable(GL_MULTISAMPLE_ARB);
+
 	DrawTestLines();
 	if(GameSet.Light==1)
 		glEnable(GL_LIGHTING);
 	
-	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
-	
-
 	glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
+	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	TopAceModelTest.Draw();
 	GLSL_Disable();
 
 	if(GameSet.Light==1)
 		glDisable(GL_LIGHTING);
 
-	RenderPass2Units();
-
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 
-	//if(domultiR)
 	glDisable(GL_MULTISAMPLE_ARB);
 
 	QueryPerformanceCounter(&CPUTestStart);
