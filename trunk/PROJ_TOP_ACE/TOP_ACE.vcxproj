@@ -156,6 +156,7 @@
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="Load3DS.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="LockFPS.cpp" />
     <ClCompile Include="SceneUnit.cpp" />
