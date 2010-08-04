@@ -40,14 +40,6 @@ void CSceneUnit::Updata(void)
 	if(NoTurnY) TurnY=TurnY*(max(0.0f,1.0f-TurnSPD_R));
 	if(NoTurnZ) TurnZ=TurnZ*(max(0.0f,1.0f-TurnSPD_R));
 	
-		
-		
-		
-		//TurnX=0.0f;
-		//TurnY=0.0f;
-		//TurnZ=0.0f;
-		//PosTo(TGT_Pos);
-	
 	if((MoveSPD*MoveSPD)>0.0000001f)
 		MovInternal(_mm_set_ps(1.0f,-MoveSPD,0.0f,0.0f));
 	MoveSPD=max(0.0f,MoveSPD-MoveSPD_R);
