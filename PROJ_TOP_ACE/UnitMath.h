@@ -45,5 +45,6 @@ public:
 	float TurnX;
 	float TurnY;
 	float TurnZ;
+	bool NoTurn;
 };
 #endif

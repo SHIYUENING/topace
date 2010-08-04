@@ -26,4 +26,5 @@ public:
 	float AIThinkTime;
 	float LilfTime;
 	void Updata(void);
+	__m128 TGT_Pos;
 };
