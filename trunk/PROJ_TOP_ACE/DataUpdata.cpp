@@ -8,7 +8,7 @@ float Test3dsFrame=0.0f;
 float maxFreme=100.0f;
 bool Test3dsFrameSwitch=false;
 extern tKeyInput KeyInput;
-CUnitMath TestUnit,TestView;
+CUnitMath TestView;//TestUnit,
 CUnitMath TestUnitExchange;
 int ReadingThreadNum=0;
 float extern moveZ;
@@ -42,11 +42,14 @@ void DataUpdata()
 
 	TestView.Reset();
 	TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
-	TestUnit.PosTo(TestView.UnitPos,1.25f);
+	//SceneUnitTest.SetPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
+	SceneUnitTest.SetTGTPos(TestView.UnitPos);
+	SceneUnitTest.Updata();
+	//TestUnit.PosTo(TestView.UnitPos,1.25f);
 	TestView.PosTo(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
 	CUnitMath UnitMathDraw;
-	UnitMathDraw.UnitPos=TestUnit.UnitPos;
-	UnitMathDraw.UnitQuat=TestUnit.UnitQuat;
+	UnitMathDraw.UnitPos=SceneUnitTest.UnitPos;
+	UnitMathDraw.UnitQuat=SceneUnitTest.UnitQuat;
 	UnitMathDraw.RotInternal(-90,1.0f,0.0f,0.0f);
 
 	ThreadDataUpdata.DataCount=3;
