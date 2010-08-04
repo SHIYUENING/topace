@@ -86,20 +86,20 @@ void KeyUpdate ()								// Perform Motion Updates Here
 	//	ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	//}
 	if(g_keys->keyDown [VK_PRIOR] == TRUE)
-		moveZ=moveZ+1.0f;
+		moveZ=moveZ+10.0f;
 	if(g_keys->keyDown [VK_NEXT] == TRUE)
-		moveZ=moveZ-1.0f;
+		moveZ=moveZ-10.0f;
 
 	if(g_keys->keyDown [VK_UP] == TRUE)
-		moveY=moveY+1.0f;
+		moveY=moveY+10.0f;
 	if(g_keys->keyDown [VK_DOWN] == TRUE)
-		moveY=moveY-1.0f;
+		moveY=moveY-10.0f;
 
 
 	if(g_keys->keyDown [VK_RIGHT] == TRUE)
-		moveX=moveX+1.0f;
+		moveX=moveX+10.0f;
 	if(g_keys->keyDown [VK_LEFT] == TRUE)
-		moveX=moveX-1.0f;
+		moveX=moveX-10.0f;
 	if(g_keys->keyDown [VK_HOME] == TRUE)
 	{
 		moveX=moveY=moveZ=0.0f;
