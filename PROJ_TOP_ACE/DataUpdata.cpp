@@ -46,7 +46,7 @@ void DataUpdata()
 	SceneUnitTest.SetTGTPos(TestView.UnitPos);
 	SceneUnitTest.Updata();
 	//TestUnit.PosTo(TestView.UnitPos,1.25f);
-	TestView.PosTo(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
+	TestView.PosTo(SceneUnitTest.UnitPos);
 	CUnitMath UnitMathDraw;
 	UnitMathDraw.UnitPos=SceneUnitTest.UnitPos;
 	UnitMathDraw.UnitQuat=SceneUnitTest.UnitQuat;

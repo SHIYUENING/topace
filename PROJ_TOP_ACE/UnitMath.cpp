@@ -7,7 +7,9 @@ CUnitMath::CUnitMath(void)
 , TurnZ(0)
 , UnitQuat(_mm_set_ps(1.0f,0.0f,0.0f,0.0f))
 , UnitPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f))
-, NoTurn(false)
+, NoTurnX(false)
+, NoTurnY(false)
+, NoTurnZ(false)
 {
 }
 
@@ -207,11 +209,11 @@ void CUnitMath::PosTo(__m128 TGTPos,float Angle)
 
 void CUnitMath::PosToDir(__m128 TGTPos)
 {
-	NoTurn=true;
 	__m128 RelativePos=GetRelativePos(TGTPos);
 
-	if(abs(RelativePos.m128_f32[0]*10.0f)<abs(RelativePos.m128_f32[2]))
+	if(abs(RelativePos.m128_f32[0]*3.0f)<abs(RelativePos.m128_f32[1]))
 	{
+		NoTurnZ=true;
 		//TurnZ=0.0f;
 		if(RelativePos.m128_f32[1]>0.0f)
 		{
@@ -222,30 +224,31 @@ void CUnitMath::PosToDir(__m128 TGTPos)
 	}
 	else
 	{
-		NoTurn=false;
-		if(RelativePos.m128_f32[1]>0.0f)
-		{
+		NoTurnZ=false;
+//		if(RelativePos.m128_f32[1]>0.0f)
+//		{
 			if(RelativePos.m128_f32[0]>0.0f)
 				TurnZ=-1.0f;//RotInternal(-Angle,0.0f,0.0f,1.0f);
 			else
 				TurnZ= 1.0f;//RotInternal( Angle,0.0f,0.0f,1.0f);
-		}
-		else
-		{
-			if(RelativePos.m128_f32[0]>0.0f)
-				TurnZ= 1.0f;//RotInternal( Angle,0.0f,0.0f,1.0f);
-			else
-				TurnZ=-1.0f;//RotInternal(-Angle,0.0f,0.0f,1.0f);
-		}
+//		}
+//		else
+//		{
+//			if(RelativePos.m128_f32[0]>0.0f)
+//				TurnZ= 1.0f;//RotInternal( Angle,0.0f,0.0f,1.0f);
+//			else
+//				TurnZ=-1.0f;//RotInternal(-Angle,0.0f,0.0f,1.0f);
+//		}
 	}
 
-	if((abs(RelativePos.m128_f32[1]*10.0f)<abs(RelativePos.m128_f32[2]))&&(RelativePos.m128_f32[2]<0.0f))
+	if((abs(RelativePos.m128_f32[1]*2.0f)<abs(RelativePos.m128_f32[2]))&&(RelativePos.m128_f32[2]<0.0f))
 	{
 		//TurnX=0.0f;//
+		NoTurnX=true;
 	}
 	else
 	{
-		NoTurn=false;
+		NoTurnX=false;
 		if(RelativePos.m128_f32[1]>=0.0f)
 			TurnX= 1.0f;//RotInternal( Angle,1.0f,0.0f,0.0f);
 		else
