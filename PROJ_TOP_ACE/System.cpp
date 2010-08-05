@@ -420,6 +420,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 {
 	hInst=hInstance;
 	InitRenderThread();
+	InitDataThread();
 	//QueryPerformanceFrequency(&feq);
 	//QueryPerformanceCounter(&t1);
 	LockFPSSYS.Init(60);
