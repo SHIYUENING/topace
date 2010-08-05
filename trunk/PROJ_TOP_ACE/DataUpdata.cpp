@@ -18,6 +18,9 @@ float extern PosOrgY;
 float extern PosOrgZ;
 CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
+void InitDataThread()
+{
+}
 void DataUpdata()
 {
 	if(Test3dsFrameSwitch)
