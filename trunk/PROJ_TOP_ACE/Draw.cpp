@@ -11,7 +11,7 @@
 #include "Textures.h"
 #include "IniFile.h"
 #include "FBO.h"
-#include "UnitMath.h"
+//#include "UnitMath.h"
 #include "TopAceModel.h"
 #include "ExchangeThread.h"
 bool extern domultiR ;
@@ -37,8 +37,8 @@ int SpotLightNumBase=0;
 CTopAceModel TopAceModelTest;
 Textures LoadingTex;
 extern HDC SwapHdc; 
-CUnitMath ViewUnit;
-CUnitMath UnitMath1;
+//CUnitMath ViewUnit;
+//CUnitMath UnitMath1;
 float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
 __m128 MatrixDrawTestUnit[4];

@@ -173,6 +173,7 @@
     </ClCompile>
     <ClCompile Include="TopAceModel.cpp" />
     <ClCompile Include="UnitMath.cpp" />
+    <ClCompile Include="UnitsList.cpp" />
     <ClCompile Include="ViewInput.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +202,7 @@
     <ClInclude Include="Tga.h" />
     <ClInclude Include="TopAceModel.h" />
     <ClInclude Include="UnitMath.h" />
+    <ClInclude Include="UnitsList.h" />
     <ClInclude Include="ViewInput.h" />
   </ItemGroup>
   <ItemGroup>
