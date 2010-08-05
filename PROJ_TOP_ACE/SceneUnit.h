@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef _SCENEUNIT_H
+#define _SCENEUNIT_H
 #include "unitmath.h"
 
 class CSceneUnit :
@@ -28,3 +30,4 @@ public:
 	void Updata(void);
 	__m128 TGT_Pos;
 };
+#endif
