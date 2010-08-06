@@ -1,8 +1,7 @@
 ﻿#include "DataUpdata.h"
 #include "KeyInput.h"
-#include "UnitMath.h"
 #include "ExchangeThread.h"
-#include "SceneUnit.h"
+#include "UnitsList.h"
 float angleR=0.0f;
 float Test3dsFrame=0.0f;
 float maxFreme=100.0f;
@@ -18,6 +17,7 @@ float extern PosOrgY;
 float extern PosOrgZ;
 CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
+CUnitsList UnitsList;
 void InitDataThread()
 {
 }
