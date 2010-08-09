@@ -55,11 +55,13 @@ void DataUpdata()
 	UnitMathDraw.UnitQuat=SceneUnitTest.UnitQuat;
 	UnitMathDraw.RotInternal(-90,1.0f,0.0f,0.0f);
 
-	ThreadDataUpdata.DataCount=3;
+	ThreadDataUpdata.DataCount=4;
 	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;
 	ThreadDataUpdata.DataList[2].UnitData_States=_UnitData_States_Use;
+	ThreadDataUpdata.DataList[3].UnitData_States=_UnitData_States_Use;
 	TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
 	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
+	SceneUnitTest.GetMatrix(ThreadDataUpdata.DataList[3].Matrix);
 
 	ThreadUpdataToExchange(&ThreadDataUpdata);
 

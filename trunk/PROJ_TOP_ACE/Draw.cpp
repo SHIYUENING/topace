@@ -420,8 +420,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	TopAceModelTest.Draw();
+	DrawTestModel();
 	GLSL_Disable();
-
+	
 	if(GameSet.Light==1)
 		glDisable(GL_LIGHTING);
 
@@ -436,4 +437,25 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	Test_matrix();
 	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
 	QueryPerformanceCounter(&CPUTestEnd);
+}
+void InitTestModel()
+{
+}
+void DrawTestModel()
+{
+	glDisable(GL_CULL_FACE);
+	glDisable( GL_TEXTURE_2D );
+	glBegin(GL_TRIANGLES);
+	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);
+	glVertex3f( 050.0f,   0.0f, 100.0f);glNormal3f( 1.0f, 0.0f, 0.0f);
+	glVertex3f(-050.0f,   0.0f, 100.0f);glNormal3f(-1.0f, 0.0f, 0.0f);
+	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);
+	glVertex3f(   0.0f, 050.0f, 100.0f);glNormal3f( 0.0f, 1.0f, 0.0f);
+	glVertex3f(   0.0f,-050.0f, 100.0f);glNormal3f( 0.0f,-1.0f, 0.0f);
+	glEnd();
+	glEnable( GL_TEXTURE_2D );
+	glEnable(GL_CULL_FACE);
+}
+void DeinitTestModel()
+{
 }
