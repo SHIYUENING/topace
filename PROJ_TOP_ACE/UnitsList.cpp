@@ -57,13 +57,36 @@ bool CUnitsList::AddListCount(unsigned int AddNum)
 
 unsigned int CUnitsList::AddOneUnit(CSceneUnit * Unit_Add)
 {
-	int DataCountTMP=DataCount+1;
+	for(unsigned int i=0;i<DataCount;i++)
+	{
+		if(!UnitsList[i])
+		{
+			UnitsList[i]=Unit_Add;
+			if(!Unit_Add)
+				UnitsList[i]=(CSceneUnit *) _aligned_malloc(sizeof(CSceneUnit),16);
+			return i;
+		}
+	}
+	unsigned int DataCountTMP=DataCount+1;
 	if(DataCountTMP>=ListCount)
 	{
 		if(!AddListCount())
 			return 0;
 	}
 	UnitsList[DataCount]=Unit_Add;
+	if(!Unit_Add)
+		UnitsList[DataCount]=(CSceneUnit *) _aligned_malloc(sizeof(CSceneUnit),16);
 	DataCount=DataCountTMP;
 	return DataCount-1;
+}
+void CUnitsList::DelOneUnit(unsigned int Unit_Del_Num)
+{
+	if((Unit_Del_Num==0)||(Unit_Del_Num>=DataCount))
+		return;
+	if(UnitsList)
+		return;
+	if(!UnitsList[Unit_Del_Num])
+		return;
+	_aligned_free(UnitsList[Unit_Del_Num]);
+	UnitsList[Unit_Del_Num]=NULL;
 }

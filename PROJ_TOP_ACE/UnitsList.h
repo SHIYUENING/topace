@@ -13,6 +13,7 @@ public:
 	unsigned int DataCount;
 	bool AddListCount(unsigned int AddNum=DEFLISTADDCOUNT);
 	unsigned int AddOneUnit(CSceneUnit * Unit_Add=NULL);
+	void DelOneUnit(unsigned int Unit_Del_Num);
 };
 
 #endif
