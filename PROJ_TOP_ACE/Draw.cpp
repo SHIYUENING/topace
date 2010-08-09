@@ -43,6 +43,7 @@ float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
 __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
+float MatrixTMPF4X4[16];
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -288,7 +289,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	FPSNum=FPSNum+1;
 	glColor4f(1.0f,1.0f,0.0f,1.0f);
 	glEnable( GL_TEXTURE_2D );
-	Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
+//	Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 void DrawTestLines()
@@ -410,6 +411,8 @@ void DrawTestLines()
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
+	glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
+
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_MULTISAMPLE_ARB);
 
@@ -417,10 +420,13 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	if(GameSet.Light==1)
 		glEnable(GL_LIGHTING);
 	
-	glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
-	TopAceModelTest.Draw();
+	glMultMatrixf(ThreadDataDraw.DataList[3].Matrix);
 	DrawTestModel();
+	glLoadMatrixf(&MatrixTMPF4X4[0]);
+	glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
+	TopAceModelTest.Draw();
+	
 	GLSL_Disable();
 	
 	if(GameSet.Light==1)
@@ -443,15 +449,18 @@ void InitTestModel()
 }
 void DrawTestModel()
 {
-	glDisable(GL_CULL_FACE);
+	glBindTexture(GL_TEXTURE_2D, 1);
 	glDisable( GL_TEXTURE_2D );
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_TRIANGLES);
-	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);
-	glVertex3f( 050.0f,   0.0f, 100.0f);glNormal3f( 1.0f, 0.0f, 0.0f);
-	glVertex3f(-050.0f,   0.0f, 100.0f);glNormal3f(-1.0f, 0.0f, 0.0f);
-	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);
-	glVertex3f(   0.0f, 050.0f, 100.0f);glNormal3f( 0.0f, 1.0f, 0.0f);
-	glVertex3f(   0.0f,-050.0f, 100.0f);glNormal3f( 0.0f,-1.0f, 0.0f);
+	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glVertex3f( 050.0f,   0.0f, 100.0f);glNormal3f( 1.0f, 0.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glVertex3f(-050.0f,   0.0f, 100.0f);glNormal3f(-1.0f, 0.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glVertex3f(   0.0f, 050.0f, 100.0f);glNormal3f( 0.0f, 1.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glVertex3f(   0.0f,-050.0f, 100.0f);glNormal3f( 0.0f,-1.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glEnd();
 	glEnable( GL_TEXTURE_2D );
 	glEnable(GL_CULL_FACE);
