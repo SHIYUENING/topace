@@ -422,7 +422,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	glMultMatrixf(ThreadDataDraw.DataList[3].Matrix);
-	DrawTestModel();
+	//DrawTestModel();
 	glLoadMatrixf(&MatrixTMPF4X4[0]);
 	glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	TopAceModelTest.Draw();
