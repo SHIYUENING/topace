@@ -455,12 +455,35 @@ void DrawTestModel()
 	glDisable(GL_CULL_FACE);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_TRIANGLES);
-	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glVertex3f( 050.0f,   0.0f, 100.0f);glNormal3f( 1.0f, 0.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glVertex3f(-050.0f,   0.0f, 100.0f);glNormal3f(-1.0f, 0.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glVertex3f(   0.0f,   0.0f,-100.0f);glNormal3f( 0.0f, 0.0f,-1.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glVertex3f(   0.0f, 050.0f, 100.0f);glNormal3f( 0.0f, 1.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glVertex3f(   0.0f,-050.0f, 100.0f);glNormal3f( 0.0f,-1.0f, 0.0f);glColor4f(1.0f,1.0f,1.0f,1.0f);
+
+	glColor4f(0.0f,1.0f,0.0f,1.0f);
+	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+	
+	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f(-1.0f, 0.0f, 0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+	
+	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f(-1.0f, 0.0f, 0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+
+	glNormal3f(-1.0f, 0.0f, 0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+	glColor4f(0.0f,1.0f,0.0f,1.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+
+	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+
 	glEnd();
 	glEnable( GL_TEXTURE_2D );
 	glEnable(GL_CULL_FACE);
