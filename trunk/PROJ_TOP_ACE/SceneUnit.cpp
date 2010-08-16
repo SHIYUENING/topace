@@ -13,6 +13,8 @@ CSceneUnit::CSceneUnit(void)
 , AIThinkTime(5)
 , LilfTime(0)
 , TGT_Pos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f))
+, TGT_ID(StandBy)
+, ACT_Modes(CounterAttack)
 {
 }
 
