@@ -1,6 +1,12 @@
 ﻿#ifndef _GLSL_H
 #define _GLSL_H
 #include <GL/glew.h>
+struct _ShaderGLSL
+{
+	GLhandleARB g_VS;
+	GLhandleARB g_PS;
+	GLhandleARB g_PO;//ProgramObject
+};
 void InitGLSL(int LightSet=2);
 void DeinitGLSL();
 //void GLSL_Enable_ATC();
