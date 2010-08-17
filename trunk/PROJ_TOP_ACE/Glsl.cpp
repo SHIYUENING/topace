@@ -32,6 +32,8 @@ GLhandleARB GLSL_SSAOPass1=0;
 
 GLhandleARB g_BlurTex_pixel=0;
 GLhandleARB GLSL_BlurTex=0;
+
+_ShaderGLSL GLSL_DrawSea;
 extern tGameSet GameSet;
 unsigned char *readShaderFile( const char *fileName )
 {
@@ -108,6 +110,25 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	return true;
 }
 
+bool Init_ShaderGLSL(_ShaderGLSL * ShaderGLSL,const char* VSfilename,const char* PSfilename)
+{
+	if(!ShaderGLSL) return false;
+	ShaderGLSL->g_VS = GLSL_CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
+	ShaderGLSL->g_PS = GLSL_CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);
+	ShaderGLSL->g_PO = glCreateProgramObjectARB();
+	glAttachObjectARB( ShaderGLSL->g_PO, ShaderGLSL->g_VS );
+	glAttachObjectARB( ShaderGLSL->g_PO, ShaderGLSL->g_PS );
+	return GetGLSLLinkSTATUS( ShaderGLSL->g_PO );
+}
+void Deinit_ShaderGLSL(_ShaderGLSL * ShaderGLSL)
+{
+	if(!ShaderGLSL) return;
+	glDetachObjectARB( ShaderGLSL->g_PO, ShaderGLSL->g_VS );
+	glDetachObjectARB( ShaderGLSL->g_PO, ShaderGLSL->g_PS );
+	glDeleteObjectARB( ShaderGLSL->g_VS );
+	glDeleteObjectARB( ShaderGLSL->g_PS );
+	glDeleteObjectARB( ShaderGLSL->g_PO );
+}
 void InitGLSL(int LightSet)
 {
 /*	GLint glMaxVERTEX_UNIFORM_COMPONENTS=0;
@@ -138,6 +159,9 @@ void InitGLSL(int LightSet)
 	//glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Vertex );
 	//glAttachObjectARB( GLSL_ATC, g_GLSL_ATC_Pixel );
 	//GetGLSLLinkSTATUS( GLSL_ATC );
+
+
+	Init_ShaderGLSL(&GLSL_DrawSea,"data/shader/GLSL_Sea.vs","data/shader/GLSL_Sea.ps");
 
 	g_PhoneLight_Vertex = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Vertex.vs",GL_VERTEX_SHADER_ARB);
 
@@ -238,6 +262,7 @@ void DeinitGLSL()
 	glDeleteObjectARB( g_GLSLSSAOPass1_pixel);
 	glDeleteObjectARB( GLSL_SSAOPass1);
 
+	Deinit_ShaderGLSL(&GLSL_DrawSea);
 	DeinitBlurTex();
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
