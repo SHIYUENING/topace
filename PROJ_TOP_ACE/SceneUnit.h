@@ -58,6 +58,7 @@ public:
 	__m128 TGT_Pos;
 	unsigned int TGT_ID;
 	unsigned int Leader_ID;
+	unsigned int ReAttackTGT_ID;
 	_ACT_Orders ACT_Order;
 	_ACT_Modes ACT_Modes;
 	_Operator Operator;
