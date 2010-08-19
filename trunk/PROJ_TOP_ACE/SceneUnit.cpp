@@ -18,6 +18,7 @@ CSceneUnit::CSceneUnit(void)
 , ACT_Order(StandBy)
 , ACT_Modes(CounterAttack)
 , Operator(No_Operator)
+, Group(0)
 {
 }
 

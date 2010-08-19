@@ -27,7 +27,21 @@ void InitDataThread()
 	ListNum=UnitsList.AddOneUnit();
 	UnitsList.UnitsList[ListNum]->UnitType=Fighter;
 	UnitsList.UnitsList[ListNum]->Operator=Player;
+	UnitsList.UnitsList[ListNum]->Life=100.0f;
 	ThreadDataUpdata.Global_Data.Scene.PlayerID=ListNum;
+
+	for(int i=0;i<30;i++)
+	{
+		int tmp=UnitsList.AddOneUnit();
+		if((1%5)==0)
+			ListNum=tmp;
+		else
+			UnitsList.UnitsList[tmp]->Leader_ID=ListNum;
+		UnitsList.UnitsList[tmp]->Life=100.0f;
+		UnitsList.UnitsList[tmp]->Operator=AI;
+		UnitsList.UnitsList[tmp]->UnitType=Fighter;
+
+	}
 }
 void DataUpdata()
 {
