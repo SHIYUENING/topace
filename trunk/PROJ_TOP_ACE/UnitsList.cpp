@@ -79,6 +79,7 @@ unsigned int CUnitsList::AddOneUnit(CSceneUnit * Unit_Add)
 	DataCount=DataCountTMP;
 	return DataCount-1;
 }
+
 void CUnitsList::DelOneUnit(unsigned int Unit_Del_Num)
 {
 	if((Unit_Del_Num==0)||(Unit_Del_Num>=DataCount))
@@ -89,4 +90,41 @@ void CUnitsList::DelOneUnit(unsigned int Unit_Del_Num)
 		return;
 	_aligned_free(UnitsList[Unit_Del_Num]);
 	UnitsList[Unit_Del_Num]=NULL;
+}
+
+void CUnitsList::UpdataList()
+{
+	CSceneUnit * SceneUnit;
+	if(UnitsList)
+		return;
+	for(int i=1;i<DataCount;i++)
+	{
+		SceneUnit=UnitsList[i];
+		if(!SceneUnit)
+			continue;
+		else
+			AnalysisSceneUnitAction(SceneUnit);
+		SceneUnit->Updata();
+	}
+}
+
+void CUnitsList::AnalysisSceneUnitAction(CSceneUnit * SceneUnit)
+{
+	if(SceneUnit->Operator==AI)
+	{
+		switch(SceneUnit->UnitType)
+		{
+			case Fighter:
+			{
+				if(SceneUnit->Life>0.0f)
+					AnalysisFighterAction(SceneUnit);
+				break;
+			}
+		}
+	}
+}
+
+void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
+{
+	if(FighterUnit->)
 }

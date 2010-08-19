@@ -14,6 +14,9 @@ public:
 	bool AddListCount(unsigned int AddNum=DEFLISTADDCOUNT);
 	unsigned int AddOneUnit(CSceneUnit * Unit_Add=NULL);
 	void DelOneUnit(unsigned int Unit_Del_Num);
+	void UpdataList();
+	void AnalysisSceneUnitAction(CSceneUnit * SceneUnit);
+	void AnalysisFighterAction(CSceneUnit * FighterUnit)
 };
 
 #endif
