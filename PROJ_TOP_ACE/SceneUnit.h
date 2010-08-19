@@ -61,6 +61,7 @@ public:
 	_ACT_Orders ACT_Order;
 	_ACT_Modes ACT_Modes;
 	_Operator Operator;
+	unsigned int Group;
 
 };
 #endif
