@@ -126,5 +126,5 @@ void CUnitsList::AnalysisSceneUnitAction(CSceneUnit * SceneUnit)
 
 void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 {
-	if(FighterUnit->)
+	//if(FighterUnit->)
 }
