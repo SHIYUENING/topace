@@ -20,6 +20,11 @@ void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata)
 		ThreadDataUpdata->DataList,
 		sizeof(_UnitData)*ThreadDataUpdata->DataCount);
 	ThreadDataExchange.DataCount=ThreadDataUpdata->DataCount;
+	memcpy_s(
+		&(ThreadDataExchange.Global_Data),
+		sizeof(_Global_Data),
+		&(ThreadDataUpdata->Global_Data),
+		sizeof(_Global_Data));
 	
 	ReadingThread_States=_ReadingThread_States_NoThread;
 }
@@ -40,6 +45,11 @@ void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw)
 		ThreadDataExchange.DataList,
 		sizeof(_UnitData)*ThreadDataExchange.DataCount);
 	ThreadDataDraw->DataCount=ThreadDataExchange.DataCount;
+	memcpy_s(
+		&(ThreadDataDraw->Global_Data),
+		sizeof(_Global_Data),
+		&(ThreadDataExchange.Global_Data),
+		sizeof(_Global_Data));
 
 	ReadingThread_States=_ReadingThread_States_NoThread;
 }
@@ -47,6 +57,8 @@ CExchangeThread::CExchangeThread(void)
 : ListCount(DEFDATANUM)
 , DataCount(1)
 {
+	Global_Data.Scene.CamID=0;
+	Global_Data.Scene.PlayerID=0;
 	DataList = (_UnitData *)_aligned_malloc(sizeof(_UnitData)*ListCount,16);
 	DataList[0].UnitData_States=_UnitData_States_Use;
 }

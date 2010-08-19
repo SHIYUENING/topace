@@ -2,6 +2,16 @@
 #ifndef _SCENEUNIT_H
 #define _SCENEUNIT_H
 #include "unitmath.h"
+
+typedef enum _UnitType{
+	DummyUnit=0,
+	Cam=1,
+	Fighter=2,
+	Missle=3,
+	Shell=4,
+	Smoke=5
+}_UnitType;
+
 typedef enum _ACT_Orders{
 	StandBy=0,
 	FollowTo=1,
@@ -14,13 +24,19 @@ typedef enum _ACT_Modes{
 	OnlyTravel=1,
 	OnlyAvoid=2
 }_ACT_Modes;
+
+typedef enum _Operator{
+	No_Operator=0,
+	Player=1,
+	AI=2
+}_Operator;
 class CSceneUnit :
 	public CUnitMath
 {
 public:
 	CSceneUnit(void);
 	~CSceneUnit(void);
-	unsigned int UnitType;
+	_UnitType UnitType;
 	unsigned int ModelType;
 	// Move Speed
 	float MoveSPD;
@@ -41,8 +57,10 @@ public:
 	void Updata(void);
 	__m128 TGT_Pos;
 	unsigned int TGT_ID;
+	unsigned int Leader_ID;
 	_ACT_Orders ACT_Order;
 	_ACT_Modes ACT_Modes;
+	_Operator Operator;
 
 };
 #endif

@@ -20,6 +20,14 @@ CSceneUnit SceneUnitTest;
 CUnitsList UnitsList;
 void InitDataThread()
 {
+	int ListNum=0;
+	ListNum=UnitsList.AddOneUnit();	
+	UnitsList.UnitsList[ListNum]->UnitType=Cam;
+	ThreadDataUpdata.Global_Data.Scene.CamID=ListNum;
+	ListNum=UnitsList.AddOneUnit();
+	UnitsList.UnitsList[ListNum]->UnitType=Fighter;
+	UnitsList.UnitsList[ListNum]->Operator=Player;
+	ThreadDataUpdata.Global_Data.Scene.PlayerID=ListNum;
 }
 void DataUpdata()
 {
