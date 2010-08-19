@@ -1,7 +1,7 @@
 #include "SceneUnit.h"
 
 CSceneUnit::CSceneUnit(void)
-: UnitType(0)
+: UnitType(DummyUnit)
 , ModelType(0)
 , MoveSPD(5.0f)
 , TurnSPD(1.5f)
@@ -14,8 +14,10 @@ CSceneUnit::CSceneUnit(void)
 , LilfTime(0)
 , TGT_Pos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f))
 , TGT_ID(0)
+, Leader_ID(0)
 , ACT_Order(StandBy)
 , ACT_Modes(CounterAttack)
+, Operator(No_Operator)
 {
 }
 

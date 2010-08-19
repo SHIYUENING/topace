@@ -20,6 +20,21 @@ struct _UnitData
 	int Type;
 	char Name[8];
 };
+
+struct _Global_Data_Scene
+{
+	int PlayerID;
+	int CamID;
+};
+struct _Global_Data_Sys
+{
+	int Tmp;
+};
+struct _Global_Data
+{
+	_Global_Data_Scene Scene;
+	_Global_Data_Sys Sys;
+};
 class CExchangeThread
 {
 public:
@@ -33,6 +48,7 @@ public:
 	bool AddOneData(_UnitData * UnitData,int * DataNum=NULL);
 	bool UpdataOneData(_UnitData * UnitData,int DataNum);
 	int GetOneUseAbleIndex(void);
+	_Global_Data Global_Data;
 };
 void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata);
 void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw);
