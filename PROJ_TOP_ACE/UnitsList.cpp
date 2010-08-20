@@ -97,7 +97,7 @@ void CUnitsList::UpdataList()
 	CSceneUnit * SceneUnit;
 	if(UnitsList)
 		return;
-	for(int i=1;i<DataCount;i++)
+	for(unsigned int i=1;i<DataCount;i++)
 	{
 		SceneUnit=UnitsList[i];
 		if(!SceneUnit)
