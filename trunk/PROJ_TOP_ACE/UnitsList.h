@@ -17,6 +17,9 @@ public:
 	void UpdataList();
 	void AnalysisSceneUnitAction(CSceneUnit * SceneUnit);
 	void AnalysisFighterAction(CSceneUnit * FighterUnit);
+	bool SetOneUnitPos(unsigned int Unit_ID,__m128 Pos);
+	bool GetOneUnitPos(unsigned int Unit_ID,__m128 * Pos);
+
 };
 
 #endif

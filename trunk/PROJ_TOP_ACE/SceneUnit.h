@@ -63,6 +63,7 @@ public:
 	_ACT_Modes ACT_Modes;
 	_Operator Operator;
 	unsigned int Group;
+	unsigned int FollowTGT_ID;
 
 };
 #endif
