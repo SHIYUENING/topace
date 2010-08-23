@@ -126,5 +126,49 @@ void CUnitsList::AnalysisSceneUnitAction(CSceneUnit * SceneUnit)
 
 void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 {
-	//if(FighterUnit->)
+	switch (FighterUnit->ACT_Order)
+	{
+	case StandBy:
+		{
+			break;
+		}
+	case FollowTo:
+		{
+
+			if(FighterUnit->FollowTGT_ID)
+				GetOneUnitPos(FighterUnit->FollowTGT_ID,&FighterUnit->TGT_Pos);
+				UnitsList[FighterUnit->FollowTGT_ID]->SetPos(FighterUnit->TGT_Pos);
+			break;
+		}
+	case AttackTo:
+		{
+			break;
+		}
+	case Avoid:
+		{
+			break;
+		}
+	}
+	//if(FighterUnit->ACT_Order)
+}
+
+bool CUnitsList::SetOneUnitPos(unsigned int Unit_ID,__m128 Pos)
+{
+	if(Unit_ID<=0) return false;
+	if(!UnitsList) return false;
+	if(Unit_ID>=DataCount) return false;
+	if(!(UnitsList[Unit_ID])) return false;
+	UnitsList[Unit_ID]->SetPos(Pos);
+	return true;
+}
+
+bool CUnitsList::GetOneUnitPos(unsigned int Unit_ID,__m128 * Pos)
+{
+	if(!Pos) return false;
+	if(Unit_ID<=0) return false;
+	if(!UnitsList) return false;
+	if(Unit_ID>=DataCount) return false;
+	if(!(UnitsList[Unit_ID])) return false;
+	Pos[0]=UnitsList[Unit_ID]->UnitPos;
+	return true;
 }

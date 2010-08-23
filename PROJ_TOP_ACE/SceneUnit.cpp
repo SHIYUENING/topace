@@ -20,6 +20,7 @@ CSceneUnit::CSceneUnit(void)
 , ACT_Modes(CounterAttack)
 , Operator(No_Operator)
 , Group(0)
+, FollowTGT_ID(0)
 {
 }
 
