@@ -130,18 +130,29 @@ void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 	{
 	case StandBy:
 		{
+			FighterUnit->TGT_Pos=FighterUnit->StandByPos;
 			break;
 		}
 	case FollowTo:
 		{
-
 			if(FighterUnit->FollowTGT_ID)
-				GetOneUnitPos(FighterUnit->FollowTGT_ID,&FighterUnit->TGT_Pos);
-				UnitsList[FighterUnit->FollowTGT_ID]->SetPos(FighterUnit->TGT_Pos);
+			{
+				if(GetOneUnitPos(FighterUnit->FollowTGT_ID,&FighterUnit->TGT_Pos)) FighterUnit->PosToTGT_ID=FighterUnit->FollowTGT_ID;
+			}
+			else
+			{
+				if(FighterUnit->Leader_ID)
+				{
+					if(GetOneUnitPos(FighterUnit->Leader_ID,&FighterUnit->TGT_Pos)) FighterUnit->PosToTGT_ID=FighterUnit->Leader_ID;
+				}
+			}
 			break;
 		}
 	case AttackTo:
 		{
+			if(FighterUnit->AttackTGT_ID)
+			{
+			}
 			break;
 		}
 	case Avoid:
