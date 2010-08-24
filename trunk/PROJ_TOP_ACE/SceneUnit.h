@@ -56,7 +56,9 @@ public:
 	float LilfTime;
 	void Updata(void);
 	__m128 TGT_Pos;
-	unsigned int TGT_ID;
+	__m128 StandByPos;
+	unsigned int PosToTGT_ID;
+	unsigned int AttackTGT_ID;
 	unsigned int Leader_ID;
 	unsigned int ReAttackTGT_ID;
 	_ACT_Orders ACT_Order;
