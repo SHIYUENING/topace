@@ -137,13 +137,21 @@ void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 		{
 			if(FighterUnit->FollowTGT_ID)
 			{
-				if(GetOneUnitPos(FighterUnit->FollowTGT_ID,&FighterUnit->TGT_Pos)) FighterUnit->PosToTGT_ID=FighterUnit->FollowTGT_ID;
+				if(GetOneUnitPos(FighterUnit->FollowTGT_ID,&FighterUnit->TGT_Pos))
+				{
+					FighterUnit->PosToTGT_ID=FighterUnit->FollowTGT_ID;
+					break;
+				}
 			}
 			else
 			{
 				if(FighterUnit->Leader_ID)
 				{
-					if(GetOneUnitPos(FighterUnit->Leader_ID,&FighterUnit->TGT_Pos)) FighterUnit->PosToTGT_ID=FighterUnit->Leader_ID;
+					if(GetOneUnitPos(FighterUnit->Leader_ID,&FighterUnit->TGT_Pos)) 
+					{
+						FighterUnit->PosToTGT_ID=FighterUnit->Leader_ID;
+						break;
+					}
 				}
 			}
 			break;
@@ -152,11 +160,22 @@ void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 		{
 			if(FighterUnit->AttackTGT_ID)
 			{
+				if(GetOneUnitPos(FighterUnit->AttackTGT_ID,&FighterUnit->TGT_Pos))
+				{
+					FighterUnit->PosToTGT_ID=FighterUnit->AttackTGT_ID;
+					break;
+				}
 			}
 			break;
 		}
 	case Avoid:
 		{
+			if(FighterUnit->ReAttackTGT_ID)
+			{
+				if(GetOneUnitPos(FighterUnit->ReAttackTGT_ID,&FighterUnit->TGT_Pos)) 
+					FighterUnit->PosToTGT_ID=FighterUnit->ReAttackTGT_ID;
+				//if()
+			}
 			break;
 		}
 	}
