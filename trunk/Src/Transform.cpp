@@ -2,7 +2,7 @@
 
 
 Transform::Transform(){
-    m = identity<Matrix33d>();
+    m = tvmet::identity<Matrix33d>();
     p = 0;
     RefreshM4();
 }
@@ -22,12 +22,12 @@ Transform::Transform(const Matrix33d& Matrix){
 
 
 Transform::Transform(const Vector3d& RefPos){
-    m = identity<Matrix33d>();
+    m = tvmet::identity<Matrix33d>();
     p = RefPos;
     RefreshM4();
 }
 void Transform::Reset(){
-    m = identity<Matrix33d>();
+    m = tvmet::identity<Matrix33d>();
     p = 0;
     RefreshM4();
 }
