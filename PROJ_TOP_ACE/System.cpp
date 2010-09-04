@@ -569,6 +569,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 							Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);									// Draw Our Scene
 
 							//Sleep(30+rand()%15);
+							glFlush();
+							//glFinish();
 							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
 							if(GameSet.FPS>0)
 								LockFPSRender.LockFPS();
