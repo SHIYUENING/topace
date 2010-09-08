@@ -175,6 +175,7 @@ void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 				if(GetOneUnitPos(FighterUnit->ReAttackTGT_ID,&FighterUnit->TGT_Pos)) 
 					FighterUnit->PosToTGT_ID=FighterUnit->ReAttackTGT_ID;
 				//if()
+
 			}
 			break;
 		}
