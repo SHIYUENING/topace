@@ -7,9 +7,10 @@ namespace hgl
 	void CloseCore();										///<¹Ø±ÕºËÐÄ
 }
 CEXTLIBS::CEXTLIBS(void)
+: InitOK(false)
 {
 	hgl::SystemInfo si;
-	hgl::InitCore(si,true);
+	InitOK=hgl::InitCore(si,true);
 
 }
 
