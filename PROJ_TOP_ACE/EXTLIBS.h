@@ -8,6 +8,7 @@ class CEXTLIBS
 public:
 	CEXTLIBS(void);
 	~CEXTLIBS(void);
+	bool InitOK;
 };
 
 #endif

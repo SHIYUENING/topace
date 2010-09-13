@@ -6,5 +6,6 @@ class CSoundSys
 public:
 	CSoundSys(void);
 	~CSoundSys(void);
+	bool InitOK;
 };
 #endif
