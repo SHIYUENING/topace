@@ -73,6 +73,12 @@
     <ClCompile Include="UnitsList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EXTLIBS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -154,6 +160,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UnitsList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EXTLIBS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

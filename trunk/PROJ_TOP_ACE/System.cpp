@@ -13,9 +13,11 @@
 
 #include "System.h"														// Header File For The NeHeGL Basecode
 #include "IniFile.h"		
-#include"Draw.h"
+#include "Draw.h"
 #include "DataUpdata.h"
 #include "KeyInput.h"
+#include "EXTLIBS.h"
+#include "SoundSys.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
@@ -418,6 +420,8 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	CEXTLIBS * EXTLIBS=new CEXTLIBS;
+	CSoundSys * SoundSys=new CSoundSys;
 	hInst=hInstance;
 	InitRenderThread();
 	InitDataThread();
@@ -436,6 +440,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		//LockFPS();
 		LockFPSSYS.LockFPS();
 	}
+	delete SoundSys;
+	delete EXTLIBS;
 	return 0;
 }																		// End Of WinMain()
 HANDLE InitRenderThread()

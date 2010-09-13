@@ -58,7 +58,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Sound\inc;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Sound\inc;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -78,7 +78,7 @@
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\Src\Graphics\lib;..\Src\Sound\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Library;..\Src\Graphics\lib;..\Src\Sound\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\Release/TOP_ACE.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -103,7 +103,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Sound\inc;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Sound\inc;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -124,7 +124,7 @@
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\Src\Graphics\lib;..\Src\Sound\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Library;..\Src\Graphics\lib;..\Src\Sound\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/TOP_ACE.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
@@ -148,6 +148,7 @@
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="EasyMatrix.cpp" />
     <ClCompile Include="ExchangeThread.cpp" />
+    <ClCompile Include="EXTLIBS.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="Font2D.cpp" />
     <ClCompile Include="Font3D.cpp" />
@@ -160,6 +161,7 @@
     </ClCompile>
     <ClCompile Include="LockFPS.cpp" />
     <ClCompile Include="SceneUnit.cpp" />
+    <ClCompile Include="SoundSys.cpp" />
     <ClCompile Include="System.cpp">
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -186,6 +188,7 @@
     <ClInclude Include="EasyQuat.h" />
     <ClInclude Include="EasyVector.h" />
     <ClInclude Include="ExchangeThread.h" />
+    <ClInclude Include="EXTLIBS.h" />
     <ClInclude Include="FBO.h" />
     <ClInclude Include="Font2D.h" />
     <ClInclude Include="Font3D.h" />
@@ -196,6 +199,7 @@
     <ClInclude Include="LockFPS.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneUnit.h" />
+    <ClInclude Include="SoundSys.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TexManager.h" />
     <ClInclude Include="Textures.h" />
