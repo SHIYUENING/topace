@@ -7,5 +7,6 @@ public:
 	CSoundSys(void);
 	~CSoundSys(void);
 	bool InitOK;
+	void SetTestPos(float x,float y,float z);
 };
 #endif

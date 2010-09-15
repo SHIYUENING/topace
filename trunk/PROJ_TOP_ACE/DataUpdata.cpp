@@ -2,6 +2,7 @@
 #include "KeyInput.h"
 #include "ExchangeThread.h"
 #include "UnitsList.h"
+#include "SoundSys.h"
 float angleR=0.0f;
 float Test3dsFrame=0.0f;
 float maxFreme=100.0f;
@@ -18,8 +19,10 @@ float extern PosOrgZ;
 CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
 CUnitsList UnitsList;
+CSoundSys * SoundSysTest;
 void InitDataThread()
 {
+	SoundSysTest=new CSoundSys;
 	int ListNum=0;
 	ListNum=UnitsList.AddOneUnit();	
 	UnitsList.UnitsList[ListNum]->UnitType=Cam;
@@ -84,7 +87,11 @@ void DataUpdata()
 	TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
 	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
 	SceneUnitTest.GetMatrix(ThreadDataUpdata.DataList[3].Matrix);
-
+	__m128 SoundPos;
+	Easy_matrix_mult_vector3X3(&SoundPos,SceneUnitTest.UnitMatrix,SceneUnitTest.UnitPos);
+	//SoundPos=SceneUnitTest.GetRelativePos(SceneUnitTest.UnitPos);
+	SoundSysTest->SetTestPos(SoundPos.m128_f32[0]*0.01f,SoundPos.m128_f32[1]*0.01f,SoundPos.m128_f32[2]*0.01f);
+	//SoundSysTest->SetTestPos(0.0f,0.0f,0.0f);
 	ThreadUpdataToExchange(&ThreadDataUpdata);
 
 }
