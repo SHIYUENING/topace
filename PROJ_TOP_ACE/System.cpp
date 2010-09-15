@@ -17,7 +17,6 @@
 #include "DataUpdata.h"
 #include "KeyInput.h"
 #include "EXTLIBS.h"
-#include "SoundSys.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
@@ -420,28 +419,17 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	CEXTLIBS * EXTLIBS=new CEXTLIBS;
-	CSoundSys * SoundSys=new CSoundSys;
+	CEXTLIBS_init();
 	hInst=hInstance;
 	InitRenderThread();
 	InitDataThread();
-	//QueryPerformanceFrequency(&feq);
-	//QueryPerformanceCounter(&t1);
 	LockFPSSYS.Init(60);
 	while(isRun)
 	{
-		
 		DataUpdata();
-		/*if(RenderThreadisSuspend)
-		{
-			RenderThreadisSuspend=false;
-			ResumeThread(RenderThreadHANDLE);
-		}*/
-		//LockFPS();
 		LockFPSSYS.LockFPS();
 	}
-	delete SoundSys;
-	delete EXTLIBS;
+	CEXTLIBS_deinit();
 	return 0;
 }																		// End Of WinMain()
 HANDLE InitRenderThread()

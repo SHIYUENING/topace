@@ -1,24 +1,25 @@
 #include "SoundSys.h"
 
 #include <hgl/OpenALEE.h>
-using namespace openal;
-hgl::AudioBuffer * ABTest;
-hgl::AudioSource * ASTest;
-hgl::AudioPlayer * APTest;
+using namespace hgl;
+AudioBuffer * ABTest;
+AudioSource * ASTest;
+//AudioPlayer * APTest;
 CSoundSys::CSoundSys(void)
 : InitOK(false)
 {
-	InitOK=openal::InitOpenAL((const wchar_t *)0,(const wchar_t *)0);
-	const char *ALDeviceList=alcGetDeviceList();	
-
-	APTest=new hgl::AudioPlayer;
-	InitOK=APTest->Load(L"Data/bgm.ogg",hgl::aftOGG);
-	APTest->Play(true);
+	//APTest=new AudioPlayer;
+	//InitOK=APTest->Load(L"Data/bgm.ogg",aftOGG);
+	//APTest->Play(true);
 	ABTest=new hgl::AudioBuffer;
-	InitOK=ABTest->Load(L"Data/GunFire.ogg",hgl::aftOGG);
+	InitOK=ABTest->Load(L"Data/GunFire.ogg",aftOGG);
 
-	ASTest=new hgl::AudioSource(ABTest);
+	ASTest=new AudioSource(ABTest);
 	ASTest->Loop=true;
+	ReferenceValue tmp;
+	tmp.cur=0.0001f;
+	tmp.max=0.00011f;
+	ASTest->SetDistance(tmp);
 	ASTest->Play(true);
 }
 
@@ -29,5 +30,11 @@ CSoundSys::~CSoundSys(void)
 	ASTest->Unlink();
 	delete ASTest;
 	delete ABTest;
-	openal::CloseOpenAL();
+	//delete APTest;
+}
+
+
+void CSoundSys::SetTestPos(float x,float y,float z)
+{
+	ASTest->SetPosition(Vertex3f(x,y,z));
 }
