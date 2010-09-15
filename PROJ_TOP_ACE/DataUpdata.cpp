@@ -88,10 +88,12 @@ void DataUpdata()
 	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
 	SceneUnitTest.GetMatrix(ThreadDataUpdata.DataList[3].Matrix);
 	__m128 SoundPos;
-	Easy_matrix_mult_vector3X3(&SoundPos,SceneUnitTest.UnitMatrix,SceneUnitTest.UnitPos);
-	//SoundPos=SceneUnitTest.GetRelativePos(SceneUnitTest.UnitPos);
+	__m128 SoundMX[4];
+	TestView.GetMatrix(SoundMX);
+	Easy_matrix_inv(SoundMX,SoundMX);
+	Easy_matrix_mult_vector3X3(&SoundPos,SoundMX,SceneUnitTest.UnitPos);
 	SoundSysTest->SetTestPos(SoundPos.m128_f32[0]*0.01f,SoundPos.m128_f32[1]*0.01f,SoundPos.m128_f32[2]*0.01f);
-	//SoundSysTest->SetTestPos(0.0f,0.0f,0.0f);
+
 	ThreadUpdataToExchange(&ThreadDataUpdata);
 
 }

@@ -119,13 +119,17 @@ void CUnitMath::Reset(void)
 {
 	UnitQuat=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
-	NewMatrix=false;
+	Easy_matrix_identity(UnitMatrix);
+	NewMatrix=true;
 }
 
 void CUnitMath::PosTo(__m128 TGTPos)
 {
 	__m128 vecX,vecY,vecZ,vecNZ,vecTMP;
 	Easy_vector_sub(&vecNZ,TGTPos,UnitPos);
+	Easy_vector_norm2(&vecTMP,vecNZ);
+	if(vecTMP.m128_f32[0]<=1e-5)
+		return;
 	Easy_vector_normalize(&vecNZ,vecNZ);
 	vecNZ.m128_f32[3]=0.0f;// vecNZ get
 
@@ -150,6 +154,9 @@ void CUnitMath::PosTo(__m128 TGTPos)
 	Easy_vector_normalize(&vecX,vecX);
 	Easy_vector_normalize(&vecY,vecY);
 	Easy_vector_normalize(&vecZ,vecZ);
+	vecX.m128_f32[3]=0.0f;
+	vecY.m128_f32[3]=0.0f;
+	vecZ.m128_f32[3]=0.0f;
 
 	Easy_matrix_identity(UnitMatrix);
 	UnitMatrix[0]=vecX;
