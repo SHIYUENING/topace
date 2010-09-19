@@ -67,5 +67,8 @@ public:
 	unsigned int Group;
 	unsigned int FollowTGT_ID;
 
+	float AttackRenge;
+	bool InAttackRenge(__m128 TGTPos);
+	bool InAttackRenge(float TGTPos[3]);
 };
 #endif

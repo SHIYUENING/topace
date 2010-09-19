@@ -4,6 +4,7 @@ CLockFPS::CLockFPS(void)
 : oneframetimelimit(0.0)
 , oneframetime(0.0)
 , oneframetimepoint(100.0f)
+, SleepDelay(true)
 {
 }
 
@@ -52,18 +53,20 @@ void CLockFPS::LockFPS(void)
 	else
 		oneframetimepoint=100.0f;
 	//QueryPerformanceCounter(&t1);
-
-	 double SleepTime=(oneframetimelimit*1000.0-oneframetime*1000.0);
-	if(SleepTime>=1.5)
+	if(SleepDelay)
 	{
-		Sleep(max(int(SleepTime-1.5),0));
-		QueryPerformanceFrequency(&feq);
-		QueryPerformanceCounter(&t2);
-		if (t2.QuadPart >= t1.QuadPart)
-			waitTime=(( double)(t2.QuadPart-t1.QuadPart))/(( double)feq.QuadPart);
-		else
-			return;
-		SleepTime=(oneframetimelimit-waitTime)*1000.0;
+		double SleepTime=(oneframetimelimit*1000.0-oneframetime*1000.0);
+		if(SleepTime>=1.5)
+		{
+			Sleep(max(int(SleepTime-1.5),0));
+			QueryPerformanceFrequency(&feq);
+			QueryPerformanceCounter(&t2);
+			if (t2.QuadPart >= t1.QuadPart)
+				waitTime=(( double)(t2.QuadPart-t1.QuadPart))/(( double)feq.QuadPart);
+			else
+				return;
+			SleepTime=(oneframetimelimit-waitTime)*1000.0;
+		}
 	}
 	QueryPerformanceFrequency(&feq);
 	QueryPerformanceCounter(&t2);
