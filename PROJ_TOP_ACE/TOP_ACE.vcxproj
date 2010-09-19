@@ -58,7 +58,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>Include;..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Sound\inc;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -78,7 +78,7 @@
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>Library;..\Src\Graphics\lib;..\Src\Sound\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Library;..\Src\Graphics\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>.\Release/TOP_ACE.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -103,7 +103,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>Include;..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Sound\inc;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;..\Src;..\Src\Mathematics;..\Src\Physics;..\Src\Mathematics\tvmet-1.7.2\include;..\Src\Graphics\include;..\Src\Controls\include;..\Src\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -124,7 +124,7 @@
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>Library;..\Src\Graphics\lib;..\Src\Sound\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>Library;..\Src\Graphics\lib;..\Src\Controls\lib;..\Src\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/TOP_ACE.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>

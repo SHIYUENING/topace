@@ -6,7 +6,18 @@
 #include <math.h>
 #include <windows.h>
 #include <xmmintrin.h>
-
+inline float Easy_vector_Getlenth_2(__m128 a,__m128 b)
+{
+	return	(a.m128_f32[0]-b.m128_f32[0])*(a.m128_f32[0]-b.m128_f32[0])+
+			(a.m128_f32[1]-b.m128_f32[1])*(a.m128_f32[1]-b.m128_f32[1])+
+			(a.m128_f32[2]-b.m128_f32[2])*(a.m128_f32[2]-b.m128_f32[2]);
+}
+inline float Easy_vector_Getlenth_2(float a[3],float b[3])
+{
+	return (a[0]-b[0])*(a[0]-b[0])+
+			(a[1]-b[1])*(a[1]-b[1])+
+			(a[2]-b[2])*(a[2]-b[2]);
+}
 inline void Easy_vector_add(float c[3], float a[3], float b[3]) {
     int i;
     for (i = 0; i < 3; ++i) {

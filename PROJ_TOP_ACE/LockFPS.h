@@ -11,6 +11,7 @@ public:
 	void Init(int LimitFPS);
 	void LockFPS(void);
 	float oneframetimepoint;
+	bool SleepDelay;
 
 protected:
 	LARGE_INTEGER feq;

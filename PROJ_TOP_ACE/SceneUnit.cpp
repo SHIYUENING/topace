@@ -23,6 +23,7 @@ CSceneUnit::CSceneUnit(void)
 , Operator(No_Operator)
 , Group(0)
 , FollowTGT_ID(0)
+, AttackRenge(0)
 {
 }
 
@@ -54,4 +55,18 @@ void CSceneUnit::Updata(void)
 		MovInternal(_mm_set_ps(1.0f,-MoveSPD,0.0f,0.0f));
 	MoveSPD=max(0.0f,MoveSPD-MoveSPD_R);
 	LilfTime=LilfTime+1.0f;
+}
+
+
+bool CSceneUnit::InAttackRenge(__m128 TGTPos)
+{
+	if(Easy_vector_Getlenth_2(TGTPos,this->UnitPos)<AttackRenge*AttackRenge)
+		return true;
+	else
+		return false;
+}
+
+bool CSceneUnit::InAttackRenge(float TGTPos[3])
+{
+	return InAttackRenge(_mm_set_ps(1.0f,TGTPos[2],TGTPos[1],TGTPos[0]));
 }
