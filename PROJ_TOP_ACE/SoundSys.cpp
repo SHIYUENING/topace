@@ -12,7 +12,7 @@ CSoundSys::CSoundSys(void)
 	//InitOK=APTest->Load(L"Data/bgm.ogg",aftOGG);
 	//APTest->Play(true);
 	ABTest=new hgl::AudioBuffer;
-	InitOK=ABTest->Load(L"Data/GunFire.ogg",aftOGG);
+	InitOK=ABTest->Load(L"Data/GunFire.wav");
 
 	ASTest=new AudioSource(ABTest);
 	ASTest->Loop=true;
