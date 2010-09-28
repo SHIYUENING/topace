@@ -1,11 +1,11 @@
-#include "EXTLIBS.h"
+ï»¿#include "EXTLIBS.h"
 #include<hgl/platform/SystemInfo.H>
 #include <hgl/external.h>
 #include <hgl/OpenALEE.h>
 namespace hgl
 {
-	bool InitCore(SystemInfo &si,bool create_log);			///<³õÊ¼»¯ºËÐÄ
-	void CloseCore();										///<¹Ø±ÕºËÐÄ
+	bool InitCore(SystemInfo &si,bool create_log);			///<åˆå§‹åŒ–æ ¸å¿ƒ
+	void CloseCore();										///<å…³é—­æ ¸å¿ƒ
 }
 /*
 CEXTLIBS::CEXTLIBS(void)

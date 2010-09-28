@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef _SOUNDSYS_H
 #define _SOUNDSYS_H
 class CSoundSys
