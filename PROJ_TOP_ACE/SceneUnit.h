@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef _SCENEUNIT_H
 #define _SCENEUNIT_H
 #include "unitmath.h"
