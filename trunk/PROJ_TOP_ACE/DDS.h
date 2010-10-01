@@ -2,14 +2,14 @@
 #ifndef _DDS_H
 #define _DDS_H
 //#ifdef _WIN32
-//#include <windows.h>		// Header File For Windows
+#include <windows.h>		// Header File For Windows
 //#endif
 #include <stdio.h>			// Header File For Standard Input/Output
 #include <stdlib.h>
 #include <gl\glew.h>
 #include <gl\gl.h>			// Header File For The OpenGL32 Library
-#include <gl\glu.h>			// Header File For The GLu32 Library
-#include <gl\glaux.h>		// Header File For The Glaux Library
+//#include <gl\glu.h>			// Header File For The GLu32 Library
+//#include <gl\glaux.h>		// Header File For The Glaux Library
 #define DDS_NO_ERROR 0
 #define DDS_ERROR_NOT_OPEN_FILE 1
 #define DDS_ERROR_DDS_FORMAT 2

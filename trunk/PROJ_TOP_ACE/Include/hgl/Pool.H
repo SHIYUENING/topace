@@ -4,6 +4,9 @@
 #include<hgl/List.H>
 #include<hgl/Queue.H>
 #include<hgl/RWLock.H>
+#include<hgl/Stack.H>
+#include<hgl/OnlyList.H>
+#include<hgl/IndexData.H>
 namespace hgl
 {
 	/**
@@ -185,6 +188,101 @@ namespace hgl
 		void SetSize(int size){memblock_size=size;}
 		int GetSize(){return memblock_size;}
 	};
+	
+	/**
+	* 索引对象池模板
+	*/
+	template<typename T,typename I> class IndexObjectPool											///索引对象池模板
+	{
+		const int			max_count;																///<最大数据数量
+
+		ObjectList<T>		all_list;																///<所有对象
+
+		Stack<T *>			null_list;																///<未使用对象列表
+		IndexData<I,T *>	idle_list;																///<闲置对象列表
+		OnlyList<T *>		active_list;															///<活动对象列表
+
+	public:
+
+		IndexObjectPool(int count);																	///<本类构造函数
+		virtual ~IndexObjectPool();																	///<本类析构函数
+
+		virtual T *Acquire();																		///<申请一个对象
+		virtual T *TryAcquire(const I &flag);														///<尝试申请一个可能闲置的对象
+		virtual T *Acquire(const I &flag);															///<申请一个可能闲置的对象
+
+		virtual bool Release(T *obj);																///<释放一个数据
+		virtual bool Release(T *obj,const I &flag);													///<释放一个数据
+	};
+
+	/**
+	* 多线程索引对象池模板
+	*/
+	template<typename T,typename I> class MTIndexObjectPool:public IndexObjectPool<T,I>				///多线程索引对象池模板
+	{
+		ThreadMutex lock;
+
+	public:
+
+		MTIndexObjectPool(int count):IndexObjectPool(count){}
+		~MTIndexObjectPool(){}
+
+		T *Acquire()
+		{
+			T *obj;
+
+			lock.Lock();
+			obj=IndexObjectPool<T,I>::Acquire();
+			lock.Unlock();
+
+			return(obj);
+		}
+
+		T *TryAcquire(const I &flag)
+		{
+			T *obj;
+
+			lock.Lock();
+			obj=IndexObjectPool<T,I>::TryAcquire(flag);
+			lock.Unlock();
+
+			return(obj);
+		}
+
+		T *Acquire(const I &flag)
+		{
+			T *obj;
+
+			lock.Lock();
+			obj=IndexObjectPool<T,I>::Acquire(flag);
+			lock.Unlock();
+
+			return(obj);
+		}
+
+		bool Release(T *obj)
+		{
+			bool result;
+
+			lock.Lock();
+			result=IndexObjectPool<T,I>::Release(obj);
+			lock.Unlock();
+
+			return(result);
+		}
+		
+		bool Release(T *obj,const I &flag)
+		{
+			bool result;
+
+			lock.Lock();
+			result=IndexObjectPool<T,I>::Release(obj,flag);
+			lock.Unlock();
+
+			return(result);
+		}
+	};
 }//namespace hgl
 #include<hgl/Template/Pool.CPP>
+#include<hgl/Template/IndexObjectPool.CPP>
 #endif//HGL_POOL_INCLUDE

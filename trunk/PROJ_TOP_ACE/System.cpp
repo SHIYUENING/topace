@@ -6,23 +6,23 @@
 *                     2001                     *
 *                                              *
 ***********************************************/
-#include"Draw.h"
+#include "Draw.h"
 #include <windows.h>													// Header File For The Windows Library
 #include <gl/glew.h>
 #include "LockFPS.h"
 
 #include "System.h"														// Header File For The NeHeGL Basecode
-#include "IniFile.h"		
-#include "Draw.h"
+#include "IniFile.h"
 #include "DataUpdata.h"
 #include "KeyInput.h"
 #include "EXTLIBS.h"
+#include "ExchangeThread.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
-#pragma comment( lib, "glew32s.lib" )							// Search For OpenGL32.lib While Linking
+#pragma comment( lib, "glew32s.lib" )							// Search For glew32s.lib While Linking
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
-#pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
+//#pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
 
 #ifdef _DEBUG
 #pragma comment( linker, "/NODEFAULTLIB:LIBCMT.lib")
@@ -422,6 +422,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	CEXTLIBS_init();
 	hInst=hInstance;
 	InitRenderThread();
+	InitThreadUpdata();
 	InitDataThread();
 	LockFPSSYS.Init(60);
 	while(isRun)
@@ -430,6 +431,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		LockFPSSYS.LockFPS();
 	}
 	CEXTLIBS_deinit();
+	DeinitThreadUpdata();
 	return 0;
 }																		// End Of WinMain()
 HANDLE InitRenderThread()

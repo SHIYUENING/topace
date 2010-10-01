@@ -1,10 +1,22 @@
 ﻿#include "ExchangeThread.h"
+#include <windows.h>
 CExchangeThread ThreadDataExchange;
 _ReadingThread_States ReadingThread_States=_ReadingThread_States_NoThread;
 int ReadingThreadWait_Updata=0; 
 int ReadingThreadWait_Draw=0; 
+HANDLE ThreadUpdataMutex;
+void InitThreadUpdata()
+{
+	ThreadUpdataMutex=CreateMutexW(NULL,false,L"ThreadUpdataMutex");
+}
+void DeinitThreadUpdata()
+{
+	ReleaseMutex(ThreadUpdataMutex);
+	CloseHandle(ThreadUpdataMutex);
+}
 void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata)
 {
+	WaitForSingleObject(ThreadUpdataMutex,INFINITE);
 	ReadingThreadWait_Updata=0;
 	while(ReadingThread_States==_ReadingThread_States_ThreadExchangeToDraw)
 		ReadingThreadWait_Updata++;
@@ -27,9 +39,11 @@ void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata)
 		sizeof(_Global_Data));
 	
 	ReadingThread_States=_ReadingThread_States_NoThread;
+	ReleaseMutex(ThreadUpdataMutex);
 }
 void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw)
 {
+	WaitForSingleObject(ThreadUpdataMutex,INFINITE);
 	ReadingThreadWait_Draw=0;
 	while(ReadingThread_States==_ReadingThread_States_ThreadUpdataToExchange)
 		ReadingThreadWait_Draw++;
@@ -52,6 +66,7 @@ void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw)
 		sizeof(_Global_Data));
 
 	ReadingThread_States=_ReadingThread_States_NoThread;
+	ReleaseMutex(ThreadUpdataMutex);
 }
 CExchangeThread::CExchangeThread(void)
 : ListCount(DEFDATANUM)
