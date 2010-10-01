@@ -50,6 +50,8 @@ public:
 	int GetOneUseAbleIndex(void);
 	_Global_Data Global_Data;
 };
+void InitThreadUpdata();
+void DeinitThreadUpdata();
 void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata);
 void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw);
 #endif

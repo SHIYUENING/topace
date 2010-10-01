@@ -39,6 +39,7 @@ namespace hgl
 				bool Peek(T &);
 		virtual bool Pop(T &);
 				bool Push(T &);
+				bool Push(T *,int);																	///<放入多个数据
 
 		virtual void Clear();                                                                       ///<清除所有数据
 

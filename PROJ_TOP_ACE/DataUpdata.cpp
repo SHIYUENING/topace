@@ -7,7 +7,7 @@ float angleR=0.0f;
 float Test3dsFrame=0.0f;
 float maxFreme=100.0f;
 bool Test3dsFrameSwitch=false;
-extern tKeyInput KeyInput;
+//extern tKeyInput KeyInput;
 CUnitMath TestView;//TestUnit,
 CUnitMath TestUnitExchange;
 int ReadingThreadNum=0;
