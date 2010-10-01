@@ -85,7 +85,7 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 	glGetObjectParameterivARB( GLSLShaderObject, GL_OBJECT_COMPILE_STATUS_ARB, &bCompiled );
 	if( bCompiled == false )
 	{
-		char str[4096];
+		char str[40960];
 		glGetInfoLogARB(GLSLShaderObject, sizeof(str), NULL, str);
 		MessageBox( NULL, str, "Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
 		WritePrivateProfileString("Glsl","Compile_Error",str,".\\Error_log.ini");
@@ -98,12 +98,12 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 // Link the program object and print out the info log...
 //
 	GLint bLinked=false;
-	char str[4096];
 	glLinkProgramARB( g_programObj );
 	glGetObjectParameterivARB( g_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
 
 	if( bLinked == false )
 	{
+		char str[40960];
 		glGetInfoLogARB( g_programObj, sizeof(str), NULL, str );
 		MessageBox( NULL, str, "Linking Error", MB_OK|MB_ICONEXCLAMATION );
 		WritePrivateProfileString("Glsl","Linking_Error",str,".\\Error_log.ini");
