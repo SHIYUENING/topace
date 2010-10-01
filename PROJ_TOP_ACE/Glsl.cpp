@@ -88,6 +88,7 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 		char str[4096];
 		glGetInfoLogARB(GLSLShaderObject, sizeof(str), NULL, str);
 		MessageBox( NULL, str, "Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
+		WritePrivateProfileString("Glsl","Compile_Error",str,".\\Error_log.ini");
 	}
 	return GLSLShaderObject;
 }
@@ -105,6 +106,7 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	{
 		glGetInfoLogARB( g_programObj, sizeof(str), NULL, str );
 		MessageBox( NULL, str, "Linking Error", MB_OK|MB_ICONEXCLAMATION );
+		WritePrivateProfileString("Glsl","Linking_Error",str,".\\Error_log.ini");
 		return false;
 	}
 	return true;
