@@ -45,8 +45,6 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 }
 void main()
 {
-	int i=LightNums.x;
-
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, gl_TexCoord[0].xy);
 	//if(DiffuseTexColor.x<0)
 //	DiffuseTexColor=vec4(1.0,1.0,1.0,1.0);
@@ -54,8 +52,15 @@ void main()
 	vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
-	for(i=0;i<8;i++)
+	for(int i=0;i<8;i++)
 	{
+		if(i=0)
+		{
+		 LightVal=vec2(0.0,0.0);
+	 AmbientColor=vec4(0.0,0.0,0.0,0.0);
+	 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
+	 SpecularColor=vec4(0.0,0.0,0.0,0.0);
+		}
 		if(i<LightNums.x)
 		{
 			LightVal=OmniLight (gl_LightSource[i].position);
