@@ -87,8 +87,21 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 	{
 		char str[40960];
 		glGetInfoLogARB(GLSLShaderObject, sizeof(str), NULL, str);
-		MessageBox( NULL, str, "Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
-		WritePrivateProfileString("Glsl","Compile_Error",str,".\\Error_log.ini");
+		MessageBox( NULL, "Error Message saving to Error.log", "Shader Compile Error", MB_OK|MB_ICONEXCLAMATION );
+		//WritePrivateProfileString("Glsl","Compile_Error",str,".\\Error_log.ini");
+		HANDLE   hFile;     
+      
+		hFile   =   CreateFileW(L".\\Error.log",                       //   open   MYFILE.TXT     
+                                  GENERIC_WRITE,                             //   open   for   reading     
+                                  FILE_SHARE_READ,                       //   share   for   reading     
+                                  NULL,                                             //   no   security     
+                                  CREATE_ALWAYS,                           //   existing   file   only     
+                                  FILE_ATTRIBUTE_NORMAL,           //   normal   file     
+                                  NULL);
+		str[40959]=0;
+		DWORD savesize=0;
+		WriteFile(hFile,str,min(40959,strlen(str)),&savesize,NULL);
+		CloseHandle(hFile);
 	}
 	return GLSLShaderObject;
 }
@@ -105,8 +118,21 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	{
 		char str[40960];
 		glGetInfoLogARB( g_programObj, sizeof(str), NULL, str );
-		MessageBox( NULL, str, "Linking Error", MB_OK|MB_ICONEXCLAMATION );
-		WritePrivateProfileString("Glsl","Linking_Error",str,".\\Error_log.ini");
+		MessageBox( NULL, "Error Message saving to Error.log", "Linking Error", MB_OK|MB_ICONEXCLAMATION );
+		//WritePrivateProfileString("Glsl","Linking_Error",str,".\\Error_log.ini");
+		HANDLE   hFile;     
+      
+		hFile   =   CreateFileW(L".\\Error.log",                       //   open   MYFILE.TXT     
+                                  GENERIC_WRITE,                             //   open   for   reading     
+                                  FILE_SHARE_READ,                       //   share   for   reading     
+                                  NULL,                                             //   no   security     
+                                  CREATE_ALWAYS,                           //   existing   file   only     
+                                  FILE_ATTRIBUTE_NORMAL,           //   normal   file     
+                                  NULL);
+		str[40959]=0;
+		DWORD savesize=0;
+		WriteFile(hFile,str,min(40959,strlen(str)),&savesize,NULL);
+		CloseHandle(hFile);
 		return false;
 	}
 	return true;
