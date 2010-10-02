@@ -20,7 +20,7 @@ CSoundSys::CSoundSys(void)
 	tmp.cur=0.0001f;
 	tmp.max=0.00011f;
 	ASTest->SetDistance(tmp);
-	ASTest->Play(true);
+	//ASTest->Play(true);
 }
 
 
