@@ -23,8 +23,8 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 	float specular = 0.0;
 	float spotEffect = dot(normalize(LightTGTPosEyeIn),-LightDir);
 	
-	//if(spotEffect > spotCosCutoff)
-	//{
+	if(spotEffect > spotCosCutoff)
+	{
 		//spotEffect = pow((spotEffect-spotCosCutoff*2.0),spotExponent);
 		//float spotCosFalloff = pow(spotCosCutoff,spotExponent);
 		//spotEffect = (spotCosFalloff- spotEffect)/(spotCosFalloff-spotCosCutoff);
@@ -35,11 +35,11 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 		NdotL = max(0.0,NdotL);
 		NdotL = NdotL*spotEffect;
 		specular = specular*spotEffect;
-	//}
-	//else
-	//{
-	//	NdotL = 0.0;
-	//}
+	}
+	else
+	{
+		NdotL = 0.0;
+	}
 	return vec2(NdotL,specular);
 }
 void main()
