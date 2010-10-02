@@ -53,6 +53,8 @@ void main()
 	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
 	for(int i=0;i<8;i++)
 	{
+	
+				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
 		if(i<LightNums.x)
 		{
 			LightVal=OmniLight (gl_LightSource[i].position);
@@ -61,7 +63,6 @@ void main()
 		{
 			//if(i<(LightNums.x+LightNums.y))
 			//{
-				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
 			//}
 		}
 		
