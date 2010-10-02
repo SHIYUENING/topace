@@ -50,10 +50,8 @@ void main()
 	vec2 LightVal=vec2(0.0,0.0);
 	vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
-	int i=0;
-	i=max(0,LightNums.x-1);
-	vec4 SpecularColor=gl_LightSource[i].position;
-	for( i=0;i<8;i++)
+	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
+	for(int i=0;i<8;i++)
 	{
 		if(i<LightNums.x)
 		{
@@ -61,11 +59,10 @@ void main()
 		}
 		else
 		{
-			if(i<(LightNums.x+LightNums.y))
-			{
-				vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
+			//if(i<(LightNums.x+LightNums.y))
+			//{
 				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
-			}
+			//}
 		}
 		
 		AmbientColor += gl_FrontLightProduct[i].ambient;
