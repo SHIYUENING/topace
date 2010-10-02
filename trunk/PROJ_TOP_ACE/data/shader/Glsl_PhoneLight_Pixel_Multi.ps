@@ -50,12 +50,13 @@ void main()
 	vec2 LightVal=vec2(0.0,0.0);
 	vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
-	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
-	for(int i=0;i<8;i++)
+	int i=0;
+	i=max(0,LightNums.x-1);
+	vec4 SpecularColor=gl_LightSource[i].position;
+	for( i=0;i<8;i++)
 	{
 		if(i<LightNums.x)
 		{
-		SpecularColor=vec4(0.0,0.0,0.0,0.0);
 			LightVal=OmniLight (gl_LightSource[i].position);
 		}
 		else
