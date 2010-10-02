@@ -23,23 +23,7 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 	float specular = 0.0;
 	float spotEffect = dot(normalize(LightTGTPosEyeIn),-LightDir);
 	
-	if(spotEffect > spotCosCutoff)
-	{
-		//spotEffect = pow((spotEffect-spotCosCutoff*2.0),spotExponent);
-		//float spotCosFalloff = pow(spotCosCutoff,spotExponent);
-		//spotEffect = (spotCosFalloff- spotEffect)/(spotCosFalloff-spotCosCutoff);
-		spotEffect = pow(spotEffect,spotExponent);
-		vec3 HightLight =normalize( LightDir - normalize(VertexEyeDir.xyz));
-		specular = pow(max(dot(Nor, HightLight), 0.0), gl_FrontMaterial.shininess);
 
-		NdotL = max(0.0,NdotL);
-		NdotL = NdotL*spotEffect;
-		specular = specular*spotEffect;
-	}
-	else
-	{
-		NdotL = 0.0;
-	}
 	return vec2(NdotL,specular);
 }
 void main()
@@ -53,17 +37,16 @@ void main()
 	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
 	for(int i=0;i<8;i++)
 	{
-	
-				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
 		if(i<LightNums.x)
 		{
 			LightVal=OmniLight (gl_LightSource[i].position);
 		}
 		else
 		{
-			//if(i<(LightNums.x+LightNums.y))
-			//{
-			//}
+			if(i<(LightNums.x+LightNums.y))
+			{
+				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
+			}
 		}
 		
 		AmbientColor += gl_FrontLightProduct[i].ambient;
