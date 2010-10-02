@@ -58,7 +58,6 @@ void main()
 		if(i<LightNums.x)
 		{
 			LightVal=OmniLight (gl_LightSource[i].position);
-			SpecularColor=vec4(0.0,0.0,0.0,0.0);
 		}
 		else
 		{
@@ -67,7 +66,7 @@ void main()
 				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
 			}
 		}
-		
+		SpecularColor=vec4(0.0,0.0,0.0,0.0);
 		AmbientColor += gl_FrontLightProduct[i].ambient;
 		DiffuseColor += LightVal.x * gl_FrontLightProduct[i].diffuse ;
 		SpecularColor += LightVal.y * gl_FrontLightProduct[i].specular ;
