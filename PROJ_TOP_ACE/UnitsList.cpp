@@ -180,6 +180,7 @@ void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 					if(Easy_vector_Getlenth_2(FighterUnit->TGT_Pos,FighterUnit->UnitPos)>0.01f)
 					{
 						Easy_vector_normalize(&TGTdir,TGTdir);
+						float TGTdirDot=Easy_vector_dot(TGTdir,FighterUnit->UnitMatrix[2]);
 					}
 				}
 				//if()
