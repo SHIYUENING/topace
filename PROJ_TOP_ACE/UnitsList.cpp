@@ -173,7 +173,15 @@ void CUnitsList::AnalysisFighterAction(CSceneUnit * FighterUnit)
 			if(FighterUnit->ReAttackTGT_ID)
 			{
 				if(GetOneUnitPos(FighterUnit->ReAttackTGT_ID,&FighterUnit->TGT_Pos)) 
+				{
 					FighterUnit->PosToTGT_ID=FighterUnit->ReAttackTGT_ID;
+					__m128 TGTdir;
+					Easy_vector_sub(&TGTdir,FighterUnit->TGT_Pos,FighterUnit->UnitPos);
+					if(Easy_vector_Getlenth_2(FighterUnit->TGT_Pos,FighterUnit->UnitPos)>0.01f)
+					{
+						Easy_vector_normalize(&TGTdir,TGTdir);
+					}
+				}
 				//if()
 
 			}
