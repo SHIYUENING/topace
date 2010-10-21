@@ -150,6 +150,7 @@
     <ClCompile Include="ExchangeThread.cpp" />
     <ClCompile Include="EXTLIBS.cpp" />
     <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="FileSysBace.cpp" />
     <ClCompile Include="Font2D.cpp" />
     <ClCompile Include="Font3D.cpp" />
     <ClCompile Include="Glsl.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="ExchangeThread.h" />
     <ClInclude Include="EXTLIBS.h" />
     <ClInclude Include="FBO.h" />
+    <ClInclude Include="FileSysBace.h" />
     <ClInclude Include="Font2D.h" />
     <ClInclude Include="Font3D.h" />
     <ClInclude Include="Glsl.h" />

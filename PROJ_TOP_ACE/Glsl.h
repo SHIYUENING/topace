@@ -24,5 +24,7 @@ void SSAOPass1(float SSAOset[4]);
 void InitBlurTex();
 void DeinitBlurTex();
 void BlurTex(int Size,bool WorH);
+GLhandleARB GLSL_CompileShader(unsigned char *ShaderAssembly,unsigned int ShaderObject);
+GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObject);
 
 #endif

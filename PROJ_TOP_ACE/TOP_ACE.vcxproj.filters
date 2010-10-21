@@ -79,6 +79,7 @@
     <ClCompile Include="SoundSys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FileSysBace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -168,6 +169,7 @@
     <ClInclude Include="SoundSys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileSysBace.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomH_pixel.glsl">

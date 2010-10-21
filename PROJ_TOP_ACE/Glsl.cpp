@@ -73,9 +73,13 @@ unsigned char *readShaderFile( const char *fileName )
 
 GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObject)
 {
+	return GLSL_CompileShader(readShaderFile( shaderfilename ),ShaderObject);
+}
+
+GLhandleARB GLSL_CompileShader(unsigned char *ShaderAssembly,unsigned int ShaderObject)
+{
 	GLhandleARB GLSLShaderObject=0;
 	GLSLShaderObject=glCreateShaderObjectARB(ShaderObject);
-	unsigned char *ShaderAssembly = readShaderFile( shaderfilename );
 	const char *ShaderStrings[1];
 	ShaderStrings[0] = (char*)ShaderAssembly;
 	glShaderSourceARB( GLSLShaderObject, 1, ShaderStrings, NULL );
@@ -105,6 +109,7 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 	}
 	return GLSLShaderObject;
 }
+
 bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 {
 //
