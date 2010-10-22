@@ -81,6 +81,7 @@
     </ClCompile>
     <ClCompile Include="FileSysBace.cpp" />
     <ClCompile Include="CharSysBace.cpp" />
+    <ClCompile Include="TALogSys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -172,6 +173,7 @@
     </ClInclude>
     <ClInclude Include="FileSysBace.h" />
     <ClInclude Include="CharSysBace.h" />
+    <ClInclude Include="TALogSys.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomH_pixel.glsl">
