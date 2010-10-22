@@ -80,6 +80,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FileSysBace.cpp" />
+    <ClCompile Include="CharSysBace.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -170,6 +171,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileSysBace.h" />
+    <ClInclude Include="CharSysBace.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomH_pixel.glsl">

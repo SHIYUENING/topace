@@ -143,6 +143,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="CharSysBace.cpp" />
     <ClCompile Include="DataUpdata.cpp" />
     <ClCompile Include="DDS.cpp" />
     <ClCompile Include="Draw.cpp" />
@@ -181,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h" />
+    <ClInclude Include="CharSysBace.h" />
     <ClInclude Include="DataUpdata.h" />
     <ClInclude Include="DDS.h" />
     <ClInclude Include="Def.h" />
