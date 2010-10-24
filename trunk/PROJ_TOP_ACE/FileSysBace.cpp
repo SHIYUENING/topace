@@ -100,7 +100,7 @@ bool WriteLocFile(const char * FileFullPath,unsigned char * FileData,unsigned in
                             FILE_ATTRIBUTE_NORMAL,           //   normal   file     
                             NULL);
 	DWORD savesize=0;
-	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL);
+	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL)!=0?true:false;
 	CloseHandle(hFile);
 	return WriteStatus;
 }
@@ -117,7 +117,7 @@ bool WriteLocFile(const wchar_t * FileFullPath,unsigned char * FileData,unsigned
                             FILE_ATTRIBUTE_NORMAL,           //   normal   file     
                             NULL);
 	DWORD savesize=0;
-	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL);
+	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL)!=0?true:false;
 	CloseHandle(hFile);
 	return WriteStatus;
 }
