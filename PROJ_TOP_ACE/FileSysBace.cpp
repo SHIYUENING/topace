@@ -48,7 +48,7 @@ unsigned char * ReadLocFile(const wchar_t * FileName,unsigned int ReadSize,unsig
 }
 
 
-bool WriteLocFile(const char * FileName,const char * FilePath,unsigned char * FileData,unsigned int WriteSize)
+bool WriteLocFile(const char * FileName,const char * FilePath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileName)||(!FileData)||(WriteSize==0))
 		return NULL;
@@ -64,13 +64,13 @@ bool WriteLocFile(const char * FileName,const char * FilePath,unsigned char * Fi
 		FilePathWTmp=new wchar_t[dwNum];
 		MultiByteToWideChar(CP_ACP,0,FileName,-1,FilePathWTmp,dwNum);
 	}
-	bool WriteStates=WriteLocFile(FileNameWTmp,FilePathWTmp,FileData,WriteSize);
+	bool WriteStates=WriteLocFile(FileNameWTmp,FilePathWTmp,FileData,WriteSize,Add);
 	if(FileNameWTmp) delete[] FileNameWTmp;
 	if(FilePathWTmp) delete[] FilePathWTmp;
 	return WriteStates;
 }
 
-bool WriteLocFile(const wchar_t * FileName,const wchar_t * FilePath,unsigned char * FileData,unsigned int WriteSize)
+bool WriteLocFile(const wchar_t * FileName,const wchar_t * FilePath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileName)||(!FileData)||(WriteSize==0))
 		return false;
@@ -83,40 +83,44 @@ bool WriteLocFile(const wchar_t * FileName,const wchar_t * FilePath,unsigned cha
 	{
 		FileFullPath=ADDTwoWchar(L".\\",FileName);
 	}
-	bool WriteStatus=WriteLocFile(FileFullPath,FileData,WriteSize);
+	bool WriteStatus=WriteLocFile(FileFullPath,FileData,WriteSize,Add);
 	if(FileFullPath!=NULL) delete[] FileFullPath;
 	return WriteStatus;
 }
-bool WriteLocFile(const char * FileFullPath,unsigned char * FileData,unsigned int WriteSize)
+bool WriteLocFile(const char * FileFullPath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileFullPath)||(!FileData)||(WriteSize==0))
 		return false;
 	HANDLE   hFile;
-	hFile   =   CreateFileA(FileFullPath,                       //   open   MYFILE.TXT     
-                            GENERIC_WRITE,                             //   open   for   reading     
-                            FILE_SHARE_READ,                       //   share   for   reading     
-                            NULL,                                             //   no   security     
-                            CREATE_ALWAYS,                           //   existing   file   only     
-                            FILE_ATTRIBUTE_NORMAL,           //   normal   file     
+	hFile   =   CreateFileA(FileFullPath,                      
+                            GENERIC_WRITE,                         
+                            FILE_SHARE_READ,                  
+                            NULL,                                         
+                            Add?OPEN_EXISTING:CREATE_ALWAYS,                        
+                            FILE_ATTRIBUTE_NORMAL,          
                             NULL);
 	DWORD savesize=0;
+	if(Add)
+		SetFilePointer(hFile,0,NULL,FILE_END);
 	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL)!=0?true:false;
 	CloseHandle(hFile);
 	return WriteStatus;
 }
-bool WriteLocFile(const wchar_t * FileFullPath,unsigned char * FileData,unsigned int WriteSize)
+bool WriteLocFile(const wchar_t * FileFullPath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileFullPath)||(!FileData)||(WriteSize==0))
 		return false;
 	HANDLE   hFile;
-	hFile   =   CreateFileW(FileFullPath,                       //   open   MYFILE.TXT     
-                            GENERIC_WRITE,                             //   open   for   reading     
-                            FILE_SHARE_READ,                       //   share   for   reading     
-                            NULL,                                             //   no   security     
-                            CREATE_ALWAYS,                           //   existing   file   only     
-                            FILE_ATTRIBUTE_NORMAL,           //   normal   file     
+	hFile   =   CreateFileW(FileFullPath,                 
+                            GENERIC_WRITE,                        
+                            FILE_SHARE_READ,                     
+                            NULL,                                         
+                            Add?OPEN_EXISTING:CREATE_ALWAYS,                     
+                            FILE_ATTRIBUTE_NORMAL,           
                             NULL);
 	DWORD savesize=0;
+	if(Add)
+		SetFilePointer(hFile,0,NULL,FILE_END);
 	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL)!=0?true:false;
 	CloseHandle(hFile);
 	return WriteStatus;
