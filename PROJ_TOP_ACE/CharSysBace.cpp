@@ -1,114 +1,114 @@
 #include "CharSysBace.h"
 
-unsigned int GetWcharLenth(const wchar_t * Wchar)
+unsigned int GetCharLenth(const wchar_t * Char)
 {
-	if(!Wchar)
+	if(!Char)
 		return 0;
-	int WcharLenth=0;
-	while(Wchar[WcharLenth]!=0)
-		WcharLenth++;
-	return WcharLenth;
+	int CharLenth=0;
+	while(Char[CharLenth]!=0)
+		CharLenth++;
+	return CharLenth;
 }
-unsigned int GetWcharLenth(const char * Wchar)
+unsigned int GetCharLenth(const char * Char)
 {
-	if(!Wchar)
+	if(!Char)
 		return 0;
-	int WcharLenth=0;
-	while(Wchar[WcharLenth]!=0)
-		WcharLenth++;
-	return WcharLenth;
+	int CharLenth=0;
+	while(Char[CharLenth]!=0)
+		CharLenth++;
+	return CharLenth;
 }
-wchar_t * ADDTwoWchar(const wchar_t * Wchar1,const wchar_t * Wchar2)
+wchar_t * ADDTwoChar(const wchar_t * Char1,const wchar_t * Char2)
 {
-	int WcharLenth1=GetWcharLenth(Wchar1);
-	int WcharLenth2=GetWcharLenth(Wchar2);
-	if(WcharLenth1+WcharLenth2<=0)
+	int CharLenth1=GetCharLenth(Char1);
+	int CharLenth2=GetCharLenth(Char2);
+	if(CharLenth1+CharLenth2<=0)
 		return 0;
-	wchar_t * ResultsWchar=new wchar_t [WcharLenth1+WcharLenth2+1];
-	for(int i=0;i<WcharLenth1;i++)
+	wchar_t * ResultsChar=new wchar_t [CharLenth1+CharLenth2+1];
+	for(int i=0;i<CharLenth1;i++)
 	{
-		ResultsWchar[i]=Wchar1[i];
+		ResultsChar[i]=Char1[i];
 	}
-	for(int i=0;i<WcharLenth2;i++)
+	for(int i=0;i<CharLenth2;i++)
 	{
-		ResultsWchar[i+WcharLenth1]=Wchar2[i];
+		ResultsChar[i+CharLenth1]=Char2[i];
 	}
-	ResultsWchar[WcharLenth1+WcharLenth2]=0;
-	return ResultsWchar;
+	ResultsChar[CharLenth1+CharLenth2]=0;
+	return ResultsChar;
 }
-char * ADDTwoWchar(const char * Wchar1,const char * Wchar2)
+char * ADDTwoChar(const char * Char1,const char * Char2)
 {
-	int WcharLenth1=GetWcharLenth(Wchar1);
-	int WcharLenth2=GetWcharLenth(Wchar2);
-	if(WcharLenth1+WcharLenth2<=0)
+	int CharLenth1=GetCharLenth(Char1);
+	int CharLenth2=GetCharLenth(Char2);
+	if(CharLenth1+CharLenth2<=0)
 		return 0;
-	char * ResultsWchar=new char [WcharLenth1+WcharLenth2+1];
-	for(int i=0;i<WcharLenth1;i++)
+	char * ResultsChar=new char [CharLenth1+CharLenth2+1];
+	for(int i=0;i<CharLenth1;i++)
 	{
-		ResultsWchar[i]=Wchar1[i];
+		ResultsChar[i]=Char1[i];
 	}
-	for(int i=0;i<WcharLenth2;i++)
+	for(int i=0;i<CharLenth2;i++)
 	{
-		ResultsWchar[i+WcharLenth1]=Wchar2[i];
+		ResultsChar[i+CharLenth1]=Char2[i];
 	}
-	ResultsWchar[WcharLenth1+WcharLenth2]=0;
-	return ResultsWchar;
+	ResultsChar[CharLenth1+CharLenth2]=0;
+	return ResultsChar;
 }
-int ADDTwoWchar(wchar_t *ResultsWchar,int ResultsWcharArrayMAXSize,const wchar_t * Wchar1,const wchar_t * Wchar2)
+int ADDTwoChar(wchar_t *ResultsChar,int ResultsCharArrayMAXSize,const wchar_t * Char1,const wchar_t * Char2)
 {
-	if((!ResultsWchar)||(ResultsWcharArrayMAXSize<2))
+	if((!ResultsChar)||(ResultsCharArrayMAXSize<2))
 		return 0;
-	int WcharLenth1=GetWcharLenth(Wchar1);
-	int WcharLenth2=GetWcharLenth(Wchar2);
-	if(WcharLenth1+WcharLenth2<=0)
+	int CharLenth1=GetCharLenth(Char1);
+	int CharLenth2=GetCharLenth(Char2);
+	if(CharLenth1+CharLenth2<=0)
 		return 0;
-	for(int i=0;i<WcharLenth1;i++)
+	for(int i=0;i<CharLenth1;i++)
 	{
-		if(i>=(ResultsWcharArrayMAXSize-1))
+		if(i>=(ResultsCharArrayMAXSize-1))
 		{
-			ResultsWchar[i]=0;
+			ResultsChar[i]=0;
 			return i;
 		}
-		ResultsWchar[i]=Wchar1[i];
+		ResultsChar[i]=Char1[i];
 	}
-	for(int i=0;i<WcharLenth2;i++)
+	for(int i=0;i<CharLenth2;i++)
 	{
-		if(i>=(ResultsWcharArrayMAXSize-1))
+		if(i>=(ResultsCharArrayMAXSize-1))
 		{
-			ResultsWchar[i]=0;
+			ResultsChar[i]=0;
 			return i;
 		}
-		ResultsWchar[i+WcharLenth1]=Wchar2[i];
+		ResultsChar[i+CharLenth1]=Char2[i];
 	}
-	ResultsWchar[WcharLenth1+WcharLenth2]=0;
-	return WcharLenth1+WcharLenth2;
+	ResultsChar[CharLenth1+CharLenth2]=0;
+	return CharLenth1+CharLenth2;
 }
-int ADDTwoWchar(char *ResultsWchar,int ResultsWcharArrayMAXSize,const char * Wchar1,const char * Wchar2)
+int ADDTwoChar(char *ResultsChar,int ResultsCharArrayMAXSize,const char * Char1,const char * Char2)
 {
-	if((!ResultsWchar)||(ResultsWcharArrayMAXSize<2))
+	if((!ResultsChar)||(ResultsCharArrayMAXSize<2))
 		return 0;
-	int WcharLenth1=GetWcharLenth(Wchar1);
-	int WcharLenth2=GetWcharLenth(Wchar2);
-	if(WcharLenth1+WcharLenth2<=0)
+	int CharLenth1=GetCharLenth(Char1);
+	int CharLenth2=GetCharLenth(Char2);
+	if(CharLenth1+CharLenth2<=0)
 		return 0;
-	for(int i=0;i<WcharLenth1;i++)
+	for(int i=0;i<CharLenth1;i++)
 	{
-		if(i>=(ResultsWcharArrayMAXSize-1))
+		if(i>=(ResultsCharArrayMAXSize-1))
 		{
-			ResultsWchar[i]=0;
+			ResultsChar[i]=0;
 			return i;
 		}
-		ResultsWchar[i]=Wchar1[i];
+		ResultsChar[i]=Char1[i];
 	}
-	for(int i=0;i<WcharLenth2;i++)
+	for(int i=0;i<CharLenth2;i++)
 	{
-		if(i>=(ResultsWcharArrayMAXSize-1))
+		if(i>=(ResultsCharArrayMAXSize-1))
 		{
-			ResultsWchar[i]=0;
+			ResultsChar[i]=0;
 			return i;
 		}
-		ResultsWchar[i+WcharLenth1]=Wchar2[i];
+		ResultsChar[i+CharLenth1]=Char2[i];
 	}
-	ResultsWchar[WcharLenth1+WcharLenth2]=0;
-	return WcharLenth1+WcharLenth2;
+	ResultsChar[CharLenth1+CharLenth2]=0;
+	return CharLenth1+CharLenth2;
 }

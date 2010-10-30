@@ -77,11 +77,11 @@ bool WriteLocFile(const wchar_t * FileName,const wchar_t * FilePath,unsigned cha
 	wchar_t * FileFullPath=NULL;
 	if(FilePath)
 	{
-		FileFullPath=ADDTwoWchar(FilePath,FileName);
+		FileFullPath=ADDTwoChar(FilePath,FileName);
 	}
 	else
 	{
-		FileFullPath=ADDTwoWchar(L".\\",FileName);
+		FileFullPath=ADDTwoChar(L".\\",FileName);
 	}
 	bool WriteStatus=WriteLocFile(FileFullPath,FileData,WriteSize,Add);
 	if(FileFullPath!=NULL) delete[] FileFullPath;
@@ -91,7 +91,14 @@ bool WriteLocFile(const char * FileFullPath,unsigned char * FileData,unsigned in
 {
 	if((!FileFullPath)||(!FileData)||(WriteSize==0))
 		return false;
-	HANDLE   hFile;
+	FILE * fWrite;
+	if(Add)
+		fopen_s(&fWrite,FileFullPath,"a");
+	else
+		fopen_s(&fWrite,FileFullPath,"w");
+	fwrite(FileData,1,WriteSize,fWrite);
+	fclose(fWrite);
+	/*HANDLE   hFile;
 	hFile   =   CreateFileA(FileFullPath,                      
                             GENERIC_WRITE,                         
                             FILE_SHARE_READ,                  
@@ -104,13 +111,21 @@ bool WriteLocFile(const char * FileFullPath,unsigned char * FileData,unsigned in
 		SetFilePointer(hFile,0,NULL,FILE_END);
 	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL)!=0?true:false;
 	CloseHandle(hFile);
-	return WriteStatus;
+	return WriteStatus;*/
+	return false;
 }
 bool WriteLocFile(const wchar_t * FileFullPath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileFullPath)||(!FileData)||(WriteSize==0))
 		return false;
-	HANDLE   hFile;
+	FILE * fWrite;
+	if(Add)
+		_wfopen_s(&fWrite,FileFullPath,L"a");
+	else
+		_wfopen_s(&fWrite,FileFullPath,L"w");
+	fwrite(FileData,1,WriteSize,fWrite);
+	fclose(fWrite);
+	/*HANDLE   hFile;
 	hFile   =   CreateFileW(FileFullPath,                 
                             GENERIC_WRITE,                        
                             FILE_SHARE_READ,                     
@@ -123,5 +138,6 @@ bool WriteLocFile(const wchar_t * FileFullPath,unsigned char * FileData,unsigned
 		SetFilePointer(hFile,0,NULL,FILE_END);
 	bool WriteStatus=WriteFile(hFile,FileData,WriteSize,&savesize,NULL)!=0?true:false;
 	CloseHandle(hFile);
-	return WriteStatus;
+	return WriteStatus;*/
+	return false;
 }
