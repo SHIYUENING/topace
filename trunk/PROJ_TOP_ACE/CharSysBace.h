@@ -1,10 +1,10 @@
 //#pragma once
 #ifndef CHARSYSBACE_H
 #define CHARSYSBACE_H
-unsigned int GetWcharLenth(const char * Wchar);
-unsigned int GetWcharLenth(const wchar_t * Wchar);
-char * ADDTwoWchar(const char * Wchar1,const char * Wchar2);
-wchar_t * ADDTwoWchar(const wchar_t * Wchar1,const wchar_t * Wchar2);// Need delete wchar_t[]
-int ADDTwoWchar(wchar_t *ResultsWchar,int ResultsWcharArrayMAXSize,const wchar_t * Wchar1,const wchar_t * Wchar2);
-int ADDTwoWchar(char *ResultsWchar,int ResultsWcharArrayMAXSize,const char * Wchar1,const char * Wchar2);
+unsigned int GetCharLenth(const char * Char);
+unsigned int GetCharLenth(const wchar_t * Char);
+char * ADDTwoChar(const char * Char1,const char * Char2);
+wchar_t * ADDTwoChar(const wchar_t * Char1,const wchar_t * Char2);// Need delete wchar_t[]
+int ADDTwoChar(wchar_t *ResultsChar,int ResultsCharArrayMAXSize,const wchar_t * Char1,const wchar_t * Char2);
+int ADDTwoChar(char *ResultsChar,int ResultsCharArrayMAXSize,const char * Char1,const char * Char2);
 #endif

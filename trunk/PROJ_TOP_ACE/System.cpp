@@ -19,6 +19,7 @@
 #include "ExchangeThread.h"
 //ROACH
 #include "ARB_MULTISAMPLE.h"
+#include "TALogSys.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For glew32s.lib While Linking
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
