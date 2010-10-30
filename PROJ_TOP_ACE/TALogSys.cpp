@@ -44,7 +44,7 @@ bool CTALogSys::WriteLOGFile(bool ADD)
 	if(LOGFileName)
 		return WriteLocFile(LOGFileName,LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
 	else
-		return WriteLocFile(L"Log.log",LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
+		return WriteLocFile(L"LOG.log",LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
 }
 void CTALogSys::SetFileNameAndPath(wchar_t * FileName,wchar_t * FilePath)
 {
