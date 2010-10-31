@@ -1,4 +1,4 @@
-#include "CharSysBace.h"
+﻿#include "CharSysBace.h"
 
 unsigned int GetCharLenth(const wchar_t * Char)
 {

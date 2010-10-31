@@ -1,4 +1,4 @@
-#include "TALogSys.h"
+﻿#include "TALogSys.h"
 #include "FileSysBace.h"
 #include "CharSysBace.h"
 CTALogSys::CTALogSys(void)
@@ -22,7 +22,7 @@ bool CTALogSys::AddLOG(const char * LOGStr)
 	if(GetCharLenth(LOGStr)==0)
 		return false;
 	char * StrTmp;
-	StrTmp=ADDTwoChar(LOGString," \n ");
+	StrTmp=ADDTwoChar(LOGString,"\n");
 	delete [] LOGString;
 	LOGString=StrTmp;
 	StrTmp=ADDTwoChar(LOGString,LOGStr);
@@ -44,7 +44,7 @@ bool CTALogSys::WriteLOGFile(bool ADD)
 	if(LOGFileName)
 		return WriteLocFile(LOGFileName,LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
 	else
-		return WriteLocFile(L"LOG.log",LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
+		return WriteLocFile(L"TOP_ACE_SYS.log",LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
 }
 void CTALogSys::SetFileNameAndPath(wchar_t * FileName,wchar_t * FilePath)
 {
