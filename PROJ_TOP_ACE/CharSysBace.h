@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef CHARSYSBACE_H
 #define CHARSYSBACE_H
 unsigned int GetCharLenth(const char * Char);

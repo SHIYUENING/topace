@@ -1,8 +1,40 @@
-#include "FileSysBace.h"
+﻿#include "FileSysBace.h"
 #include "CharSysBace.h"
 
-
-unsigned char * ReadLocFile(const char * FileName,unsigned int ReadSize,unsigned int ReadAddress)
+bool ReadLocFile(HANDLE hFile,unsigned char * FileData,unsigned int ReadSize,DWORD * ReadInSize,unsigned int ReadAddress)
+{
+	BOOL ReadStates;
+	DWORD FileSize=0;
+	if((!hFile)||(hFile == INVALID_HANDLE_VALUE))
+		return false;
+	GetFileSize(hFile,&FileSize);
+	if((ReadSize!=0)&&(ReadSize<=FileSize))
+		FileSize=ReadSize;
+	if(FileSize<=0)
+		return false;
+	if(!FileData)
+		FileData=new unsigned char[FileSize];
+	SetFilePointer(hFile,ReadAddress,NULL,FILE_BEGIN);
+	ReadStates=ReadFile(hFile,FileData,FileSize,ReadInSize,NULL);
+	if(!ReadStates)
+		return false;
+}
+bool ReadLocFile(const char * FileName,unsigned char * FileData,unsigned int ReadSize,DWORD * ReadInSize,unsigned int ReadAddress)
+{
+	if(!FileName)
+		return false;
+	HANDLE hFile=CreateFileA(FileName,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	return ReadLocFile(hFile,FileData,ReadSize,ReadInSize,ReadAddress);
+}
+bool ReadLocFile(const wchar_t * FileName,unsigned char * FileData,unsigned int ReadSize,DWORD * ReadInSize,unsigned int ReadAddress)
+{
+	if(!FileName)
+		return false;
+	HANDLE hFile=CreateFileW(FileName,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+	return ReadLocFile(hFile,FileData,ReadSize,ReadInSize,ReadAddress);
+}
+/*
+unsigned char * ReadLocFile(const char * FileName,unsigned int ReadSize,int * ReadInSize,unsigned int ReadAddress)
 {
 	unsigned char * FileData;
 	if(!FileName)
@@ -10,12 +42,11 @@ unsigned char * ReadLocFile(const char * FileName,unsigned int ReadSize,unsigned
 	int dwNum=MultiByteToWideChar(CP_ACP,0,FileName,-1,NULL,0);
 	wchar_t * FileNameWTmp=new wchar_t[dwNum];
 	MultiByteToWideChar(CP_ACP,0,FileName,-1,FileNameWTmp,dwNum);
-	FileData = ReadLocFile(FileNameWTmp,ReadSize,ReadAddress);
+	FileData = ReadLocFile(FileNameWTmp,ReadSize,ReadInSize,ReadAddress);
 	delete[] FileNameWTmp;
 	return FileData;
 }
-
-unsigned char * ReadLocFile(const wchar_t * FileName,unsigned int ReadSize,unsigned int ReadAddress)
+unsigned char * ReadLocFile(const wchar_t * FileName,unsigned int ReadSize,int * ReadInSize,unsigned int ReadAddress)
 {
 	if(!FileName)
 		return NULL;
@@ -46,43 +77,29 @@ unsigned char * ReadLocFile(const wchar_t * FileName,unsigned int ReadSize,unsig
 		return NULL;
 	return FileData;
 }
-
-
+*/
 bool WriteLocFile(const char * FileName,const char * FilePath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileName)||(!FileData)||(WriteSize==0))
-		return NULL;
-	wchar_t * FileNameWTmp=NULL;
-	wchar_t * FilePathWTmp=NULL;
-	int dwNum=0;
-	dwNum=MultiByteToWideChar(CP_ACP,0,FileName,-1,NULL,0);
-	FileNameWTmp=new wchar_t[dwNum];
-	MultiByteToWideChar(CP_ACP,0,FileName,-1,FileNameWTmp,dwNum);
+		return false;
+	char * FileFullPath=NULL;
 	if(FilePath)
-	{
-		dwNum=MultiByteToWideChar(CP_ACP,0,FilePath,-1,NULL,0);
-		FilePathWTmp=new wchar_t[dwNum];
-		MultiByteToWideChar(CP_ACP,0,FileName,-1,FilePathWTmp,dwNum);
-	}
-	bool WriteStates=WriteLocFile(FileNameWTmp,FilePathWTmp,FileData,WriteSize,Add);
-	if(FileNameWTmp) delete[] FileNameWTmp;
-	if(FilePathWTmp) delete[] FilePathWTmp;
-	return WriteStates;
+		FileFullPath=ADDTwoChar(FilePath,FileName);
+	else
+		FileFullPath=ADDTwoChar(".\\",FileName);
+	bool WriteStatus=WriteLocFile(FileFullPath,FileData,WriteSize,Add);
+	if(FileFullPath!=NULL) delete[] FileFullPath;
+	return WriteStatus;
 }
-
 bool WriteLocFile(const wchar_t * FileName,const wchar_t * FilePath,unsigned char * FileData,unsigned int WriteSize,bool Add)
 {
 	if((!FileName)||(!FileData)||(WriteSize==0))
 		return false;
 	wchar_t * FileFullPath=NULL;
 	if(FilePath)
-	{
 		FileFullPath=ADDTwoChar(FilePath,FileName);
-	}
 	else
-	{
-		FileFullPath=ADDTwoChar(L".\\",FileName);
-	}
+		FileFullPath=ADDTwoChar(".\\",FileName);
 	bool WriteStatus=WriteLocFile(FileFullPath,FileData,WriteSize,Add);
 	if(FileFullPath!=NULL) delete[] FileFullPath;
 	return WriteStatus;

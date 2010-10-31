@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 #ifndef TALOGSYS_H
 #define TALOGSYS_H
 
