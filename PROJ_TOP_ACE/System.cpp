@@ -420,6 +420,9 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	CTALogSys MainLOG;
+	MainLOG.AddLOG("******TOP ACE LOG Start******");
+	MainLOG.WriteLOGFile(false);
 	CEXTLIBS_init();
 	hInst=hInstance;
 	InitRenderThread();
@@ -433,6 +436,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	}
 	CEXTLIBS_deinit();
 	DeinitThreadUpdata();
+	MainLOG.ClearLOG();
+	
+	MainLOG.AddLOG("******TOP ACE LOG End******");
+	MainLOG.WriteLOGFile(true);
 	return 0;
 }																		// End Of WinMain()
 HANDLE InitRenderThread()

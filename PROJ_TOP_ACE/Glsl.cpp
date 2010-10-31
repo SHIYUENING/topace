@@ -2,6 +2,8 @@
 #include <stdio.h>	
 #include <windows.h>
 #include"IniFile.h"
+#include "FileSysBace.h"
+#include "TALogSys.h"
 int GlslVer = 0;
 //GLhandleARB	g_GLSL_ATC_Pixel;
 //GLhandleARB	g_GLSL_ATC_Vertex;
@@ -35,6 +37,7 @@ GLhandleARB GLSL_BlurTex=0;
 
 _ShaderGLSL GLSL_DrawSea;
 extern tGameSet GameSet;
+CTALogSys GLSLLOG;
 unsigned char *readShaderFile( const char *fileName )
 {
 	FILE *file = fopen( fileName, "r" );
@@ -70,12 +73,66 @@ unsigned char *readShaderFile( const char *fileName )
 
 	return buffer;
 }
-
+char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject)
+{
+	int logreadsize=0;
+	int logbuffersize=0x800;
+	char * logbuffer=new char [logbuffersize];
+	glGetInfoLogARB(GLSLShaderObject, logbuffersize,&logreadsize, logbuffer);
+	while(logbuffersize<=logreadsize)
+	{
+		logbuffersize=logbuffersize*2;
+		delete[] logbuffer;
+		if(logbuffersize>0x10000)
+			break;
+		logbuffer=new char [logbuffersize];
+		glGetInfoLogARB(GLSLShaderObject, logbuffersize,&logreadsize, logbuffer);
+	}
+	return logbuffer;
+}
 GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObject)
 {
 	return GLSL_CompileShader(readShaderFile( shaderfilename ),ShaderObject);
 }
-
+GLhandleARB GLSL_CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
+{
+	GLhandleARB GLhandleARBTMP=0;
+	char * GLSLFileBuffer=ReadLocFullFile_ANSI_TXT(shaderfilename);
+	if(!GLSLFileBuffer)
+	{
+		int dwNum=WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,NULL,0,NULL,NULL);
+		char * shaderfilenameANSI=new char[dwNum];
+		WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
+		GLSLLOG.AddLOG("****** GLSL ERROR ******");
+		GLSLLOG.AddLOG("Cannot open shader file");
+		GLSLLOG.AddLOG(shaderfilenameANSI);
+		GLSLLOG.WriteLOGFile(true);
+		GLSLLOG.ClearLOG();
+		delete [] shaderfilenameANSI;
+		return 0;
+	}
+	GLhandleARBTMP = GLSL_CompileShader(GLSLFileBuffer,ShaderObject);
+	delete [] GLSLFileBuffer;
+	return GLhandleARBTMP;
+}
+GLhandleARB GLSL_CompileShader(char *ShaderAssembly,GLenum ShaderObject)
+{
+	GLhandleARB GLSLShaderObject=glCreateShaderObjectARB(ShaderObject);
+	glShaderSourceARB( GLSLShaderObject, 1, (const GLcharARB **)(&ShaderAssembly), NULL );
+	glCompileShaderARB( GLSLShaderObject);
+	GLint bCompiled=0;
+	glGetObjectParameterivARB( GLSLShaderObject, GL_OBJECT_COMPILE_STATUS_ARB, &bCompiled );
+	if(!bCompiled)
+	{
+		char * logbuffer=GetGLSLInfoLog(GLSLShaderObject);
+		GLSLLOG.AddLOG("****** GLSL ERROR ******");
+		GLSLLOG.AddLOG(logbuffer);
+		GLSLLOG.WriteLOGFile(true);
+		GLSLLOG.ClearLOG();
+		delete[] logbuffer;
+	}
+	return GLSLShaderObject;
+}
 GLhandleARB GLSL_CompileShader(unsigned char *ShaderAssembly,unsigned int ShaderObject)
 {
 	GLhandleARB GLSLShaderObject=0;
@@ -121,7 +178,13 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 
 	if( bLinked == false )
 	{
-		char str[40960];
+		char * logbuffer=GetGLSLInfoLog(g_programObj);
+		GLSLLOG.AddLOG("****** GLSL ERROR ******");
+		GLSLLOG.AddLOG(logbuffer);
+		GLSLLOG.WriteLOGFile(true);
+		GLSLLOG.ClearLOG();
+		delete[] logbuffer;
+		/*char str[40960];
 		glGetInfoLogARB( g_programObj, sizeof(str), NULL, str );
 		MessageBox( NULL, "Error Message saving to Error.log", "Linking Error", MB_OK|MB_ICONEXCLAMATION );
 		//WritePrivateProfileString("Glsl","Linking_Error",str,".\\Error_log.ini");
@@ -137,13 +200,23 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 		str[40959]=0;
 		DWORD savesize=0;
 		WriteFile(hFile,str,min(40959,strlen(str)),&savesize,NULL);
-		CloseHandle(hFile);
+		CloseHandle(hFile);*/
 		return false;
 	}
 	return true;
 }
 
 bool Init_ShaderGLSL(_ShaderGLSL * ShaderGLSL,const char* VSfilename,const char* PSfilename)
+{
+	if(!ShaderGLSL) return false;
+	ShaderGLSL->g_VS = GLSL_CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
+	ShaderGLSL->g_PS = GLSL_CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);
+	ShaderGLSL->g_PO = glCreateProgramObjectARB();
+	glAttachObjectARB( ShaderGLSL->g_PO, ShaderGLSL->g_VS );
+	glAttachObjectARB( ShaderGLSL->g_PO, ShaderGLSL->g_PS );
+	return GetGLSLLinkSTATUS( ShaderGLSL->g_PO );
+}
+bool Init_ShaderGLSL(_ShaderGLSL * ShaderGLSL,const wchar_t* VSfilename,const wchar_t* PSfilename)
 {
 	if(!ShaderGLSL) return false;
 	ShaderGLSL->g_VS = GLSL_CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
@@ -194,7 +267,7 @@ void InitGLSL(int LightSet)
 	//GetGLSLLinkSTATUS( GLSL_ATC );
 
 
-	Init_ShaderGLSL(&GLSL_DrawSea,"data/shader/GLSL_Sea.vs","data/shader/GLSL_Sea.ps");
+	Init_ShaderGLSL(&GLSL_DrawSea,L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 
 	g_PhoneLight_Vertex = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Vertex.vs",GL_VERTEX_SHADER_ARB);
 
