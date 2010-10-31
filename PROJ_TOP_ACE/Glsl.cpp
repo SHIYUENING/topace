@@ -96,13 +96,14 @@ GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObj
 }
 GLhandleARB GLSL_CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
 {
+	GLSLLOG.ClearLOG();
 	GLhandleARB GLhandleARBTMP=0;
 	char * GLSLFileBuffer=ReadLocFullFile_ANSI_TXT(shaderfilename);
+	int dwNum=WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,NULL,0,NULL,NULL);
+	char * shaderfilenameANSI=new char[dwNum];
+	WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
 	if(!GLSLFileBuffer)
 	{
-		int dwNum=WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,NULL,0,NULL,NULL);
-		char * shaderfilenameANSI=new char[dwNum];
-		WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
 		GLSLLOG.AddLOG("****** GLSL ERROR ******");
 		GLSLLOG.AddLOG("Cannot open shader file");
 		GLSLLOG.AddLOG(shaderfilenameANSI);
@@ -111,7 +112,11 @@ GLhandleARB GLSL_CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject
 		delete [] shaderfilenameANSI;
 		return 0;
 	}
+	GLSLLOG.AddLOG("****** GLSL Loading File ******");
+	GLSLLOG.AddLOG(shaderfilenameANSI);
 	GLhandleARBTMP = GLSL_CompileShader(GLSLFileBuffer,ShaderObject);
+	
+	delete [] shaderfilenameANSI;
 	delete [] GLSLFileBuffer;
 	return GLhandleARBTMP;
 }
@@ -179,6 +184,7 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	if( bLinked == false )
 	{
 		char * logbuffer=GetGLSLInfoLog(g_programObj);
+		GLSLLOG.ClearLOG();
 		GLSLLOG.AddLOG("****** GLSL ERROR ******");
 		GLSLLOG.AddLOG(logbuffer);
 		GLSLLOG.WriteLOGFile(true);
