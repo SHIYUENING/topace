@@ -275,26 +275,26 @@ void InitGLSL(int LightSet)
 
 	Init_ShaderGLSL(&GLSL_DrawSea,L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 
-	g_PhoneLight_Vertex = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Vertex.vs",GL_VERTEX_SHADER_ARB);
+	g_PhoneLight_Vertex = GLSL_CompileShader(L"data/shader/Glsl_PhoneLight_Vertex.vs",GL_VERTEX_SHADER_ARB);
 
 	switch (LightSet)
 	{
-		case 2: g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
-		case 3: g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Multi.ps",GL_FRAGMENT_SHADER_ARB);break;
-		default : g_PhoneLight_Pixel = GLSL_CompileShader("data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
+		case 2: g_PhoneLight_Pixel = GLSL_CompileShader(L"data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
+		case 3: g_PhoneLight_Pixel = GLSL_CompileShader(L"data/shader/Glsl_PhoneLight_Pixel_Multi.ps",GL_FRAGMENT_SHADER_ARB);break;
+		default : g_PhoneLight_Pixel = GLSL_CompileShader(L"data/shader/Glsl_PhoneLight_Pixel_Singe.ps",GL_FRAGMENT_SHADER_ARB);break;
 	}
 	g_PhoneLight = glCreateProgramObjectARB();
 	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Vertex );
 	glAttachObjectARB( g_PhoneLight, g_PhoneLight_Pixel );
 	GetGLSLLinkSTATUS( g_PhoneLight );
 
-	g_StarPass1_Pixel = GLSL_CompileShader("data/shader/Glsl_StarPass1_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
+	g_StarPass1_Pixel = GLSL_CompileShader(L"data/shader/Glsl_StarPass1_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
 	g_StarPass1 = glCreateProgramObjectARB();
 
 	glAttachObjectARB( g_StarPass1, g_StarPass1_Pixel );
 	GetGLSLLinkSTATUS( g_StarPass1 );
 
-	g_StarPass0_Pixel = GLSL_CompileShader("data/shader/Glsl_StarPass0_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
+	g_StarPass0_Pixel = GLSL_CompileShader(L"data/shader/Glsl_StarPass0_Pixel.ps",GL_FRAGMENT_SHADER_ARB);
 	g_StarPass0 = glCreateProgramObjectARB();
 
 	glAttachObjectARB( g_StarPass0, g_StarPass0_Pixel );
@@ -305,10 +305,10 @@ void InitGLSL(int LightSet)
 	GLSL_DrawBloomMap = glCreateProgramObjectARB();
 	GLSL_ToneMapping = glCreateProgramObjectARB();
 
-	g_GLSLBloomW_pixel = GLSL_CompileShader("data/shader/BloomW_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
-	g_GLSLBloomH_pixel = GLSL_CompileShader("data/shader/BloomH_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
-	g_GLSLBloomMap_pixel = GLSL_CompileShader("data/shader/BloomMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
-	g_GLSLToneMapping_pixel = GLSL_CompileShader("data/shader/ToneMapping_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLBloomW_pixel = GLSL_CompileShader(L"data/shader/BloomW_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLBloomH_pixel = GLSL_CompileShader(L"data/shader/BloomH_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLBloomMap_pixel = GLSL_CompileShader(L"data/shader/BloomMap_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
+	g_GLSLToneMapping_pixel = GLSL_CompileShader(L"data/shader/ToneMapping_pixel.glsl",GL_FRAGMENT_SHADER_ARB);
 
 	glAttachObjectARB( GLSL_DrawBloomW, g_GLSLBloomW_pixel );
 	glAttachObjectARB( GLSL_DrawBloomH, g_GLSLBloomH_pixel );
@@ -323,12 +323,12 @@ void InitGLSL(int LightSet)
 	if(GameSet.SSAO>0)
 	{
 		GLSL_SSAOPass0 = glCreateProgramObjectARB();
-		g_GLSLSSAOPass0_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass0.ps",GL_FRAGMENT_SHADER_ARB);
+		g_GLSLSSAOPass0_pixel = GLSL_CompileShader(L"data/shader/Glsl_SSAO_Pass0.ps",GL_FRAGMENT_SHADER_ARB);
 		glAttachObjectARB( GLSL_SSAOPass0, g_GLSLSSAOPass0_pixel);
 		GetGLSLLinkSTATUS( GLSL_SSAOPass0);
 		
 		GLSL_SSAOPass1 = glCreateProgramObjectARB();
-		g_GLSLSSAOPass1_pixel = GLSL_CompileShader("data/shader/Glsl_SSAO_Pass1.ps",GL_FRAGMENT_SHADER_ARB);
+		g_GLSLSSAOPass1_pixel = GLSL_CompileShader(L"data/shader/Glsl_SSAO_Pass1.ps",GL_FRAGMENT_SHADER_ARB);
 		glAttachObjectARB( GLSL_SSAOPass1, g_GLSLSSAOPass1_pixel);
 		GetGLSLLinkSTATUS( GLSL_SSAOPass1);
 	}
