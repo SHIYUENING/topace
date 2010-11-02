@@ -155,6 +155,7 @@
     <ClCompile Include="Font2D.cpp" />
     <ClCompile Include="Font3D.cpp" />
     <ClCompile Include="Glsl.cpp" />
+    <ClCompile Include="GLSLLoader.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="Load3DS.cpp">
@@ -198,6 +199,7 @@
     <ClInclude Include="Font2D.h" />
     <ClInclude Include="Font3D.h" />
     <ClInclude Include="Glsl.h" />
+    <ClInclude Include="GLSLLoader.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="Load3DS.h" />
