@@ -4,13 +4,6 @@
 #include <GL/glew.h>
 #include "TALogSys.h"
 
-struct _GLSL_Shader_Obj
-{
-	GLhandleARB g_VS;
-	GLhandleARB g_PS;
-	GLhandleARB g_PO;//ProgramObject
-};
-
 class CGLSLLoader
 {
 public:
@@ -21,9 +14,12 @@ public:
 	GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
 	GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject);
 	CTALogSys GLSLLOG;
-	_GLSL_Shader_Obj GLSL_Shader_Obj;
 	bool LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename);
 	void ClearShader(void);
+	GLhandleARB GetPO(void);
+	GLhandleARB g_VS;
+	GLhandleARB g_PS;
+	GLhandleARB g_PO;//ProgramObject
 };
 
 #endif

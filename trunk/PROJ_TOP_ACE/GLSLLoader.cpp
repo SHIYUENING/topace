@@ -6,9 +6,9 @@
 
 CGLSLLoader::CGLSLLoader(void)
 {
-	GLSL_Shader_Obj.g_VS=0;
-	GLSL_Shader_Obj.g_PS=0;
-	GLSL_Shader_Obj.g_PO=0;
+	g_VS=0;
+	g_PS=0;
+	g_PO=0;
 }
 
 
@@ -121,24 +121,34 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 
 bool CGLSLLoader::LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename)
 {
+	if((!VSfilename)&&(!PSfilename))
+		return false;
 	ClearShader();
-	GLSL_Shader_Obj.g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
-	GLSL_Shader_Obj.g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);
-	GLSL_Shader_Obj.g_PO = glCreateProgramObjectARB();
-	glAttachObjectARB( GLSL_Shader_Obj.g_PO, GLSL_Shader_Obj.g_VS );
-	glAttachObjectARB( GLSL_Shader_Obj.g_PO, GLSL_Shader_Obj.g_PS );
-	return GetGLSLLinkSTATUS( GLSL_Shader_Obj.g_PO );
+	if(VSfilename) g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
+	if(PSfilename) g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);
+	if((!g_VS)&&(!g_PS))
+		return false;
+	g_PO = glCreateProgramObjectARB();
+	if(g_VS) glAttachObjectARB( g_PO, g_VS );
+	if(g_PS) glAttachObjectARB( g_PO, g_PS );
+	return GetGLSLLinkSTATUS( g_PO );
 }
 
 
 void CGLSLLoader::ClearShader(void)
 {
-	if((GLSL_Shader_Obj.g_PO>0)&&(GLSL_Shader_Obj.g_VS>0)) glDetachObjectARB(GLSL_Shader_Obj.g_PO,GLSL_Shader_Obj.g_VS);
-	if((GLSL_Shader_Obj.g_PO>0)&&(GLSL_Shader_Obj.g_PS>0)) glDetachObjectARB(GLSL_Shader_Obj.g_PO,GLSL_Shader_Obj.g_PS);
-	if(GLSL_Shader_Obj.g_PO>0) glDeleteObjectARB(GLSL_Shader_Obj.g_PO);
-	if(GLSL_Shader_Obj.g_VS>0) glDeleteObjectARB(GLSL_Shader_Obj.g_VS);
-	if(GLSL_Shader_Obj.g_PS>0) glDeleteObjectARB(GLSL_Shader_Obj.g_PS);
-	GLSL_Shader_Obj.g_VS=0;
-	GLSL_Shader_Obj.g_PS=0;
-	GLSL_Shader_Obj.g_PO=0;
+	if((g_PO>0)&&(g_VS>0)) glDetachObjectARB(g_PO,g_VS);
+	if((g_PO>0)&&(g_PS>0)) glDetachObjectARB(g_PO,g_PS);
+	if(g_PO>0) glDeleteObjectARB(g_PO);
+	if(g_VS>0) glDeleteObjectARB(g_VS);
+	if(g_PS>0) glDeleteObjectARB(g_PS);
+	g_VS=0;
+	g_PS=0;
+	g_PO=0;
+}
+
+
+GLhandleARB CGLSLLoader::GetPO(void)
+{
+	return g_PO;
 }
