@@ -14,6 +14,7 @@
 //#include "UnitMath.h"
 #include "TopAceModel.h"
 #include "ExchangeThread.h"
+#include "DrawQUAD.h"
 bool extern domultiR ;
 bool extern doangleR ;
 float extern angleR;
@@ -58,13 +59,11 @@ void DrawLoadingTex(Textures * pLoadingTex)
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
-	
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,	0.0f);	glVertex2i( GameSet.winW/2-GameSet.winH/2,GameSet.winH);
-				glTexCoord2f(1.0f,	0.0f);	glVertex2i( GameSet.winW/2+GameSet.winH/2,GameSet.winH);
-				glTexCoord2f(1.0f,	1.0f);	glVertex2i( GameSet.winW/2+GameSet.winH/2, 0);
-				glTexCoord2f(0.0f,	1.0f);	glVertex2i( GameSet.winW/2-GameSet.winH/2, 0);
-			glEnd();
+	DrawQUAD(
+		GameSet.winW/2-GameSet.winH/2,
+		GameSet.winW/2+GameSet.winH/2,
+		0,
+		GameSet.winH);
 
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
