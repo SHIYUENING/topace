@@ -83,6 +83,7 @@
     <ClCompile Include="CharSysBace.cpp" />
     <ClCompile Include="TALogSys.cpp" />
     <ClCompile Include="GLSLLoader.cpp" />
+    <ClCompile Include="DrawQUAD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -176,6 +177,7 @@
     <ClInclude Include="CharSysBace.h" />
     <ClInclude Include="TALogSys.h" />
     <ClInclude Include="GLSLLoader.h" />
+    <ClInclude Include="DrawQUAD.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomH_pixel.glsl">

@@ -80,9 +80,6 @@ GLhandleARB CGLSLLoader::CompileShader(char *ShaderAssembly,GLenum ShaderObject)
 }
 bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 {
-//
-// Link the program object and print out the info log...
-//
 	GLint bLinked=false;
 	glLinkProgramARB( g_programObj );
 	glGetObjectParameterivARB( g_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
@@ -149,10 +146,4 @@ void CGLSLLoader::ClearShader(void)
 	g_VS=0;
 	g_PS=0;
 	g_PO=0;
-}
-
-
-GLhandleARB CGLSLLoader::GetPO(void)
-{
-	return g_PO;
 }
