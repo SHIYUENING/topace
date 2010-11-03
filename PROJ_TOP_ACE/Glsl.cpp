@@ -30,7 +30,7 @@ void InitGLSL(int LightSet)
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 	switch (GLSLLightSet)
 	{
-		case 3 : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Multi.ps");
+		case 3 : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Multi.ps"); if(GLSL_PhoneLight.g_PO) break;
 		default : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Singe.ps");
 	}
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
@@ -93,6 +93,7 @@ void GLSL_Enable_StarPass0()
 }
 void DrawBloomMapGLSL(int WinW,int WinH)
 {
+	if(GlslVer<100) return;
 	glUseProgramObjectARB( GLSL_DrawBloomMap.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"texColor"),0);
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"AveLum"),0.23f);
@@ -101,29 +102,34 @@ void DrawBloomMapGLSL(int WinW,int WinH)
 }
 void DrawBloomWGLSL(int WinW)
 {
+	if(GlslVer<100) return;
 	glUseProgramObjectARB( GLSL_DrawBloomW.g_PO );
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomW.g_PO,"_imgW1"),(float)WinW);
 	glUniform1i(glGetUniformLocation(GLSL_DrawBloomW.g_PO,"_texSrc1"),0);
 }
 void DrawBloomHGLSL(int WinH)
 {
+	if(GlslVer<100) return;
 	glUseProgramObjectARB( GLSL_DrawBloomH.g_PO );
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomH.g_PO,"_imgH1"),(float)WinH);
 	glUniform1i(glGetUniformLocation(GLSL_DrawBloomH.g_PO,"_texSrc1"),0);
 }
 void ToneMappingGLSL()
 {
+	if(GlslVer<100) return;
 	glUseProgramObjectARB( GLSL_ToneMapping.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_ToneMapping.g_PO,"_texSrc1"),0);
 }
 void SSAOPass0()
 {
+	if(GlslVer<100) return;
 	glUseProgramObjectARB(GLSL_SSAOPass0.g_PO);
 	glUniform1i(glGetUniformLocation(GLSL_SSAOPass0.g_PO,"DepthTex"),0);
 	
 }
 void SSAOPass1(float SSAOset[4])
 {
+	if(GlslVer<100) return;
 	glUseProgramObjectARB(GLSL_SSAOPass1.g_PO);
 	glUniform1i(glGetUniformLocation(GLSL_SSAOPass1.g_PO,"DepthTex"),0);
 	glUniform4fv(glGetUniformLocation(GLSL_SSAOPass1.g_PO,"SSAOset"),1,SSAOset);
@@ -132,6 +138,7 @@ void SSAOPass1(float SSAOset[4])
 
 void BlurTex(int Size,bool WorH)
 {
+	if(GlslVer<100) return;
 	float BlurTexSet[2]={0.0f,0.0f};
 	if(WorH)
 		BlurTexSet[0]=1.0f/float(Size);
