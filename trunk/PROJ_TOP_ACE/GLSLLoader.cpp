@@ -37,7 +37,6 @@ char * CGLSLLoader::GetGLSLInfoLog(GLhandleARB GLSLShaderObject)
 }
 GLhandleARB CGLSLLoader::CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
 {
-	GLSLLOG.ClearLOG();
 	GLhandleARB GLhandleARBTMP=0;
 	char * GLSLFileBuffer=ReadLocFullFile_ANSI_TXT(shaderfilename);
 	int dwNum=WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,NULL,0,NULL,NULL);
@@ -91,7 +90,6 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	if( bLinked == false )
 	{
 		char * logbuffer=GetGLSLInfoLog(g_programObj);
-		GLSLLOG.ClearLOG();
 		GLSLLOG.AddLOG("****** GLSL ERROR ******");
 		GLSLLOG.AddLOG(logbuffer);
 		GLSLLOG.WriteLOGFile(true);
@@ -116,6 +114,7 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 		CloseHandle(hFile);*/
 		return false;
 	}
+	GLSLLOG.ClearLOG();
 	return true;
 }
 
@@ -131,7 +130,12 @@ bool CGLSLLoader::LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename
 	g_PO = glCreateProgramObjectARB();
 	if(g_VS) glAttachObjectARB( g_PO, g_VS );
 	if(g_PS) glAttachObjectARB( g_PO, g_PS );
-	return GetGLSLLinkSTATUS( g_PO );
+	if(!GetGLSLLinkSTATUS( g_PO ))
+	{
+		ClearShader();
+		return false;
+	}
+	return true;
 }
 
 
