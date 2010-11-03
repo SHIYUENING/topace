@@ -147,6 +147,7 @@
     <ClCompile Include="DataUpdata.cpp" />
     <ClCompile Include="DDS.cpp" />
     <ClCompile Include="Draw.cpp" />
+    <ClCompile Include="DrawQUAD.cpp" />
     <ClCompile Include="EasyMatrix.cpp" />
     <ClCompile Include="ExchangeThread.cpp" />
     <ClCompile Include="EXTLIBS.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="DDS.h" />
     <ClInclude Include="Def.h" />
     <ClInclude Include="Draw.h" />
+    <ClInclude Include="DrawQUAD.h" />
     <ClInclude Include="EasyMatrix.h" />
     <ClInclude Include="EasyQuat.h" />
     <ClInclude Include="EasyVector.h" />

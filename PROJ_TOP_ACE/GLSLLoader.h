@@ -16,7 +16,6 @@ public:
 	CTALogSys GLSLLOG;
 	bool LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename);
 	void ClearShader(void);
-	GLhandleARB GetPO(void);
 	GLhandleARB g_VS;
 	GLhandleARB g_PS;
 	GLhandleARB g_PO;//ProgramObject
