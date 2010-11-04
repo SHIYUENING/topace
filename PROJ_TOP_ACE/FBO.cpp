@@ -199,7 +199,7 @@ void TestTexFBO()
 void FBOS_BLOOM()
 {
 	glBindTexture(GL_TEXTURE_2D, ScreemTex);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0 ,FBOWinW, FBOWinH, 0);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0 ,ScreemTexW, ScreemTexH, 0);
 	//glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
