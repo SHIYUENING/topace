@@ -21,7 +21,7 @@ bool domulti = true;
 bool doangle = true;
 bool domultiR = true;
 bool doangleR = true;
-float moveZ=0.0f;
+float moveZ=-250.0f;
 float moveY=0.0f;
 float moveX=0.0f;
 // ENDROACH

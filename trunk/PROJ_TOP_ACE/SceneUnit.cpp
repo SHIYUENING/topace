@@ -3,7 +3,7 @@
 CSceneUnit::CSceneUnit(void)
 : UnitType(DummyUnit)
 , ModelType(0)
-, MoveSPD(5.0f)
+, MoveSPD(0.0f)
 , TurnSPD(1.5f)
 , MoveSPD_R(0)
 , TurnSPD_R(0.1f)

@@ -88,7 +88,7 @@ void InitDraw()
 	GLfloat LightPos[]={0.0f,00000.0f,0.0f,0.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
 	GLfloat mat_specular[]={0.5f,0.5f,0.5f,1.0f};
-	GLfloat mat_ambient[]={0.3f,0.3f,0.3f,1.0f};
+	GLfloat mat_ambient[]={0.7f,0.7f,0.7f,1.0f};
 	GLfloat mat_diffuse[]={0.7f,0.7f,0.7f,1.0f};
 	GLfloat mat_shininess[]={5.0f};
 	glLightfv(GL_LIGHT0,GL_SPECULAR,mat_specular);
@@ -410,11 +410,11 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	if(GameSet.Light==1)
 		glDisable(GL_LIGHTING);
-
+	
+	RenderPass2Units();
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 
 	glDisable(GL_MULTISAMPLE_ARB);
-
 	QueryPerformanceCounter(&CPUTestStart);
 	UnitMatrix();
 	SetCameraMatrix();
