@@ -49,27 +49,7 @@ void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, pLoadingTex->TexID);			// Select Our Font Texture
-	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPushMatrix();										// Store The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-	glOrtho(0,GameSet.winW,0,GameSet.winH,-1,1);							// Set Up An Ortho Screen
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPushMatrix();										// Store The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
-	DrawQUAD(
-		GameSet.winW/2-GameSet.winH/2,
-		GameSet.winW/2+GameSet.winH/2,
-		0,
-		GameSet.winH);
-
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPopMatrix();										// Restore The Old Projection Matrix
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPopMatrix();										// Restore The Old Projection Matrix
-	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	DrawQUADEX(pLoadingTex->TexID,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	SwapBuffers (SwapHdc);	
 }
 void InitDraw()
