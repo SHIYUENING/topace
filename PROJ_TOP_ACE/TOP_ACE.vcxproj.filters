@@ -180,13 +180,7 @@
     <ClInclude Include="DrawQUAD.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\shader\BloomH_pixel.glsl">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="data\shader\BloomMap_pixel.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\BloomW_pixel.glsl">
       <Filter>Shader</Filter>
     </None>
     <None Include="data\shader\BlurTex.ps">

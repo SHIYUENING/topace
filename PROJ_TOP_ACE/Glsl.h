@@ -13,9 +13,5 @@ void ToneMappingGLSL();
 void SSAOPass0();
 void SSAOPass1(float SSAOset[4]);
 void BlurTex(int Size,bool WorH);
-GLhandleARB GLSL_CompileShader(unsigned char *ShaderAssembly,unsigned int ShaderObject);
-GLhandleARB GLSL_CompileShader(const char* shaderfilename,unsigned int ShaderObject);
-GLhandleARB GLSL_CompileShader(char *ShaderAssembly,GLenum ShaderObject);
-GLhandleARB GLSL_CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
 
 #endif

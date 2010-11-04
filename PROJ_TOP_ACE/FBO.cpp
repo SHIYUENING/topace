@@ -228,49 +228,27 @@ void FBOS_BLOOM()
 	glLoadIdentity();
 
 	DrawBloomMapGLSL(FBOWinW,FBOWinH);
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
-			glEnd();
+	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexW/BloomScale,0);
+
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
-	CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
-	//DrawBloomWGLSL(FBOWinW);
 	BlurTex(FBOWinW/4,true);
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
-			glEnd();
+	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexW/BloomScale,0);
 	
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex2);
-	//DrawBloomHGLSL(FBOWinH);
 	BlurTex(FBOWinH/4,false);
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
-			glEnd();
+	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexW/BloomScale,0);
 	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
 	glPopAttrib();
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
-	
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	ToneMappingGLSL();
-			glBegin(GL_QUADS);
-				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
-			glEnd();
+	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexW/BloomScale,0);
 
 	GLSL_Disable();
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
