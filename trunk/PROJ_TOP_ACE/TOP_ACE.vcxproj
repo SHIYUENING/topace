@@ -221,9 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico" />
-    <None Include="data\shader\BloomH_pixel.glsl" />
     <None Include="data\shader\BloomMap_pixel.glsl" />
-    <None Include="data\shader\BloomW_pixel.glsl" />
     <None Include="data\shader\BlurTex.ps" />
     <None Include="data\shader\Glsl_PhoneLight_Pixel_Multi.ps" />
     <None Include="data\shader\Glsl_PhoneLight_Pixel_Singe.ps" />
