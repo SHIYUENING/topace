@@ -1,4 +1,6 @@
-﻿#include "FBO.h"	
+﻿#include "FBO.h"
+#include "DrawQUAD.h"
+#include "TALogSys.h"
 GLuint FBOID=0;	
 GLuint ScreemTex=0;
 GLuint ScreemTexDepth=0;
@@ -19,6 +21,8 @@ int ScreemTexW=0;
 int ScreemTexH=0;
 int FBOWinW=0;
 int FBOWinH=0;
+CTALogSys FBOLOG;
+int BloomScale=8;
 int next_p2 ( int a )
 {
 	int rval=1;
@@ -27,33 +31,38 @@ int next_p2 ( int a )
 }
 void CheckFBOError()
 {
-		GLenum status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-		switch(status) 
-		{
-			case GL_FRAMEBUFFER_COMPLETE_EXT:
-				break;
-			case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-				MessageBox (HWND_DESKTOP, "Unsupported framebuffer format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing attachment\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same dimensions\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, attached images must have same format\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing draw buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-				MessageBox (HWND_DESKTOP, "Framebuffer incomplete, missing read buffer\n", "Error", MB_OK | MB_ICONEXCLAMATION);
-				break;
-			default:
-				MessageBox (HWND_DESKTOP, "unknown error !!!!\n", "Error", MB_OK | MB_ICONEXCLAMATION);
+	FBOLOG.AddLOG("******Check Framebuffer Status******");
+	FBOLOG.AddLOG("******ERROR******");
+	GLenum status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	switch(status) 
+	{
+		case GL_FRAMEBUFFER_COMPLETE_EXT: 
+			FBOLOG.ClearLOG(); 
+			return;
+		case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+			FBOLOG.AddLOG("Unsupported framebuffer format");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+			FBOLOG.AddLOG("Framebuffer incomplete, missing attachment");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+			FBOLOG.AddLOG("Framebuffer incomplete, attached images must have same dimensions");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+			FBOLOG.AddLOG("Framebuffer incomplete, attached images must have same format");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+			FBOLOG.AddLOG("Framebuffer incomplete, missing draw buffer");
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+			FBOLOG.AddLOG("Framebuffer incomplete, missing read buffer");
+			break;
+		default:
+			FBOLOG.AddLOG("unknown error");
 	         
-		}
+	}
+	FBOLOG.WriteLOGFile(true);
+	FBOLOG.ClearLOG();
 }
 GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint Format,GLuint DataType)
 {
@@ -105,15 +114,15 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		if(BloomSet>=3)
 			BloomTexFormatISet=GL_RGBA32F_ARB;
 
-		BloomTex1=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
-		BloomTex2=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
-		BloomTexDepth=InitTex2D(ScreemTexW/8, ScreemTexH/8,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+		BloomTex1=InitTex2D(ScreemTexW/BloomScale, ScreemTexW/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
+		BloomTex2=InitTex2D(ScreemTexW/BloomScale, ScreemTexW/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
+		BloomTexDepth=InitTex2D(ScreemTexW/BloomScale, ScreemTexW/BloomScale,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 	}
 
 
-	StarTex1=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-	StarTex2=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-	StarTexDepth=InitTex2D(StarTexSizeX, StarTexSizeY,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+	//StarTex1=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+	//StarTex2=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+	//StarTexDepth=InitTex2D(StarTexSizeX, StarTexSizeY,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 //	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	//FBOS_Star_Begin();
@@ -207,13 +216,13 @@ void FBOS_BLOOM()
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
-	glViewport(0,0,ScreemTexW/8, ScreemTexH/8);
+	glViewport(0,0,ScreemTexW/BloomScale, ScreemTexW/BloomScale);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glMatrixMode(GL_PROJECTION);					
 	glPushMatrix();	
 	glLoadIdentity();
-	glOrtho(0,ScreemTexW/8,0,ScreemTexH/8,-1,1);
+	glOrtho(0,ScreemTexW/BloomScale,0,ScreemTexW/BloomScale,-1,1);
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPushMatrix();	
 	glLoadIdentity();
@@ -221,30 +230,32 @@ void FBOS_BLOOM()
 	DrawBloomMapGLSL(FBOWinW,FBOWinH);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
 			glEnd();
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
 	CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
-	DrawBloomWGLSL(FBOWinW);
+	//DrawBloomWGLSL(FBOWinW);
+	BlurTex(FBOWinW/4,true);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
 			glEnd();
 	
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex2);
-	DrawBloomHGLSL(FBOWinH);
+	//DrawBloomHGLSL(FBOWinH);
+	BlurTex(FBOWinH/4,false);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
 			glEnd();
 	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -256,9 +267,9 @@ void FBOS_BLOOM()
 	ToneMappingGLSL();
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
-				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/8,0);
-				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/8, ScreemTexH/8);
-				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexH/8);
+				glTexCoord2f(1.0f,0.0f);glVertex2i( ScreemTexW/BloomScale,0);
+				glTexCoord2f(1.0f,1.0f);glVertex2i( ScreemTexW/BloomScale, ScreemTexW/BloomScale);
+				glTexCoord2f(0.0f,1.0f);glVertex2i(0, ScreemTexW/BloomScale);
 			glEnd();
 
 	GLSL_Disable();

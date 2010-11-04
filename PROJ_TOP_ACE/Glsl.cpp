@@ -12,8 +12,6 @@ CTALogSys GLSLLOG;
 CGLSLLoader GLSL_Sea;
 CGLSLLoader GLSL_PhoneLight;
 CGLSLLoader GLSL_StarPass0,GLSL_StarPass1;
-CGLSLLoader GLSL_DrawBloomW;
-CGLSLLoader GLSL_DrawBloomH;
 CGLSLLoader GLSL_ToneMapping;
 CGLSLLoader GLSL_DrawBloomMap;
 CGLSLLoader GLSL_SSAOPass0,GLSL_SSAOPass1;
@@ -38,8 +36,6 @@ void InitGLSL(int LightSet)
 	
 	if(GameSet.Bloom>0)
 	{
-		GLSL_DrawBloomW.LoadShader(NULL,L"data/shader/BloomW_pixel.glsl");
-		GLSL_DrawBloomH.LoadShader(NULL,L"data/shader/BloomH_pixel.glsl");
 		GLSL_DrawBloomMap.LoadShader(NULL,L"data/shader/BloomMap_pixel.glsl");
 		GLSL_ToneMapping.LoadShader(NULL,L"data/shader/ToneMapping_pixel.glsl");
 	}
@@ -61,8 +57,6 @@ void DeinitGLSL()
 	GLSL_BlurTex.ClearShader();
 	GLSL_Sea.ClearShader();
 	GLSL_PhoneLight.ClearShader();
-	GLSL_DrawBloomW.ClearShader();
-	GLSL_DrawBloomH.ClearShader();
 	GLSL_DrawBloomMap.ClearShader();
 	GLSL_ToneMapping.ClearShader();
 }
@@ -100,20 +94,7 @@ void DrawBloomMapGLSL(int WinW,int WinH)
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"imgW"),(float)WinW);
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"imgH"),(float)WinH);
 }
-void DrawBloomWGLSL(int WinW)
-{
-	if(GlslVer<100) return;
-	glUseProgramObjectARB( GLSL_DrawBloomW.g_PO );
-	glUniform1f(glGetUniformLocation(GLSL_DrawBloomW.g_PO,"_imgW1"),(float)WinW);
-	glUniform1i(glGetUniformLocation(GLSL_DrawBloomW.g_PO,"_texSrc1"),0);
-}
-void DrawBloomHGLSL(int WinH)
-{
-	if(GlslVer<100) return;
-	glUseProgramObjectARB( GLSL_DrawBloomH.g_PO );
-	glUniform1f(glGetUniformLocation(GLSL_DrawBloomH.g_PO,"_imgH1"),(float)WinH);
-	glUniform1i(glGetUniformLocation(GLSL_DrawBloomH.g_PO,"_texSrc1"),0);
-}
+
 void ToneMappingGLSL()
 {
 	if(GlslVer<100) return;
