@@ -399,7 +399,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	if(GameSet.Light==1)
 		glEnable(GL_LIGHTING);
 	
-	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
+	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	glMultMatrixf(ThreadDataDraw.DataList[3].Matrix);
 	DrawTestModel();
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
@@ -435,7 +435,7 @@ void DrawTestModel()
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_TRIANGLES);
 
-	glColor4f(0.0f,1.0f,0.0f,1.0f);
+	//glColor4f(0.0f,1.0f,0.0f,1.0f);
 	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
 	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
 	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
