@@ -5,9 +5,9 @@
 #include "FileSysBace.h"
 #include "TALogSys.h"
 #include "GLSLLoader.h"
+#include "CharSysBace.h"
 int GlslVer = 0;
 int GLSLLightSet=0;
-
 CTALogSys GLSLLOG;
 CGLSLLoader GLSL_Sea;
 CGLSLLoader GLSL_PhoneLight;
@@ -24,7 +24,7 @@ void InitGLSL(int LightSet)
 	else return;
 	GLSLLightSet = GameSet.Light;
 	if(LightSet<2) { GlslVer=0;return;}
-
+	const char* verstr = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 	switch (GLSLLightSet)
 	{
