@@ -23,6 +23,7 @@ int FBOWinW=0;
 int FBOWinH=0;
 CTALogSys FBOLOG;
 int BloomScale=8;
+GLint MAX_COLOR_ATTACHMENTS=0;
 int next_p2 ( int a )
 {
 	int rval=1;
@@ -92,7 +93,7 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		SuppotFBO=false;
 		return 0;
 	}
-
+	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&MAX_COLOR_ATTACHMENTS);
 
 	if(GameSet.SSAO>0)
 	{
@@ -198,6 +199,8 @@ void TestTexFBO()
 }
 void FBOS_BLOOM()
 {
+	if(MAX_COLOR_ATTACHMENTS<4)
+		return;
 	glBindTexture(GL_TEXTURE_2D, ScreemTex);
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0 ,ScreemTexW, ScreemTexH, 0);
 	//glBindTexture(GL_TEXTURE_2D, BloomTex1);
