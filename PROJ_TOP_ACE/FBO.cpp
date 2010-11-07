@@ -238,11 +238,14 @@ void FBOS_BLOOM()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	glPopAttrib();
-	glBindTexture(GL_TEXTURE_2D, ScreemTex);
-	glDisable( GL_BLEND );
+	glBindTexture(GL_TEXTURE_2D, BloomTex1);
+	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
-	//ToneMappingGLSL();
-	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0,FBOWinW,0,FBOWinH,-1,1);
+	ToneMappingGLSL();
+	DrawQUAD(0,ScreemTexW,ScreemTexH,0);
 
 	GLSL_Disable();
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
