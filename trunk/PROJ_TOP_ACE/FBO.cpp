@@ -22,7 +22,7 @@ int ScreemTexH=0;
 int FBOWinW=0;
 int FBOWinH=0;
 CTALogSys FBOLOG;
-int BloomScale=8;
+int BloomScale=4;
 GLint MAX_COLOR_ATTACHMENTS=0;
 int next_p2 ( int a )
 {
@@ -202,7 +202,7 @@ void FBOS_BLOOM()
 	if(MAX_COLOR_ATTACHMENTS<4)
 		return;
 	glBindTexture(GL_TEXTURE_2D, ScreemTex);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0 ,ScreemTexW, ScreemTexH, 0);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (FBOWinW-ScreemTexW)/2, (FBOWinH-ScreemTexH)/2,ScreemTexW, ScreemTexH, 0);
 	//glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
@@ -247,8 +247,10 @@ void FBOS_BLOOM()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0,FBOWinW,0,FBOWinH,-1,1);
+	glMatrixMode(GL_MODELVIEW);	
+	glLoadIdentity();
 	ToneMappingGLSL();
-	DrawQUAD(0,ScreemTexW,ScreemTexH,0);
+	DrawQUAD((FBOWinW-ScreemTexW)/2,ScreemTexW,ScreemTexH,(FBOWinH-ScreemTexH)/2);
 
 	GLSL_Disable();
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
