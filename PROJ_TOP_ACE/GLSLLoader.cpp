@@ -3,7 +3,8 @@
 #include <stdio.h>	
 #include <windows.h>
 #include "FileSysBace.h"
-
+#include "CharSysBace.h"
+#define ShaderPath L"data/shader/GLSL/"
 CGLSLLoader::CGLSLLoader(void)
 {
 	g_VS=0;
@@ -146,4 +147,56 @@ void CGLSLLoader::ClearShader(void)
 	g_VS=0;
 	g_PS=0;
 	g_PO=0;
+}
+
+bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int LightSet)
+{
+	if(!ShaderName)
+		return false;
+	if(LightSet<2)
+		return false;
+	wchar_t* ShaderFullName=NULL;
+	wchar_t* ShaderFullNameTMP=NULL;
+	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM4/");
+	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
+	if(LoadShader2(ShaderFullName)&&(LightSet>=3))
+	{
+		delete[] ShaderFullNameTMP;
+		delete[] ShaderFullName;
+		return true;
+	}
+	
+	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM2/");
+	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
+	if(LoadShader2(ShaderFullName))
+	{
+		delete[] ShaderFullNameTMP;
+		delete[] ShaderFullName;
+		return true;
+	}
+	delete[] ShaderFullNameTMP;
+	delete[] ShaderFullName;
+	return false;
+}
+
+bool CGLSLLoader::LoadShader2(const wchar_t* ShaderName)
+{
+	if(!ShaderName)
+		return false;
+	ClearShader();
+	wchar_t* VSfilename=ADDTwoChar(ShaderName,L".vs");g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
+	wchar_t* PSfilename=ADDTwoChar(ShaderName,L".ps");g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);
+	delete[] VSfilename;
+	delete[] PSfilename;
+	if((!g_VS)&&(!g_PS))
+		return false;
+	g_PO = glCreateProgramObjectARB();
+	if(g_VS) glAttachObjectARB( g_PO, g_VS );
+	if(g_PS) glAttachObjectARB( g_PO, g_PS );
+	if(!GetGLSLLinkSTATUS( g_PO ))
+	{
+		ClearShader();
+		return false;
+	}
+	return true;
 }

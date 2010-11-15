@@ -26,11 +26,12 @@ void InitGLSL(int LightSet)
 	if(LightSet<2) { GlslVer=0;return;}
 	const char* verstr = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
-	switch (GLSLLightSet)
+	GLSL_PhoneLight.LoadShader(L"Light",LightSet);
+	/*switch (GLSLLightSet)
 	{
 		case 3 : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Multi.ps"); if(GLSL_PhoneLight.g_PO) break;
 		default : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Singe.ps");
-	}
+	}*/
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
 	
