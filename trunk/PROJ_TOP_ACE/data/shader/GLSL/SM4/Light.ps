@@ -1,0 +1,80 @@
+uniform ivec2 LightNums;
+uniform sampler2D DiffuseTex;
+varying  vec4 VertexEyeDir; 
+varying  vec3 Normal; 
+vec2 OmniLight(vec4 LightPosEyeIn)
+{
+	vec3 Nor=normalize(Normal);
+	vec3 LightDir = normalize( LightPosEyeIn.xyz - VertexEyeDir.xyz );
+	float NdotL = dot(Nor,LightDir);
+	float specular = 0.0;
+
+	vec3 HightLight =normalize( LightDir - normalize(VertexEyeDir.xyz));
+	specular = pow(max(dot(Nor, HightLight), 0.0), gl_FrontMaterial.shininess);
+
+	NdotL = max(0.0,NdotL);
+	return vec2(NdotL,specular);
+}
+vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,float spotExponent)
+{
+	vec3 Nor=normalize(Normal);
+	vec3 LightDir = normalize( LightPosEyeIn.xyz - VertexEyeDir.xyz );
+	float NdotL = dot(Nor,LightDir);
+	float specular = 0.0;
+	float spotEffect = dot(normalize(LightTGTPosEyeIn),-LightDir);
+	
+	if(spotEffect > spotCosCutoff)
+	{
+		//spotEffect = pow((spotEffect-spotCosCutoff*2.0),spotExponent);
+		//float spotCosFalloff = pow(spotCosCutoff,spotExponent);
+		//spotEffect = (spotCosFalloff- spotEffect)/(spotCosFalloff-spotCosCutoff);
+		spotEffect = pow(spotEffect,spotExponent);
+		vec3 HightLight =normalize( LightDir - normalize(VertexEyeDir.xyz));
+		specular = pow(max(dot(Nor, HightLight), 0.0), gl_FrontMaterial.shininess);
+
+		NdotL = max(0.0,NdotL);
+		NdotL = NdotL*spotEffect;
+		specular = specular*spotEffect;
+	}
+	else
+	{
+		NdotL = 0.0;
+	}
+	return vec2(NdotL,specular);
+}
+void main()
+{
+	vec4 DiffuseTexColor = texture2D(DiffuseTex, gl_TexCoord[0].xy);
+	//if(DiffuseTexColor.x<0)
+//	DiffuseTexColor=vec4(1.0,1.0,1.0,1.0);
+	vec2 LightVal=vec2(0.0,0.0);
+	vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
+	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
+	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
+	for(int i=0;i<8;i++)
+	{
+		if(i<LightNums.x)
+		{
+			LightVal=OmniLight (gl_LightSource[i].position);
+		}
+		else
+		{
+			if(i<(LightNums.x+LightNums.y))
+			{
+				LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent);
+			}
+		}
+		
+		AmbientColor += gl_FrontLightProduct[i].ambient;
+		DiffuseColor += LightVal.x * gl_FrontLightProduct[i].diffuse ;
+		SpecularColor += LightVal.y * gl_FrontLightProduct[i].specular ;
+	}
+	gl_FragColor = DiffuseTexColor * (AmbientColor + gl_FrontLightModelProduct.sceneColor + DiffuseColor)*gl_Color +SpecularColor ;
+	gl_FragColor.w=DiffuseTexColor.w;
+	//gl_FragColor+=SpecularColor;
+	
+	//gl_FragColor.xyz=Normal;
+	//gl_FragColor = DiffuseTexColor;
+    return;
+} 
+
