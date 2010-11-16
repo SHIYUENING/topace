@@ -112,6 +112,15 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 		CloseHandle(hFile);*/
 		return false;
 	}
+	else
+	{
+		char * logbuffer=GetGLSLInfoLog(g_programObj);
+		GLSLLOG.AddLOG("****** GLSL Log ******");
+		GLSLLOG.AddLOG(logbuffer);
+		GLSLLOG.WriteLOGFile(true);
+		GLSLLOG.ClearLOG();
+		delete[] logbuffer;
+	}
 	GLSLLOG.ClearLOG();
 	return true;
 }
@@ -157,17 +166,19 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int LightSet)
 		return false;
 	wchar_t* ShaderFullName=NULL;
 	wchar_t* ShaderFullNameTMP=NULL;
-	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM4/");
-	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
-	if(LoadShader2(ShaderFullName)&&(LightSet>=3))
+	if(LightSet>=3)
 	{
+		ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM4/");
+		ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
+		if(LoadShader2(ShaderFullName))
+		{
+			delete[] ShaderFullNameTMP;
+			delete[] ShaderFullName;
+			return true;
+		}
 		delete[] ShaderFullNameTMP;
 		delete[] ShaderFullName;
-		return true;
 	}
-	delete[] ShaderFullNameTMP;
-	delete[] ShaderFullName;
-
 	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM2/");
 	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
 	if(LoadShader2(ShaderFullName))
