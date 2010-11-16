@@ -33,18 +33,15 @@ void InitGLSL()
 	
 	if(GameSet.Bloom>0)
 	{
-		GLSL_DrawBloomMap.LoadShader(L"BloomMap",GameSet.Light);
-		GLSL_ToneMapping.LoadShader(L"ToneMapping",GameSet.Light);
-		//GLSL_DrawBloomMap.LoadShader(NULL,L"data/shader/BloomMap_pixel.glsl");
-		//GLSL_ToneMapping.LoadShader(NULL,L"data/shader/ToneMapping_pixel.glsl");
+		GLSL_DrawBloomMap.LoadShader(L"BloomMap",2);
+		GLSL_ToneMapping.LoadShader(L"ToneMapping",2);
 	}
 	if(GameSet.SSAO>0)
 	{
 		GLSL_SSAOPass0.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass0.ps");
 		GLSL_SSAOPass1.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass1.ps");
 	}
-	//GLSL_BlurTex.LoadShader(NULL,L"data/shader/BlurTex.ps");
-	GLSL_BlurTex.LoadShader(L"BlurTex",GameSet.Light);
+	GLSL_BlurTex.LoadShader(L"BlurTex",2);
 }
 void DeinitGLSL()
 {
