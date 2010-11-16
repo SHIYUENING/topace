@@ -165,7 +165,9 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int LightSet)
 		delete[] ShaderFullName;
 		return true;
 	}
-	
+	delete[] ShaderFullNameTMP;
+	delete[] ShaderFullName;
+
 	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM2/");
 	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
 	if(LoadShader2(ShaderFullName))

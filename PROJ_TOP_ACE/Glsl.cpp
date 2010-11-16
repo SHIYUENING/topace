@@ -17,35 +17,34 @@ CGLSLLoader GLSL_DrawBloomMap;
 CGLSLLoader GLSL_SSAOPass0,GLSL_SSAOPass1;
 CGLSLLoader GLSL_BlurTex;
 extern tGameSet GameSet;
-void InitGLSL(int LightSet)
+void InitGLSL()
 {
 
 	if(glewIsSupported("GL_ARB_shading_language_100")) GlslVer=100;
 	else return;
 	GLSLLightSet = GameSet.Light;
-	if(LightSet<2) { GlslVer=0;return;}
+	if(GameSet.Light<2) { GlslVer=0;return;}
 	const char* verstr = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
-	GLSL_PhoneLight.LoadShader(L"Light",LightSet);
-	/*switch (GLSLLightSet)
-	{
-		case 3 : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Multi.ps"); if(GLSL_PhoneLight.g_PO) break;
-		default : GLSL_PhoneLight.LoadShader(L"data/shader/GLSL_PhoneLight_Vertex.vs",L"data/shader/GLSL_PhoneLight_Pixel_Singe.ps");
-	}*/
+	GLSL_PhoneLight.LoadShader(L"Light",GameSet.Light);
+
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
 	
 	if(GameSet.Bloom>0)
 	{
-		GLSL_DrawBloomMap.LoadShader(NULL,L"data/shader/BloomMap_pixel.glsl");
-		GLSL_ToneMapping.LoadShader(NULL,L"data/shader/ToneMapping_pixel.glsl");
+		GLSL_DrawBloomMap.LoadShader(L"BloomMap",GameSet.Light);
+		GLSL_ToneMapping.LoadShader(L"ToneMapping",GameSet.Light);
+		//GLSL_DrawBloomMap.LoadShader(NULL,L"data/shader/BloomMap_pixel.glsl");
+		//GLSL_ToneMapping.LoadShader(NULL,L"data/shader/ToneMapping_pixel.glsl");
 	}
 	if(GameSet.SSAO>0)
 	{
 		GLSL_SSAOPass0.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass0.ps");
 		GLSL_SSAOPass1.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass1.ps");
 	}
-	GLSL_BlurTex.LoadShader(NULL,L"data/shader/BlurTex.ps");
+	//GLSL_BlurTex.LoadShader(NULL,L"data/shader/BlurTex.ps");
+	GLSL_BlurTex.LoadShader(L"BlurTex",GameSet.Light);
 }
 void DeinitGLSL()
 {
