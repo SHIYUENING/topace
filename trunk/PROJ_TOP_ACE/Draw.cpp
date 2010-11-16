@@ -78,7 +78,7 @@ void InitDraw()
 	DrawLoadingTex(&LoadingTex);
 	if(GameSet.Light>1)
 		InitFBO(GameSet.winW,GameSet.winH,GameSet.Bloom);
-	InitGLSL(GameSet.Light);
+	InitGLSL();
 	CDDS::SetAFNum(GameSet.AF);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);

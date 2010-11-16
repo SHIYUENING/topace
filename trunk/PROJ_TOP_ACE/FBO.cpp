@@ -202,7 +202,7 @@ void FBOS_BLOOM()
 	if(MAX_COLOR_ATTACHMENTS<4)
 		return;
 	glBindTexture(GL_TEXTURE_2D, ScreemTex);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (FBOWinW-ScreemTexW)/2, (FBOWinH-ScreemTexH)/2,ScreemTexW, ScreemTexH, 0);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (FBOWinW-ScreemTexW)/2, (FBOWinH-ScreemTexH)/2,ScreemTexW, ScreemTexH, 0);
 	//glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
@@ -246,12 +246,14 @@ void FBOS_BLOOM()
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0,FBOWinW,0,FBOWinH,-1,1);
+	//glOrtho(0,FBOWinW,0,FBOWinH,-1,1);
+	glOrtho(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1);
 	glMatrixMode(GL_MODELVIEW);	
 	glLoadIdentity();
 	ToneMappingGLSL();
-	DrawQUAD((FBOWinW-ScreemTexW)/2,ScreemTexW,ScreemTexH,(FBOWinH-ScreemTexH)/2);
-
+	//DrawQUAD((FBOWinW-ScreemTexW)/2,ScreemTexW,ScreemTexH,(FBOWinH-ScreemTexH)/2);
+	//DrawQUAD((FBOWinW-ScreemTexW)/2,FBOWinW-(FBOWinW-ScreemTexW)/2,FBOWinH-(FBOWinH-ScreemTexH)/2,(FBOWinH-ScreemTexH)/2);
+	DrawQUAD(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2);
 	GLSL_Disable();
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();	
