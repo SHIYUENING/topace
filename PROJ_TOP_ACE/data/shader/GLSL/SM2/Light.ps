@@ -1,7 +1,8 @@
+#version 120
 uniform ivec2 LightNums;
 uniform sampler2D DiffuseTex;
-varying  vec4 VertexEyeDir; 
-varying  vec3 Normal; 
+in  vec4 VertexEyeDir; 
+in  vec3 Normal; 
 vec2 OmniLight(vec4 LightPosEyeIn)
 {
 	vec3 Nor=normalize(Normal);

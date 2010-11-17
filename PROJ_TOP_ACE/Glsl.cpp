@@ -6,6 +6,7 @@
 #include "TALogSys.h"
 #include "GLSLLoader.h"
 #include "CharSysBace.h"
+#include "Common.h"
 int GlslVer = 0;
 int GLSLLightSet=0;
 CTALogSys GLSLLOG;
