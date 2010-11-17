@@ -1,5 +1,6 @@
-varying  vec4 VertexEyeDir; 
-varying  vec3 Normal; 
+#version 120
+out  vec4 VertexEyeDir; 
+out  vec3 Normal; 
 void main()
 {
 	VertexEyeDir = gl_ModelViewMatrix * gl_Vertex;

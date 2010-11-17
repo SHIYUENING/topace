@@ -115,8 +115,8 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		if(BloomSet>=3)
 			BloomTexFormatISet=GL_RGBA32F_ARB;
 
-		BloomTex1=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
-		BloomTex2=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RGBA,GL_UNSIGNED_BYTE);
+		BloomTex1=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
+		BloomTex2=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
 	}
 
 
@@ -246,13 +246,10 @@ void FBOS_BLOOM()
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//glOrtho(0,FBOWinW,0,FBOWinH,-1,1);
 	glOrtho(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1);
 	glMatrixMode(GL_MODELVIEW);	
 	glLoadIdentity();
 	ToneMappingGLSL();
-	//DrawQUAD((FBOWinW-ScreemTexW)/2,ScreemTexW,ScreemTexH,(FBOWinH-ScreemTexH)/2);
-	//DrawQUAD((FBOWinW-ScreemTexW)/2,FBOWinW-(FBOWinW-ScreemTexW)/2,FBOWinH-(FBOWinH-ScreemTexH)/2,(FBOWinH-ScreemTexH)/2);
 	DrawQUAD(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2);
 	GLSL_Disable();
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix

@@ -84,6 +84,7 @@
     <ClCompile Include="TALogSys.cpp" />
     <ClCompile Include="GLSLLoader.cpp" />
     <ClCompile Include="DrawQUAD.cpp" />
+    <ClCompile Include="Common.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -178,6 +179,7 @@
     <ClInclude Include="TALogSys.h" />
     <ClInclude Include="GLSLLoader.h" />
     <ClInclude Include="DrawQUAD.h" />
+    <ClInclude Include="Common.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomMap_pixel.glsl">

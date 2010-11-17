@@ -15,6 +15,7 @@
 #include "TopAceModel.h"
 #include "ExchangeThread.h"
 #include "DrawQUAD.h"
+#include "Common.h"
 bool extern domultiR ;
 bool extern doangleR ;
 float extern angleR;
