@@ -46,6 +46,7 @@ float PosOrgZ=0.0f;
 __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
 float MatrixTMPF4X4[16];
+GLfloat DrawMatrixTMP[16];
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -399,9 +400,16 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	DrawTestLines();
 	if(GameSet.Light==1)
 		glEnable(GL_LIGHTING);
-	
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	glMultMatrixf(ThreadDataDraw.DataList[3].Matrix);
+
+	glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
+	SetPMatrix(DrawMatrixTMP);
+	glGetFloatv(GL_MODELVIEW_MATRIX,&DrawMatrixTMP[0]);
+	SetMMatrix(DrawMatrixTMP);
+	
+	SetMMatrixToGlsl();
+	SetMVPMatrixToGlsl();
 	DrawTestModel();
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);

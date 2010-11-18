@@ -13,5 +13,7 @@ void GetMMatrix(GLfloat * Matrix);
 void GetPMatrix(GLfloat * Matrix);
 void GetMVPMatrix(GLfloat * Matrix);
 void MatrixOrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
-void MatrixPerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
+void MatrixPerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
+void SetGlslPO(GLuint SetGlslPO);
+GLuint GetGlslPO();
 #endif

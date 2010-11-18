@@ -18,6 +18,7 @@ CGLSLLoader GLSL_DrawBloomMap;
 CGLSLLoader GLSL_SSAOPass0,GLSL_SSAOPass1;
 CGLSLLoader GLSL_BlurTex;
 extern tGameSet GameSet;
+GLfloat GlslMatrixTMP[16];
 void InitGLSL()
 {
 
@@ -62,6 +63,7 @@ void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
 	int LightNums[2]={OmniLightNum,SpotLightNum};
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_PhoneLight.g_PO);
 	glUseProgramObjectARB( GLSL_PhoneLight.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTex"),0);
 	glUniform2iv(glGetUniformLocation(GLSL_PhoneLight.g_PO,"LightNums"),1,LightNums);
@@ -69,23 +71,27 @@ void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 void GLSL_Disable()
 {
 	if(GlslVer<100) return;
+	SetGlslPO(0);
 	glUseProgramObjectARB( NULL );
 }
 void GLSL_Enable_StarPass1()
 {
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_StarPass1.g_PO);
 	glUseProgramObjectARB( GLSL_StarPass1.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_StarPass1.g_PO,"StarTex1"),0);
 }
 void GLSL_Enable_StarPass0()
 {
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_StarPass0.g_PO);
 	glUseProgramObjectARB( GLSL_StarPass0.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_StarPass0.g_PO,"StarTex1"),0);
 }
 void DrawBloomMapGLSL(int WinW,int WinH)
 {
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_DrawBloomMap.g_PO);
 	glUseProgramObjectARB( GLSL_DrawBloomMap.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"texColor"),0);
 	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"AveLum"),0.23f);
@@ -96,12 +102,14 @@ void DrawBloomMapGLSL(int WinW,int WinH)
 void ToneMappingGLSL()
 {
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_ToneMapping.g_PO);
 	glUseProgramObjectARB( GLSL_ToneMapping.g_PO );
 	glUniform1i(glGetUniformLocation(GLSL_ToneMapping.g_PO,"_texSrc1"),0);
 }
 void SSAOPass0()
 {
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_SSAOPass0.g_PO);
 	glUseProgramObjectARB(GLSL_SSAOPass0.g_PO);
 	glUniform1i(glGetUniformLocation(GLSL_SSAOPass0.g_PO,"DepthTex"),0);
 	
@@ -109,6 +117,7 @@ void SSAOPass0()
 void SSAOPass1(float SSAOset[4])
 {
 	if(GlslVer<100) return;
+	SetGlslPO(GLSL_SSAOPass1.g_PO);
 	glUseProgramObjectARB(GLSL_SSAOPass1.g_PO);
 	glUniform1i(glGetUniformLocation(GLSL_SSAOPass1.g_PO,"DepthTex"),0);
 	glUniform4fv(glGetUniformLocation(GLSL_SSAOPass1.g_PO,"SSAOset"),1,SSAOset);
@@ -123,8 +132,33 @@ void BlurTex(int Size,bool WorH)
 		BlurTexSet[0]=1.0f/float(Size);
 	else
 		BlurTexSet[1]=1.0f/float(Size);
+	SetGlslPO(GLSL_BlurTex.g_PO);
 	glUseProgramObjectARB(GLSL_BlurTex.g_PO);
 	glUniform1i(glGetUniformLocation(GLSL_BlurTex.g_PO,"BlurTex"),0);
 	glUniform2fv(glGetUniformLocation(GLSL_BlurTex.g_PO,"BlurTexSet"),1,BlurTexSet);
 
+}
+void SetMMatrixToGlsl(GLfloat * MMatrix)
+{
+	if(MMatrix)
+		memcpy(GlslMatrixTMP, MMatrix, 16 * sizeof(GLfloat));
+	else
+		GetMMatrix(GlslMatrixTMP);
+	glUniformMatrix4fv(glGetUniformLocation(GetGlslPO(),"MMatrix"),1,false,GlslMatrixTMP);
+}
+void SetPMatrixToGlsl(GLfloat * PMatrix)
+{
+	if(PMatrix)
+		memcpy(GlslMatrixTMP, PMatrix, 16 * sizeof(GLfloat));
+	else
+		GetPMatrix(GlslMatrixTMP);
+	glUniformMatrix4fv(glGetUniformLocation(GetGlslPO(),"PMatrix"),1,false,GlslMatrixTMP);
+}
+void SetMVPMatrixToGlsl(GLfloat * MVPMatrix)
+{
+	if(MVPMatrix)
+		memcpy(GlslMatrixTMP, MVPMatrix, 16 * sizeof(GLfloat));
+	else
+		GetMVPMatrix(GlslMatrixTMP);
+	glUniformMatrix4fv(glGetUniformLocation(GetGlslPO(),"MVPMatrix"),1,false,GlslMatrixTMP);
 }
