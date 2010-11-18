@@ -185,15 +185,14 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int LightSet)
 	return false;
 }
 
-bool CGLSLLoader::LoadShader2(const wchar_t* ShaderName)
+bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName)
 {
-	if(!ShaderName)
+	if(!ShaderFullName)
 		return false;
 	ClearShader();
-	wchar_t* VSfilename=ADDTwoChar(ShaderName,L".vs");g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);
-	wchar_t* PSfilename=ADDTwoChar(ShaderName,L".ps");g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);
-	delete[] VSfilename;
-	delete[] PSfilename;
+	wchar_t* VSfilename=ADDTwoChar(ShaderFullName,L".vs");	g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);	delete[] VSfilename;
+	//if(!g_VS){	VSfilename=ADDTwoChar(ShaderPath,L"SM2/common.vs");	g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);	delete[] VSfilename;}
+	wchar_t* PSfilename=ADDTwoChar(ShaderFullName,L".ps");	g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);	delete[] PSfilename;
 	if((!g_VS)&&(!g_PS))
 		return false;
 	g_PO = glCreateProgramObjectARB();

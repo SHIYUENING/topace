@@ -19,7 +19,7 @@ public:
 	GLhandleARB g_VS;
 	GLhandleARB g_PS;
 	GLhandleARB g_PO;//ProgramObject
-	bool LoadShader2(const wchar_t* ShaderName);
+	bool LoadShader2(const wchar_t* ShaderFullName);
 	bool LoadShader(const wchar_t* ShaderName,int LightSet);
 };
 
