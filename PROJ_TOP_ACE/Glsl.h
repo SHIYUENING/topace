@@ -14,4 +14,7 @@ void SSAOPass0();
 void SSAOPass1(float SSAOset[4]);
 void BlurTex(int Size,bool WorH);
 
+void SetMMatrixToGlsl(GLfloat * MMatrix=0);
+void SetPMatrixToGlsl(GLfloat * PMatrix=0);
+void SetMVPMatrixToGlsl(GLfloat * MVPMatrix=0);
 #endif
