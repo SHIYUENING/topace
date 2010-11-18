@@ -1,5 +1,5 @@
 #include "Common.h"
-
+#include <math.h>
 GLdouble MVPMatrix[16]={1.0,0.0,0.0,0.0,
 						0.0,1.0,0.0,0.0,
 						0.0,0.0,1.0,0.0,
@@ -9,6 +9,10 @@ GLdouble MMatrix[16]={1.0,0.0,0.0,0.0,
 					  0.0,0.0,1.0,0.0,
 					  0.0,0.0,0.0,1.0};
 GLdouble PMatrix[16]={1.0,0.0,0.0,0.0,
+					  0.0,1.0,0.0,0.0,
+					  0.0,0.0,1.0,0.0,
+					  0.0,0.0,0.0,1.0};
+GLdouble MatrixTMP[16]={1.0,0.0,0.0,0.0,
 					  0.0,1.0,0.0,0.0,
 					  0.0,0.0,1.0,0.0,
 					  0.0,0.0,0.0,1.0};
@@ -98,6 +102,7 @@ void MatrixPerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom,
 	PMatrix[2] = 0;								PMatrix[6] = 0;								PMatrix[10] = -(f + n) / (f - n);					PMatrix[14] = -(2 * f * n) / (f - n);
 	PMatrix[3] = 0;								PMatrix[7] = 0;								PMatrix[11] = -1;									PMatrix[15] = 0;
 }
+
 GLuint GlslPO=0;
 void SetGlslPO(GLuint SetGlslPO)
 {
@@ -106,4 +111,46 @@ void SetGlslPO(GLuint SetGlslPO)
 GLuint GetGlslPO()
 {
 	return GlslPO;
+}
+void MultMMatrix(GLfloat * Matrix)
+{
+	if(!Matrix) return ;
+	for (int i=0;i<16;i++) MatrixTMP[i]=Matrix[i];
+	Easy_matrix_mult_Double(MMatrix,MMatrix,MatrixTMP);
+}
+void glhFrustumf2(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top,
+                  GLdouble znear, GLdouble zfar)
+{
+    GLdouble temp, temp2, temp3, temp4;
+    temp = 2.0 * znear;
+    temp2 = right - left;
+    temp3 = top - bottom;
+    temp4 = zfar - znear;
+    PMatrix[0] = temp / temp2;
+    PMatrix[1] = 0.0;
+    PMatrix[2] = 0.0;
+    PMatrix[3] = 0.0;
+    PMatrix[4] = 0.0;
+    PMatrix[5] = temp / temp3;
+    PMatrix[6] = 0.0;
+    PMatrix[7] = 0.0;
+    PMatrix[8] = (right + left) / temp2;
+    PMatrix[9] = (top + bottom) / temp3;
+    PMatrix[10] = (-zfar - znear) / temp4;
+    PMatrix[11] = -1.0;
+    PMatrix[12] = 0.0;
+    PMatrix[13] = 0.0;
+    PMatrix[14] = (-temp * zfar) / temp4;
+    PMatrix[15] = 0.0;
+}
+void MatrixPerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio,
+                      GLdouble znear, GLdouble zfar)
+{
+    GLdouble ymax, xmax;
+    GLdouble temp, temp2, temp3, temp4;
+    ymax = znear * tan(fovyInDegrees * 3.14159265358979323846 / 360.0);
+    //ymin = -ymax;
+    //xmin = -ymax * aspectRatio;
+    xmax = ymax * aspectRatio;
+    glhFrustumf2(-xmax, xmax, -ymax, ymax, znear, zfar);
 }
