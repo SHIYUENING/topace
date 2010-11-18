@@ -24,6 +24,8 @@ int FBOWinH=0;
 CTALogSys FBOLOG;
 int BloomScale=4;
 GLint MAX_COLOR_ATTACHMENTS=0;
+
+GLfloat FBOMatrixTMP[16];
 int next_p2 ( int a )
 {
 	int rval=1;
