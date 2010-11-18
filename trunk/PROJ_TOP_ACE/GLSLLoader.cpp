@@ -23,17 +23,10 @@ char * CGLSLLoader::GetGLSLInfoLog(GLhandleARB GLSLShaderObject)
 {
 	int logreadsize=0;
 	int logbuffersize=0x800;
-	char * logbuffer=new char [logbuffersize];
+	glGetObjectParameterivARB(GLSLShaderObject, GL_OBJECT_INFO_LOG_LENGTH_ARB,&logbuffersize);
+	char * logbuffer=new char [logbuffersize+1];
 	glGetInfoLogARB(GLSLShaderObject, logbuffersize,&logreadsize, logbuffer);
-	while(logbuffersize<=logreadsize)
-	{
-		logbuffersize=logbuffersize*2;
-		delete[] logbuffer;
-		if(logbuffersize>0x10000)
-			break;
-		logbuffer=new char [logbuffersize];
-		glGetInfoLogARB(GLSLShaderObject, logbuffersize,&logreadsize, logbuffer);
-	}
+	logbuffer[logbuffersize]=0;
 	return logbuffer;
 }
 GLhandleARB CGLSLLoader::CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
