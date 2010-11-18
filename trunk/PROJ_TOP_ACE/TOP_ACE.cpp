@@ -13,6 +13,7 @@
 #include <gl\glew.h>												// Header File For The OpenGL32 Library
 #include "System.h"												// Header File For NeHeGL
 #include <math.h>												// We'll Need Some Math
+#include "Common.h"
 
 // ROACH
 
@@ -49,6 +50,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	glMatrixMode(GL_PROJECTION);								// Select The Projection Matrix
 	glLoadIdentity();											// Reset The Projection Matrix
 	gluPerspective(45, (float)window->init.width/(float)window->init.height, 5.0,  100000.0f); // Set Our Perspective
+	MatrixPerspectiveProjectionFov(45.0, (double)window->init.width/(double)window->init.height, 5.0,  100000.0); 
 	glMatrixMode(GL_MODELVIEW);									// Select The Modelview Matrix
 	glLoadIdentity();											// Reset The Modelview Matrix
 

@@ -201,6 +201,7 @@ void SetCameraMatrix()
 	
 	Easy_matrix_inv(MatrixOut,MatrixOut);
 	glLoadMatrixf(&(MatrixOut[0].m128_f32[0]));
+	SetMMatrix(MatrixOut[0].m128_f32);
 }
 void SetLights()
 {
@@ -398,15 +399,12 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glEnable(GL_MULTISAMPLE_ARB);
 
 	DrawTestLines();
-	if(GameSet.Light==1)
-		glEnable(GL_LIGHTING);
+	if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
-	glMultMatrixf(ThreadDataDraw.DataList[3].Matrix);
+	MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
 
 	glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
-	SetPMatrix(DrawMatrixTMP);
-	glGetFloatv(GL_MODELVIEW_MATRIX,&DrawMatrixTMP[0]);
-	SetMMatrix(DrawMatrixTMP);
+	//SetPMatrix(DrawMatrixTMP);
 	
 	SetMMatrixToGlsl();
 	SetMVPMatrixToGlsl();
@@ -417,8 +415,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	GLSL_Disable();
 	
-	if(GameSet.Light==1)
-		glDisable(GL_LIGHTING);
+	if(GameSet.Light==1) glDisable(GL_LIGHTING);
 	
 	RenderPass2Units();
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);

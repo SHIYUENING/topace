@@ -11,6 +11,6 @@ void main()
 	gl_Position = MVPMatrix * gl_Vertex;
     gl_FrontColor = gl_Color;
     gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
-    Normal = gl_NormalMatrix * gl_Normal;
+    Normal =( MMatrix * vec4(gl_Normal,0.0)).xyz;
     return;
 }
