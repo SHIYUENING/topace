@@ -1,6 +1,7 @@
 ﻿#include "FBO.h"
 #include "DrawQUAD.h"
 #include "TALogSys.h"
+#include "Common.h"
 GLuint FBOID=0;	
 GLuint ScreemTex=0;
 GLuint ScreemTexDepth=0;
@@ -216,28 +217,31 @@ void FBOS_BLOOM()
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	glViewport(0,0,ScreemTexW/BloomScale, ScreemTexH/BloomScale);
-	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
-	glMatrixMode(GL_PROJECTION);					
-	glPushMatrix();	
-	glLoadIdentity();
-	glOrtho(0,ScreemTexW/BloomScale,0,ScreemTexH/BloomScale,-1,1);
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPushMatrix();	
-	glLoadIdentity();
-
+	//glMatrixMode(GL_TEXTURE);
+	//glLoadIdentity();
+	//glMatrixMode(GL_PROJECTION);					
+	//glPushMatrix();	
+	//glLoadIdentity();
+	//glOrtho(0,ScreemTexW/BloomScale,0,ScreemTexH/BloomScale,-1,1);
+	//glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	//glPushMatrix();	
+	//glLoadIdentity();
+	MatrixOrthogonalProjection(0,ScreemTexW/BloomScale,0,ScreemTexH/BloomScale,-1,1,FBOMatrixTMP);
 	DrawBloomMapGLSL(FBOWinW,FBOWinH);
+	SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
 
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	BlurTex(FBOWinW/4,true);
+	SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
 	
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex2);
 	BlurTex(FBOWinH/4,false);
+	SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
 	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -246,18 +250,20 @@ void FBOS_BLOOM()
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1);
-	glMatrixMode(GL_MODELVIEW);	
-	glLoadIdentity();
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//glOrtho(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1);
+	//glMatrixMode(GL_MODELVIEW);	
+	//glLoadIdentity();
+	MatrixOrthogonalProjection(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1,FBOMatrixTMP);
 	ToneMappingGLSL();
+	SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2);
 	GLSL_Disable();
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPopMatrix();	
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPopMatrix();
+	//glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	//glPopMatrix();	
+	//glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	//glPopMatrix();
 	glEnable( GL_CULL_FACE );
 	glEnable(GL_DEPTH_TEST);
 	

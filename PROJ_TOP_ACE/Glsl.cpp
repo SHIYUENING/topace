@@ -17,6 +17,7 @@ CGLSLLoader GLSL_ToneMapping;
 CGLSLLoader GLSL_DrawBloomMap;
 CGLSLLoader GLSL_SSAOPass0,GLSL_SSAOPass1;
 CGLSLLoader GLSL_BlurTex;
+CGLSLLoader GLSL_Common;
 extern tGameSet GameSet;
 GLfloat GlslMatrixTMP[16];
 void InitGLSL()
@@ -27,6 +28,7 @@ void InitGLSL()
 	GLSLLightSet = GameSet.Light;
 	if(GameSet.Light<2) { GlslVer=0;return;}
 	const char* verstr = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+	GLSL_Common.LoadShader(L"common",2);
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 	GLSL_PhoneLight.LoadShader(L"Light",GameSet.Light);
 
@@ -35,7 +37,9 @@ void InitGLSL()
 	
 	if(GameSet.Bloom>0)
 	{
+		GLSL_DrawBloomMap.g_VS=GLSL_Common.g_VS;
 		GLSL_DrawBloomMap.LoadShader(L"BloomMap",2);
+		GLSL_ToneMapping.g_VS=GLSL_Common.g_VS;
 		GLSL_ToneMapping.LoadShader(L"ToneMapping",2);
 	}
 	if(GameSet.SSAO>0)
@@ -43,6 +47,7 @@ void InitGLSL()
 		GLSL_SSAOPass0.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass0.ps");
 		GLSL_SSAOPass1.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass1.ps");
 	}
+	GLSL_BlurTex.g_VS=GLSL_Common.g_VS;
 	GLSL_BlurTex.LoadShader(L"BlurTex",2);
 }
 void DeinitGLSL()
@@ -58,6 +63,7 @@ void DeinitGLSL()
 	GLSL_PhoneLight.ClearShader();
 	GLSL_DrawBloomMap.ClearShader();
 	GLSL_ToneMapping.ClearShader();
+	GLSL_Common.ClearShader();
 }
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
