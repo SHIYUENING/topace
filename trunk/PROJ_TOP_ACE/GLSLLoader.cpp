@@ -141,25 +141,26 @@ bool CGLSLLoader::LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename
 
 void CGLSLLoader::ClearShader(void)
 {
-	if((g_PO>0)&&(g_VS>0)) glDetachObjectARB(g_PO,g_VS);
-	if((g_PO>0)&&(g_PS>0)) glDetachObjectARB(g_PO,g_PS);
-	if(g_PO>0) glDeleteObjectARB(g_PO);
-	if(g_VS>0) glDeleteObjectARB(g_VS);
-	if(g_PS>0) glDeleteObjectARB(g_PS);
+	if(!g_PO)
+		return;
+	if(glIsProgram(g_PO)!=GL_FALSE)
+	{
+		if(glIsShader(g_VS)!=GL_FALSE){ glDetachObjectARB(g_PO,g_VS); glDeleteObjectARB(g_VS);}
+		if(glIsShader(g_PS)!=GL_FALSE){ glDetachObjectARB(g_PO,g_PS); glDeleteObjectARB(g_PS);}
+		glDeleteObjectARB(g_PS);
+	}
 	g_VS=0;
 	g_PS=0;
 	g_PO=0;
 }
 
-bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int LightSet)
+bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool ClearOldShader)
 {
-	if(!ShaderName)
-		return false;
-	if(LightSet<2)
-		return false;
+	if(ClearOldShader) ClearShader();
+	if((!ShaderName)||(ShaderLevel<2)) return false;
 	wchar_t* ShaderFullName=NULL;
 	wchar_t* ShaderFullNameTMP=NULL;
-	if(LightSet>=3)
+	if(ShaderLevel>=3)
 	{
 		ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM4/");
 		ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
@@ -189,10 +190,18 @@ bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName)
 {
 	if(!ShaderFullName)
 		return false;
-	ClearShader();
-	wchar_t* VSfilename=ADDTwoChar(ShaderFullName,L".vs");	g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);	delete[] VSfilename;
-	//if(!g_VS){	VSfilename=ADDTwoChar(ShaderPath,L"SM2/common.vs");	g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);	delete[] VSfilename;}
-	wchar_t* PSfilename=ADDTwoChar(ShaderFullName,L".ps");	g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);	delete[] PSfilename;
+	if(!g_VS)
+	{
+		wchar_t* VSfilename=ADDTwoChar(ShaderFullName,L".vs");	
+		g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);	
+		delete[] VSfilename;
+	}
+	if(!g_PS)
+	{
+		wchar_t* PSfilename=ADDTwoChar(ShaderFullName,L".ps");	
+		g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);	
+		delete[] PSfilename;
+	}
 	if((!g_VS)&&(!g_PS))
 		return false;
 	g_PO = glCreateProgramObjectARB();

@@ -1,8 +1,8 @@
 #version 120
 uniform mat4x4 MMatrix;
 uniform mat4x4 MVPMatrix;
-out  vec4 VertexEyeDir; 
-out  vec3 Normal; 
+varying  vec4 VertexEyeDir; 
+varying  vec3 Normal; 
 void main()
 {
 	//VertexEyeDir = gl_ModelViewMatrix * gl_Vertex;
