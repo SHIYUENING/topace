@@ -102,9 +102,9 @@ void InitDraw()
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,mat_diffuse);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,mat_shininess);
 	
-	TopAceModelTest.ReadTAMFile(L"data/model/test/1234.tam");
+	TopAceModelTest.ReadTAMFile(L"data/model/test/1234x.tam");
 	TopAceModelTest.LoadToVRAM();
-	if(TopAceModelTest.TAM_FileData)
+/*	if(TopAceModelTest.TAM_FileData)
 	{
 		PosOrgZ=2*max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[1]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[1]))),
@@ -118,7 +118,7 @@ void InitDraw()
 		//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_TRUE);
 		//glEnable(GL_LIGHT0);
 	}
-/*	if(!Test3dsModelHanger)
+	if(!Test3dsModelHanger)
 	{
 		
 		Test3dsModelHanger=new CLoad3DS;

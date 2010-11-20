@@ -206,7 +206,6 @@ void FBOS_BLOOM()
 		return;
 	glBindTexture(GL_TEXTURE_2D, ScreemTex);
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (FBOWinW-ScreemTexW)/2, (FBOWinH-ScreemTexH)/2,ScreemTexW, ScreemTexH, 0);
-	//glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
@@ -217,16 +216,8 @@ void FBOS_BLOOM()
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	glViewport(0,0,ScreemTexW/BloomScale, ScreemTexH/BloomScale);
-	//glMatrixMode(GL_TEXTURE);
-	//glLoadIdentity();
-	//glMatrixMode(GL_PROJECTION);					
-	//glPushMatrix();	
-	//glLoadIdentity();
-	//glOrtho(0,ScreemTexW/BloomScale,0,ScreemTexH/BloomScale,-1,1);
-	//glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	//glPushMatrix();	
-	//glLoadIdentity();
-	MatrixOrthogonalProjection(0,ScreemTexW/BloomScale,0,ScreemTexH/BloomScale,-1,1,FBOMatrixTMP);
+
+	MatrixOrthogonalProjection(0.0,float(ScreemTexW/BloomScale),0.0,float(ScreemTexH/BloomScale),-1.0,1.0,FBOMatrixTMP);
 	DrawBloomMapGLSL(FBOWinW,FBOWinH);
 	SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
@@ -250,20 +241,13 @@ void FBOS_BLOOM()
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//glOrtho(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1);
-	//glMatrixMode(GL_MODELVIEW);	
-	//glLoadIdentity();
-	MatrixOrthogonalProjection(-FBOWinW/2,FBOWinW/2,-FBOWinH/2,FBOWinH/2,-1,1,FBOMatrixTMP);
+
+	MatrixOrthogonalProjection(float(-FBOWinW/2),float(FBOWinW/2),float(-FBOWinH/2),float(FBOWinH/2),-1.0,1.0,FBOMatrixTMP);
 	ToneMappingGLSL();
 	SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2);
 	GLSL_Disable();
-	//glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	//glPopMatrix();	
-	//glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	//glPopMatrix();
+
 	glEnable( GL_CULL_FACE );
 	glEnable(GL_DEPTH_TEST);
 	
