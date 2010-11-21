@@ -45,8 +45,8 @@ float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
 __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
-float MatrixTMPF4X4[16];
-GLfloat DrawMatrixTMP[16];
+//float MatrixTMPF4X4[16];
+//GLfloat DrawMatrixTMP[16];
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -393,9 +393,9 @@ void DrawTestLines()
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
-	glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
+	//glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
 
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear ( GL_DEPTH_BUFFER_BIT);//GL_COLOR_BUFFER_BIT |
 	glEnable(GL_MULTISAMPLE_ARB);
 
 	DrawTestLines();
@@ -403,7 +403,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
 
-	glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
+	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
 	
 	SetMMatrixToGlsl();
@@ -434,7 +434,7 @@ void InitTestModel()
 }
 void DrawTestModel()
 {
-	glBindTexture(GL_TEXTURE_2D, 1);
+	glBindTexture(GL_TEXTURE_2D, 1);//LoadingTex.TexID
 	glDisable( GL_TEXTURE_2D );
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
@@ -442,32 +442,32 @@ void DrawTestModel()
 	glBegin(GL_TRIANGLES);
 
 	glColor4f(0.0f,1.0f,0.0f,1.0f);
-	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
-	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
-	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+	glNormal3f( 0.0f, 0.0f,-1.0f);glTexCoord2f(   0.0f,   0.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f( 1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
 	
-	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
-	glNormal3f(-1.0f, 0.0f, 0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
-	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+	glNormal3f( 0.0f, 0.0f,-1.0f);glTexCoord2f(   0.0f,   0.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f(-1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
 
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
-	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
-	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+	glNormal3f( 0.0f, 0.0f,-1.0f);glTexCoord2f(   0.0f,   0.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f( 1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
 	
-	glNormal3f( 0.0f, 0.0f,-1.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
-	glNormal3f(-1.0f, 0.0f, 0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
-	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+	glNormal3f( 0.0f, 0.0f,-1.0f);glTexCoord2f(   0.0f,   0.0f);glVertex3f(   0.0f,   0.0f,-050.0f);
+	glNormal3f(-1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
 
-	glNormal3f(-1.0f, 0.0f, 0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
-	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+	glNormal3f(-1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f(-050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
 	glColor4f(0.0f,1.0f,0.0f,1.0f);
-	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
 
-	glNormal3f( 0.0f, 1.0f, 0.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
+	glNormal3f( 0.0f, 1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f, 050.0f, 050.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
-	glNormal3f( 1.0f, 0.0f, 0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
-	glNormal3f( 0.0f,-1.0f, 0.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
+	glNormal3f( 1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
+	glNormal3f( 0.0f,-1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
 
 	glEnd();
 	glEnable( GL_TEXTURE_2D );

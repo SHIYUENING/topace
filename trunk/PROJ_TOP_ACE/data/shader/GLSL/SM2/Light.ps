@@ -1,8 +1,9 @@
 #version 120
 uniform ivec2 LightNums;
 uniform sampler2D DiffuseTex;
-varying  vec4 VertexEyeDir; 
-varying  vec3 Normal; 
+varying vec4 VertexEyeDir; 
+varying vec3 Normal; 
+varying vec2 TexCoord0;
 vec2 OmniLight(vec4 LightPosEyeIn)
 {
 	vec3 Nor=normalize(Normal);
@@ -18,7 +19,7 @@ vec2 OmniLight(vec4 LightPosEyeIn)
 }
 void main()
 {
-	vec4 DiffuseTexColor = texture2D(DiffuseTex, gl_TexCoord[0].xy);
+	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoord0.xy);
 	vec2 OmniLightVal=vec2(0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);

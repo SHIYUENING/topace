@@ -261,9 +261,9 @@ void FBOS_Star_Begin()
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ScreemTex, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, ScreemTexDepth, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glClear (GL_COLOR_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
@@ -287,9 +287,9 @@ void FBOS_Star_End()
 	glPopAttrib();
 	*/
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, StarTexDepth, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glViewport(0,0,StarTexSizeX, StarTexSizeY);
 	//glClear (GL_COLOR_BUFFER_BIT);
@@ -317,7 +317,7 @@ void FBOS_Star_End()
 
 	GLSL_Enable_StarPass1();
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex2, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex1);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -329,7 +329,7 @@ void FBOS_Star_End()
 	glDisable(GL_BLEND);
 	glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex2);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -339,7 +339,7 @@ void FBOS_Star_End()
 			glEnd();
 	glDisable(GL_BLEND);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex2, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex1);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -349,7 +349,7 @@ void FBOS_Star_End()
 			glEnd();
 	glEnable(GL_BLEND);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex2);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -359,7 +359,7 @@ void FBOS_Star_End()
 			glEnd();
 	glDisable(GL_BLEND);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex2, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex1);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -369,7 +369,7 @@ void FBOS_Star_End()
 			glEnd();
 	glEnable(GL_BLEND);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex2);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -381,7 +381,7 @@ void FBOS_Star_End()
 	GLSL_Enable_StarPass0();
 	glDisable(GL_BLEND);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex2, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex1);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -392,7 +392,7 @@ void FBOS_Star_End()
 
 	glEnable(GL_BLEND);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glBindTexture(GL_TEXTURE_2D, StarTex2);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,	1.0f);	glVertex2i( 0,StarTexSizeY);
@@ -418,7 +418,7 @@ void FBOS_SSAO()
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, SSAOTex1, 0);
-	CheckFBOError();
+	//CheckFBOError();
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
