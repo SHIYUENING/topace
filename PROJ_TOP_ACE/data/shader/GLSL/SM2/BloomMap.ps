@@ -1,4 +1,5 @@
-
+#version 120
+varying vec2 TexCoord0;
 uniform sampler2D texColor;
 uniform float AveLum;
 uniform float imgW;
@@ -8,17 +9,17 @@ void main()
 	float dx = 1.0/imgW;
 	float dy = 1.0/imgH;
 
-	vec4 color = texture2D(texColor,gl_TexCoord[0].xy);
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,0.0));
+	vec4 color = texture2D(texColor,TexCoord0.xy);
+	color += texture2D(texColor,TexCoord0.xy+vec2(dx*3.0,0.0));
 
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(0.0,dy));
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,dy));
+	color += texture2D(texColor,TexCoord0.xy+vec2(0.0,dy));
+	color += texture2D(texColor,TexCoord0.xy+vec2(dx*3.0,dy));
 
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(0.0,dy*2.0));
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,dy*2.0));
+	color += texture2D(texColor,TexCoord0.xy+vec2(0.0,dy*2.0));
+	color += texture2D(texColor,TexCoord0.xy+vec2(dx*3.0,dy*2.0));
 
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(0.0,dy*3.0));
-	color += texture2D(texColor,gl_TexCoord[0].xy+vec2(dx*3.0,dy*3.0));
+	color += texture2D(texColor,TexCoord0.xy+vec2(0.0,dy*3.0));
+	color += texture2D(texColor,TexCoord0.xy+vec2(dx*3.0,dy*3.0));
 	color /= 8.0;
 
 	vec4 cout = vec4(0.0,0.0,0.0,0.0);

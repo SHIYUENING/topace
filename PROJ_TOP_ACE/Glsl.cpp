@@ -37,10 +37,20 @@ void InitGLSL()
 	
 	if(GameSet.Bloom>0)
 	{
+		//glEnableVertexAttribArray(7);
 		GLSL_DrawBloomMap.g_VS=GLSL_Common.g_VS;
 		GLSL_DrawBloomMap.LoadShader(L"BloomMap",2);
+		glBindAttribLocation( GLSL_DrawBloomMap.g_PO, 3, "TexCoord0_in" );
+		GLSL_DrawBloomMap.GetGLSLLinkSTATUS(GLSL_DrawBloomMap.g_PO);
+		//glDisableVertexAttribArray(7);
+		GLint success=0;
+		glGetProgramiv(GLSL_DrawBloomMap.g_PO,  GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &success);
+		GLint sampler_loc = glGetUniformLocation(GLSL_DrawBloomMap.g_PO, "gl_Vertex");
+		sampler_loc=sampler_loc;
 		GLSL_ToneMapping.g_VS=GLSL_Common.g_VS;
 		GLSL_ToneMapping.LoadShader(L"ToneMapping",2);
+		glBindAttribLocation( GLSL_ToneMapping.g_PO, 3, "TexCoord0_in" );
+		GLSL_ToneMapping.GetGLSLLinkSTATUS(GLSL_ToneMapping.g_PO);
 	}
 	if(GameSet.SSAO>0)
 	{
@@ -49,6 +59,8 @@ void InitGLSL()
 	}
 	GLSL_BlurTex.g_VS=GLSL_Common.g_VS;
 	GLSL_BlurTex.LoadShader(L"BlurTex",2);
+	glBindAttribLocation( GLSL_BlurTex.g_PO, 3, "TexCoord0_in" );
+	GLSL_BlurTex.GetGLSLLinkSTATUS(GLSL_BlurTex.g_PO);
 }
 void DeinitGLSL()
 {

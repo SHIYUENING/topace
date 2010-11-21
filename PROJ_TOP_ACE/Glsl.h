@@ -1,7 +1,7 @@
 ﻿#ifndef _GLSL_H
 #define _GLSL_H
 #include <GL/glew.h>
-
+#define AbLoc_Tex0 3
 void InitGLSL();
 void DeinitGLSL();
 void GLSL_Enable_PhoneLight(int OmniLightNum=1,int SpotLightNum=0);
