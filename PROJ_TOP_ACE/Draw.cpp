@@ -82,6 +82,7 @@ void InitDraw()
 		InitFBO(GameSet.winW,GameSet.winH,GameSet.Bloom);
 	InitGLSL();
 	CDDS::SetAFNum(GameSet.AF);
+	InitTestModel();
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -178,7 +179,7 @@ void DeinitDraw()
 	}
 	TopAceModelTest.DeleteVRAM();
 	Inited=false;
-
+	DeinitTestModel();
 }
 void UnitMatrix()
 {
@@ -243,8 +244,8 @@ void RenderPass2Units()
 	
 	if(GameSet.Bloom>0)
 		FBOS_BLOOM();
-	if(GameSet.SSAO>0)
-		FBOS_SSAO();
+	//if(GameSet.SSAO>0)
+	//	FBOS_SSAO();
 	//TestTexFBO();
 }
 void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
@@ -431,6 +432,56 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void InitTestModel()
 {
+	float TestModelPos[]={
+			0.0f,   0.0f,-050.0f,
+			050.0f,   0.0f, 050.0f,
+			0.0f, 050.0f, 050.0f,
+
+			0.0f,   0.0f,-050.0f,
+			-050.0f,   0.0f, 050.0f,
+			0.0f, 050.0f, 050.0f,
+
+			0.0f,   0.0f,-050.0f,
+			050.0f,   0.0f, 050.0f,
+			0.0f,-050.0f, 050.0f,
+
+			0.0f,   0.0f,-050.0f,
+			-050.0f,   0.0f, 050.0f,
+			0.0f,-050.0f, 050.0f,
+
+			-050.0f,   0.0f, 050.0f,
+			0.0f,-050.0f, 050.0f,
+			0.0f, 050.0f, 050.0f,
+
+			0.0f, 050.0f, 050.0f,
+			050.0f,   0.0f, 050.0f,
+			0.0f,-050.0f, 050.0f
+	};
+	float TestModelNormal[]={
+			0.0f, 0.0f,-1.0f,
+			1.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,
+
+			0.0f, 0.0f,-1.0f,
+			-1.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,
+
+			0.0f, 0.0f,-1.0f,
+			1.0f, 0.0f, 0.0f,
+			0.0f,-1.0f, 0.0f,
+
+			0.0f, 0.0f,-1.0f,
+			-1.0f, 0.0f, 0.0f,
+			0.0f,-1.0f, 0.0f,
+	
+			-1.0f, 0.0f, 0.0f,
+			0.0f,-1.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,
+
+			0.0f, 1.0f, 0.0f,
+			1.0f, 0.0f, 0.0f,
+			0.0f,-1.0f, 0.0f
+	};
 }
 void DrawTestModel()
 {
