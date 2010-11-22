@@ -60,6 +60,26 @@ void CO_SetPMatrix(GLfloat * Matrix)
 	if(!Matrix) return ;
 	for (int i=0;i<16;i++) PMatrix[i]=Matrix[i];
 }
+void CO_SetMVPMatrix(GLfloat * Matrix)
+{
+	if(!Matrix) return ;
+	for (int i=0;i<16;i++) MVPMatrix[i]=Matrix[i];
+}
+void CO_SetMMatrixD(GLdouble * Matrix)
+{
+	if(!Matrix) return ;
+	memcpy(MMatrix,Matrix,16*sizeof(GLdouble));
+}
+void CO_SetPMatrixD(GLdouble * Matrix)
+{
+	if(!Matrix) return ;
+	memcpy(PMatrix,Matrix,16*sizeof(GLdouble));
+}
+void CO_SetMVPMatrixD(GLdouble * Matrix)
+{
+	if(!Matrix) return ;
+	memcpy(MVPMatrix,Matrix,16*sizeof(GLdouble));
+}
 void CO_IdentityMVPMatrix()
 {
 	memcpy(MVPMatrix, IdentityMatrixD, 16 * sizeof(GLdouble));
@@ -87,6 +107,21 @@ void CO_GetMVPMatrix(GLfloat * Matrix)
 	if(!Matrix) return ;
 	Easy_matrix_mult_Double(MVPMatrix,PMatrix,MMatrix);
 	for (int i=0;i<16;i++) Matrix[i]=(GLfloat)MVPMatrix[i];
+}
+void CO_GetMMatrixD(GLdouble * Matrix)
+{
+	if(!Matrix) return ;
+	memcpy(Matrix,MMatrix,16*sizeof(GLdouble));
+}
+void CO_GetPMatrixD(GLdouble * Matrix)
+{
+	if(!Matrix) return ;
+	memcpy(Matrix,PMatrix,16*sizeof(GLdouble));
+}
+void CO_GetMVPMatrixD(GLdouble * Matrix)
+{
+	if(!Matrix) return ;
+	memcpy(Matrix,MVPMatrix,16*sizeof(GLdouble));
 }
 void CO_MatrixOrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
 {
