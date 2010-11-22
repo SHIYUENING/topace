@@ -216,24 +216,26 @@ void FBOS_BLOOM()
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	glViewport(0,0,ScreemTexW/BloomScale, ScreemTexH/BloomScale);
-
-	MatrixOrthogonalProjection(0.0,float(ScreemTexW/BloomScale),0.0,float(ScreemTexH/BloomScale),-1.0,1.0,FBOMatrixTMP);
-	DrawBloomMapGLSL(FBOWinW,FBOWinH);
-	SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
+	
+	glEnableVertexAttribArray(AbLoc_Tex0);
+	glEnableVertexAttribArray(AbLoc_Pos);
+	CO_MatrixOrthogonalProjection(0.0,float(ScreemTexW/BloomScale),0.0,float(ScreemTexH/BloomScale),-1.0,1.0,FBOMatrixTMP);
+	GLSL_Enable_DrawBloomMapGLSL(FBOWinW,FBOWinH);
+	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
+	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
-	BlurTex(FBOWinW/4,true);
-	SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
+	GLSL_Enable_BlurTex(FBOWinW/4,true);
+	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
+	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 	
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex2);
-	BlurTex(FBOWinH/4,false);
-	SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0);
+	GLSL_Enable_BlurTex(FBOWinH/4,false);
+	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
+	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -242,11 +244,13 @@ void FBOS_BLOOM()
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
-	MatrixOrthogonalProjection(float(-FBOWinW/2),float(FBOWinW/2),float(-FBOWinH/2),float(FBOWinH/2),-1.0,1.0,FBOMatrixTMP);
-	ToneMappingGLSL();
-	SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2);
+	CO_MatrixOrthogonalProjection(float(-FBOWinW/2),float(FBOWinW/2),float(-FBOWinH/2),float(FBOWinH/2),-1.0,1.0,FBOMatrixTMP);
+	GLSL_Enable_ToneMappingGLSL();
+	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
+	DrawQUAD_Att(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2,AbLoc_Tex0,AbLoc_Pos);
 	GLSL_Disable();
+	glDisableVertexAttribArray(AbLoc_Tex0);
+	glDisableVertexAttribArray(AbLoc_Pos);
 
 	glEnable( GL_CULL_FACE );
 	glEnable(GL_DEPTH_TEST);
@@ -437,7 +441,7 @@ void FBOS_SSAO()
 	float TCX=float(FBOWinW)/float(ScreemTexW);
 	float TCY=float(FBOWinH)/float(ScreemTexH);
 	float SSAOset[4]={float(FBOWinW),float(FBOWinH),5.0f,100000.0f};
-	SSAOPass1(SSAOset);
+	GLSL_Enable_SSAOPass1(SSAOset);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
 				glTexCoord2f(TCX,0.0f);glVertex2i( FBOWinW/2,0);
@@ -446,7 +450,7 @@ void FBOS_SSAO()
 			glEnd();
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, SSAOTex2, 0);
 	glBindTexture(GL_TEXTURE_2D, SSAOTex1);
-	BlurTex(FBOWinW,true);
+	GLSL_Enable_BlurTex(FBOWinW,true);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
 				glTexCoord2f(TCX,0.0f);glVertex2i( FBOWinW/2,0);
@@ -455,7 +459,7 @@ void FBOS_SSAO()
 			glEnd();
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, SSAOTex1, 0);
 	glBindTexture(GL_TEXTURE_2D, SSAOTex2);
-	BlurTex(FBOWinH,false);
+	GLSL_Enable_BlurTex(FBOWinH,false);
 			glBegin(GL_QUADS);
 				glTexCoord2f(0.0f,0.0f);glVertex2i(0,0);
 				glTexCoord2f(TCX,0.0f);glVertex2i( FBOWinW/2,0);

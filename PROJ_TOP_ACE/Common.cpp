@@ -50,59 +50,59 @@ void Easy_matrix_mult_Double(GLdouble * Matrix, GLdouble * a, GLdouble * b)
         }
     }
 }
-void SetMMatrix(GLfloat * Matrix)
+void CO_SetMMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
 	for (int i=0;i<16;i++) MMatrix[i]=Matrix[i];
 }
-void SetPMatrix(GLfloat * Matrix)
+void CO_SetPMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
 	for (int i=0;i<16;i++) PMatrix[i]=Matrix[i];
 }
-void IdentityMVPMatrix()
+void CO_IdentityMVPMatrix()
 {
 	memcpy(MVPMatrix, IdentityMatrixD, 16 * sizeof(GLdouble));
 }
-void IdentityMMatrix()
+void CO_IdentityMMatrix()
 {
 	memcpy(MMatrix, IdentityMatrixD, 16 * sizeof(GLdouble));
 }
-void IdentityPMatrix()
+void CO_IdentityPMatrix()
 {
 	memcpy(PMatrix, IdentityMatrixD, 16 * sizeof(GLdouble));
 }
-void GetMMatrix(GLfloat * Matrix)
+void CO_GetMMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
 	for (int i=0;i<16;i++) Matrix[i]=(GLfloat)MMatrix[i];
 }
-void GetPMatrix(GLfloat * Matrix)
+void CO_GetPMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
 	for (int i=0;i<16;i++) Matrix[i]=(GLfloat)PMatrix[i];
 }
-void GetMVPMatrix(GLfloat * Matrix)
+void CO_GetMVPMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
 	Easy_matrix_mult_Double(MVPMatrix,PMatrix,MMatrix);
 	for (int i=0;i<16;i++) Matrix[i]=(GLfloat)MVPMatrix[i];
 }
-void MatrixOrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
+void CO_MatrixOrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
 {
 	PMatrix[0] = 2 / (right - left);	PMatrix[4] = 0;						PMatrix[8] = 0;					PMatrix[12] = -(right + left) / (right - left);
 	PMatrix[1] = 0;						PMatrix[5] = 2 / (top - bottom);	PMatrix[9] = 0;					PMatrix[13] = -(top + bottom) / (top - bottom);
 	PMatrix[2] = 0;						PMatrix[6] = 0;						PMatrix[10] = -2 / (f - n);		PMatrix[14] = -(f + n) / (f - n);
 	PMatrix[3] = 0;						PMatrix[7] = 0;						PMatrix[11] = 0;				PMatrix[15] = 1;
 }
-void MatrixOrthogonalProjection(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat n, GLfloat f, GLfloat * Matrix)
+void CO_MatrixOrthogonalProjection(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat n, GLfloat f, GLfloat * Matrix)
 {
 	Matrix[0] = 2 / (right - left);	Matrix[4] = 0;						Matrix[8] = 0;					Matrix[12] = -(right + left) / (right - left);
 	Matrix[1] = 0;						Matrix[5] = 2 / (top - bottom);	Matrix[9] = 0;					Matrix[13] = -(top + bottom) / (top - bottom);
 	Matrix[2] = 0;						Matrix[6] = 0;						Matrix[10] = -2 / (f - n);		Matrix[14] = -(f + n) / (f - n);
 	Matrix[3] = 0;						Matrix[7] = 0;						Matrix[11] = 0;				Matrix[15] = 1;
 }
-void MatrixPerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
+void CO_MatrixPerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
 {
 	PMatrix[0] = (2 * n) / (right - left);		PMatrix[4] = 0;								PMatrix[8] = (right + left) / (right - left);		PMatrix[12] = 0;
 	PMatrix[1] = 0;								PMatrix[5] = (2 * n) / (top - bottom);		PMatrix[9] = (top + bottom) / (top - bottom);		PMatrix[13] = 0;
@@ -111,15 +111,15 @@ void MatrixPerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom,
 }
 
 GLuint GlslPO=0;
-void SetGlslPO(GLuint SetGlslPO)
+void CO_SetGlslPO(GLuint SetGlslPO)
 {
 	GlslPO=SetGlslPO;
 }
-GLuint GetGlslPO()
+GLuint CO_GetGlslPO()
 {
 	return GlslPO;
 }
-void MultMMatrix(GLfloat * Matrix)
+void CO_MultMMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
 	for (int i=0;i<16;i++) MatrixTMP[i]=Matrix[i];
@@ -163,7 +163,7 @@ void MatrixPerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio
     glhFrustumf2(-xmax, xmax, -ymax, ymax, znear, zfar);
 }
 */
-void MatrixPerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio,
+void CO_MatrixPerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio,
                       GLdouble znear, GLdouble zfar)
 {
     GLdouble ymax, xmax;
@@ -188,7 +188,7 @@ void MatrixPerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio
     PMatrix[15] = 0.0;
 }
 
-void MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRatio,
+void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRatio,
                       GLfloat znear, GLfloat zfar,GLfloat * Matrix)
 {
     GLfloat ymax, xmax;
