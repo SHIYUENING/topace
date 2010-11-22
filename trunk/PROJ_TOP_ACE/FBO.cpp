@@ -202,7 +202,7 @@ void TestTexFBO()
 }
 void FBOS_BLOOM()
 {
-	if(MAX_COLOR_ATTACHMENTS<4)
+	if(MAX_COLOR_ATTACHMENTS<1)
 		return;
 	glBindTexture(GL_TEXTURE_2D, ScreemTex);
 	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (FBOWinW-ScreemTexW)/2, (FBOWinH-ScreemTexH)/2,ScreemTexW, ScreemTexH, 0);
@@ -415,6 +415,7 @@ void FBOS_Star_End()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
 }
+/*
 void FBOS_SSAO()
 {
 	glBindTexture(GL_TEXTURE_2D, ScreemTexDepth);
@@ -488,3 +489,4 @@ void FBOS_SSAO()
 	glEnable( GL_CULL_FACE );
 	glEnable(GL_DEPTH_TEST);
 }
+*/
