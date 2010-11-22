@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #define AbLoc_Pos 1
 #define AbLoc_Tex0 2
+#define AbLoc_Normal 3
+#define AbLoc_Color 4
 void InitGLSL();
 void DeinitGLSL();
 void GLSL_Enable_PhoneLight(int OmniLightNum=1,int SpotLightNum=0);

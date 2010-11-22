@@ -31,6 +31,11 @@ void InitGLSL()
 	GLSL_Common.LoadShader(L"common",2);
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 	GLSL_PhoneLight.LoadShader(L"Light",GameSet.Light);
+	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Pos, "Position_in" );
+	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Tex0, "TexCoord0_in" );
+	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Normal, "Normal_in" );
+	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Color, "Color_in" );
+	GLSL_PhoneLight.GetGLSLLinkSTATUS(GLSL_PhoneLight.g_PO);
 
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");

@@ -47,6 +47,16 @@ __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
 //float MatrixTMPF4X4[16];
 //GLfloat DrawMatrixTMP[16];
+struct _TestMeshVBOID
+{
+	unsigned int VerticeID;
+	unsigned int NormalID;
+	//unsigned int TexCoordID;
+	unsigned int ColorID;
+
+};
+_TestMeshVBOID TestMeshVBOID;
+
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -482,6 +492,42 @@ void InitTestModel()
 			1.0f, 0.0f, 0.0f,
 			0.0f,-1.0f, 0.0f
 	};
+	float TestModelColor[]={
+			0.0f,1.0f,0.0f,1.0f,
+			0.0f,1.0f,0.0f,1.0f,
+			0.0f,1.0f,0.0f,1.0f,
+
+			0.0f,1.0f,0.0f,1.0f,
+			0.0f,1.0f,0.0f,1.0f,
+			0.0f,1.0f,0.0f,1.0f,
+
+			1.0f,1.0f,1.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f,
+
+			1.0f,1.0f,1.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f,
+
+			1.0f,1.0f,1.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f,
+			0.0f,1.0f,0.0f,1.0f,
+
+			0.0f,1.0f,0.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f,
+			1.0f,1.0f,1.0f,1.0f
+	};
+	
+	glGenBuffersARB( 1,&TestMeshVBOID.VerticeID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelPos), TestModelPos, GL_STATIC_DRAW_ARB );
+	glGenBuffersARB( 1,&TestMeshVBOID.NormalID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelNormal), TestModelNormal, GL_STATIC_DRAW_ARB );
+	glGenBuffersARB( 1,&TestMeshVBOID.ColorID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelColor), TestModelColor, GL_STATIC_DRAW_ARB );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 }
 void DrawTestModel()
 {
@@ -489,7 +535,7 @@ void DrawTestModel()
 	glDisable( GL_TEXTURE_2D );
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	/*glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_TRIANGLES);
 
 	glColor4f(0.0f,1.0f,0.0f,1.0f);
@@ -520,10 +566,35 @@ void DrawTestModel()
 	glNormal3f( 1.0f, 0.0f, 0.0f);glTexCoord2f(   1.0f,   0.0f);glVertex3f( 050.0f,   0.0f, 050.0f);
 	glNormal3f( 0.0f,-1.0f, 0.0f);glTexCoord2f(   0.0f,   1.0f);glVertex3f(   0.0f,-050.0f, 050.0f);
 
-	glEnd();
+	glEnd();*/
+	
+	glEnableVertexAttribArray(AbLoc_Pos);
+	glEnableVertexAttribArray(AbLoc_Normal);
+	glEnableVertexAttribArray(AbLoc_Color);
+	//glEnableVertexAttribArray(AbLoc_Tex0);
+
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
+	glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,0,0);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
+	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
+	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
+	glDrawArrays(GL_TRIANGLES,0,18);
+	glDisableClientState( GL_VERTEX_ARRAY );
+	
+	glDisableVertexAttribArray(AbLoc_Color);
+	glDisableVertexAttribArray(AbLoc_Normal);
+	glDisableVertexAttribArray(AbLoc_Pos);
+	//glDisableVertexAttribArray(AbLoc_Tex0);
+
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glEnable( GL_TEXTURE_2D );
 	glEnable(GL_CULL_FACE);
 }
 void DeinitTestModel()
 {
+	glDeleteBuffersARB(1,&TestMeshVBOID.VerticeID);
+	glDeleteBuffersARB(1,&TestMeshVBOID.NormalID);
+	glDeleteBuffersARB(1,&TestMeshVBOID.ColorID);
 }

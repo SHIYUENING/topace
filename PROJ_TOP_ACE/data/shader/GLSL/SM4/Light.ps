@@ -1,10 +1,10 @@
 #version 150
-
 uniform ivec2 LightNums;
 uniform sampler2D DiffuseTex;
 in vec4 VertexEyeDir; 
 in vec3 Normal; 
 in vec2 TexCoord0;
+in vec4 Color;
 vec2 OmniLight(vec4 LightPosEyeIn)
 {
 	vec3 Nor=normalize(Normal);
@@ -71,7 +71,7 @@ void main()
 		DiffuseColor += LightVal.x * gl_FrontLightProduct[i].diffuse ;
 		SpecularColor += LightVal.y * gl_FrontLightProduct[i].specular ;
 	}
-	gl_FragColor = DiffuseTexColor * (AmbientColor + gl_FrontLightModelProduct.sceneColor + DiffuseColor)*gl_Color +SpecularColor ;
+	gl_FragColor = DiffuseTexColor * (AmbientColor + gl_FrontLightModelProduct.sceneColor + DiffuseColor)*Color +SpecularColor ;
 	gl_FragColor.w=DiffuseTexColor.w;
 	//gl_FragColor+=SpecularColor;
 	
