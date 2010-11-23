@@ -20,9 +20,10 @@
 //ROACH
 #include "ARB_MULTISAMPLE.h"
 #include "TALogSys.h"
+#include "Common.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For glew32s.lib While Linking
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
-#pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
+//#pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 //#pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
 
 #ifdef _DEBUG
@@ -85,10 +86,14 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 {
 	GameSet.winW=WindowWidth=width;
 	GameSet.winH=WindowHeight=height;
+	CO_MatrixPerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0); 
+	GLdouble PMatrix[16];
+	CO_GetPMatrixD(PMatrix);
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
-	glLoadIdentity ();													// Reset The Projection Matrix
-	gluPerspective(50, (float)width/(float)height, 5.0,  100000.0f);
+	//glLoadIdentity ();													// Reset The Projection Matrix
+	//gluPerspective(50, (float)width/(float)height, 5.0,  100000.0f);
+	glLoadMatrixd(PMatrix);
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
 }
