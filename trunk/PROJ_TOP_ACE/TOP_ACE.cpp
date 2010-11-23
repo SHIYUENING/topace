@@ -43,17 +43,19 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 {
 	g_window	= window;
 	g_keys		= keys;
-
+	/*
 	// Start Of User Initialization
-
 	glViewport(0 , 0,window->init.width ,window->init.height);	// Set Up A Viewport
-	glMatrixMode(GL_PROJECTION);								// Select The Projection Matrix
-	glLoadIdentity();											// Reset The Projection Matrix
-	gluPerspective(45, (float)window->init.width/(float)window->init.height, 5.0,  100000.0f); // Set Our Perspective
 	CO_MatrixPerspectiveProjectionFov(45.0, (double)window->init.width/(double)window->init.height, 5.0,  100000.0); 
+	GLdouble PMatrix[16];
+	CO_GetPMatrixD(PMatrix);
+	glMatrixMode(GL_PROJECTION);								// Select The Projection Matrix
+	//glLoadIdentity();											// Reset The Projection Matrix
+	//gluPerspective(45, (float)window->init.width/(float)window->init.height, 5.0,  100000.0f); // Set Our Perspective
+	glLoadMatrixd(PMatrix);
 	glMatrixMode(GL_MODELVIEW);									// Select The Modelview Matrix
 	glLoadIdentity();											// Reset The Modelview Matrix
-
+	*/
 	glEnable(GL_DEPTH_TEST);									// Enable Depth Testing
 
 	glShadeModel(GL_SMOOTH);									// Select Smooth Shading
