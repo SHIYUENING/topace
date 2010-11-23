@@ -58,11 +58,11 @@ void InitGLSL()
 		glBindAttribLocation( GLSL_ToneMapping.g_PO, AbLoc_Pos, "Position_in" );
 		GLSL_ToneMapping.GetGLSLLinkSTATUS(GLSL_ToneMapping.g_PO);
 	}
-	if(GameSet.SSAO>0)
+	/*if(GameSet.SSAO>0)
 	{
 		GLSL_SSAOPass0.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass0.ps");
 		GLSL_SSAOPass1.LoadShader(NULL,L"data/shader/Glsl_SSAO_Pass1.ps");
-	}
+	}*/
 	GLSL_BlurTex.g_VS=GLSL_Common.g_VS;
 	GLSL_BlurTex.LoadShader(L"BlurTex",2);
 	glBindAttribLocation( GLSL_BlurTex.g_PO, AbLoc_Tex0, "TexCoord0_in" );

@@ -51,7 +51,7 @@ struct _TestMeshVBOID
 {
 	unsigned int VerticeID;
 	unsigned int NormalID;
-	//unsigned int TexCoordID;
+	unsigned int TexCoordID;
 	unsigned int ColorID;
 
 };
@@ -517,6 +517,32 @@ void InitTestModel()
 			1.0f,1.0f,1.0f,1.0f,
 			1.0f,1.0f,1.0f,1.0f
 	};
+
+	float TestModelTexCoord[]={
+		0.0f,   0.0f,
+		1.0f,   0.0f,
+		0.0f,   1.0f,
+
+		0.0f,   0.0f,
+		1.0f,   0.0f,
+		0.0f,   1.0f,
+
+		0.0f,   0.0f,
+		1.0f,   0.0f,
+		0.0f,   1.0f,
+
+		0.0f,   0.0f,
+		1.0f,   0.0f,
+		0.0f,   1.0f,
+
+		0.0f,   0.0f,
+		1.0f,   0.0f,
+		0.0f,   1.0f,
+
+		0.0f,   0.0f,
+		1.0f,   0.0f,
+		0.0f,   1.0f
+	};
 	
 	glGenBuffersARB( 1,&TestMeshVBOID.VerticeID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
@@ -527,7 +553,11 @@ void InitTestModel()
 	glGenBuffersARB( 1,&TestMeshVBOID.ColorID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelColor), TestModelColor, GL_STATIC_DRAW_ARB );
+	glGenBuffersARB( 1,&TestMeshVBOID.TexCoordID);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelTexCoord), TestModelTexCoord, GL_STATIC_DRAW_ARB );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+
 }
 void DrawTestModel()
 {
@@ -571,7 +601,7 @@ void DrawTestModel()
 	glEnableVertexAttribArray(AbLoc_Pos);
 	glEnableVertexAttribArray(AbLoc_Normal);
 	glEnableVertexAttribArray(AbLoc_Color);
-	//glEnableVertexAttribArray(AbLoc_Tex0);
+	glEnableVertexAttribArray(AbLoc_Tex0);
 
 	glEnableClientState( GL_VERTEX_ARRAY );
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
@@ -580,13 +610,15 @@ void DrawTestModel()
 	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
 	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
+	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
 	glDrawArrays(GL_TRIANGLES,0,18);
 	glDisableClientState( GL_VERTEX_ARRAY );
 	
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
 	glDisableVertexAttribArray(AbLoc_Pos);
-	//glDisableVertexAttribArray(AbLoc_Tex0);
+	glDisableVertexAttribArray(AbLoc_Tex0);
 
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glEnable( GL_TEXTURE_2D );
@@ -597,4 +629,5 @@ void DeinitTestModel()
 	glDeleteBuffersARB(1,&TestMeshVBOID.VerticeID);
 	glDeleteBuffersARB(1,&TestMeshVBOID.NormalID);
 	glDeleteBuffersARB(1,&TestMeshVBOID.ColorID);
+	glDeleteBuffersARB(1,&TestMeshVBOID.TexCoordID);
 }
