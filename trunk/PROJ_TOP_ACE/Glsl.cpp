@@ -20,6 +20,21 @@ CGLSLLoader GLSL_BlurTex;
 CGLSLLoader GLSL_Common;
 extern tGameSet GameSet;
 GLfloat GlslMatrixTMP[16];
+
+GLint PhoneLight_DiffuseTex=0;
+GLint PhoneLight_LightNums=0;
+
+GLint DrawBloomMap_texColor=0;
+GLint DrawBloomMap_AveLum=0;
+GLint DrawBloomMap_imgW=0;
+GLint DrawBloomMap_imgH=0;
+
+GLint ToneMapping__texSrc1=0;
+
+GLint BlurTex_BlurTex=0;
+GLint BlurTex_BlurTexSet=0;
+
+
 void InitGLSL()
 {
 
@@ -36,6 +51,8 @@ void InitGLSL()
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Normal, "Normal_in" );
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Color, "Color_in" );
 	GLSL_PhoneLight.GetGLSLLinkSTATUS(GLSL_PhoneLight.g_PO);
+	PhoneLight_DiffuseTex = glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTex");
+	PhoneLight_LightNums = glGetUniformLocation(GLSL_PhoneLight.g_PO,"LightNums");
 
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
@@ -47,7 +64,10 @@ void InitGLSL()
 		glBindAttribLocation( GLSL_DrawBloomMap.g_PO, AbLoc_Tex0, "TexCoord0_in" );
 		glBindAttribLocation( GLSL_DrawBloomMap.g_PO, AbLoc_Pos, "Position_in" );
 		GLSL_DrawBloomMap.GetGLSLLinkSTATUS(GLSL_DrawBloomMap.g_PO);
-
+		DrawBloomMap_texColor=glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"texColor");
+		DrawBloomMap_AveLum=glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"AveLum");
+		DrawBloomMap_imgW=glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"imgW");
+		DrawBloomMap_imgH=glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"imgH");
 		
 	//GLint success=0;
 	//glGetProgramiv(GLSL_DrawBloomMap.g_PO,  GL_ACTIVE_ATTRIBUTES, &success);
@@ -57,6 +77,7 @@ void InitGLSL()
 		glBindAttribLocation( GLSL_ToneMapping.g_PO, AbLoc_Tex0, "TexCoord0_in" );
 		glBindAttribLocation( GLSL_ToneMapping.g_PO, AbLoc_Pos, "Position_in" );
 		GLSL_ToneMapping.GetGLSLLinkSTATUS(GLSL_ToneMapping.g_PO);
+		ToneMapping__texSrc1=glGetUniformLocation(GLSL_ToneMapping.g_PO,"_texSrc1");
 	}
 	/*if(GameSet.SSAO>0)
 	{
@@ -68,6 +89,8 @@ void InitGLSL()
 	glBindAttribLocation( GLSL_BlurTex.g_PO, AbLoc_Tex0, "TexCoord0_in" );
 	glBindAttribLocation( GLSL_BlurTex.g_PO, AbLoc_Pos, "Position_in" );
 	GLSL_BlurTex.GetGLSLLinkSTATUS(GLSL_BlurTex.g_PO);
+	BlurTex_BlurTex=glGetUniformLocation(GLSL_BlurTex.g_PO,"BlurTex");
+	BlurTex_BlurTexSet=glGetUniformLocation(GLSL_BlurTex.g_PO,"BlurTexSet");
 }
 void DeinitGLSL()
 {
@@ -84,14 +107,15 @@ void DeinitGLSL()
 	GLSL_ToneMapping.ClearShader();
 	GLSL_Common.ClearShader();
 }
+
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
 	int LightNums[2]={OmniLightNum,SpotLightNum};
 	if(GlslVer<100) return;
 	CO_SetGlslPO(GLSL_PhoneLight.g_PO);
 	glUseProgramObjectARB( GLSL_PhoneLight.g_PO );
-	glUniform1i(glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTex"),0);
-	glUniform2iv(glGetUniformLocation(GLSL_PhoneLight.g_PO,"LightNums"),1,LightNums);
+	glUniform1i(PhoneLight_DiffuseTex,0);
+	glUniform2iv(PhoneLight_LightNums,1,LightNums);
 }
 void GLSL_Disable()
 {
@@ -118,10 +142,10 @@ void GLSL_Enable_DrawBloomMapGLSL(int WinW,int WinH)
 	if(GlslVer<100) return;
 	CO_SetGlslPO(GLSL_DrawBloomMap.g_PO);
 	glUseProgramObjectARB( GLSL_DrawBloomMap.g_PO );
-	glUniform1i(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"texColor"),0);
-	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"AveLum"),0.23f);
-	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"imgW"),(float)WinW);
-	glUniform1f(glGetUniformLocation(GLSL_DrawBloomMap.g_PO,"imgH"),(float)WinH);
+	glUniform1i(DrawBloomMap_texColor,0);
+	glUniform1f(DrawBloomMap_AveLum,0.23f);
+	glUniform1f(DrawBloomMap_imgW,(float)WinW);
+	glUniform1f(DrawBloomMap_imgH,(float)WinH);
 }
 
 void GLSL_Enable_ToneMappingGLSL()
@@ -129,7 +153,7 @@ void GLSL_Enable_ToneMappingGLSL()
 	if(GlslVer<100) return;
 	CO_SetGlslPO(GLSL_ToneMapping.g_PO);
 	glUseProgramObjectARB( GLSL_ToneMapping.g_PO );
-	glUniform1i(glGetUniformLocation(GLSL_ToneMapping.g_PO,"_texSrc1"),0);
+	glUniform1i(ToneMapping__texSrc1,0);
 }
 void GLSL_Enable_SSAOPass0()
 {
@@ -159,8 +183,8 @@ void GLSL_Enable_BlurTex(int Size,bool WorH)
 		BlurTexSet[1]=1.0f/float(Size);
 	CO_SetGlslPO(GLSL_BlurTex.g_PO);
 	glUseProgramObjectARB(GLSL_BlurTex.g_PO);
-	glUniform1i(glGetUniformLocation(GLSL_BlurTex.g_PO,"BlurTex"),0);
-	glUniform2fv(glGetUniformLocation(GLSL_BlurTex.g_PO,"BlurTexSet"),1,BlurTexSet);
+	glUniform1i(BlurTex_BlurTex,0);
+	glUniform2fv(BlurTex_BlurTexSet,1,BlurTexSet);
 
 }
 void GLSL_SetMMatrixToGlsl(GLfloat * MMatrix)

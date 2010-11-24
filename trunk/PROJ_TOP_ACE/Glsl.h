@@ -20,4 +20,5 @@ void GLSL_Enable_BlurTex(int Size,bool WorH);
 void GLSL_SetMMatrixToGlsl(GLfloat * MMatrix=0);
 void GLSL_SetPMatrixToGlsl(GLfloat * PMatrix=0);
 void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix=0);
+
 #endif

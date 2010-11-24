@@ -247,3 +247,26 @@ void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRati
     Matrix[14] = (-2.0f*znear * zfar) /  (zfar - znear);
     Matrix[15] = 0.0;
 }
+
+_SpotLightData CO_SpotLightData[SpotLightDataNum];
+_MaterialData CO_MaterialData;
+void CO_SetSpotLight(_SpotLightData * Light,unsigned int LightNum)
+{
+	if((!Light)||(LightNum>=SpotLightDataNum))
+		return;
+	memcpy(&(CO_SpotLightData[LightNum]),Light,sizeof(_SpotLightData));
+}
+void CO_GetSpotLight(_SpotLightData * Light,unsigned int LightNum)
+{
+	if((!Light)||(LightNum>=SpotLightDataNum))
+		return;
+	memcpy(Light,&(CO_SpotLightData[LightNum]),sizeof(_SpotLightData));
+}
+void CO_SetMaterial(_MaterialData * Material)
+{
+	memcpy(&CO_MaterialData,Material,sizeof(_MaterialData));
+}
+void CO_GetMaterial(_MaterialData * Material)
+{
+	memcpy(Material,&CO_MaterialData,sizeof(_MaterialData));
+}
