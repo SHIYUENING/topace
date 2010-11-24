@@ -248,19 +248,19 @@ void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRati
     Matrix[15] = 0.0;
 }
 
-_SpotLightData CO_SpotLightData[SpotLightDataNum];
+_OmniLightData CO_OmniLightData[OmniLightDataNum];
 _MaterialData CO_MaterialData;
-void CO_SetSpotLight(_SpotLightData * Light,unsigned int LightNum)
+void CO_SetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 {
-	if((!Light)||(LightNum>=SpotLightDataNum))
+	if((!Light)||(LightNum>=OmniLightDataNum))
 		return;
-	memcpy(&(CO_SpotLightData[LightNum]),Light,sizeof(_SpotLightData));
+	memcpy(&(CO_OmniLightData[LightNum]),Light,sizeof(_OmniLightData));
 }
-void CO_GetSpotLight(_SpotLightData * Light,unsigned int LightNum)
+void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 {
-	if((!Light)||(LightNum>=SpotLightDataNum))
+	if((!Light)||(LightNum>=OmniLightDataNum))
 		return;
-	memcpy(Light,&(CO_SpotLightData[LightNum]),sizeof(_SpotLightData));
+	memcpy(Light,&(CO_OmniLightData[LightNum]),sizeof(_OmniLightData));
 }
 void CO_SetMaterial(_MaterialData * Material)
 {

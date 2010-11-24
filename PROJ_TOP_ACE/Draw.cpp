@@ -16,8 +16,6 @@
 #include "ExchangeThread.h"
 #include "DrawQUAD.h"
 #include "Common.h"
-bool extern domultiR ;
-bool extern doangleR ;
 float extern angleR;
 float extern Test3dsFrame;
 float extern maxFreme;
@@ -96,8 +94,33 @@ void InitDraw()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+	glShadeModel(GL_SMOOTH);
 	//glPolygonMode(GL_BACK,GL_LINE);
 	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
+	_OmniLightData SetOmniLightData;
+	SetOmniLightData.Color[0]=0.7f;
+	SetOmniLightData.Color[1]=0.7f;
+	SetOmniLightData.Color[2]=0.7f;
+	SetOmniLightData.Color[3]=1.0f;
+	SetOmniLightData.Pos[0]=0.0f;
+	SetOmniLightData.Pos[1]=0.0f;
+	SetOmniLightData.Pos[2]=0.0f;
+	SetOmniLightData.Pos[3]=0.0f;
+	CO_SetOmniLight(&SetOmniLightData,0);
+	_MaterialData MaterialData;
+	MaterialData.ambient[0]=0.7f;
+	MaterialData.ambient[1]=0.7f;
+	MaterialData.ambient[2]=0.7f;
+	MaterialData.ambient[3]=5.0f;//shininess
+	MaterialData.diffuse[0]=0.7f;
+	MaterialData.diffuse[1]=0.7f;
+	MaterialData.diffuse[2]=0.7f;
+	MaterialData.diffuse[3]=1.0f;
+	MaterialData.specular[0]=0.5f;
+	MaterialData.specular[1]=0.5f;
+	MaterialData.specular[2]=0.5f;
+	MaterialData.specular[3]=1.0f;
+	CO_SetMaterial(&MaterialData);
 	GLfloat LightPos[]={0.0f,00000.0f,0.0f,0.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
 	GLfloat mat_specular[]={0.5f,0.5f,0.5f,1.0f};
