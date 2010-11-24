@@ -175,10 +175,6 @@
     <ClCompile Include="TexManager.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TGA.cpp" />
-    <ClCompile Include="TOP_ACE.cpp">
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
     <ClCompile Include="TopAceModel.cpp" />
     <ClCompile Include="UnitMath.cpp" />
     <ClCompile Include="UnitsList.cpp" />

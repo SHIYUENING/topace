@@ -4,8 +4,8 @@
 
 #include <GL/glew.h>
 #include <windows.h>
-#define SpotLightDataNum 8
-struct _SpotLightData{
+#define OmniLightDataNum 8
+struct _OmniLightData{
 	GLfloat Pos[4];
 	GLfloat Color[4];
 };
@@ -15,8 +15,8 @@ struct _MaterialData{
 	GLfloat ambient[4];//shininess in ambient[3]
 	//GLfloat shininess;
 };
-void CO_SetSpotLight(_SpotLightData * Light,unsigned int LightNum);
-void CO_GetSpotLight(_SpotLightData * Light,unsigned int LightNum);
+void CO_SetOmniLight(_OmniLightData * Light,unsigned int LightNum);
+void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum);
 void CO_SetMaterial(_MaterialData * Material);
 void CO_GetMaterial(_MaterialData * Material);
 void CO_SetMMatrix(GLfloat * Matrix);

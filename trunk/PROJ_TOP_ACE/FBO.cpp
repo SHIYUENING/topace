@@ -112,11 +112,11 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	if(BloomSet>0)
 	{
 		GLuint BloomTexFormatISet=GL_RGBA8;
-		if(BloomSet==2)
+		/*if(BloomSet==2)
 			BloomTexFormatISet=GL_RGBA16F_ARB;
 
 		if(BloomSet>=3)
-			BloomTexFormatISet=GL_RGBA32F_ARB;
+			BloomTexFormatISet=GL_RGBA32F_ARB;*/
 
 		BloomTex1=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
 		BloomTex2=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);

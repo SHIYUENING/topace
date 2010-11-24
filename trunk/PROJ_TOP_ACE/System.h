@@ -1,32 +1,7 @@
-﻿/********************
-*                   *
-*   NeHeGL Header   *
-*                   *
-**********************************************************************************
-*                                                                                *
-*	You Need To Provide The Following Functions:                                 *
-*                                                                                *
-*	BOOL Initialize (GL_Window* window, Keys* keys);                             *
-*		Performs All Your Initialization                                         *
-*		Returns TRUE If Initialization Was Successful, FALSE If Not              *
-*		'window' Is A Parameter Used In Calls To NeHeGL                          *
-*		'keys' Is A Structure Containing The Up/Down Status Of keys              *
-*                                                                                *
-*	void Deinitialize (void);                                                    *
-*		Performs All Your DeInitialization                                       *
-*                                                                                *
-*	void Update (DWORD milliseconds);                                            *
-*		Perform Motion Updates                                                   *
-*		'milliseconds' Is The Number Of Milliseconds Passed Since The Last Call  *
-*		With Whatever Accuracy GetTickCount() Provides                           *
-*                                                                                *
-*	void Draw (void);                                                            *
-*		Perform All Your Scene Drawing                                           *
-*                                                                                *
-*********************************************************************************/
+﻿
 
-#ifndef GL_FRAMEWORK__INCLUDED
-#define GL_FRAMEWORK__INCLUDED
+#ifndef _SYSTEM_H
+#define _SYSTEM_H
 
 #include <windows.h>								// Header File For Windows
 
@@ -63,12 +38,8 @@ void TerminateApplication (GL_Window* window);		// Terminate The Application
 
 void ToggleFullscreen (GL_Window* window);			// Toggle Fullscreen / Windowed Mode
 
-// These Are The Function You Must Provide
-BOOL Initialize (GL_Window* window, Keys* keys);	// Performs All Your Initialization
 
-void Deinitialize (void);							// Performs All Your DeInitialization
-
-void KeyUpdate ();					// Perform Motion Updates
+void KeyUpdate ( Keys* keys);					// Perform Motion Updates
 HANDLE InitRenderThread();
 void ExitRenderThread();
 unsigned int __stdcall RenderThread(LPVOID lpvoid);

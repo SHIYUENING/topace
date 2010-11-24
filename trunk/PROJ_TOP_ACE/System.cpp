@@ -1,11 +1,4 @@
-﻿/***********************************************
-*                                              *
-*    Jeff Molofee's Revised OpenGL Basecode    *
-*  Huge Thanks To Maxwell Sayles & Peter Puck  *
-*            http://nehe.gamedev.net           *
-*                     2001                     *
-*                                              *
-***********************************************/
+﻿
 #include "Draw.h"
 #include <windows.h>													// Header File For The Windows Library
 #include <gl/glew.h>
@@ -53,7 +46,9 @@ HANDLE RenderThreadHANDLE=NULL;
 HINSTANCE hInst;
 int WindowWidth=800;
 int WindowHeight=600;
-
+float moveZ=-250.0f;
+float moveY=0.0f;
+float moveX=0.0f;
 
 CLockFPS LockFPSSYS,LockFPSRender;
 /*
@@ -71,6 +66,41 @@ void Delay(__int64 Us)
         QueryPerformanceCounter(&CurrTicks);
 }
 */
+void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
+{
+
+
+	if (g_keys->keyDown [VK_ESCAPE] == TRUE)					// Is ESC Being Pressed?
+	{
+		TerminateApplication (g_window);						// Terminate The Program
+	}
+
+	//if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
+	//{
+	//	ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
+	//}
+	if(g_keys->keyDown [VK_PRIOR] == TRUE)
+		moveZ=moveZ+10.0f;
+	if(g_keys->keyDown [VK_NEXT] == TRUE)
+		moveZ=moveZ-10.0f;
+
+	if(g_keys->keyDown [VK_UP] == TRUE)
+		moveY=moveY+10.0f;
+	if(g_keys->keyDown [VK_DOWN] == TRUE)
+		moveY=moveY-10.0f;
+
+
+	if(g_keys->keyDown [VK_RIGHT] == TRUE)
+		moveX=moveX+10.0f;
+	if(g_keys->keyDown [VK_LEFT] == TRUE)
+		moveX=moveX-10.0f;
+	if(g_keys->keyDown [VK_HOME] == TRUE)
+	{
+		moveX=moveY=moveZ=0.0f;
+	}
+}
+
+
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
 	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
@@ -537,12 +567,6 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 				wglSwapIntervalEXT(1);
 			}
 			// At This Point We Should Have A Window That Is Setup To Render OpenGL
-			if (Initialize (&window, &keys) == FALSE)					// Call User Intialization
-			{
-				// Failure
-				TerminateApplication (&window);							// Close Window, This Will Handle The Shutdown
-			}
-			else														// Otherwise (Start The Message Pump)
 			{	// Initialize was a success
 				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
 				InitDraw();
@@ -568,7 +592,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 						//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
 
 						UpdataKeyInput(&window.keys->keyDown[0]);
-						KeyUpdate ();
+						KeyUpdate (&keys,&window);
 						if (window.isVisible == FALSE)					// If Window Is Not Visible
 						{
 							WaitMessage ();								// Application Is Minimized Wait For A Message
@@ -608,7 +632,6 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		}
 	}																	// While (isProgramLooping)
 	DeinitDraw();
-	Deinitialize ();
 	
 	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
 

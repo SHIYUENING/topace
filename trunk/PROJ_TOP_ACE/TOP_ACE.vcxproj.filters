@@ -58,9 +58,6 @@
     <ClCompile Include="TGA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TOP_ACE.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TopAceModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
