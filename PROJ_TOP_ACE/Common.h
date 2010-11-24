@@ -12,8 +12,8 @@ struct _SpotLightData{
 struct _MaterialData{
 	GLfloat diffuse[4];
 	GLfloat specular[4];
-	GLfloat ambient[3];
-	GLfloat mat_shininess;
+	GLfloat ambient[4];//shininess in ambient[3]
+	//GLfloat shininess;
 };
 void CO_SetSpotLight(_SpotLightData * Light,unsigned int LightNum);
 void CO_GetSpotLight(_SpotLightData * Light,unsigned int LightNum);
