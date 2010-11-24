@@ -4,6 +4,21 @@
 
 #include <GL/glew.h>
 #include <windows.h>
+#define SpotLightDataNum 8
+struct _SpotLightData{
+	GLfloat Pos[4];
+	GLfloat Color[4];
+};
+struct _MaterialData{
+	GLfloat diffuse[4];
+	GLfloat specular[4];
+	GLfloat ambient[3];
+	GLfloat mat_shininess;
+};
+void CO_SetSpotLight(_SpotLightData * Light,unsigned int LightNum);
+void CO_GetSpotLight(_SpotLightData * Light,unsigned int LightNum);
+void CO_SetMaterial(_MaterialData * Material);
+void CO_GetMaterial(_MaterialData * Material);
 void CO_SetMMatrix(GLfloat * Matrix);
 void CO_SetPMatrix(GLfloat * Matrix);
 void CO_SetMVPMatrix(GLfloat * Matrix);
