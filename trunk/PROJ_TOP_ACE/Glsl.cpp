@@ -21,8 +21,16 @@ CGLSLLoader GLSL_Common;
 extern tGameSet GameSet;
 GLfloat GlslMatrixTMP[16];
 
+GLfloat GLSL_SpotLight_Pos[SpotLightDataNum];
+GLfloat GLSL_SpotLight_Color[SpotLightDataNum];
+GLfloat GLSL_Material[3];
+
 GLint PhoneLight_DiffuseTex=0;
+GLint PhoneLight_DiffuseTexTurnY=0;
 GLint PhoneLight_LightNums=0;
+GLint PhoneLight_SpotLight_Pos=0;
+GLint PhoneLight_SpotLight_Color=0;
+GLint PhoneLight_Material=0;
 
 GLint DrawBloomMap_texColor=0;
 GLint DrawBloomMap_AveLum=0;
@@ -43,8 +51,23 @@ void InitGLSL()
 	GLSLLightSet = GameSet.Light;
 	if(GameSet.Light<2) { GlslVer=0;return;}
 	const char* verstr = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+	for(int i=0;i<SpotLightDataNum;i++)
+	{
+		_SpotLightData SpotLightTMP;
+		SpotLightTMP.Color[0]=0.0f;
+		SpotLightTMP.Color[1]=0.0f;
+		SpotLightTMP.Color[2]=0.0f;
+		SpotLightTMP.Color[3]=0.0f;
+		SpotLightTMP.Pos[0]=0.0f;
+		SpotLightTMP.Pos[1]=0.0f;
+		SpotLightTMP.Pos[2]=0.0f;
+		SpotLightTMP.Pos[3]=0.0f;
+		CO_SetSpotLight(&SpotLightTMP,i);
+	}
 	GLSL_Common.LoadShader(L"common",2);
+
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
+
 	GLSL_PhoneLight.LoadShader(L"Light",GameSet.Light);
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Pos, "Position_in" );
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Tex0, "TexCoord0_in" );
@@ -53,6 +76,10 @@ void InitGLSL()
 	GLSL_PhoneLight.GetGLSLLinkSTATUS(GLSL_PhoneLight.g_PO);
 	PhoneLight_DiffuseTex = glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTex");
 	PhoneLight_LightNums = glGetUniformLocation(GLSL_PhoneLight.g_PO,"LightNums");
+	PhoneLight_DiffuseTexTurnY = glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTexTurnY");
+	PhoneLight_SpotLight_Pos = glGetUniformLocation(GLSL_PhoneLight.g_PO,"SpotLight_Pos");
+	PhoneLight_SpotLight_Color = glGetUniformLocation(GLSL_PhoneLight.g_PO,"SpotLight_Color");
+	PhoneLight_Material = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Material");
 
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
@@ -110,12 +137,18 @@ void DeinitGLSL()
 
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
+
+
 	int LightNums[2]={OmniLightNum,SpotLightNum};
 	if(GlslVer<100) return;
 	CO_SetGlslPO(GLSL_PhoneLight.g_PO);
 	glUseProgramObjectARB( GLSL_PhoneLight.g_PO );
 	glUniform1i(PhoneLight_DiffuseTex,0);
 	glUniform2iv(PhoneLight_LightNums,1,LightNums);
+	glUniform1f(PhoneLight_DiffuseTexTurnY,1.0f);
+	glUniform4fv(PhoneLight_SpotLight_Pos,SpotLightDataNum,GLSL_SpotLight_Pos);
+	glUniform4fv(PhoneLight_SpotLight_Color,SpotLightDataNum,GLSL_SpotLight_Color);
+	glUniform4fv(PhoneLight_Material,SpotLightDataNum,GLSL_Material);
 }
 void GLSL_Disable()
 {
