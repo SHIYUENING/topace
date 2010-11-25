@@ -16,6 +16,7 @@ GLdouble MatrixTMP[16]={1.0,0.0,0.0,0.0,
 					  0.0,1.0,0.0,0.0,
 					  0.0,0.0,1.0,0.0,
 					  0.0,0.0,0.0,1.0};
+GLfloat MatrixTMPF[16];
 static const GLdouble IdentityMatrixD[16]={1.0,0.0,0.0,0.0,
 										   0.0,1.0,0.0,0.0,
 										   0.0,0.0,1.0,0.0,
@@ -49,6 +50,30 @@ void Easy_matrix_mult_Double(GLdouble * Matrix, GLdouble * a, GLdouble * b)
             Matrix[j*4+i] = ab;
         }
     }
+}
+void CO_SetMMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix)
+{
+	if(Matrix)
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)Matrix[i];
+	else
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MMatrix[i];
+	glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+}
+void CO_SetPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix)
+{
+	if(Matrix)
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)Matrix[i];
+	else
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)PMatrix[i];
+	glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+}
+void CO_SetMVPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix)
+{
+	if(Matrix)
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)Matrix[i];
+	else
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MVPMatrix[i];
+	glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
 }
 void CO_SetMMatrix(GLfloat * Matrix)
 {
@@ -248,25 +273,63 @@ void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRati
     Matrix[15] = 0.0;
 }
 
-_OmniLightData CO_OmniLightData[OmniLightDataNum];
-_MaterialData CO_MaterialData;
+
+GLfloat CO_OmniLight_Pos[OmniLightDataNum*4];
+GLfloat CO_OmniLight_Color[OmniLightDataNum*4];
 void CO_SetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 {
 	if((!Light)||(LightNum>=OmniLightDataNum))
 		return;
-	memcpy(&(CO_OmniLightData[LightNum]),Light,sizeof(_OmniLightData));
+	memcpy(&(CO_OmniLight_Pos[LightNum*4]),Light->Pos,sizeof(GLfloat)*4);
+	memcpy(&(CO_OmniLight_Color[LightNum*4]),Light->Color,sizeof(GLfloat)*4);
 }
 void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 {
 	if((!Light)||(LightNum>=OmniLightDataNum))
 		return;
-	memcpy(Light,&(CO_OmniLightData[LightNum]),sizeof(_OmniLightData));
+	memcpy(Light->Pos,&(CO_OmniLight_Pos[LightNum*4]),sizeof(GLfloat)*4);
+	memcpy(Light->Color,&(CO_OmniLight_Color[LightNum*4]),sizeof(GLfloat)*4);
 }
+void CO_SetOmniLightToGLSL(GLint UniformLoc)
+{
+	glUniform4fv(UniformLoc,OmniLightDataNum,CO_OmniLight_Pos);
+	glUniform4fv(UniformLoc,OmniLightDataNum,CO_OmniLight_Color);
+}
+
+_MaterialData CO_MaterialData;
 void CO_SetMaterial(_MaterialData * Material)
 {
-	memcpy(&CO_MaterialData,Material,sizeof(_MaterialData));
+	if(Material)
+		memcpy(&CO_MaterialData,Material,sizeof(_MaterialData));
 }
 void CO_GetMaterial(_MaterialData * Material)
 {
-	memcpy(Material,&CO_MaterialData,sizeof(_MaterialData));
+	if(Material)
+		memcpy(Material,&CO_MaterialData,sizeof(_MaterialData));
+}
+void CO_SetMaterialToGLSL(GLint UniformLoc,_MaterialData * Material)
+{
+	if(Material)
+		glUniform4fv(UniformLoc,3,(GLfloat * )Material);
+	else
+		glUniform4fv(UniformLoc,3,(GLfloat * )(&CO_MaterialData));
+}
+
+GLfloat CO_GlobalAmbient[4];
+void CO_SetGlobalAmbient(GLfloat * GlobalAmbient)
+{
+	if(GlobalAmbient)
+		memcpy(CO_GlobalAmbient,GlobalAmbient,sizeof(CO_GlobalAmbient));
+}
+void CO_GetGlobalAmbient(GLfloat * GlobalAmbient)
+{
+	if(GlobalAmbient)
+		memcpy(GlobalAmbient,CO_GlobalAmbient,sizeof(CO_GlobalAmbient));
+}
+void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient)
+{
+	if(GlobalAmbient)
+		glUniform4fv(UniformLoc,1,GlobalAmbient);
+	else
+		glUniform4fv(UniformLoc,1,CO_GlobalAmbient);
 }
