@@ -12,13 +12,20 @@ struct _OmniLightData{
 struct _MaterialData{
 	GLfloat diffuse[4];
 	GLfloat specular[4];
-	GLfloat ambient[4];//shininess in ambient[3]
+	GLfloat emission[4];//shininess in emission[3]
 	//GLfloat shininess;
 };
+void CO_SetMMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix);
+void CO_SetPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix);
+void CO_SetMVPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix);
+void CO_SetGlobalAmbient(GLfloat * GlobalAmbient);
+void CO_GetGlobalAmbient(GLfloat * GlobalAmbient);
+void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient=NULL);
 void CO_SetOmniLight(_OmniLightData * Light,unsigned int LightNum);
 void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum);
 void CO_SetMaterial(_MaterialData * Material);
 void CO_GetMaterial(_MaterialData * Material);
+void CO_SetMaterialToGLSL(GLint UniformLoc,_MaterialData * Material=NULL);
 void CO_SetMMatrix(GLfloat * Matrix);
 void CO_SetPMatrix(GLfloat * Matrix);
 void CO_SetMVPMatrix(GLfloat * Matrix);

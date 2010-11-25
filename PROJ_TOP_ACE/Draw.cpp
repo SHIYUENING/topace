@@ -108,10 +108,10 @@ void InitDraw()
 	SetOmniLightData.Pos[3]=0.0f;
 	CO_SetOmniLight(&SetOmniLightData,0);
 	_MaterialData MaterialData;
-	MaterialData.ambient[0]=0.7f;
-	MaterialData.ambient[1]=0.7f;
-	MaterialData.ambient[2]=0.7f;
-	MaterialData.ambient[3]=5.0f;//shininess
+	MaterialData.emission[0]=0.0f;
+	MaterialData.emission[1]=0.0f;
+	MaterialData.emission[2]=0.0f;
+	MaterialData.emission[3]=5.0f;//shininess
 	MaterialData.diffuse[0]=0.7f;
 	MaterialData.diffuse[1]=0.7f;
 	MaterialData.diffuse[2]=0.7f;
@@ -121,6 +121,8 @@ void InitDraw()
 	MaterialData.specular[2]=0.5f;
 	MaterialData.specular[3]=1.0f;
 	CO_SetMaterial(&MaterialData);
+	GLfloat GlobalAmbient_Set[]={0.7f,0.7f,0.7f,1.0f};
+	CO_SetGlobalAmbient(GlobalAmbient_Set);
 	GLfloat LightPos[]={0.0f,00000.0f,0.0f,0.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
 	GLfloat mat_specular[]={0.5f,0.5f,0.5f,1.0f};

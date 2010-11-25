@@ -25,22 +25,23 @@ GLfloat GLSL_OmniLight_Pos[OmniLightDataNum*4];
 GLfloat GLSL_OmniLight_Color[OmniLightDataNum*4];
 GLfloat GLSL_Material[3*4];
 
-GLint PhoneLight_DiffuseTex=0;
-GLint PhoneLight_DiffuseTexTurnY=0;
-GLint PhoneLight_LightNums=0;
-GLint PhoneLight_SpotLight_Pos=0;
-GLint PhoneLight_SpotLight_Color=0;
-GLint PhoneLight_Material=0;
+GLint PhoneLight_DiffuseTex=-1;
+GLint PhoneLight_DiffuseTexTurnY=-1;
+GLint PhoneLight_LightNums=-1;
+GLint PhoneLight_OmniLight_Pos=-1;
+GLint PhoneLight_OmniLight_Color=-1;
+GLint PhoneLight_Material=-1;
+GLint PhoneLight_Global_Ambient=-1;
 
-GLint DrawBloomMap_texColor=0;
-GLint DrawBloomMap_AveLum=0;
-GLint DrawBloomMap_imgW=0;
-GLint DrawBloomMap_imgH=0;
+GLint DrawBloomMap_texColor=-1;
+GLint DrawBloomMap_AveLum=-1;
+GLint DrawBloomMap_imgW=-1;
+GLint DrawBloomMap_imgH=-1;
 
-GLint ToneMapping__texSrc1=0;
+GLint ToneMapping__texSrc1=-1;
 
-GLint BlurTex_BlurTex=0;
-GLint BlurTex_BlurTexSet=0;
+GLint BlurTex_BlurTex=-1;
+GLint BlurTex_BlurTexSet=-1;
 
 
 void InitGLSL()
@@ -65,9 +66,10 @@ void InitGLSL()
 	PhoneLight_DiffuseTex = glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTex");
 	PhoneLight_LightNums = glGetUniformLocation(GLSL_PhoneLight.g_PO,"LightNums");
 	PhoneLight_DiffuseTexTurnY = glGetUniformLocation(GLSL_PhoneLight.g_PO,"DiffuseTexTurnY");
-	PhoneLight_SpotLight_Pos = glGetUniformLocation(GLSL_PhoneLight.g_PO,"OmniLight_Pos");
-	PhoneLight_SpotLight_Color = glGetUniformLocation(GLSL_PhoneLight.g_PO,"OmniLight_Color");
+	PhoneLight_OmniLight_Pos = glGetUniformLocation(GLSL_PhoneLight.g_PO,"OmniLight_Pos");
+	PhoneLight_OmniLight_Color = glGetUniformLocation(GLSL_PhoneLight.g_PO,"OmniLight_Color");
 	PhoneLight_Material = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Material");
+	PhoneLight_Global_Ambient = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Global_Ambient");
 
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
@@ -141,8 +143,8 @@ void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 	glUniform1i(PhoneLight_DiffuseTex,0);
 	glUniform2iv(PhoneLight_LightNums,1,LightNums);
 	glUniform1f(PhoneLight_DiffuseTexTurnY,1.0f);
-	glUniform4fv(PhoneLight_SpotLight_Pos,OmniLightDataNum,GLSL_OmniLight_Pos);
-	glUniform4fv(PhoneLight_SpotLight_Color,OmniLightDataNum,GLSL_OmniLight_Color);
+	glUniform4fv(PhoneLight_OmniLight_Pos,OmniLightDataNum,GLSL_OmniLight_Pos);
+	glUniform4fv(PhoneLight_OmniLight_Color,OmniLightDataNum,GLSL_OmniLight_Color);
 	glUniform4fv(PhoneLight_Material,3,GLSL_Material);
 }
 void GLSL_Disable()
