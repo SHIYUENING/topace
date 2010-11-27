@@ -143,9 +143,13 @@ void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 	glUniform1i(PhoneLight_DiffuseTex,0);
 	glUniform2iv(PhoneLight_LightNums,1,LightNums);
 	glUniform1f(PhoneLight_DiffuseTexTurnY,1.0f);
-	glUniform4fv(PhoneLight_OmniLight_Pos,OmniLightDataNum,GLSL_OmniLight_Pos);
-	glUniform4fv(PhoneLight_OmniLight_Color,OmniLightDataNum,GLSL_OmniLight_Color);
-	glUniform4fv(PhoneLight_Material,3,GLSL_Material);
+
+	CO_SetOmniLightToGLSL(PhoneLight_OmniLight_Pos,PhoneLight_OmniLight_Color);
+	CO_SetMaterialToGLSL(PhoneLight_Material);
+	CO_SetGlobalAmbientToGLSL(PhoneLight_Global_Ambient);
+	//glUniform4fv(PhoneLight_OmniLight_Pos,OmniLightDataNum,GLSL_OmniLight_Pos);
+	//glUniform4fv(PhoneLight_OmniLight_Color,OmniLightDataNum,GLSL_OmniLight_Color);
+	//glUniform4fv(PhoneLight_Material,3,GLSL_Material);
 }
 void GLSL_Disable()
 {

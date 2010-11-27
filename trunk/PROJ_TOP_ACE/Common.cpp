@@ -290,10 +290,10 @@ void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 	memcpy(Light->Pos,&(CO_OmniLight_Pos[LightNum*4]),sizeof(GLfloat)*4);
 	memcpy(Light->Color,&(CO_OmniLight_Color[LightNum*4]),sizeof(GLfloat)*4);
 }
-void CO_SetOmniLightToGLSL(GLint UniformLoc)
+void CO_SetOmniLightToGLSL(GLint UniformLoc_Pos,GLint UniformLoc_Color)
 {
-	glUniform4fv(UniformLoc,OmniLightDataNum,CO_OmniLight_Pos);
-	glUniform4fv(UniformLoc,OmniLightDataNum,CO_OmniLight_Color);
+	glUniform4fv(UniformLoc_Pos,OmniLightDataNum,CO_OmniLight_Pos);
+	glUniform4fv(UniformLoc_Color,OmniLightDataNum,CO_OmniLight_Color);
 }
 
 _MaterialData CO_MaterialData;
@@ -315,7 +315,7 @@ void CO_SetMaterialToGLSL(GLint UniformLoc,_MaterialData * Material)
 		glUniform4fv(UniformLoc,3,(GLfloat * )(&CO_MaterialData));
 }
 
-GLfloat CO_GlobalAmbient[4];
+GLfloat CO_GlobalAmbient[4]={0.0f,0.0f,0.0f,0.0f};
 void CO_SetGlobalAmbient(GLfloat * GlobalAmbient)
 {
 	if(GlobalAmbient)
@@ -332,4 +332,35 @@ void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient)
 		glUniform4fv(UniformLoc,1,GlobalAmbient);
 	else
 		glUniform4fv(UniformLoc,1,CO_GlobalAmbient);
+}
+
+void CO_SetMMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
+{
+	if(Matrix)
+		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
+	else
+	{
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MMatrix[i];
+		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+	}
+}
+void CO_SetPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
+{
+	if(Matrix)
+		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
+	else
+	{
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)PMatrix[i];
+		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+	}
+}
+void CO_SetMVPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
+{
+	if(Matrix)
+		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
+	else
+	{
+		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MVPMatrix[i];
+		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+	}
 }
