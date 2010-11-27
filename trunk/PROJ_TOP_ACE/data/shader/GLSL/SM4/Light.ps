@@ -30,6 +30,7 @@ vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 	NdotL = max(0.0,NdotL);
 	return vec2(NdotL,specular);
 }
+/*
 vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,float spotExponent,float LightShininess)
 {
 	vec3 Nor=normalize(Normal);
@@ -57,12 +58,11 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 	}
 	return vec2(NdotL,specular);
 }
+*/
 void main()
 {
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoord0.xy)*Color;
-
 	vec2 LightVal=vec2(0.0,0.0);
-	//vec4 AmbientColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
 	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
 	for(int i=0;i<8;i++)
