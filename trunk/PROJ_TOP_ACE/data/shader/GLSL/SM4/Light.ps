@@ -78,17 +78,10 @@ void main()
 		//		LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent,Material_shininess);
 		//	}
 		//}
-		
-		//AmbientColor += gl_FrontLightProduct[i].ambient;
 		DiffuseColor += LightVal.x * OmniLight_Color[i] * Material_diffuse ;
 		SpecularColor += LightVal.y * OmniLight_Color[i] * Material_specular ;
 	}
-	//gl_FragColor = DiffuseTexColor * (AmbientColor + gl_FrontLightModelProduct.sceneColor + DiffuseColor)*Color +SpecularColor ;
-	//gl_FragColor.w=DiffuseTexColor.w;
-	//gl_FragColor+=SpecularColor;
-	
-	//gl_FragColor.xyz=Normal;
-	//gl_FragColor = DiffuseTexColor;
+
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
 	FragColor.w=DiffuseTexColor.w;
     return;
