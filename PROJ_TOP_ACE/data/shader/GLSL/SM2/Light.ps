@@ -16,7 +16,6 @@ varying vec4 VertexEyeDir;
 varying vec3 Normal; 
 varying vec2 TexCoord0;
 varying vec4 Color;
-out vec4 FragColor;
 vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 {
 	vec3 Nor=normalize(Normal);
@@ -36,7 +35,7 @@ void main()
 	vec2 LightVal = OmniLight (OmniLight_Pos[0],Material_shininess);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0] * Material_diffuse;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
-	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
-	FragColor.w=DiffuseTexColor.w;
+	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
+	gl_FragColor.w=DiffuseTexColor.w;
     return;
 } 
