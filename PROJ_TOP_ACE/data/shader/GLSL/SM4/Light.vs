@@ -11,10 +11,10 @@ out vec2 TexCoord0;
 out vec4 Color;
 void main()
 {
-	VertexEyeDir = MMatrix * vec4(Position_in,1.0);//gl_Vertex
-	gl_Position = MVPMatrix * vec4(Position_in,1.0);//gl_Vertex
-    Color = Color_in;//gl_Color;
-    Normal =( MMatrix * vec4(Normal_in,0.0)).xyz;//gl_Normal
-	TexCoord0=TexCoord0_in .xy;//gl_MultiTexCoord0
+	VertexEyeDir = MMatrix * vec4(Position_in,1.0);
+	gl_Position = MVPMatrix * vec4(Position_in,1.0);
+    Color = Color_in;
+    Normal =( MMatrix * vec4(Normal_in,0.0)).xyz;
+	TexCoord0=TexCoord0_in .xy;
     return;
 }

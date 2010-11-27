@@ -34,7 +34,7 @@ wchar_t ShowFPS[64]={0};
 extern tGameSet GameSet;
 int OmniLightNumBase=0;
 int SpotLightNumBase=0;
-CTopAceModel TopAceModelTest;
+//CTopAceModel TopAceModelTest;
 Textures LoadingTex;
 extern HDC SwapHdc; 
 //CUnitMath ViewUnit;
@@ -61,6 +61,55 @@ void DrawLoadingTex(Textures * pLoadingTex)
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	DrawQUADEX(pLoadingTex->TexID,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	SwapBuffers (SwapHdc);	
+}
+void InitTestLight()
+{
+	_OmniLightData SetOmniLightData;
+	SetOmniLightData.Color[0]=0.7f;
+	SetOmniLightData.Color[1]=0.7f;
+	SetOmniLightData.Color[2]=0.7f;
+	SetOmniLightData.Color[3]=1.0f;
+	SetOmniLightData.Pos[0]=0.0f;
+	SetOmniLightData.Pos[1]=0.0f;
+	SetOmniLightData.Pos[2]=0.0f;
+	SetOmniLightData.Pos[3]=0.0f;
+	CO_SetOmniLight(&SetOmniLightData,0);
+
+	_MaterialData MaterialData;
+	MaterialData.emission[0]=0.0f;
+	MaterialData.emission[1]=0.0f;
+	MaterialData.emission[2]=0.0f;
+	MaterialData.emission[3]=5.0f;//shininess
+	MaterialData.diffuse[0]=0.7f;
+	MaterialData.diffuse[1]=0.7f;
+	MaterialData.diffuse[2]=0.7f;
+	MaterialData.diffuse[3]=1.0f;
+	MaterialData.specular[0]=0.5f;
+	MaterialData.specular[1]=0.5f;
+	MaterialData.specular[2]=0.5f;
+	MaterialData.specular[3]=1.0f;
+	CO_SetMaterial(&MaterialData);
+
+	GLfloat GlobalAmbient_Set[]={0.7f,0.7f,0.7f,1.0f};
+	CO_SetGlobalAmbient(GlobalAmbient_Set);
+	OmniLightNumBase=1;
+
+	/*
+	GLfloat LightPos[]={0.0f,00000.0f,0.0f,0.0f};
+	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
+	GLfloat mat_specular[]={0.5f,0.5f,0.5f,1.0f};
+	GLfloat mat_ambient[]={0.7f,0.7f,0.7f,1.0f};
+	GLfloat mat_diffuse[]={0.7f,0.7f,0.7f,1.0f};
+	GLfloat mat_shininess[]={5.0f};
+	glLightfv(GL_LIGHT0,GL_SPECULAR,mat_specular);
+	glLightfv(GL_LIGHT0,GL_AMBIENT,mat_ambient);
+	glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_diffuse);
+	glLightfv(GL_LIGHT0,GL_SHININESS,mat_shininess);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,mat_specular);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,mat_ambient);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,mat_diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,mat_shininess);
+	*/
 }
 void InitDraw()
 {
@@ -97,51 +146,11 @@ void InitDraw()
 	glShadeModel(GL_SMOOTH);
 	//glPolygonMode(GL_BACK,GL_LINE);
 	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
-	_OmniLightData SetOmniLightData;
-	SetOmniLightData.Color[0]=0.7f;
-	SetOmniLightData.Color[1]=0.7f;
-	SetOmniLightData.Color[2]=0.7f;
-	SetOmniLightData.Color[3]=1.0f;
-	SetOmniLightData.Pos[0]=0.0f;
-	SetOmniLightData.Pos[1]=0.0f;
-	SetOmniLightData.Pos[2]=0.0f;
-	SetOmniLightData.Pos[3]=0.0f;
-	CO_SetOmniLight(&SetOmniLightData,0);
-	_MaterialData MaterialData;
-	MaterialData.emission[0]=0.0f;
-	MaterialData.emission[1]=0.0f;
-	MaterialData.emission[2]=0.0f;
-	MaterialData.emission[3]=5.0f;//shininess
-	MaterialData.diffuse[0]=0.7f;
-	MaterialData.diffuse[1]=0.7f;
-	MaterialData.diffuse[2]=0.7f;
-	MaterialData.diffuse[3]=1.0f;
-	MaterialData.specular[0]=0.5f;
-	MaterialData.specular[1]=0.5f;
-	MaterialData.specular[2]=0.5f;
-	MaterialData.specular[3]=1.0f;
-	CO_SetMaterial(&MaterialData);
+	InitTestLight();
 
-	GLfloat GlobalAmbient_Set[]={0.7f,0.7f,0.7f,1.0f};
-	CO_SetGlobalAmbient(GlobalAmbient_Set);
 
-	GLfloat LightPos[]={0.0f,00000.0f,0.0f,0.0f};
-	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
-	GLfloat mat_specular[]={0.5f,0.5f,0.5f,1.0f};
-	GLfloat mat_ambient[]={0.7f,0.7f,0.7f,1.0f};
-	GLfloat mat_diffuse[]={0.7f,0.7f,0.7f,1.0f};
-	GLfloat mat_shininess[]={5.0f};
-	glLightfv(GL_LIGHT0,GL_SPECULAR,mat_specular);
-	glLightfv(GL_LIGHT0,GL_AMBIENT,mat_ambient);
-	glLightfv(GL_LIGHT0,GL_DIFFUSE,mat_diffuse);
-	glLightfv(GL_LIGHT0,GL_SHININESS,mat_shininess);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,mat_specular);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,mat_ambient);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,mat_diffuse);
-	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,mat_shininess);
-	
-	TopAceModelTest.ReadTAMFile(L"data/model/test/1234x.tam");
-	TopAceModelTest.LoadToVRAM();
+	//TopAceModelTest.ReadTAMFile(L"data/model/test/1234x.tam");
+	//TopAceModelTest.LoadToVRAM();
 /*	if(TopAceModelTest.TAM_FileData)
 	{
 		PosOrgZ=2*max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
@@ -214,7 +223,7 @@ void DeinitDraw()
 		delete Font2D;
 		Font2D=NULL;
 	}
-	TopAceModelTest.DeleteVRAM();
+	//TopAceModelTest.DeleteVRAM();
 	Inited=false;
 	DeinitTestModel();
 }
@@ -243,8 +252,8 @@ void SetCameraMatrix()
 }
 void SetLights()
 {
-	OmniLightNumBase=0;
-	SpotLightNumBase=0;
+	//OmniLightNumBase=0;
+	//SpotLightNumBase=0;
 	/*if(Test3dsModelHanger)
 	if(Test3dsModelHanger->Model3ds)
 	{
@@ -252,17 +261,17 @@ void SetLights()
 		OmniLightNumBase+=Test3dsModelHanger->OmniLightNum;
 		SpotLightNumBase+=Test3dsModelHanger->SpotLightNum;
 	}*/
-	if((OmniLightNumBase+SpotLightNumBase)==0)
+	/*if((OmniLightNumBase+SpotLightNumBase)==0)
 	{
 		OmniLightNumBase=1;
 		float TMPLightColor[4]={0.75,0.75,0.75,1.0};
 		float TMPLightPos[4]={0.0,-3000.0,0000.0,1.0};
-		glEnable(GL_LIGHT0);
+		//glEnable(GL_LIGHT0);
 		//glLightfv(GL_LIGHT0,GL_POSITION,TMPLightPos);
-		glLightfv(GL_LIGHT0,GL_SPECULAR,TMPLightColor);
-		glLightfv(GL_LIGHT0,GL_DIFFUSE,TMPLightColor);
+		//glLightfv(GL_LIGHT0,GL_SPECULAR,TMPLightColor);
+		//glLightfv(GL_LIGHT0,GL_DIFFUSE,TMPLightColor);
 		//glLightfv(GL_LIGHT0,GL_AMBIENT,TMPLightColor);
-	}
+	}*/
 }
 void RenderUnits(bool OnlySelfIllumUnit=false)
 {
@@ -464,7 +473,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	SetCameraMatrix();
 	SetLights();
 	Test_matrix();
-	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
+//	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
 	QueryPerformanceCounter(&CPUTestEnd);
 }
 void InitTestModel()
