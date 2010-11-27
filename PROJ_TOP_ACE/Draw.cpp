@@ -121,8 +121,10 @@ void InitDraw()
 	MaterialData.specular[2]=0.5f;
 	MaterialData.specular[3]=1.0f;
 	CO_SetMaterial(&MaterialData);
+
 	GLfloat GlobalAmbient_Set[]={0.7f,0.7f,0.7f,1.0f};
 	CO_SetGlobalAmbient(GlobalAmbient_Set);
+
 	GLfloat LightPos[]={0.0f,00000.0f,0.0f,0.0f};
 	glLightfv(GL_LIGHT0,GL_POSITION,LightPos);
 	GLfloat mat_specular[]={0.5f,0.5f,0.5f,1.0f};
