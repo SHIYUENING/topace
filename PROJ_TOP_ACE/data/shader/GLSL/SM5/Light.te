@@ -1,0 +1,67 @@
+#version 400
+layout(triangles, equal_spacing, ccw) in;
+in vec2 tcTexCoord0[];
+in vec4 tcColor[];
+in vec3 b210[];
+in vec3 b120[];
+in vec3 b021[];
+in vec3 b012[];
+in vec3 b102[];
+in vec3 b201[];
+in vec3 b111[];
+in vec3 n110[];
+in vec3 n011[];
+in vec3 n101[];
+out vec4 VertexEyeDir;
+out vec3 Normal;
+out vec2 TexCoord0;
+out vec4 Color;
+uniform mat4x4 MMatrix;
+uniform mat4x4 MVPMatrix;
+
+void main()
+{
+	// The barycentric coordinates
+	float u = gl_TessCoord.x;
+	float v = gl_TessCoord.y;
+	float w = gl_TessCoord.z;
+
+	// Precompute squares and squares * 3 
+	float uu = u * u;
+	float vv = v * v;
+	float ww = w * w;
+	float uu3 = uu * 3;
+	float vv3 = vv * 3;
+	float ww3 = ww * 3;
+
+	// Compute position from cubic control points and barycentric coords
+	vec3 world_pos = tcPosition[0] * ww * w
+					+ tcPosition[1] * uu * u
+					+ tcPosition[2] * vv * v
+					+ b210[0] * ww3 * u
+					+ b120[0] * w * uu3
+					+ b201[0] * ww3 * v
+					+ b021[0] * uu3 * v
+					+ b102[0] * w * vv3
+					+ b012[0] * u * vv3
+					+ b111[0] * 6 * w * u * v;
+
+		Normal = tcNormal[0] * ww
+					+ tcNormal[1] * uu
+					+ tcNormal[2] * vv
+					+ n110[0] * w * u
+					+ n011[0] * u * v
+					+ n101[0] * w * v;
+
+    gl_Position = Projection * Modelview * vec4(world_pos, 1);
+	VertexEyeDir = Modelview * vec4(world_pos, 1);
+	Normal=Modelview * vec4(Normal, 1);
+
+	TexCoord0=gl_TessCoord.z*tcTexCoord0[0]
+			 +gl_TessCoord.x*tcTexCoord0[1]
+			 +gl_TessCoord.y*tcTexCoord0[2];
+			 
+	Color=gl_TessCoord.z*tcColor[0]
+			 +gl_TessCoord.x*tcColor[1]
+			 +gl_TessCoord.y*tcColor[2];
+}
