@@ -1,5 +1,7 @@
 #version 400
 layout(triangles, equal_spacing, ccw) in;
+in vec3 tcPosition[];
+in vec3 tcNormal[];
 in vec2 tcTexCoord0[];
 in vec4 tcColor[];
 in vec3 b210[];
@@ -12,10 +14,10 @@ in vec3 b111[];
 in vec3 n110[];
 in vec3 n011[];
 in vec3 n101[];
-out vec4 VertexEyeDir;
-out vec3 Normal;
-out vec2 TexCoord0;
-out vec4 Color;
+out vec4 teVertexEyeDir;
+out vec3 teNormal;
+out vec2 teTexCoord0;
+out vec4 teColor;
 uniform mat4x4 MMatrix;
 uniform mat4x4 MVPMatrix;
 
@@ -46,22 +48,33 @@ void main()
 					+ b012[0] * u * vv3
 					+ b111[0] * 6 * w * u * v;
 
-		Normal = tcNormal[0] * ww
+		teNormal = tcNormal[0] * ww
 					+ tcNormal[1] * uu
 					+ tcNormal[2] * vv
 					+ n110[0] * w * u
 					+ n011[0] * u * v
 					+ n101[0] * w * v;
 
-    gl_Position = Projection * Modelview * vec4(world_pos, 1);
-	VertexEyeDir = Modelview * vec4(world_pos, 1);
-	Normal=Modelview * vec4(Normal, 1);
+	vec3 p0 = gl_TessCoord.x * tcPosition[0];
+    vec3 p1 = gl_TessCoord.y * tcPosition[1];
+    vec3 p2 = gl_TessCoord.z * tcPosition[2];
+	vec3 n0 = gl_TessCoord.x * tcNormal[0];
+    vec3 n1 = gl_TessCoord.y * tcNormal[1];
+    vec3 n2 = gl_TessCoord.z * tcNormal[2];
+    vec3 tePositiontmp = normalize(p0 + p1 + p2);
+ //   teNormal = normalize(teNormal);
 
-	TexCoord0=gl_TessCoord.z*tcTexCoord0[0]
+
+    gl_Position = MVPMatrix* vec4(tePositiontmp, 1);
+	teVertexEyeDir = MMatrix * vec4(world_pos, 1);
+	vec4 TE_TMPv4 = MMatrix * vec4(teNormal, 1);
+	teNormal=TE_TMPv4.xyz;
+
+	teTexCoord0=gl_TessCoord.z*tcTexCoord0[0]
 			 +gl_TessCoord.x*tcTexCoord0[1]
 			 +gl_TessCoord.y*tcTexCoord0[2];
 			 
-	Color=gl_TessCoord.z*tcColor[0]
+	teColor=gl_TessCoord.z*tcColor[0]
 			 +gl_TessCoord.x*tcColor[1]
 			 +gl_TessCoord.y*tcColor[2];
 }

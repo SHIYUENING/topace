@@ -17,9 +17,12 @@ public:
 	bool LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename);
 	void ClearShader(void);
 	GLhandleARB g_VS;
+	GLhandleARB g_TC;
+	GLhandleARB g_TE;
+	GLhandleARB g_GS;
 	GLhandleARB g_PS;
 	GLhandleARB g_PO;//ProgramObject
-	bool LoadShader2(const wchar_t* ShaderFullName);
+	bool LoadShader2(const wchar_t* ShaderFullName,int ShaderLevel);
 	bool LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool ClearOldShader=false);
 };
 
