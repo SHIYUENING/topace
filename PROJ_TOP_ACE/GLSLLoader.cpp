@@ -6,10 +6,12 @@
 #include "CharSysBace.h"
 #define ShaderPath L"data/shader/GLSL/"
 CGLSLLoader::CGLSLLoader(void)
+	:g_VS(0)
+	,g_TC(0)
+	,g_TE(0)
+	,g_GS(0)
+	,g_PS(0)
 {
-	g_VS=0;
-	g_PS=0;
-	g_PO=0;
 }
 
 
@@ -146,6 +148,9 @@ void CGLSLLoader::ClearShader(void)
 	if(glIsProgram(g_PO)!=GL_FALSE)
 	{
 		if(glIsShader(g_VS)!=GL_FALSE){ glDetachObjectARB(g_PO,g_VS); glDeleteObjectARB(g_VS);}
+		if(glIsShader(g_TC)!=GL_FALSE){ glDetachObjectARB(g_PO,g_TC); glDeleteObjectARB(g_TC);}
+		if(glIsShader(g_TE)!=GL_FALSE){ glDetachObjectARB(g_PO,g_TE); glDeleteObjectARB(g_TE);}
+		if(glIsShader(g_GS)!=GL_FALSE){ glDetachObjectARB(g_PO,g_GS); glDeleteObjectARB(g_GS);}
 		if(glIsShader(g_PS)!=GL_FALSE){ glDetachObjectARB(g_PO,g_PS); glDeleteObjectARB(g_PS);}
 		glDeleteObjectARB(g_PS);
 	}
@@ -160,11 +165,24 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool Clea
 	if((!ShaderName)||(ShaderLevel<2)) return false;
 	wchar_t* ShaderFullName=NULL;
 	wchar_t* ShaderFullNameTMP=NULL;
+	if(ShaderLevel>=4)
+	{
+		ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM5/");
+		ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
+		if(LoadShader2(ShaderFullName,ShaderLevel))
+		{
+			delete[] ShaderFullNameTMP;
+			delete[] ShaderFullName;
+			return true;
+		}
+		delete[] ShaderFullNameTMP;
+		delete[] ShaderFullName;
+	}
 	if(ShaderLevel>=3)
 	{
 		ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM4/");
 		ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
-		if(LoadShader2(ShaderFullName))
+		if(LoadShader2(ShaderFullName,ShaderLevel))
 		{
 			delete[] ShaderFullNameTMP;
 			delete[] ShaderFullName;
@@ -175,7 +193,7 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool Clea
 	}
 	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM2/");
 	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
-	if(LoadShader2(ShaderFullName))
+	if(LoadShader2(ShaderFullName,ShaderLevel))
 	{
 		delete[] ShaderFullNameTMP;
 		delete[] ShaderFullName;
@@ -186,7 +204,7 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool Clea
 	return false;
 }
 
-bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName)
+bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName,int ShaderLevel)
 {
 	if(!ShaderFullName)
 		return false;
@@ -196,16 +214,38 @@ bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName)
 		g_VS=CompileShader(VSfilename,GL_VERTEX_SHADER_ARB);	
 		delete[] VSfilename;
 	}
+	if(ShaderLevel>=4)
+	if(!g_TC)
+	{
+		wchar_t* TCfilename=ADDTwoChar(ShaderFullName,L".tc");	
+		g_TC=CompileShader(TCfilename,GL_TESS_CONTROL_SHADER);	
+		delete[] TCfilename;
+	}
+	if(ShaderLevel>=4)
+	if(!g_TE)
+	{
+		wchar_t* TEfilename=ADDTwoChar(ShaderFullName,L".te");	
+		g_TE=CompileShader(TEfilename,GL_TESS_EVALUATION_SHADER);	
+		delete[] TEfilename;
+	}
+	if(ShaderLevel>=4)
+	if(!g_GS)
+	{
+		wchar_t* GSfilename=ADDTwoChar(ShaderFullName,L".gs");	
+		g_GS=CompileShader(GSfilename,GL_GEOMETRY_SHADER);	
+		delete[] GSfilename;
+	}
 	if(!g_PS)
 	{
 		wchar_t* PSfilename=ADDTwoChar(ShaderFullName,L".ps");	
 		g_PS=CompileShader(PSfilename,GL_FRAGMENT_SHADER_ARB);	
 		delete[] PSfilename;
 	}
-	if((!g_VS)&&(!g_PS))
-		return false;
 	g_PO = glCreateProgramObjectARB();
 	if(g_VS) glAttachObjectARB( g_PO, g_VS );
+	if(g_TC) glAttachObjectARB( g_PO, g_TC );
+	if(g_TE) glAttachObjectARB( g_PO, g_TE );
+	if(g_GS) glAttachObjectARB( g_PO, g_GS );
 	if(g_PS) glAttachObjectARB( g_PO, g_PS );
 	if(!GetGLSLLinkSTATUS( g_PO ))
 	{

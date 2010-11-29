@@ -1,11 +1,13 @@
 #version 400
 layout(vertices = 3) out;
 
-in vec3 vPosition;
-in vec3 vNormal; 
-in vec2 vTexCoord0;
-in vec4 vColor;
+in vec3 vPosition[];
+in vec3 vNormal[]; 
+in vec2 vTexCoord0[];
+in vec4 vColor[];
 
+out vec3 tcPosition[];
+out vec3 tcNormal[];
 out vec2 tcTexCoord0[];
 out vec4 tcColor[];
 out vec3 b210[];
@@ -18,17 +20,17 @@ out vec3 b111[];
 out vec3 n110[];
 out vec3 n011[];
 out vec3 n101[];
-uniform float TessLevelInner;
-uniform float TessLevelOuter;
-
+//uniform float TessLevelInner;
+//uniform float TessLevelOuter;
+#define TessLevelInner 2
+#define TessLevelOuter 2
 #define ID gl_InvocationID
 #define float3 vec3
 
 void main()
 {
-
-
-
+    tcPosition[ID] = vPosition[ID];
+    tcNormal[ID] = vNormal[ID];
     tcTexCoord0[ID] = vTexCoord0[ID];
     tcColor[ID] = vColor[ID];
     if (ID == 0) {
