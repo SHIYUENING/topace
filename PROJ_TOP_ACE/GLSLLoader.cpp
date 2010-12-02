@@ -182,7 +182,7 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool Clea
 	{
 		ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM4/");
 		ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
-		if(LoadShader2(ShaderFullName,ShaderLevel))
+		if(LoadShader2(ShaderFullName,min(3,ShaderLevel)))
 		{
 			delete[] ShaderFullNameTMP;
 			delete[] ShaderFullName;
@@ -193,7 +193,7 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool Clea
 	}
 	ShaderFullNameTMP=ADDTwoChar(ShaderPath,L"SM2/");
 	ShaderFullName=ADDTwoChar(ShaderFullNameTMP,ShaderName);
-	if(LoadShader2(ShaderFullName,ShaderLevel))
+	if(LoadShader2(ShaderFullName,min(2,ShaderLevel)))
 	{
 		delete[] ShaderFullNameTMP;
 		delete[] ShaderFullName;
@@ -208,6 +208,7 @@ bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName,int ShaderLevel)
 {
 	if(!ShaderFullName)
 		return false;
+	if(ShaderLevel>=2)
 	if(!g_VS)
 	{
 		wchar_t* VSfilename=ADDTwoChar(ShaderFullName,L".vs");	
@@ -228,13 +229,14 @@ bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName,int ShaderLevel)
 		g_TE=CompileShader(TEfilename,GL_TESS_EVALUATION_SHADER);	
 		delete[] TEfilename;
 	}
-	if(ShaderLevel>=4)
+	if(ShaderLevel>=3)
 	if(!g_GS)
 	{
 		wchar_t* GSfilename=ADDTwoChar(ShaderFullName,L".gs");	
 		g_GS=CompileShader(GSfilename,GL_GEOMETRY_SHADER);	
 		delete[] GSfilename;
 	}
+	if(ShaderLevel>=2)
 	if(!g_PS)
 	{
 		wchar_t* PSfilename=ADDTwoChar(ShaderFullName,L".ps");	
@@ -242,11 +244,11 @@ bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName,int ShaderLevel)
 		delete[] PSfilename;
 	}
 	g_PO = glCreateProgramObjectARB();
-	if(g_VS) glAttachObjectARB( g_PO, g_VS );
-	if(g_TC) glAttachObjectARB( g_PO, g_TC );
-	if(g_TE) glAttachObjectARB( g_PO, g_TE );
-	if(g_GS) glAttachObjectARB( g_PO, g_GS );
-	if(g_PS) glAttachObjectARB( g_PO, g_PS );
+	if(ShaderLevel>=2) if(g_VS) glAttachObjectARB( g_PO, g_VS );
+	if(ShaderLevel>=4) if(g_TC) glAttachObjectARB( g_PO, g_TC );
+	if(ShaderLevel>=4) if(g_TE) glAttachObjectARB( g_PO, g_TE );
+	if(ShaderLevel>=3) if(g_GS) glAttachObjectARB( g_PO, g_GS );
+	if(ShaderLevel>=2) if(g_PS) glAttachObjectARB( g_PO, g_PS );
 	if(!GetGLSLLinkSTATUS( g_PO ))
 	{
 		ClearShader();
