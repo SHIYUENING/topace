@@ -2,6 +2,7 @@
 #include "Draw.h"
 #include <windows.h>													// Header File For The Windows Library
 #include <gl/glew.h>
+#include <gl/wglew.h>
 #include "LockFPS.h"
 
 #include "System.h"														// Header File For The NeHeGL Basecode
@@ -49,7 +50,7 @@ int WindowHeight=600;
 float moveZ=-250.0f;
 float moveY=0.0f;
 float moveX=0.0f;
-
+HGLRC	 m_hrc;
 CLockFPS LockFPSSYS,LockFPSRender;
 /*
 void Delay(__int64 Us)
@@ -291,7 +292,24 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		return FALSE;													// Return False
 	}
 
-	
+		glewInit();
+	int attribs[] =
+	{
+		WGL_CONTEXT_MAJOR_VERSION_ARB, 2,
+		WGL_CONTEXT_MINOR_VERSION_ARB, 0,
+		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+		0
+	};
+
+
+	/*if(wglewIsSupported("WGL_ARB_create_context") == 1)
+	{
+		m_hrc = wglCreateContextAttribsARB(window->hDC,0, attribs);
+		wglMakeCurrent(NULL,NULL);
+		wglDeleteContext(window->hRC);
+		bool tmppp=wglMakeCurrent(window->hDC, m_hrc);
+		window->hRC=m_hrc;
+	}*/
 //ROACH
 	/*
 	Now that our window is created, we want to queary what samples are available
@@ -560,9 +578,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			
 			if(GameSet.SYNC)
 			{
-				typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)( int );
+				/*typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)( int );
 				PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT = 0;
-				wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)
+				wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)*/
 				wglGetProcAddress("wglSwapIntervalEXT");
 				wglSwapIntervalEXT(1);
 			}
