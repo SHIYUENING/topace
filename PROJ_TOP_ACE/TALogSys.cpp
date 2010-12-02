@@ -15,16 +15,19 @@ CTALogSys::~CTALogSys(void)
 }
 
 
-bool CTALogSys::AddLOG(const char * LOGStr)
+bool CTALogSys::AddLOG(const char * LOGStr,bool NoN)
 {
 	if(!LOGStr)
 		return false;
 	if(GetCharLenth(LOGStr)==0)
 		return false;
 	char * StrTmp;
-	StrTmp=ADDTwoChar(LOGString,"\n");
-	delete [] LOGString;
-	LOGString=StrTmp;
+	if(!NoN)
+	{
+		StrTmp=ADDTwoChar(LOGString,"\n");
+		delete [] LOGString;
+		LOGString=StrTmp;
+	}
 	StrTmp=ADDTwoChar(LOGString,LOGStr);
 	delete [] LOGString;
 	LOGString=StrTmp;
