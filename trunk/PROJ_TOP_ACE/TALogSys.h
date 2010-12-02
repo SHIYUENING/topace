@@ -7,7 +7,7 @@ class CTALogSys
 public:
 	CTALogSys(void);
 	~CTALogSys(void);
-	bool AddLOG(const char * LOGStr);
+	bool AddLOG(const char * LOGStr,bool NoN=false);
 	char * LOGString;
 	wchar_t * LOGFileName;
 	wchar_t * LOGFilePath;

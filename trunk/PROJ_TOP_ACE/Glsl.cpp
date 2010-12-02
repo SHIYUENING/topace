@@ -57,7 +57,7 @@ void InitGLSL()
 
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 
-	GLSL_PhoneLight.LoadShader(L"Light",4);
+	GLSL_PhoneLight.LoadShader(L"Light",GameSet.Light);
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Pos, "Position_in" );
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Tex0, "TexCoord0_in" );
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Normal, "Normal_in" );

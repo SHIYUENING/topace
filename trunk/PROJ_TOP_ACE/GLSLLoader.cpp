@@ -40,7 +40,7 @@ GLhandleARB CGLSLLoader::CompileShader(const wchar_t* shaderfilename,GLenum Shad
 	WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
 	if(!GLSLFileBuffer)
 	{
-		GLSLLOG.AddLOG("****** GLSL ERROR ******");
+		GLSLLOG.AddLOG("\n  ****** GLSL ERROR ******\n    ");
 		GLSLLOG.AddLOG("Cannot open shader file");
 		GLSLLOG.AddLOG(shaderfilenameANSI);
 		GLSLLOG.WriteLOGFile(true);
@@ -48,8 +48,8 @@ GLhandleARB CGLSLLoader::CompileShader(const wchar_t* shaderfilename,GLenum Shad
 		delete [] shaderfilenameANSI;
 		return 0;
 	}
-	GLSLLOG.AddLOG("****** GLSL Loading File ******");
-	GLSLLOG.AddLOG(shaderfilenameANSI);
+	GLSLLOG.AddLOG("\n  ****** GLSL Loading File ******\n    ");
+	GLSLLOG.AddLOG(shaderfilenameANSI,true);
 	GLhandleARBTMP = CompileShader(GLSLFileBuffer,ShaderObject);
 	
 	delete [] shaderfilenameANSI;
@@ -64,14 +64,14 @@ GLhandleARB CGLSLLoader::CompileShader(char *ShaderAssembly,GLenum ShaderObject)
 	GLint bCompiled=0;
 	glGetObjectParameterivARB( GLSLShaderObject, GL_OBJECT_COMPILE_STATUS_ARB, &bCompiled );
 	if(!bCompiled)
-	{
-		char * logbuffer=GetGLSLInfoLog(GLSLShaderObject);
-		GLSLLOG.AddLOG("****** GLSL ERROR ******");
-		GLSLLOG.AddLOG(logbuffer);
-		GLSLLOG.WriteLOGFile(true);
-		GLSLLOG.ClearLOG();
-		delete[] logbuffer;
-	}
+		GLSLLOG.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+	else
+		GLSLLOG.AddLOG("\n  ****** GLSL Log ******\n    ");
+	char * logbuffer=GetGLSLInfoLog(GLSLShaderObject);
+	GLSLLOG.AddLOG(logbuffer,true);
+	GLSLLOG.WriteLOGFile(true);
+	GLSLLOG.ClearLOG();
+	delete[] logbuffer;
 	return GLSLShaderObject;
 }
 bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
@@ -83,8 +83,8 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	if( bLinked == false )
 	{
 		char * logbuffer=GetGLSLInfoLog(g_programObj);
-		GLSLLOG.AddLOG("****** GLSL ERROR ******");
-		GLSLLOG.AddLOG(logbuffer);
+		GLSLLOG.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+		GLSLLOG.AddLOG(logbuffer,true);
 		GLSLLOG.WriteLOGFile(true);
 		GLSLLOG.ClearLOG();
 		delete[] logbuffer;
@@ -110,8 +110,8 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	else
 	{
 		char * logbuffer=GetGLSLInfoLog(g_programObj);
-		GLSLLOG.AddLOG("****** GLSL Log ******");
-		GLSLLOG.AddLOG(logbuffer);
+		GLSLLOG.AddLOG("\n  ****** GLSL Log ******\n    ");
+		GLSLLOG.AddLOG(logbuffer,true);
 		GLSLLOG.WriteLOGFile(true);
 		GLSLLOG.ClearLOG();
 		delete[] logbuffer;
