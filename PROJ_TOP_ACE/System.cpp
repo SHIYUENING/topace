@@ -36,7 +36,6 @@ int (__stdcall *hglSwapBuffers)(void *)=NULL;
 HMODULE gl_dll=false;
 HDC SwapHdc; 
 extern tGameSet GameSet;
-//LARGE_INTEGER t1,t2,feq;
 double oneframetimelimit=1.0/60.0;
 double oneframetime=0.0;
 bool isDraw=true;
@@ -52,21 +51,7 @@ float moveY=0.0f;
 float moveX=0.0f;
 HGLRC	 m_hrc;
 CLockFPS LockFPSSYS,LockFPSRender;
-/*
-void Delay(__int64 Us)
-{
-    LARGE_INTEGER CurrTicks, TicksCount; 
-
-    QueryPerformanceFrequency(&TicksCount);
-    QueryPerformanceCounter(&CurrTicks); 
-
-    TicksCount.QuadPart = TicksCount.QuadPart * Us / 1000000i64;
-    TicksCount.QuadPart += CurrTicks.QuadPart; 
-
-    while(CurrTicks.QuadPart<TicksCount.QuadPart)
-        QueryPerformanceCounter(&CurrTicks);
-}
-*/
+CTALogSys MainLOG;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -292,24 +277,6 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		return FALSE;													// Return False
 	}
 
-		glewInit();
-	int attribs[] =
-	{
-		WGL_CONTEXT_MAJOR_VERSION_ARB, 2,
-		WGL_CONTEXT_MINOR_VERSION_ARB, 0,
-		WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-		0
-	};
-
-
-	/*if(wglewIsSupported("WGL_ARB_create_context") == 1)
-	{
-		m_hrc = wglCreateContextAttribsARB(window->hDC,0, attribs);
-		wglMakeCurrent(NULL,NULL);
-		wglDeleteContext(window->hRC);
-		bool tmppp=wglMakeCurrent(window->hDC, m_hrc);
-		window->hRC=m_hrc;
-	}*/
 //ROACH
 	/*
 	Now that our window is created, we want to queary what samples are available
@@ -327,6 +294,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 			return CreateWindowGL(window);
 		}
 	}
+	glewInit();
 
 //ENDROACH
 
@@ -473,7 +441,6 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	CTALogSys MainLOG;
 	MainLOG.AddLOG("******TOP ACE LOG Start******");
 	MainLOG.WriteLOGFile(false);
 	CEXTLIBS_init();
@@ -506,37 +473,23 @@ HANDLE InitRenderThread()
 void ExitRenderThread()
 {
 	isDraw=false;
-	//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
-	//	ResumeThread(RenderThreadHANDLE);
-	//_endthreadex((int)RenderThreadHANDLE);
-	
 }
 unsigned int __stdcall RenderThread(LPVOID lpvoid)
 {
-/*	while(isDraw)
-	{
-
-		//angleR=angleR+0.05f;
-		RenderThreadisSuspend=true;
-		SuspendThread(RenderThreadHANDLE);
-	}*/
-
-	Application			application;									// Application Structure
-	GL_Window			window;											// Window Structure
-	Keys				keys;											// Key Structure
-	BOOL				isMessagePumpActive;							// Message Pump Active?
-	MSG					msg;											// Window Message Structure
-
+	Application			application;
+	GL_Window			window;
+	Keys				keys;
+	BOOL				isMessagePumpActive;
+	MSG					msg;
 	loadIniFile();
-	// Fill Out Application Data
-	application.className = "TOP_ACE";									// Application Class Name
-	application.hInstance = hInst;									// Application Instance
+	application.className = "TOP_ACE";
+	application.hInstance = hInst;
 
 	// Fill Out Window
 	ZeroMemory (&window, sizeof (GL_Window));							// Make Sure Memory Is Zeroed
 	window.keys					= &keys;								// Window Key Structure
 	window.init.application		= &application;							// Window Application
-	window.init.title			= "TOP_ACE";	// Window Title
+	window.init.title			= "TOP_ACE";
 	window.init.width			= GameSet.winW;									// Window Width
 	window.init.height			= GameSet.winH;									// Window Height
 	window.init.bitsPerPixel	= GameSet.bits;									// Bits Per Pixel
@@ -545,115 +498,65 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	WindowWidth=GameSet.winW;
 	WindowHeight=GameSet.winH;
 
-	ZeroMemory (&keys, sizeof (Keys));									// Zero keys Structure
-
+	ZeroMemory (&keys, sizeof (Keys));
 
 	if (RegisterWindowClass (&application) == FALSE)					// Did Registering A Class Fail?
 	{
-		// Failure
-		MessageBox (HWND_DESKTOP, "Error Registering Window Class!", "Error", MB_OK | MB_ICONEXCLAMATION);
+		MainLOG.AddLOG("******TOP ACE Error******");
+		MainLOG.AddLOG("Error Registering Window Class");
+		MainLOG.WriteLOGFile(false);
 		return -1;														// Terminate Application
 	}
 
 	gl_dll=LoadLibrary("OpenGL32.DLL");
-
-	if(!gl_dll)
-		MessageBox (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
-
-	if(gl_dll)
-		hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
-
-	g_isProgramLooping = TRUE;											// Program Looping Is Set To TRUE
-	g_createFullScreen = window.init.isFullScreen;						// g_createFullScreen Is Set To User Default
+	if(!gl_dll) MessageBox (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
+	if(gl_dll) hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
+	g_isProgramLooping = TRUE;
+	g_createFullScreen = window.init.isFullScreen;
 	
-	while (g_isProgramLooping)											// Loop Until WM_QUIT Is Received
+	while (g_isProgramLooping)
 	{
-		// Create A Window
-		window.init.isFullScreen = g_createFullScreen;					// Set Init Param Of Window Creation To Fullscreen?
-		if (CreateWindowGL (&window) == TRUE)							// Was Window Creation Successful?
+		window.init.isFullScreen = g_createFullScreen;
+		if (CreateWindowGL (&window) == TRUE)
 		{
-			//WritePrivateProfileString("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
-			//WritePrivateProfileString("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
 			SwapHdc=window.hDC;
-			
-			if(GameSet.SYNC)
+			if(GameSet.SYNC) wglSwapIntervalEXT(1);
+			else wglSwapIntervalEXT(0);
+			isMessagePumpActive = TRUE;
+			InitDraw();
+			LockFPSRender.Init(GameSet.FPS);
+			while (isMessagePumpActive == TRUE)	
 			{
-				/*typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALFARPROC)( int );
-				PFNWGLSWAPINTERVALFARPROC wglSwapIntervalEXT = 0;
-				wglSwapIntervalEXT = (PFNWGLSWAPINTERVALFARPROC)*/
-				wglGetProcAddress("wglSwapIntervalEXT");
-				wglSwapIntervalEXT(1);
-			}
-			// At This Point We Should Have A Window That Is Setup To Render OpenGL
-			{	// Initialize was a success
-				isMessagePumpActive = TRUE;								// Set isMessagePumpActive To TRUE
-				InitDraw();
-				
-				LockFPSRender.Init(GameSet.FPS);
-				while (isMessagePumpActive == TRUE)						// While The Message Pump Is Active
+				if (PeekMessage (&msg, window.hWnd, 0, 0, PM_REMOVE) != 0)
 				{
-					// Success Creating Window.  Check For Window Messages
-					if (PeekMessage (&msg, window.hWnd, 0, 0, PM_REMOVE) != 0)
+					if (msg.message != WM_QUIT) DispatchMessage (&msg);
+					else	isMessagePumpActive = FALSE;
+				}
+				else
+				{
+					UpdataKeyInput(&window.keys->keyDown[0]);
+					KeyUpdate (&keys,&window);
+					if (window.isVisible == FALSE) WaitMessage ();
+					else
 					{
-						// Check For WM_QUIT Message
-						if (msg.message != WM_QUIT)						// Is The Message A WM_QUIT Message?
-						{
-							DispatchMessage (&msg);						// If Not, Dispatch The Message
-						}
-						else											// Otherwise (If Message Is WM_QUIT)
-						{
-							isMessagePumpActive = FALSE;				// Terminate The Message Pump
-						}
+						Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);
+						glFlush();
+						hglSwapBuffers (SwapHdc);
+						if(GameSet.FPS>0) LockFPSRender.LockFPS();
 					}
-					else												// If There Are No Messages
-					{
-						//if(WaitForSingleObject(RenderThreadHANDLE,0)==WAIT_TIMEOUT)
-
-						UpdataKeyInput(&window.keys->keyDown[0]);
-						KeyUpdate (&keys,&window);
-						if (window.isVisible == FALSE)					// If Window Is Not Visible
-						{
-							WaitMessage ();								// Application Is Minimized Wait For A Message
-						}
-						else											// If Window Is Visible
-						{
-							Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);									// Draw Our Scene
-
-							//Sleep(30+rand()%15);
-							glFlush();
-							//glFinish();
-							hglSwapBuffers (SwapHdc);					// Swap Buffers (Double Buffering)
-							if(GameSet.FPS>0)
-								LockFPSRender.LockFPS();
-							
-						}
-						
-					}
-					//RenderThreadisSuspend=true;
-					//SuspendThread(RenderThreadHANDLE);
-				}														// Loop While isMessagePumpActive == TRUE
-				ClearVRAM();
-				
-			}															// If (Initialize (...
-
-			// Application Is Finished
-														// User Defined DeInitialization
-			
-
-			DestroyWindowGL (&window);									// Destroy The Active Window
+				}
+			}
+			ClearVRAM();
+			DestroyWindowGL (&window);
 		}
-		else															// If Window Creation Failed
+		else
 		{
-			// Error Creating Window
 			MessageBox (HWND_DESKTOP, "Error Creating OpenGL Window", "Error", MB_OK | MB_ICONEXCLAMATION);
-			g_isProgramLooping = FALSE;									// Terminate The Loop
+			g_isProgramLooping = FALSE;
 		}
-	}																	// While (isProgramLooping)
+	}
 	DeinitDraw();
-	
-	UnregisterClass (application.className, application.hInstance);		// UnRegister Window Class
-
-
+	UnregisterClass (application.className, application.hInstance);
 	isRun=false;
 	return 0;
 }
