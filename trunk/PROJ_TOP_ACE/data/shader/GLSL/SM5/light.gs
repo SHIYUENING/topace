@@ -12,7 +12,7 @@ out vec2 TexCoord0;
 out vec4 Color;
 void main()
 {
-	for(int i=0;i<gl_in.length();i++)
+	for(int i=0;i<3;i++)
 	{
 		VertexEyeDir = teVertexEyeDir[i];
 		Normal = teNormal[i];
