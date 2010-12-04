@@ -51,6 +51,7 @@ void Easy_matrix_mult_Double(GLdouble * Matrix, GLdouble * a, GLdouble * b)
         }
     }
 }
+/*
 void CO_SetMMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix)
 {
 	if(Matrix)
@@ -75,6 +76,7 @@ void CO_SetMVPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix)
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MVPMatrix[i];
 	glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
 }
+*/
 void CO_SetMMatrix(GLfloat * Matrix)
 {
 	if(!Matrix) return ;
@@ -146,6 +148,7 @@ void CO_GetPMatrixD(GLdouble * Matrix)
 void CO_GetMVPMatrixD(GLdouble * Matrix)
 {
 	if(!Matrix) return ;
+	Easy_matrix_mult_Double(MVPMatrix,PMatrix,MMatrix);
 	memcpy(Matrix,MVPMatrix,16*sizeof(GLdouble));
 }
 void CO_MatrixOrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
@@ -360,6 +363,7 @@ void CO_SetMVPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
 		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
 	else
 	{
+		Easy_matrix_mult_Double(MVPMatrix,PMatrix,MMatrix);
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MVPMatrix[i];
 		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
 	}
