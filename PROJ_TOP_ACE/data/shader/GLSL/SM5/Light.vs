@@ -15,5 +15,4 @@ void main()
 	vNormal		=	normalize(Normal_in);
 	vTexCoord0	=	TexCoord0_in;
 	vColor		=	Color_in;
-    return;
 }
