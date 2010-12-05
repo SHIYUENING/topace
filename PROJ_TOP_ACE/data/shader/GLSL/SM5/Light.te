@@ -4,16 +4,7 @@ in vec3 tcPosition[];
 in vec3 tcNormal[];
 in vec2 tcTexCoord0[];
 in vec4 tcColor[];
-in vec3 b210[];
-in vec3 b120[];
-in vec3 b021[];
-in vec3 b012[];
-in vec3 b102[];
-in vec3 b201[];
-in vec3 b111[];
-in vec3 n110[];
-in vec3 n011[];
-in vec3 n101[];
+
 out vec4 teVertexEyeDir;
 out vec3 teNormal;
 out vec2 teTexCoord0;
@@ -23,58 +14,22 @@ uniform mat4x4 MVPMatrix;
 
 void main()
 {
-	// The barycentric coordinates
-	float u = gl_TessCoord.x;
-	float v = gl_TessCoord.y;
-	float w = gl_TessCoord.z;
 
-	// Precompute squares and squares * 3 
-	float uu = u * u;
-	float vv = v * v;
-	float ww = w * w;
-	float uu3 = uu * 3;
-	float vv3 = vv * 3;
-	float ww3 = ww * 3;
+	vec3 world_pos = gl_TessCoord.x*tcPosition[0]
+			 +gl_TessCoord.y*tcPosition[1]
+			 +gl_TessCoord.z*tcPosition[2];
+    gl_Position = MVPMatrix* vec4(world_pos, 1.0);
+	teVertexEyeDir = MMatrix * vec4(world_pos, 1.0);
+	vec3 Normal=gl_TessCoord.x*tcNormal[0]
+			 +gl_TessCoord.y*tcNormal[1]
+			 +gl_TessCoord.z*tcNormal[2];
+	teNormal=(MMatrix * vec4(Normal, 0.0)).xyz;
 
-	// Compute position from cubic control points and barycentric coords
-	vec3 world_pos = tcPosition[0] * ww * w
-					+ tcPosition[1] * uu * u
-					+ tcPosition[2] * vv * v
-					+ b210[0] * ww3 * u
-					+ b120[0] * w * uu3
-					+ b201[0] * ww3 * v
-					+ b021[0] * uu3 * v
-					+ b102[0] * w * vv3
-					+ b012[0] * u * vv3
-					+ b111[0] * 6 * w * u * v;
-
-		teNormal = tcNormal[0] * ww
-					+ tcNormal[1] * uu
-					+ tcNormal[2] * vv
-					+ n110[0] * w * u
-					+ n011[0] * u * v
-					+ n101[0] * w * v;
-
-	vec3 p0 = gl_TessCoord.x * tcPosition[0];
-    vec3 p1 = gl_TessCoord.y * tcPosition[1];
-    vec3 p2 = gl_TessCoord.z * tcPosition[2];
-	vec3 n0 = gl_TessCoord.x * tcNormal[0];
-    vec3 n1 = gl_TessCoord.y * tcNormal[1];
-    vec3 n2 = gl_TessCoord.z * tcNormal[2];
-    vec3 tePositiontmp = normalize(p0 + p1 + p2);
- //   teNormal = normalize(teNormal);
-
-
-    gl_Position = MVPMatrix* vec4(tePositiontmp, 1);
-	teVertexEyeDir = MMatrix * vec4(world_pos, 1);
-	vec4 TE_TMPv4 = MMatrix * vec4(teNormal, 1);
-	teNormal=TE_TMPv4.xyz;
-
-	teTexCoord0=gl_TessCoord.z*tcTexCoord0[0]
-			 +gl_TessCoord.x*tcTexCoord0[1]
-			 +gl_TessCoord.y*tcTexCoord0[2];
+	teTexCoord0=gl_TessCoord.x*tcTexCoord0[0]
+			 +gl_TessCoord.y*tcTexCoord0[1]
+			 +gl_TessCoord.z*tcTexCoord0[2];
 			 
-	teColor=gl_TessCoord.z*tcColor[0]
-			 +gl_TessCoord.x*tcColor[1]
-			 +gl_TessCoord.y*tcColor[2];
+	teColor=gl_TessCoord.x*tcColor[0]
+			 +gl_TessCoord.y*tcColor[1]
+			 +gl_TessCoord.z*tcColor[2];
 }
