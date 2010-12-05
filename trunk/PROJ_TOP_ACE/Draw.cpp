@@ -45,13 +45,14 @@ __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
 //float MatrixTMPF4X4[16];
 //GLfloat DrawMatrixTMP[16];
+GLuint TestModelVAO=0;
 struct _TestMeshVBOID
 {
 	unsigned int VerticeID;
 	unsigned int NormalID;
 	unsigned int TexCoordID;
 	unsigned int ColorID;
-
+	unsigned int FaceID;
 };
 _TestMeshVBOID TestMeshVBOID;
 
@@ -443,7 +444,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
 
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
-	glEnable(GL_MULTISAMPLE_ARB);
+	//glEnable(GL_MULTISAMPLE_ARB);
 
 	DrawTestLines();
 	if(GameSet.Light==1) glEnable(GL_LIGHTING);
@@ -478,6 +479,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void InitTestModel()
 {
+	int TestModelFaces[]={
+		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
+	};
 	float TestModelPos[]={
 			0.0f,   0.0f,-050.0f,
 			050.0f,   0.0f, 050.0f,
@@ -580,26 +584,62 @@ void InitTestModel()
 		0.0f,   1.0f
 	};
 	
+	glGenVertexArrays(1,&TestModelVAO);
+	glBindVertexArray(TestModelVAO);
 	glGenBuffersARB( 1,&TestMeshVBOID.VerticeID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelPos), TestModelPos, GL_STATIC_DRAW_ARB );
+	glEnableVertexAttribArray(AbLoc_Pos);
+	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
 	glGenBuffersARB( 1,&TestMeshVBOID.NormalID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelNormal), TestModelNormal, GL_STATIC_DRAW_ARB );
+	glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Normal);
 	glGenBuffersARB( 1,&TestMeshVBOID.ColorID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelColor), TestModelColor, GL_STATIC_DRAW_ARB );
+	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Color);
 	glGenBuffersARB( 1,&TestMeshVBOID.TexCoordID);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
 	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelTexCoord), TestModelTexCoord, GL_STATIC_DRAW_ARB );
+	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Tex0);
+	//glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glGenBuffersARB( 1,&TestMeshVBOID.FaceID);
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, TestMeshVBOID.FaceID );
+	glBufferDataARB( GL_ELEMENT_ARRAY_BUFFER, sizeof(TestModelFaces), TestModelFaces, GL_STATIC_DRAW_ARB );
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	
+	/*
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
+	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Pos);
+
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
+	glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Normal);
+	
+	
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
+	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Color);
+	
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
+	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Tex0);
+	*/
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, 0);
 
 }
 void DrawTestModel()
 {
 	glBindTexture(GL_TEXTURE_2D, 1);//LoadingTex.TexID
-	glDisable( GL_TEXTURE_2D );
-	glDisable(GL_BLEND);
+	//glDisable( GL_TEXTURE_2D );
+	//glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
 	/*glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glBegin(GL_TRIANGLES);
@@ -634,28 +674,59 @@ void DrawTestModel()
 
 	glEnd();*/
 	
-	glEnableVertexAttribArray(AbLoc_Pos);
+	/*glEnableVertexAttribArray(AbLoc_Pos);
 	glEnableVertexAttribArray(AbLoc_Normal);
 	glEnableVertexAttribArray(AbLoc_Color);
 	glEnableVertexAttribArray(AbLoc_Tex0);
-
-	glEnableClientState( GL_VERTEX_ARRAY );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
+	*/
+    //glPatchParameteri(GL_PATCH_VERTICES, 3);
+	//glEnableClientState( GL_VERTEX_ARRAY );
+	/*glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
 	glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,0,0);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
 	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
 	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
-	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
-	glDrawArrays(GL_TRIANGLES,0,18);
-	glDisableClientState( GL_VERTEX_ARRAY );
+	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);*/
+	//glBindVertexArray(TestModelVAO);
+	//glDrawArrays(GL_PATCHES,0,18);
+/*		glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
+	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Pos);
+
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
+	glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Normal);
 	
+	
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
+	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Color);
+	
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
+	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
+	glEnableVertexAttribArray(AbLoc_Tex0);
+
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, TestMeshVBOID.FaceID );
+	*/
+/*	glEnableVertexAttribArray(AbLoc_Pos);
+	glEnableVertexAttribArray(AbLoc_Normal);
+	glEnableVertexAttribArray(AbLoc_Color);
+	glEnableVertexAttribArray(AbLoc_Tex0);*/
+	glPatchParameteri(GL_PATCH_VERTICES, 3);
+	glBindVertexArray(TestModelVAO);
+    glDrawElements(GL_PATCHES, 18, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
 	glDisableVertexAttribArray(AbLoc_Pos);
 	glDisableVertexAttribArray(AbLoc_Tex0);
-
+	
+	//glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	//glDisableClientState( GL_VERTEX_ARRAY );
+	GLenum tmppp=glGetError();
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glEnable( GL_TEXTURE_2D );
 	glEnable(GL_CULL_FACE);
