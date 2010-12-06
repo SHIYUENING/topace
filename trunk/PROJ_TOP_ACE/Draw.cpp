@@ -119,6 +119,8 @@ void InitDraw()
 	WritePrivateProfileString("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
 	WritePrivateProfileString("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
 	//WritePrivateProfileString("PC Info","GL_EXTENSIONS",(char *)glGetString(GL_EXTENSIONS),".\\gameset.ini");
+	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=3;
+	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=2;
 	if (!glewIsSupported("GL_VERSION_2_0"))
 	{
 		MessageBox( NULL, "Please Updata Video Card Driver", "OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
@@ -456,7 +458,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	GLSL_SetMMatrixToGlsl();
 	GLSL_SetMVPMatrixToGlsl();
-	DrawTestModel();
+	if(GameSet.Light>=4)
+		glPatchParameteri(GL_PATCH_VERTICES, 3);
+	DrawTestModel(GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	//TopAceModelTest.Draw();
@@ -635,7 +639,7 @@ void InitTestModel()
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, 0);
 
 }
-void DrawTestModel()
+void DrawTestModel(unsigned int TestModelDrawMode)
 {
 	glBindTexture(GL_TEXTURE_2D, 1);//LoadingTex.TexID
 	//glDisable( GL_TEXTURE_2D );
@@ -715,9 +719,8 @@ void DrawTestModel()
 	glEnableVertexAttribArray(AbLoc_Normal);
 	glEnableVertexAttribArray(AbLoc_Color);
 	glEnableVertexAttribArray(AbLoc_Tex0);*/
-	glPatchParameteri(GL_PATCH_VERTICES, 3);
 	glBindVertexArray(TestModelVAO);
-    glDrawElements(GL_PATCHES, 18, GL_UNSIGNED_INT, 0);
+    glDrawElements(TestModelDrawMode, 18, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
