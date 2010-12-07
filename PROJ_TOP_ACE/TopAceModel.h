@@ -8,7 +8,12 @@
 #include <math.h>
 #include <windows.h>
 #include <xmmintrin.h>
-#include <GL/glew.h>
+#include "Glsl.h"
+#include "GLSLLoader.h"
+#include "FileSysBace.h"
+#include "TALogSys.h"
+#include "CharSysBace.h"
+#include "Common.h"
 #include "EasyMatrix.h"
 #include "TexManager.h"
 typedef enum _TAM_File_States {
@@ -272,6 +277,7 @@ struct tMeshVBOID
 	unsigned int NormalID;
 	unsigned int TexCoordID;
 	unsigned int FaceID;
+	unsigned int VAOID;
 
 };
 class CTopAceModel
