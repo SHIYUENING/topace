@@ -340,31 +340,31 @@ void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient)
 void CO_SetMMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
 {
 	if(Matrix)
-		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
+		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,Matrix);
 	else
 	{
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MMatrix[i];
-		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,MatrixTMPF);
 	}
 }
 void CO_SetPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
 {
 	if(Matrix)
-		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
+		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,Matrix);
 	else
 	{
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)PMatrix[i];
-		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,MatrixTMPF);
 	}
 }
 void CO_SetMVPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
 {
 	if(Matrix)
-		glUniformMatrix4fv(UniformLoc,1,false,Matrix);
+		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,Matrix);
 	else
 	{
 		Easy_matrix_mult_Double(MVPMatrix,PMatrix,MMatrix);
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MVPMatrix[i];
-		glUniformMatrix4fv(UniformLoc,1,false,MatrixTMPF);
+		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,MatrixTMPF);
 	}
 }

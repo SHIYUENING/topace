@@ -15,9 +15,6 @@ struct _MaterialData{
 	GLfloat emission[4];//shininess in emission[3]
 	//GLfloat shininess;
 };
-void CO_SetMMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix);
-void CO_SetPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix);
-void CO_SetMVPMatrixToGLSL(GLint UniformLoc,GLfloat * Matrix);
 void CO_SetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_GetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient=NULL);
