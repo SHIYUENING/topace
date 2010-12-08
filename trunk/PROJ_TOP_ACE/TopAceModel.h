@@ -340,7 +340,7 @@ public:
 	__m128 GetBoneMatrix_BoneSca;
 	__m128 NodeBoneMatrixTMP[4];
 	__m128 NodeBoneMatrixTMPFirst[4];
-
+	double NodeBoneMatrixTMPD[16];
 	_TAM_Bone * TAM_Bone_Tmp;
 	void GetNodeMatrixs(__m128 * NodeMatrix,__m128 * NodeFirstMatrix,_TAM_Bone * TAM_Bone);
 	__m128 TAM_IdentityMatrix[4];
@@ -371,5 +371,6 @@ public:
 	bool DrawTranslucent;
 	bool GetCamMatrix(unsigned int CamID, __m128 * CamMatrix);
 	void SetLight(unsigned int LightID,unsigned int LightBase=0);
+	void Draw(bool Translucent);
 };
 #endif
