@@ -411,17 +411,18 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
 	
-	GLSL_SetMMatrixToGlsl();
-	GLSL_SetMVPMatrixToGlsl();
+
 	if(GameSet.Light>=4)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
+
 	TopAceModelTest.Draw();
-	
-	CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
+	/*CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
+	GLSL_SetMMatrixToGlsl();
+	GLSL_SetMVPMatrixToGlsl();
 	DrawTestModel(GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES);
-	
+	*/
 	GLSL_Disable();
 	
 	if(GameSet.Light==1) glDisable(GL_LIGHTING);
