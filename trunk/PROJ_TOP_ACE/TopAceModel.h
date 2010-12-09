@@ -306,6 +306,8 @@ public:
 	_TAM_Bone * TAM_Get_ChildBone(_TAM_Bone * TAM_Bone);
 
 	_TAM_File_States TAM_File_States;
+	
+	_MaterialData MaterialDataTAMTMP;
 	unsigned char * TAM_FileData;
 	bool InitTAMFile(unsigned char * TAM_FileData_IN);
 	bool InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN);

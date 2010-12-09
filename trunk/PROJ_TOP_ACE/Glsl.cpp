@@ -21,9 +21,6 @@ CGLSLLoader GLSL_Common;
 extern tGameSet GameSet;
 GLfloat GlslMatrixTMP[16];
 
-GLfloat GLSL_OmniLight_Pos[OmniLightDataNum*4];
-GLfloat GLSL_OmniLight_Color[OmniLightDataNum*4];
-GLfloat GLSL_Material[3*4];
 
 GLint PhoneLight_DiffuseTex=-1;
 GLint PhoneLight_DiffuseTexTurnY=-1;
@@ -127,29 +124,28 @@ void DeinitGLSL()
 
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
-	_OmniLightData OmniLightTMP;
-	for(int i=0;i<OmniLightDataNum;i++)
-	{
-		CO_GetOmniLight(&OmniLightTMP,i);
-		memcpy(&(GLSL_OmniLight_Pos[i*4]),OmniLightTMP.Pos,sizeof(GLfloat)*4);
-		memcpy(&(GLSL_OmniLight_Color[i*4]),OmniLightTMP.Color,sizeof(GLfloat)*4);
-	}
-	CO_GetMaterial((_MaterialData *)(&GLSL_Material));
-
-	int LightNums[2]={OmniLightNum,SpotLightNum};
 	if(GlslVer<100) return;
+	int LightNums[2]={OmniLightNum,SpotLightNum};
+	
 	CO_SetGlslPO(GLSL_PhoneLight.g_PO);
 	glUseProgramObjectARB( GLSL_PhoneLight.g_PO );
 	glUniform1i(PhoneLight_DiffuseTex,0);
 	glUniform2iv(PhoneLight_LightNums,1,LightNums);
 	glUniform1f(PhoneLight_DiffuseTexTurnY,1.0f);
 
-	CO_SetOmniLightToGLSL(PhoneLight_OmniLight_Pos,PhoneLight_OmniLight_Color);
-	CO_SetMaterialToGLSL(PhoneLight_Material);
-	CO_SetGlobalAmbientToGLSL(PhoneLight_Global_Ambient);
-	//glUniform4fv(PhoneLight_OmniLight_Pos,OmniLightDataNum,GLSL_OmniLight_Pos);
-	//glUniform4fv(PhoneLight_OmniLight_Color,OmniLightDataNum,GLSL_OmniLight_Color);
-	//glUniform4fv(PhoneLight_Material,3,GLSL_Material);
+	CO_SetMatrixsGLSLLoc(
+		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
+		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
+		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));
+
+	CO_SetOmniLightGLSLLoc(PhoneLight_OmniLight_Pos,PhoneLight_OmniLight_Color);
+	CO_SetOmniLightToGLSL();
+
+	CO_SetMaterialGLSLLoc(PhoneLight_Material);
+	CO_SetMaterialToGLSL(NULL);
+
+	CO_SetGlobalAmbientGLSLLoc(PhoneLight_Global_Ambient);
+	CO_SetGlobalAmbientToGLSL(NULL);
 }
 void GLSL_Disable()
 {

@@ -407,7 +407,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	DrawTestLines();
 	if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
-	CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
 
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
@@ -416,10 +415,12 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	GLSL_SetMVPMatrixToGlsl();
 	if(GameSet.Light>=4)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
-	DrawTestModel(GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
-	//TopAceModelTest.Draw();
+	TopAceModelTest.Draw();
+	
+	CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
+	DrawTestModel(GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES);
 	
 	GLSL_Disable();
 	
