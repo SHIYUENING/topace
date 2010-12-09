@@ -374,5 +374,7 @@ public:
 	bool GetCamMatrix(unsigned int CamID, __m128 * CamMatrix);
 	void SetLight(unsigned int LightID,unsigned int LightBase=0);
 	void Draw(bool Translucent);
+	void CreatVAO(tMeshVBOID * MeshVBOID);
+	void CreatVAO_RAM(tMeshVBOID * MeshVBOID,_TAM_Mesh * TAM_Mesh);
 };
 #endif
