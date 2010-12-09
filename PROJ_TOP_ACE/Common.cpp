@@ -279,6 +279,8 @@ void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRati
 
 GLfloat CO_OmniLight_Pos[OmniLightDataNum*4];
 GLfloat CO_OmniLight_Color[OmniLightDataNum*4];
+GLint CO_OmniLight_Pos_Loc=-1;
+GLint CO_OmniLight_Color_Loc=-1;
 void CO_SetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 {
 	if((!Light)||(LightNum>=OmniLightDataNum))
@@ -293,13 +295,19 @@ void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum)
 	memcpy(Light->Pos,&(CO_OmniLight_Pos[LightNum*4]),sizeof(GLfloat)*4);
 	memcpy(Light->Color,&(CO_OmniLight_Color[LightNum*4]),sizeof(GLfloat)*4);
 }
-void CO_SetOmniLightToGLSL(GLint UniformLoc_Pos,GLint UniformLoc_Color)
+void CO_SetOmniLightGLSLLoc(GLint OmniLight_Pos_Loc,GLint OmniLight_Color_Loc)
 {
-	glUniform4fv(UniformLoc_Pos,OmniLightDataNum,CO_OmniLight_Pos);
-	glUniform4fv(UniformLoc_Color,OmniLightDataNum,CO_OmniLight_Color);
+	CO_OmniLight_Pos_Loc=OmniLight_Pos_Loc;
+	CO_OmniLight_Color_Loc=OmniLight_Color_Loc;
+}
+void CO_SetOmniLightToGLSL()
+{
+	glUniform4fv(CO_OmniLight_Pos_Loc,OmniLightDataNum,CO_OmniLight_Pos);
+	glUniform4fv(CO_OmniLight_Color_Loc,OmniLightDataNum,CO_OmniLight_Color);
 }
 
 _MaterialData CO_MaterialData;
+GLint CO_Material_Loc=-1;
 void CO_SetMaterial(_MaterialData * Material)
 {
 	if(Material)
@@ -310,15 +318,20 @@ void CO_GetMaterial(_MaterialData * Material)
 	if(Material)
 		memcpy(Material,&CO_MaterialData,sizeof(_MaterialData));
 }
-void CO_SetMaterialToGLSL(GLint UniformLoc,_MaterialData * Material)
+void CO_SetMaterialGLSLLoc(GLint Material_Loc)
+{
+	CO_Material_Loc=Material_Loc;
+}
+void CO_SetMaterialToGLSL(_MaterialData * Material)
 {
 	if(Material)
-		glUniform4fv(UniformLoc,3,(GLfloat * )Material);
+		glUniform4fv(CO_Material_Loc,3,(GLfloat * )Material);
 	else
-		glUniform4fv(UniformLoc,3,(GLfloat * )(&CO_MaterialData));
+		glUniform4fv(CO_Material_Loc,3,(GLfloat * )(&CO_MaterialData));
 }
 
 GLfloat CO_GlobalAmbient[4]={0.0f,0.0f,0.0f,0.0f};
+GLint CO_GlobalAmbient_Loc=-1;
 void CO_SetGlobalAmbient(GLfloat * GlobalAmbient)
 {
 	if(GlobalAmbient)
@@ -329,42 +342,55 @@ void CO_GetGlobalAmbient(GLfloat * GlobalAmbient)
 	if(GlobalAmbient)
 		memcpy(GlobalAmbient,CO_GlobalAmbient,sizeof(CO_GlobalAmbient));
 }
-void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient)
+void CO_SetGlobalAmbientGLSLLoc(GLint GlobalAmbient_Loc)
+{
+	CO_GlobalAmbient_Loc=GlobalAmbient_Loc;
+}
+void CO_SetGlobalAmbientToGLSL(GLfloat * GlobalAmbient)
 {
 	if(GlobalAmbient)
-		glUniform4fv(UniformLoc,1,GlobalAmbient);
+		glUniform4fv(CO_GlobalAmbient_Loc,1,GlobalAmbient);
 	else
-		glUniform4fv(UniformLoc,1,CO_GlobalAmbient);
+		glUniform4fv(CO_GlobalAmbient_Loc,1,CO_GlobalAmbient);
 }
 
-void CO_SetMMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
+GLint CO_MMatrixGLSLLoc=-1;
+GLint CO_PMatrixGLSLLoc=-1;
+GLint CO_MVPMatrixGLSLLoc=-1;
+void CO_SetMatrixsGLSLLoc(GLint MMatrixGLSLLoc,GLint PMatrixGLSLLoc,GLint MVPMatrixGLSLLoc)
+{
+	if(MMatrixGLSLLoc!=-1) CO_MMatrixGLSLLoc=MMatrixGLSLLoc;
+	if(PMatrixGLSLLoc!=-1) CO_PMatrixGLSLLoc=PMatrixGLSLLoc;
+	if(MVPMatrixGLSLLoc!=-1) CO_MVPMatrixGLSLLoc=MVPMatrixGLSLLoc;
+}
+void CO_SetMMatrixToGlsl(GLfloat * Matrix)
 {
 	if(Matrix)
-		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,Matrix);
+		glUniformMatrix4fv(CO_MMatrixGLSLLoc,1,false,Matrix);
 	else
 	{
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MMatrix[i];
-		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,MatrixTMPF);
+		glUniformMatrix4fv(CO_MMatrixGLSLLoc,1,false,MatrixTMPF);
 	}
 }
-void CO_SetPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
+void CO_SetPMatrixToGlsl(GLfloat * Matrix)
 {
 	if(Matrix)
-		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,Matrix);
+		glUniformMatrix4fv(CO_PMatrixGLSLLoc,1,false,Matrix);
 	else
 	{
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)PMatrix[i];
-		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,MatrixTMPF);
+		glUniformMatrix4fv(CO_PMatrixGLSLLoc,1,false,MatrixTMPF);
 	}
 }
-void CO_SetMVPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix)
+void CO_SetMVPMatrixToGlsl(GLfloat * Matrix)
 {
 	if(Matrix)
-		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,Matrix);
+		glUniformMatrix4fv(CO_MVPMatrixGLSLLoc,1,false,Matrix);
 	else
 	{
 		Easy_matrix_mult_Double(MVPMatrix,PMatrix,MMatrix);
 		for (int i=0;i<16;i++) MatrixTMPF[i]=(GLfloat)MVPMatrix[i];
-		glUniformMatrix4fv(UniformLoc==0?GlslPO:UniformLoc,1,false,MatrixTMPF);
+		glUniformMatrix4fv(CO_MVPMatrixGLSLLoc,1,false,MatrixTMPF);
 	}
 }

@@ -17,13 +17,19 @@ struct _MaterialData{
 };
 void CO_SetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_GetGlobalAmbient(GLfloat * GlobalAmbient);
-void CO_SetGlobalAmbientToGLSL(GLint UniformLoc,GLfloat * GlobalAmbient=NULL);
+void CO_SetGlobalAmbientToGLSL(GLfloat * GlobalAmbient);
+void CO_SetGlobalAmbientGLSLLoc(GLint GlobalAmbient_Loc);
+
 void CO_SetOmniLight(_OmniLightData * Light,unsigned int LightNum);
 void CO_GetOmniLight(_OmniLightData * Light,unsigned int LightNum);
-void CO_SetOmniLightToGLSL(GLint UniformLoc_Pos,GLint UniformLoc_Color);
+void CO_SetOmniLightGLSLLoc(GLint OmniLight_Pos_Loc,GLint OmniLight_Color_Loc);
+void CO_SetOmniLightToGLSL();
+
 void CO_SetMaterial(_MaterialData * Material);
 void CO_GetMaterial(_MaterialData * Material);
-void CO_SetMaterialToGLSL(GLint UniformLoc,_MaterialData * Material=NULL);
+void CO_SetMaterialGLSLLoc(GLint Material_Loc);
+void CO_SetMaterialToGLSL(_MaterialData * Material);
+
 void CO_SetMMatrix(GLfloat * Matrix);
 void CO_SetPMatrix(GLfloat * Matrix);
 void CO_SetMVPMatrix(GLfloat * Matrix);
@@ -48,8 +54,10 @@ void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRati
                       GLfloat znear, GLfloat zfar,GLfloat * Matrix);
 void CO_SetGlslPO(GLuint SetGlslPO);
 void CO_MultMMatrix(GLfloat * Matrix);
-void CO_SetMMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix);
-void CO_SetPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix);
-void CO_SetMVPMatrixToGlsl(GLint UniformLoc,GLfloat * Matrix);
+
+void CO_SetMatrixsGLSLLoc(GLint MMatrixGLSLLoc,GLint PMatrixGLSLLoc,GLint MVPMatrixGLSLLoc);
+void CO_SetMMatrixToGlsl(GLfloat * Matrix);
+void CO_SetPMatrixToGlsl(GLfloat * Matrix);
+void CO_SetMVPMatrixToGlsl(GLfloat * Matrix);
 GLuint CO_GetGlslPO();
 #endif

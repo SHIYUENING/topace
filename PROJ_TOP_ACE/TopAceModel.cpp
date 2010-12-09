@@ -748,8 +748,8 @@ void CTopAceModel::Draw(bool Translucent)
 						CO_MultMMatrix((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
 					}
 				}
-				CO_SetMMatrixToGlsl(NULL,NULL);
-				CO_SetMVPMatrixToGlsl(NULL,NULL);
+				CO_SetMMatrixToGlsl(NULL);
+				CO_SetMVPMatrixToGlsl(NULL);
 				if(SuppotVBO)
 					DrawMeshRigid(TAM_Mesh_Draw);
 				else
@@ -852,6 +852,14 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,TAM_Mat->diffuse);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION,TAM_Mat->self_illum);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,&TAM_Mat->specularLv);
+	for(int i=0;i<4;i++)
+	{
+		MaterialDataTAMTMP.diffuse[i]=TAM_Mat->diffuse[i];
+		MaterialDataTAMTMP.emission[i]=TAM_Mat->self_illum[i];
+		MaterialDataTAMTMP.specular[i]=TAM_Mat->specular[i];
+	}
+	MaterialDataTAMTMP.specular[3]=max(10.0f,TAM_Mat->specularLv);
+	CO_SetMaterialToGLSL(&MaterialDataTAMTMP);
 	if(TAM_Mat->Tex_diffuse)
 	{
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_diffuse->TexID);
