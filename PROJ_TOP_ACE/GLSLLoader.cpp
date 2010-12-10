@@ -88,23 +88,6 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 		GLSLLOG.WriteLOGFile(true);
 		GLSLLOG.ClearLOG();
 		delete[] logbuffer;
-		/*char str[40960];
-		glGetInfoLogARB( g_programObj, sizeof(str), NULL, str );
-		MessageBox( NULL, "Error Message saving to Error.log", "Linking Error", MB_OK|MB_ICONEXCLAMATION );
-		//WritePrivateProfileString("Glsl","Linking_Error",str,".\\Error_log.ini");
-		HANDLE   hFile;     
-      
-		hFile   =   CreateFileW(L".\\Error.log",                       //   open   MYFILE.TXT     
-                                  GENERIC_WRITE,                             //   open   for   reading     
-                                  FILE_SHARE_READ,                       //   share   for   reading     
-                                  NULL,                                             //   no   security     
-                                  CREATE_ALWAYS,                           //   existing   file   only     
-                                  FILE_ATTRIBUTE_NORMAL,           //   normal   file     
-                                  NULL);
-		str[40959]=0;
-		DWORD savesize=0;
-		WriteFile(hFile,str,min(40959,strlen(str)),&savesize,NULL);
-		CloseHandle(hFile);*/
 		return false;
 	}
 	else
@@ -139,8 +122,6 @@ bool CGLSLLoader::LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename
 	}
 	return true;
 }
-
-
 void CGLSLLoader::ClearShader(void)
 {
 	if(!g_PO)
@@ -155,10 +136,12 @@ void CGLSLLoader::ClearShader(void)
 		glDeleteObjectARB(g_PS);
 	}
 	g_VS=0;
+	g_TC=0;
+	g_TE=0;
+	g_GS=0;
 	g_PS=0;
 	g_PO=0;
 }
-
 bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool ClearOldShader)
 {
 	if(ClearOldShader) ClearShader();
@@ -203,11 +186,9 @@ bool CGLSLLoader::LoadShader(const wchar_t* ShaderName,int ShaderLevel,bool Clea
 	delete[] ShaderFullName;
 	return false;
 }
-
 bool CGLSLLoader::LoadShader2(const wchar_t* ShaderFullName,int ShaderLevel)
 {
-	if(!ShaderFullName)
-		return false;
+	if(!ShaderFullName) return false;
 	if(ShaderLevel>=2)
 	if(!g_VS)
 	{

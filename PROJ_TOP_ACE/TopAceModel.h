@@ -278,6 +278,8 @@ struct tMeshVBOID
 	unsigned int TexCoordID;
 	unsigned int FaceID;
 	unsigned int VAOID;
+	unsigned int BoneIDsID;
+	unsigned int BoneWGsID;
 
 };
 class CTopAceModel
@@ -373,8 +375,9 @@ public:
 	bool DrawTranslucent;
 	bool GetCamMatrix(unsigned int CamID, __m128 * CamMatrix);
 	void SetLight(unsigned int LightID,unsigned int LightBase=0);
-	void Draw(bool Translucent);
+	void Draw(bool Translucent,bool Fiexible);
 	void CreatVAO(tMeshVBOID * MeshVBOID);
-	void CreatVAO_RAM(tMeshVBOID * MeshVBOID,_TAM_Mesh * TAM_Mesh);
+	bool MeshUseAlphaTMP;
+	bool IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh);
 };
 #endif

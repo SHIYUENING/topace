@@ -252,6 +252,7 @@ void SetCameraMatrix()
 	Easy_matrix_inv(MatrixOut,MatrixOut);
 	glLoadMatrixf(&(MatrixOut[0].m128_f32[0]));
 	CO_SetMMatrix(MatrixOut[0].m128_f32);
+	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
 }
 void SetLights()
 {
@@ -436,7 +437,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	SetCameraMatrix();
 	SetLights();
 	Test_matrix();
-//	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
+	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
 	QueryPerformanceCounter(&CPUTestEnd);
 }
 void InitTestModel()

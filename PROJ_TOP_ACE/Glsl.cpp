@@ -48,7 +48,6 @@ void InitGLSL()
 	else return;
 	GLSLLightSet = GameSet.Light;
 	if(GameSet.Light<2) { GlslVer=0;return;}
-	const char* verstr = (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
 	GLSL_Common.LoadShader(L"common",2);
 

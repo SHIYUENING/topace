@@ -76,17 +76,21 @@ void DataUpdata()
 	//TestUnit.PosTo(TestView.UnitPos,1.25f);
 	//TestView.PosTo(SceneUnitTest.UnitPos);
 	CUnitMath UnitMathDraw;
+	CUnitMath UnitMathDraw2;
 	UnitMathDraw.UnitPos=SceneUnitTest.UnitPos;
 	UnitMathDraw.UnitQuat=SceneUnitTest.UnitQuat;
 	UnitMathDraw.RotInternal(-90,1.0f,0.0f,0.0f);
+	UnitMathDraw2.RotInternal(-90,1.0f,0.0f,0.0f);
 
-	ThreadDataUpdata.DataCount=4;
+	ThreadDataUpdata.DataCount=5;
 	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;
 	ThreadDataUpdata.DataList[2].UnitData_States=_UnitData_States_Use;
 	ThreadDataUpdata.DataList[3].UnitData_States=_UnitData_States_Use;
+	ThreadDataUpdata.DataList[4].UnitData_States=_UnitData_States_Use;
 	TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
 	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
 	SceneUnitTest.GetMatrix(ThreadDataUpdata.DataList[3].Matrix);
+	UnitMathDraw2.GetMatrix(ThreadDataUpdata.DataList[4].Matrix);
 	__m128 SoundPos;
 	__m128 SoundMX[4];
 	TestView.GetMatrix(SoundMX);
