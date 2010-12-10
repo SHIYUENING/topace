@@ -5,6 +5,8 @@
 #define AbLoc_Tex0 1
 #define AbLoc_Normal 2
 #define AbLoc_Color 3
+#define AbLoc_BID 4
+#define AbLoc_BWG 5
 void InitGLSL();
 void DeinitGLSL();
 void GLSL_Enable_PhoneLight(int OmniLightNum=1,int SpotLightNum=0);
