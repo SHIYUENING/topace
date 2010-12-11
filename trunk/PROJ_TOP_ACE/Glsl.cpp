@@ -29,6 +29,7 @@ GLint PhoneLight_OmniLight_Pos=-1;
 GLint PhoneLight_OmniLight_Color=-1;
 GLint PhoneLight_Material=-1;
 GLint PhoneLight_Global_Ambient=-1;
+GLint PhoneLight_TessLevel=-1;
 
 GLint DrawBloomMap_texColor=-1;
 GLint DrawBloomMap_AveLum=-1;
@@ -40,7 +41,7 @@ GLint ToneMapping__texSrc1=-1;
 GLint BlurTex_BlurTex=-1;
 GLint BlurTex_BlurTexSet=-1;
 
-
+extern int TessLevel;
 void InitGLSL()
 {
 
@@ -66,6 +67,7 @@ void InitGLSL()
 	PhoneLight_OmniLight_Color = glGetUniformLocation(GLSL_PhoneLight.g_PO,"OmniLight_Color");
 	PhoneLight_Material = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Material");
 	PhoneLight_Global_Ambient = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Global_Ambient");
+	PhoneLight_TessLevel = glGetUniformLocation(GLSL_PhoneLight.g_PO,"TessLevel");
 
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
@@ -131,6 +133,7 @@ void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 	glUniform1i(PhoneLight_DiffuseTex,0);
 	glUniform2iv(PhoneLight_LightNums,1,LightNums);
 	glUniform1f(PhoneLight_DiffuseTexTurnY,1.0f);
+	glUniform1f(PhoneLight_TessLevel,(float)TessLevel);
 
 	CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
