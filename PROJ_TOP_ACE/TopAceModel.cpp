@@ -12,6 +12,7 @@ CTopAceModel::CTopAceModel(void)
 , TAM_Light_FramesTMP(NULL)
 , TAM_Bone_Tmp(NULL)
 , FilePath(NULL)
+, TAMDrawMode(GL_TRIANGLES)
 {
 	
 }
@@ -867,7 +868,7 @@ bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 		SetDrawMeshMat(&(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1]));
 	
 	glBindVertexArray(MeshVBOID->VAOID);
-	glDrawArrays(GL_TRIANGLES,0,TAM_Mesh->vecNum);
+	glDrawArrays(TAMDrawMode,0,TAM_Mesh->vecNum);
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
@@ -877,6 +878,7 @@ bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 }
 bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 {
+	if(TAMDrawMode==GL_PATCHES) return false;
 	if(TAM_Mesh->vecNum==0) return false;
 
 	if(!IsDrawWithAlpha(TAM_Mesh))return false;
@@ -908,6 +910,8 @@ bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 
 bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 {
+	
+	if(TAMDrawMode==GL_PATCHES) return false;
 	if(TAM_Mesh->vecNum==0) return false;
 
 	if(!IsDrawWithAlpha(TAM_Mesh))return false;

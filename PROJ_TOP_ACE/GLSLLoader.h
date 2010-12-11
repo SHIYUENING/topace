@@ -4,15 +4,15 @@
 #include <GL/glew.h>
 #include "TALogSys.h"
 
+char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject);
 class CGLSLLoader
 {
 public:
 	CGLSLLoader(void);
 	~CGLSLLoader(void);
-	char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject);
 	bool GetGLSLLinkSTATUS(GLhandleARB g_programObj);
 	GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
-	GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject);
+	GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint bCompiled);
 	CTALogSys GLSLLOG;
 	bool LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename);
 	void ClearShader(void);

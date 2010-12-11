@@ -52,6 +52,9 @@ float moveX=0.0f;
 HGLRC	 m_hrc;
 CLockFPS LockFPSSYS,LockFPSRender;
 CTALogSys MainLOG;
+int TessLevel=1;
+bool Gdown1=false;
+bool Gdown2=false;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -69,6 +72,23 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 		moveZ=moveZ+10.0f;
 	if(g_keys->keyDown [VK_NEXT] == TRUE)
 		moveZ=moveZ-10.0f;
+
+	if((g_keys->keyDown ['1'] == TRUE)&&(!Gdown1))
+	{
+		Gdown1=true;
+		TessLevel=TessLevel-1;
+	}
+	else Gdown1=false;
+	if((g_keys->keyDown ['2'] == TRUE)&&(!Gdown2))
+	{
+		Gdown2=true;
+		TessLevel=TessLevel+1;
+	}
+	else Gdown2=false;
+	TessLevel=max(1,TessLevel);
+	int TessLevelMAX=64;
+	glGetIntegerv(GL_MAX_TESS_GEN_LEVEL,&TessLevelMAX);
+	TessLevel=min(TessLevelMAX,TessLevel);
 
 	if(g_keys->keyDown [VK_UP] == TRUE)
 		moveY=moveY+10.0f;

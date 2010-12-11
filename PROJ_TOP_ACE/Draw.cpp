@@ -55,7 +55,7 @@ struct _TestMeshVBOID
 	unsigned int FaceID;
 };
 _TestMeshVBOID TestMeshVBOID;
-
+extern int TessLevel;
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -316,7 +316,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%, GPU:%3.3f%%",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU);
+		swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%, GPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		Font2D->inputTxt(ShowFPS);
 	}
 	FPSNum=FPSNum+1;
@@ -417,7 +417,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
-
+	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
 	TopAceModelTest.Draw();
 	/*CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
 	GLSL_SetMMatrixToGlsl();
