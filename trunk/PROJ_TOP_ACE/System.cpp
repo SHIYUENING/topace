@@ -71,9 +71,9 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 	//	ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	//}
 	if(g_keys->keyDown [VK_PRIOR] == TRUE)
-		moveZ=moveZ+10.0f;
+		moveZ=moveZ+2.0f;
 	if(g_keys->keyDown [VK_NEXT] == TRUE)
-		moveZ=moveZ-10.0f;
+		moveZ=moveZ-2.0f;
 
 	if((g_keys->keyDown ['1'] == TRUE)&&(!Gdown1))
 	{
@@ -93,15 +93,15 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 	TessLevel=min(TessLevelMAX,TessLevel);
 
 	if(g_keys->keyDown [VK_UP] == TRUE)
-		moveY=moveY+10.0f;
+		moveY=moveY+2.0f;
 	if(g_keys->keyDown [VK_DOWN] == TRUE)
-		moveY=moveY-10.0f;
+		moveY=moveY-2.0f;
 
 
 	if(g_keys->keyDown [VK_RIGHT] == TRUE)
-		moveX=moveX+10.0f;
+		moveX=moveX+2.0f;
 	if(g_keys->keyDown [VK_LEFT] == TRUE)
-		moveX=moveX-10.0f;
+		moveX=moveX-2.0f;
 	if(g_keys->keyDown [VK_HOME] == TRUE)
 	{
 		moveX=moveY=moveZ=0.0f;

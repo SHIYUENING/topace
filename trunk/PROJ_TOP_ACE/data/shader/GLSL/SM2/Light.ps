@@ -31,7 +31,10 @@ vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 }
 void main()
 {
-	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoord0.xy)*Color;
+	vec2 TexCoordDiffuse;
+	TexCoordDiffuse.x=TexCoord0.x;
+	TexCoordDiffuse.y=DiffuseTexTurnY*TexCoord0.y;
+	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
 	vec2 LightVal = OmniLight (OmniLight_Pos[0],Material_shininess);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0] * Material_diffuse;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
