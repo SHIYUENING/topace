@@ -78,13 +78,13 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 		Gdown1=true;
 		TessLevel=TessLevel-1;
 	}
-	else Gdown1=false;
+	if(g_keys->keyDown ['1'] != TRUE)  Gdown1=false;
 	if((g_keys->keyDown ['2'] == TRUE)&&(!Gdown2))
 	{
 		Gdown2=true;
 		TessLevel=TessLevel+1;
 	}
-	else Gdown2=false;
+	if(g_keys->keyDown ['2'] != TRUE)  Gdown2=false;
 	TessLevel=max(1,TessLevel);
 	int TessLevelMAX=64;
 	glGetIntegerv(GL_MAX_TESS_GEN_LEVEL,&TessLevelMAX);
