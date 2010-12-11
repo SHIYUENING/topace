@@ -55,6 +55,8 @@ CTALogSys MainLOG;
 int TessLevel=1;
 bool Gdown1=false;
 bool Gdown2=false;
+bool GdownSPACE=false;
+bool DrawFrame=false;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -104,6 +106,13 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 	{
 		moveX=moveY=moveZ=0.0f;
 	}
+
+	if((g_keys->keyDown [VK_SPACE] == TRUE)&&(!GdownSPACE))
+	{
+		GdownSPACE=true;
+		DrawFrame=!DrawFrame;
+	}
+	if(g_keys->keyDown [VK_SPACE] != TRUE)  GdownSPACE=false;
 }
 
 
