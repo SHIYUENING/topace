@@ -56,6 +56,7 @@ struct _TestMeshVBOID
 };
 _TestMeshVBOID TestMeshVBOID;
 extern int TessLevel;
+extern bool DrawFrame;
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -147,7 +148,6 @@ void InitDraw()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glShadeModel(GL_SMOOTH);
-	//glPolygonMode(GL_BACK,GL_LINE);
 	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
 	InitTestLight();
 
@@ -404,7 +404,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
 	//glEnable(GL_MULTISAMPLE_ARB);
-
+	
+	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	DrawTestLines();
 	if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
@@ -429,6 +430,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	if(GameSet.Light==1) glDisable(GL_LIGHTING);
 	
 	RenderPass2Units();
+	
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 
 	glDisable(GL_MULTISAMPLE_ARB);
