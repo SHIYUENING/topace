@@ -52,22 +52,22 @@ void main()
 
     gl_Position = MVPMatrix* vec4(world_pos, 1.0);
 	teVertexEyeDir = MMatrix * vec4(world_pos, 1.0);
-	vec3 Normal = tcNormal[0] * ww
+	/*vec3 Normal = tcNormal[0] * ww
 					+ tcNormal[1] * uu
 					+ tcNormal[2] * vv
 					+ n110[0] * w * u
 					+ n011[0] * u * v
-					+ n101[0] * w * v;
-/*	vec3 Normal=gl_TessCoord.x*tcNormal[2]
-			 +gl_TessCoord.y*tcNormal[0]
-			 +gl_TessCoord.z*tcNormal[1];*/
+					+ n101[0] * w * v;*/
+	vec3 Normal=gl_TessCoord.x*tcNormal[1]
+			 +gl_TessCoord.y*tcNormal[2]
+			 +gl_TessCoord.z*tcNormal[0];
 	teNormal=(MMatrix * vec4(Normal, 0.0)).xyz;
 
-	teTexCoord0=gl_TessCoord.x*tcTexCoord0[2]
-			 +gl_TessCoord.y*tcTexCoord0[0]
-			 +gl_TessCoord.z*tcTexCoord0[1];
+	teTexCoord0=gl_TessCoord.z*tcTexCoord0[0]
+			 +gl_TessCoord.x*tcTexCoord0[1]
+			 +gl_TessCoord.y*tcTexCoord0[2];
 			 
-	teColor=gl_TessCoord.x*tcColor[2]
-			 +gl_TessCoord.y*tcColor[0]
-			 +gl_TessCoord.z*tcColor[1];
+	teColor=gl_TessCoord.x*tcColor[1]
+			 +gl_TessCoord.y*tcColor[2]
+			 +gl_TessCoord.z*tcColor[0];
 }

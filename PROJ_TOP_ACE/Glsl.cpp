@@ -243,3 +243,7 @@ void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix)
 		CO_GetMVPMatrix(GlslMatrixTMP);
 	glUniformMatrix4fv(glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"),1,false,GlslMatrixTMP);
 }
+void GSLS_SetPhoneLight_DiffuseTexTurnY(float DiffuseTexTurnY)
+{
+	glUniform1f(PhoneLight_DiffuseTexTurnY,DiffuseTexTurnY);
+}

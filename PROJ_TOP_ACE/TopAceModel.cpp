@@ -806,16 +806,22 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 		MaterialDataTAMTMP.emission[i]=TAM_Mat->self_illum[i];
 		MaterialDataTAMTMP.specular[i]=TAM_Mat->specular[i];
 	}
-	MaterialDataTAMTMP.specular[3]=max(10.0f,TAM_Mat->specularLv);
+	MaterialDataTAMTMP.emission[3]=max(10.0f,TAM_Mat->specularLv);
 	CO_SetMaterialToGLSL(&MaterialDataTAMTMP);
 	if(TAM_Mat->Tex_diffuse)
 	{
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_diffuse->TexID);
 		glMatrixMode(GL_TEXTURE);
 		if(TAM_Mat->Tex_diffuse->TexType==IS_DDS)
+		{
 			glLoadMatrixf(&IdentityDDSTexMatrix[0][0]);
+			GSLS_SetPhoneLight_DiffuseTexTurnY(-1.0f);
+		}
 		else
+		{
+			GSLS_SetPhoneLight_DiffuseTexTurnY(1.0f);
 			glLoadIdentity();
+		}
 		glMatrixMode(GL_MODELVIEW);
 	}
 
