@@ -120,6 +120,8 @@ void InitDraw()
 	WritePrivateProfileString("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
 	WritePrivateProfileString("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
 	//WritePrivateProfileString("PC Info","GL_EXTENSIONS",(char *)glGetString(GL_EXTENSIONS),".\\gameset.ini");
+	wchar_t  TestModelPath[512];
+	GetPrivateProfileStringW(L"other",L"TestModelPath",L"data/1234.tam",TestModelPath,512,L".\\gameset.ini");
 	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=3;
 	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=2;
 	if (!glewIsSupported("GL_VERSION_2_0"))
@@ -153,7 +155,7 @@ void InitDraw()
 	InitTestLight();
 
 
-	TopAceModelTest.ReadTAMFile(L"data/1234.tam");
+	TopAceModelTest.ReadTAMFile(TestModelPath);
 	TopAceModelTest.LoadToVRAM();
 	if(TopAceModelTest.TAM_FileData)
 	{
