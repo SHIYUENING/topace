@@ -753,6 +753,7 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 			{
 				if(!Fiexible) continue;
 				CO_SetMMatrixToGlsl(NULL);
+				CO_SetPMatrixToGlsl(NULL);
 				CO_SetMVPMatrixToGlsl(NULL);
 				DrawRAMMeshFiexible(TAM_Mesh_Draw);
 			}
@@ -770,6 +771,7 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 					}
 				}
 				CO_SetMMatrixToGlsl(NULL);
+				CO_SetPMatrixToGlsl(NULL);
 				CO_SetMVPMatrixToGlsl(NULL);
 				if(SuppotVBO)
 					DrawMeshRigid(TAM_Mesh_Draw);
@@ -790,8 +792,10 @@ void CTopAceModel::Draw(void)
 	glDisable(GL_BLEND);
 	Draw(false,true);
 	Draw(false,false);
+	//glDepthMask(GL_FALSE);
 	Draw(true,false);
 	Draw(true,true);
+	//glDepthMask(GL_TRUE);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 	glMatrixMode(GL_TEXTURE);

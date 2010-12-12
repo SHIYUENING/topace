@@ -19,8 +19,8 @@ in vec3 b111[];
 in vec3 n110[];
 in vec3 n011[];
 in vec3 n101[];
-uniform mat4x4 MMatrix;
-uniform mat4x4 MVPMatrix;
+uniform mat4x4 PMatrix;
+//uniform mat4x4 MVPMatrix;
 
 void main()
 {
@@ -50,8 +50,8 @@ void main()
 			 +gl_TessCoord.y*tcPosition[1]
 			 +gl_TessCoord.z*tcPosition[2];*/
 
-    gl_Position = MVPMatrix* vec4(world_pos, 1.0);
-	teVertexEyeDir = MMatrix * vec4(world_pos, 1.0);
+    gl_Position = PMatrix* vec4(world_pos, 1.0);
+	teVertexEyeDir = vec4(world_pos, 1.0);
 	/*vec3 Normal = tcNormal[0] * ww
 					+ tcNormal[1] * uu
 					+ tcNormal[2] * vv
@@ -61,7 +61,7 @@ void main()
 	vec3 Normal=gl_TessCoord.x*tcNormal[1]
 			 +gl_TessCoord.y*tcNormal[2]
 			 +gl_TessCoord.z*tcNormal[0];
-	teNormal=(MMatrix * vec4(Normal, 0.0)).xyz;
+	teNormal=Normal;
 
 	teTexCoord0=gl_TessCoord.z*tcTexCoord0[0]
 			 +gl_TessCoord.x*tcTexCoord0[1]
