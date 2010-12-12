@@ -13,6 +13,7 @@ CTopAceModel::CTopAceModel(void)
 , TAM_Bone_Tmp(NULL)
 , FilePath(NULL)
 , TAMDrawMode(GL_TRIANGLES)
+, testMAXFrame(0)
 {
 	
 }
@@ -357,6 +358,7 @@ bool CTopAceModel::InitTAMBone(_TAM_Bone * TAM_BoneData_IN)
 		TAM_BoneData_IN->FramesHeadAddress[i]=(_TAM_Bone_Frame_Head *)&TAM_FileData[int(TAM_BoneData_IN->FramesHeadAddress[i])];
 		if(TAM_BoneData_IN->FramesHeadAddress[i]->TotalFrameNum>0)
 		{
+			testMAXFrame=max(TAM_BoneData_IN->FramesHeadAddress[i]->MAXFrameNum,testMAXFrame);
 			_TAM_Bone_Frame ** TAM_Bone_Frames=(_TAM_Bone_Frame **) &(TAM_BoneData_IN->FramesHeadAddress[i]->FramesAddress);
 			for(unsigned int j=0;j<=TAM_BoneData_IN->FramesHeadAddress[i]->MAXFrameNum;j++)
 			{
@@ -740,6 +742,13 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 		TAM_Mesh_Draw=pTAM_FileHead->MeshHeadAddress[i];
 		if(TAM_Mesh_Draw)
 		{
+			if(TAM_Mesh_Draw->OneFace)
+				glEnable(GL_CULL_FACE);
+				//glCullFace(GL_BACK);
+			else
+				glDisable(GL_CULL_FACE);
+				//glCullFace(GL_NONE);
+			//glDisable(GL_CULL_FACE);
 			if(TAM_Mesh_Draw->IsFiexible)
 			{
 				if(!Fiexible) continue;
@@ -806,7 +815,7 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 		MaterialDataTAMTMP.emission[i]=TAM_Mat->self_illum[i];
 		MaterialDataTAMTMP.specular[i]=TAM_Mat->specular[i];
 	}
-	MaterialDataTAMTMP.emission[3]=max(10.0f,TAM_Mat->specularLv);
+	MaterialDataTAMTMP.emission[3]=max(1.0f,TAM_Mat->specularLv);
 	CO_SetMaterialToGLSL(&MaterialDataTAMTMP);
 	if(TAM_Mat->Tex_diffuse)
 	{
