@@ -380,5 +380,6 @@ public:
 	bool MeshUseAlphaTMP;
 	bool IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh);
 	unsigned int TAMDrawMode;
+	unsigned int testMAXFrame;
 };
 #endif

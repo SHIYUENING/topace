@@ -144,6 +144,7 @@ void InitDraw()
 	InitGLSL();
 	CDDS::SetAFNum(GameSet.AF);
 	InitTestModel();
+	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -154,13 +155,14 @@ void InitDraw()
 
 	TopAceModelTest.ReadTAMFile(L"data/1234.tam");
 	TopAceModelTest.LoadToVRAM();
-	/*if(TopAceModelTest.TAM_FileData)
+	if(TopAceModelTest.TAM_FileData)
 	{
-		PosOrgZ=2*max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
+		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[1]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[1]))),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[2]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[2])));
-		PosOrgY=-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
-	}*/
+		PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
+		maxFreme=(float)TopAceModelTest.testMAXFrame;
+	}
 	/*
 	if(GameSet.Light==1)
 	{
