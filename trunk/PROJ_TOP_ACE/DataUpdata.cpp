@@ -69,7 +69,10 @@ void DataUpdata()
 	angleR=angleR+0.2f;
 
 	TestView.Reset();
-	TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
+	TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
+	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
+	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,PosOrgY,0));
+	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
 	//SceneUnitTest.SetPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
 	SceneUnitTest.SetTGTPos(TestView.UnitPos);
 	SceneUnitTest.Updata();
