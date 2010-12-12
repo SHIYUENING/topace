@@ -9,10 +9,12 @@ out vec3 vPosition;
 out vec3 vNormal; 
 out vec2 vTexCoord0;
 out vec4 vColor;
+uniform mat4x4 MMatrix;
 void main()
 {
-	vPosition	=	Position_in;
-	vNormal		=	normalize(Normal_in);
+	vPosition	=	(MMatrix* vec4(Position_in, 1.0)).xyz;
+	//vPosition	=	Position_in;
+	vNormal		=	(MMatrix* vec4(normalize(Normal_in),0.0)).xyz;
 	vTexCoord0	=	TexCoord0_in;
 	vColor		=	Color_in;
 }
