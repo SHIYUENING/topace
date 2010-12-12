@@ -92,7 +92,7 @@ void InitTestLight()
 	MaterialData.specular[3]=1.0f;
 	CO_SetMaterial(&MaterialData);
 
-	GLfloat GlobalAmbient_Set[]={0.7f,0.7f,0.7f,1.0f};
+	GLfloat GlobalAmbient_Set[]={0.2f,0.2f,0.2f,1.0f};
 	CO_SetGlobalAmbient(GlobalAmbient_Set);
 	OmniLightNumBase=1;
 

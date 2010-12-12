@@ -70,7 +70,7 @@ void main()
 		n101[ID] = normalize(n200 + n002 - v31 * (b003 - b300));
 
 		float DotN=dot(vNormal[0],vNormal[1])+dot(vNormal[2],vNormal[1]);
-		if((dot(gFacetNormal,vec3(0.0,0.0,1.0))>0.0)&&(DotN<1.999))
+		if((dot(gFacetNormal,vec3(0.0,0.0,1.0))>0.0)&&(DotN<1.9999))
 		{
 			gl_TessLevelInner[0] = TessLevel;
 			gl_TessLevelOuter[0] = TessLevel;
