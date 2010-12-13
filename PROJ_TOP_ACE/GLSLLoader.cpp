@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "FileSysBace.h"
 #include "CharSysBace.h"
+#include "Glsl.h"
 char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject)
 {
 	int logreadsize=0;
@@ -61,6 +62,44 @@ bool LinkShader(GLhandleARB GLSL_programObj)
 	glLinkProgramARB( GLSL_programObj );
 	glGetObjectParameterivARB( GLSL_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
 	return bLinked!=0?true:false;
+}
+bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS)
+{
+	if(!GLSL_PO) return false;
+	GLSL_PO[0]=glCreateProgramObjectARB();
+	if(Attach_VS) glAttachObjectARB(GLSL_PO[0],Attach_VS);
+	if(Attach_TC) glAttachObjectARB(GLSL_PO[0],Attach_TC);
+	if(Attach_TE) glAttachObjectARB(GLSL_PO[0],Attach_TE);
+	if(Attach_GS) glAttachObjectARB(GLSL_PO[0],Attach_GS);
+	if(Attach_PS) glAttachObjectARB(GLSL_PO[0],Attach_PS);
+	glBindAttribLocation(GLSL_PO[0],AbLoc_Pos, "Position_in" );
+	glBindAttribLocation(GLSL_PO[0],AbLoc_Tex0, "TexCoord0_in" );
+	glBindAttribLocation(GLSL_PO[0],AbLoc_Normal, "Normal_in" );
+	glBindAttribLocation(GLSL_PO[0],AbLoc_Color, "Color_in" );
+	GLint bLinked=0;
+	glLinkProgramARB( GLSL_PO[0] );
+	glGetObjectParameterivARB( GLSL_PO[0], GL_OBJECT_LINK_STATUS_ARB, &bLinked );
+	CTALogSys TALogSysCS;
+	if(bLinked) TALogSysCS.AddLOG("\n  ****** GLSL Log ******\n    ");
+	else TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+	char * logbuffer=GetGLSLInfoLog(GLSL_PO[0]);
+	TALogSysCS.AddLOG(logbuffer,true);
+	TALogSysCS.WriteLOGFile(true);
+	TALogSysCS.ClearLOG();
+	delete[] logbuffer;
+	return bLinked!=0?true:false;
+}
+void ClearShaderObject(GLhandleARB GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS)
+{
+	if(glIsProgram(GLSL_PO)!=GL_FALSE)
+	{
+		if(glIsShader(Attach_VS)!=GL_FALSE){ glDetachObjectARB(GLSL_PO,Attach_VS);}
+		if(glIsShader(Attach_TC)!=GL_FALSE){ glDetachObjectARB(GLSL_PO,Attach_TC);}
+		if(glIsShader(Attach_TE)!=GL_FALSE){ glDetachObjectARB(GLSL_PO,Attach_TE);}
+		if(glIsShader(Attach_GS)!=GL_FALSE){ glDetachObjectARB(GLSL_PO,Attach_GS);}
+		if(glIsShader(Attach_PS)!=GL_FALSE){ glDetachObjectARB(GLSL_PO,Attach_PS);}
+		glDeleteObjectARB(GLSL_PO);
+	}
 }
 CGLSLLoader::CGLSLLoader(void)
 	:g_VS(0)
