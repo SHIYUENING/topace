@@ -1,10 +1,8 @@
 #include "GLSLLoader.h"
-
 #include <stdio.h>	
 #include <windows.h>
 #include "FileSysBace.h"
 #include "CharSysBace.h"
-#define ShaderPath L"data/shader/GLSL/"
 char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject)
 {
 	int logreadsize=0;
@@ -15,6 +13,54 @@ char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject)
 	glGetInfoLogARB(GLSLShaderObject, logbuffersize,&logreadsize, logbuffer);
 	logbuffer[logbuffersize]=0;
 	return logbuffer;
+}
+GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
+{
+	CTALogSys TALogSysCS;
+	GLhandleARB GLhandleARBTMP=0;
+	char * GLSLFileBuffer=ReadLocFullFile_ANSI_TXT(shaderfilename);
+	int dwNum=WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,NULL,0,NULL,NULL);
+	char * shaderfilenameANSI=new char[dwNum];
+	WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
+	if(!GLSLFileBuffer)
+	{
+		TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+		TALogSysCS.AddLOG("Cannot open shader file\n");
+		TALogSysCS.AddLOG(shaderfilenameANSI);
+		TALogSysCS.WriteLOGFile(true);
+		TALogSysCS.ClearLOG();
+		delete [] shaderfilenameANSI;
+		return 0;
+	}
+	TALogSysCS.AddLOG("\n  ****** GLSL Loading File ******\n    ");
+	TALogSysCS.AddLOG(shaderfilenameANSI,true);
+	GLint bCompiled=0;
+	GLhandleARBTMP = CompileShader(GLSLFileBuffer,ShaderObject,&bCompiled);
+	if(!bCompiled) TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+	else TALogSysCS.AddLOG("\n  ****** GLSL Log ******\n    ");
+	char * logbuffer=GetGLSLInfoLog(GLhandleARBTMP);
+	TALogSysCS.AddLOG(logbuffer,true);
+	TALogSysCS.WriteLOGFile(true);
+	TALogSysCS.ClearLOG();
+	delete [] logbuffer;
+	delete [] shaderfilenameANSI;
+	delete [] GLSLFileBuffer;
+	return GLhandleARBTMP;
+}
+GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint * bCompiled)
+{
+	GLhandleARB GLSLShaderObject=glCreateShaderObjectARB(ShaderObject);
+	glShaderSourceARB( GLSLShaderObject, 1, (const GLcharARB **)(&ShaderAssembly), NULL );
+	glCompileShaderARB( GLSLShaderObject);
+	glGetObjectParameterivARB( GLSLShaderObject, GL_OBJECT_COMPILE_STATUS_ARB, bCompiled );
+	return GLSLShaderObject;
+}
+bool LinkShader(GLhandleARB GLSL_programObj)
+{
+	GLint bLinked=0;
+	glLinkProgramARB( g_programObj );
+	glGetObjectParameterivARB( g_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
+	return bLinked!=0?true:false;
 }
 CGLSLLoader::CGLSLLoader(void)
 	:g_VS(0)
@@ -28,49 +74,6 @@ CGLSLLoader::~CGLSLLoader(void)
 {
 	ClearShader();
 	GLSLLOG.ClearLOG();
-}
-
-
-GLhandleARB CGLSLLoader::CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
-{
-	CTALogSys TALogSysCS;
-	GLhandleARB GLhandleARBTMP=0;
-	char * GLSLFileBuffer=ReadLocFullFile_ANSI_TXT(shaderfilename);
-	int dwNum=WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,NULL,0,NULL,NULL);
-	char * shaderfilenameANSI=new char[dwNum];
-	WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
-	if(!GLSLFileBuffer)
-	{
-		TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
-		TALogSysCS.AddLOG("Cannot open shader file");
-		TALogSysCS.AddLOG(shaderfilenameANSI);
-		TALogSysCS.WriteLOGFile(true);
-		TALogSysCS.ClearLOG();
-		delete [] shaderfilenameANSI;
-		return 0;
-	}
-	TALogSysCS.AddLOG("\n  ****** GLSL Loading File ******\n    ");
-	TALogSysCS.AddLOG(shaderfilenameANSI,true);
-	GLint bCompiled=0;
-	GLhandleARBTMP = CompileShader(GLSLFileBuffer,ShaderObject,bCompiled);
-	if(!bCompiled) GLSLLOG.AddLOG("\n  ****** GLSL ERROR ******\n    ");
-	else GLSLLOG.AddLOG("\n  ****** GLSL Log ******\n    ");
-	char * logbuffer=GetGLSLInfoLog(GLhandleARBTMP);
-	TALogSysCS.AddLOG(logbuffer,true);
-	TALogSysCS.WriteLOGFile(true);
-	TALogSysCS.ClearLOG();
-	delete [] logbuffer;
-	delete [] shaderfilenameANSI;
-	delete [] GLSLFileBuffer;
-	return GLhandleARBTMP;
-}
-GLhandleARB CGLSLLoader::CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint bCompiled)
-{
-	GLhandleARB GLSLShaderObject=glCreateShaderObjectARB(ShaderObject);
-	glShaderSourceARB( GLSLShaderObject, 1, (const GLcharARB **)(&ShaderAssembly), NULL );
-	glCompileShaderARB( GLSLShaderObject);
-	glGetObjectParameterivARB( GLSLShaderObject, GL_OBJECT_COMPILE_STATUS_ARB, &bCompiled );
-	return GLSLShaderObject;
 }
 bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 {

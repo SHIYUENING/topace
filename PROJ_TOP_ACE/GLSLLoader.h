@@ -3,16 +3,17 @@
 #define _GLSLLOADER_H
 #include <GL/glew.h>
 #include "TALogSys.h"
-
+#define ShaderPath L"data/shader/GLSL/"
+GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
+GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint * bCompiled);
 char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject);
+bool LinkShader(GLhandleARB GLSL_programObj);
 class CGLSLLoader
 {
 public:
 	CGLSLLoader(void);
 	~CGLSLLoader(void);
 	bool GetGLSLLinkSTATUS(GLhandleARB g_programObj);
-	GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
-	GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint bCompiled);
 	CTALogSys GLSLLOG;
 	bool LoadShader(const wchar_t* VSfilename,const wchar_t* PSfilename);
 	void ClearShader(void);
