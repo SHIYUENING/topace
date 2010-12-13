@@ -8,11 +8,8 @@
 #define SINGLBONE 0
 #define MULTIBONE 1
 void Init_GLSL_light(int LightSet);
-class CGLSL_Light
-{
-public:
-	CGLSL_Light(void);
-	~CGLSL_Light(void);
-};
+void Deinit_GLSL_light();
+void Init_GLSL_light_Uniform(int boneType,int GLSLver);
+void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightNum,int TessLevel);
 
 #endif

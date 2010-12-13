@@ -1,42 +1,89 @@
 #include "GLSL_Light.h"
 #include "FileSysBace.h"
 #include "CharSysBace.h"
+#include "Glsl.h"
+#include "Common.h"
 GLhandleARB GH_VS[2][3];
 GLhandleARB GH_TC;
 GLhandleARB GH_TE;
 GLhandleARB GH_GS[3];
 GLhandleARB GH_PS[3];
 GLhandleARB GH_PO[2][3];
+GLint GLSL_Light_DiffuseTex[2][3];
+GLint GLSL_Light_DiffuseTexTurnY[2][3];
+GLint GLSL_Light_LightNums[2][3];
+GLint GLSL_Light_OmniLight_Pos[2][3];
+GLint GLSL_Light_OmniLight_Color[2][3];
+GLint GLSL_Light_Material[2][3];
+GLint GLSL_Light_Global_Ambient[2][3];
+GLint GLSL_Light_TessLevel[2][3];
 void Init_GLSL_light(int LightSet)
 {
 	if(LightSet<2) return;
 	GH_VS[SINGLBONE][GLSL120]=CompileShader(L"data/shader/GLSL/Light/VS_120_SINGLBONE.glsl",GL_VERTEX_SHADER);
 	GH_VS[MULTIBONE][GLSL120]=CompileShader(L"data/shader/GLSL/Light/VS_120_MULTIBONE.glsl",GL_VERTEX_SHADER);
 	GH_PS			[GLSL120]=CompileShader(L"data/shader/GLSL/Light/PS_120.glsl",			GL_FRAGMENT_SHADER);
-	GH_PO[SINGLBONE][GLSL120]=glCreateProgramObjectARB();
-	GH_PO[MULTIBONE][GLSL120]=glCreateProgramObjectARB();
+	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL120]),GH_VS[SINGLBONE][GLSL120],0,0,0,GH_PS[GLSL120]);Init_GLSL_light_Uniform(SINGLBONE,GLSL120);
+	CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL120]),GH_VS[MULTIBONE][GLSL120],0,0,0,GH_PS[GLSL120]);Init_GLSL_light_Uniform(MULTIBONE,GLSL120);
 	if(LightSet<3) return;
 	GH_VS[SINGLBONE][GLSL150]=CompileShader(L"data/shader/GLSL/Light/VS_150_SINGLBONE.glsl",GL_VERTEX_SHADER);
 	GH_VS[MULTIBONE][GLSL150]=CompileShader(L"data/shader/GLSL/Light/VS_150_MULTIBONE.glsl",GL_VERTEX_SHADER);
-	GH_GS			[GLSL150]=CompileShader(L"data/shader/GLSL/Light/PS_150.glsl",			GL_GEOMETRY_SHADER);
+	GH_GS			[GLSL150]=CompileShader(L"data/shader/GLSL/Light/GS_150.glsl",			GL_GEOMETRY_SHADER);
 	GH_PS			[GLSL150]=CompileShader(L"data/shader/GLSL/Light/PS_150.glsl",			GL_FRAGMENT_SHADER);
-	GH_PO[SINGLBONE][GLSL150]=glCreateProgramObjectARB();
-	GH_PO[MULTIBONE][GLSL150]=glCreateProgramObjectARB();
+	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL150]),GH_VS[SINGLBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(SINGLBONE,GLSL150);
+	CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL150]),GH_VS[MULTIBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(MULTIBONE,GLSL150);
 	if(LightSet<4) return;
 	GH_VS[SINGLBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_SINGLBONE.glsl",GL_VERTEX_SHADER);
 	GH_VS[MULTIBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_MULTIBONE.glsl",GL_VERTEX_SHADER);
-	GH_TC					 =CompileShader(L"data/shader/GLSL/Light/VS_400_MULTIBONE.glsl",GL_TESS_CONTROL_SHADER);
-	GH_TE					 =CompileShader(L"data/shader/GLSL/Light/VS_400_MULTIBONE.glsl",GL_TESS_EVALUATION_SHADER);
-	GH_GS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/PS_400.glsl",			GL_GEOMETRY_SHADER);
+	GH_TC					 =CompileShader(L"data/shader/GLSL/Light/TC_400.glsl",			GL_TESS_CONTROL_SHADER);
+	GH_TE					 =CompileShader(L"data/shader/GLSL/Light/TE_400.glsl",			GL_TESS_EVALUATION_SHADER);
+	GH_GS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/GS_400.glsl",			GL_GEOMETRY_SHADER);
 	GH_PS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/PS_400.glsl",			GL_FRAGMENT_SHADER);
-	GH_PO[SINGLBONE][GLSL400]=glCreateProgramObjectARB();
-	GH_PO[MULTIBONE][GLSL400]=glCreateProgramObjectARB();
+	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL400]),GH_VS[SINGLBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);Init_GLSL_light_Uniform(SINGLBONE,GLSL400);
+	CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL400]),GH_VS[MULTIBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);Init_GLSL_light_Uniform(MULTIBONE,GLSL400);
 }
-CGLSL_Light::CGLSL_Light(void)
+void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 {
+	GLSL_Light_DiffuseTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTex");
+	GLSL_Light_LightNums[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"LightNums");
+	GLSL_Light_DiffuseTexTurnY[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTexTurnY");
+	GLSL_Light_OmniLight_Pos[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"OmniLight_Pos");
+	GLSL_Light_OmniLight_Color[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"OmniLight_Color");
+	GLSL_Light_Material[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"Material");
+	GLSL_Light_Global_Ambient[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"Global_Ambient");
+	GLSL_Light_TessLevel[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"TessLevel");
 }
-
-
-CGLSL_Light::~CGLSL_Light(void)
+void Deinit_GLSL_light()
 {
+	ClearShaderObject(GH_PO[SINGLBONE][GLSL120],GH_VS[SINGLBONE][GLSL120],0,0,0,GH_PS[GLSL120]);
+	ClearShaderObject(GH_PO[MULTIBONE][GLSL120],GH_VS[MULTIBONE][GLSL120],0,0,0,GH_PS[GLSL120]);
+	ClearShaderObject(GH_PO[SINGLBONE][GLSL150],GH_VS[SINGLBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);
+	ClearShaderObject(GH_PO[MULTIBONE][GLSL150],GH_VS[MULTIBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);
+	ClearShaderObject(GH_PO[SINGLBONE][GLSL400],GH_VS[SINGLBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);
+	ClearShaderObject(GH_PO[MULTIBONE][GLSL400],GH_VS[MULTIBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);
+}
+void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightNum,int TessLevel)
+{
+		int LightNums[2]={OmniLightNum,SpotLightNum};
+	
+	CO_SetGlslPO(GH_PO[boneType][GLSLver]);
+	glUseProgramObjectARB( GH_PO[boneType][GLSLver] );
+	glUniform1i(GLSL_Light_DiffuseTex[MULTIBONE][GLSL400],0);
+	glUniform2iv(GLSL_Light_LightNums[MULTIBONE][GLSL400],1,LightNums);
+	glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
+	glUniform1f(GLSL_Light_TessLevel[MULTIBONE][GLSL400],(float)TessLevel);
+
+	CO_SetMatrixsGLSLLoc(
+		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
+		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
+		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));
+
+	CO_SetOmniLightGLSLLoc(GLSL_Light_OmniLight_Pos[boneType][GLSLver],GLSL_Light_OmniLight_Color[boneType][GLSLver]);
+	CO_SetOmniLightToGLSL();
+
+	CO_SetMaterialGLSLLoc(GLSL_Light_Material[boneType][GLSLver]);
+	CO_SetMaterialToGLSL(NULL);
+
+	CO_SetGlobalAmbientGLSLLoc(GLSL_Light_Global_Ambient[boneType][GLSLver]);
+	CO_SetGlobalAmbientToGLSL(NULL);
 }
