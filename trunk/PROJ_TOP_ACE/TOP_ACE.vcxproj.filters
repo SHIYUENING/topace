@@ -82,7 +82,9 @@
     <ClCompile Include="GLSLLoader.cpp" />
     <ClCompile Include="DrawQUAD.cpp" />
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="GLSL_Light.cpp" />
+    <ClCompile Include="GLSL_Light.cpp">
+      <Filter>GLSL_EFF</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -178,7 +180,9 @@
     <ClInclude Include="GLSLLoader.h" />
     <ClInclude Include="DrawQUAD.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="GLSL_Light.h" />
+    <ClInclude Include="GLSL_Light.h">
+      <Filter>GLSL_EFF</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomMap_pixel.glsl">

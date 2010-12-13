@@ -58,8 +58,8 @@ GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint * bComp
 bool LinkShader(GLhandleARB GLSL_programObj)
 {
 	GLint bLinked=0;
-	glLinkProgramARB( g_programObj );
-	glGetObjectParameterivARB( g_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
+	glLinkProgramARB( GLSL_programObj );
+	glGetObjectParameterivARB( GLSL_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
 	return bLinked!=0?true:false;
 }
 CGLSLLoader::CGLSLLoader(void)
