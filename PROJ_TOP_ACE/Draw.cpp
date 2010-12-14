@@ -423,7 +423,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	int GLSLver=min(max(GameSet.Light-2,0),2);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
