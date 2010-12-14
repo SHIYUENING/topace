@@ -412,7 +412,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	DrawTestLines();
 	if(GameSet.Light==1) glEnable(GL_LIGHTING);
-	GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
+	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
@@ -420,10 +420,31 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 
 	if(GameSet.Light>=4)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
+	int GLSLver=min(max(GameSet.Light-2,0),2);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
+	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
+	TopAceModelTest.Draw(false,true);
 	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
-	TopAceModelTest.Draw();
+	GLSL_Enable_Light(SINGLBONE,GLSLver,OmniLightNumBase,SpotLightNumBase,TessLevel);
+	TopAceModelTest.Draw(false,false);
+	//glDepthMask(GL_FALSE);
+	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
+	GLSL_Enable_Light(SINGLBONE,GLSLver,OmniLightNumBase,SpotLightNumBase,TessLevel);
+	TopAceModelTest.Draw(true,false);
+	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
+	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
+	TopAceModelTest.Draw(true,true);
+	//glDepthMask(GL_TRUE);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glEnable(GL_CULL_FACE);
 	/*CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
 	GLSL_SetMMatrixToGlsl();
 	GLSL_SetMVPMatrixToGlsl();
