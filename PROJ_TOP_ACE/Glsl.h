@@ -9,7 +9,7 @@
 #define AbLoc_BWG 5
 void InitGLSL();
 void DeinitGLSL();
-void GLSL_Enable_PhoneLight(int OmniLightNum=1,int SpotLightNum=0);
+//void GLSL_Enable_PhoneLight(int OmniLightNum=1,int SpotLightNum=0);
 void GLSL_Disable();
 void GLSL_Enable_StarPass0();
 void GLSL_Enable_StarPass1();
@@ -23,5 +23,5 @@ void GLSL_SetMMatrixToGlsl(GLfloat * MMatrix=0);
 void GLSL_SetPMatrixToGlsl(GLfloat * PMatrix=0);
 void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix=0);
 
-void GSLS_SetPhoneLight_DiffuseTexTurnY(float DiffuseTexTurnY);
+//void GSLS_SetPhoneLight_DiffuseTexTurnY(float DiffuseTexTurnY);
 #endif

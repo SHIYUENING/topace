@@ -21,7 +21,7 @@ CGLSLLoader GLSL_Common;
 extern tGameSet GameSet;
 GLfloat GlslMatrixTMP[16];
 
-
+/*
 GLint PhoneLight_DiffuseTex=-1;
 GLint PhoneLight_DiffuseTexTurnY=-1;
 GLint PhoneLight_LightNums=-1;
@@ -30,7 +30,7 @@ GLint PhoneLight_OmniLight_Color=-1;
 GLint PhoneLight_Material=-1;
 GLint PhoneLight_Global_Ambient=-1;
 GLint PhoneLight_TessLevel=-1;
-
+*/
 GLint DrawBloomMap_texColor=-1;
 GLint DrawBloomMap_AveLum=-1;
 GLint DrawBloomMap_imgW=-1;
@@ -53,7 +53,7 @@ void InitGLSL()
 	GLSL_Common.LoadShader(L"common",2);
 
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
-
+	/*
 	GLSL_PhoneLight.LoadShader(L"Light",GameSet.Light);
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Pos, "Position_in" );
 	glBindAttribLocation(GLSL_PhoneLight.g_PO,AbLoc_Tex0, "TexCoord0_in" );
@@ -67,7 +67,7 @@ void InitGLSL()
 	PhoneLight_OmniLight_Color = glGetUniformLocation(GLSL_PhoneLight.g_PO,"OmniLight_Color");
 	PhoneLight_Material = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Material");
 	PhoneLight_Global_Ambient = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Global_Ambient");
-	PhoneLight_TessLevel = glGetUniformLocation(GLSL_PhoneLight.g_PO,"TessLevel");
+	PhoneLight_TessLevel = glGetUniformLocation(GLSL_PhoneLight.g_PO,"TessLevel");*/
 	Init_GLSL_light(GameSet.Light);
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
@@ -124,7 +124,7 @@ void DeinitGLSL()
 
 	Deinit_GLSL_light();
 }
-
+/*
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 {
 	if(GlslVer<100) return;
@@ -150,7 +150,7 @@ void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
 
 	CO_SetGlobalAmbientGLSLLoc(PhoneLight_Global_Ambient);
 	CO_SetGlobalAmbientToGLSL(NULL);
-}
+}*/
 void GLSL_Disable()
 {
 	if(GlslVer<100) return;
@@ -245,7 +245,9 @@ void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix)
 		CO_GetMVPMatrix(GlslMatrixTMP);
 	glUniformMatrix4fv(glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"),1,false,GlslMatrixTMP);
 }
+/*
 void GSLS_SetPhoneLight_DiffuseTexTurnY(float DiffuseTexTurnY)
 {
 	glUniform1f(PhoneLight_DiffuseTexTurnY,DiffuseTexTurnY);
 }
+*/

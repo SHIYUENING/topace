@@ -86,9 +86,10 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	glUseProgramObjectARB( GH_PO[boneType][GLSLver] );
 	glUniform1i(GLSL_Light_DiffuseTex[MULTIBONE][GLSL400],0);
 	glUniform2iv(GLSL_Light_LightNums[MULTIBONE][GLSL400],1,LightNums);
-	glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
+	//glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
 	glUniform1f(GLSL_Light_TessLevel[MULTIBONE][GLSL400],(float)max(1,TessLevel));
-
+	CO_SetDiffuseTexTurnYGLSLLoc(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400]);
+	CO_SetDiffuseTexTurnYToGLSL(1.0f);
 	CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
