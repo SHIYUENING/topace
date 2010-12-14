@@ -3,6 +3,7 @@
 #include "CharSysBace.h"
 #include "Glsl.h"
 #include "Common.h"
+
 GLhandleARB GH_VS[2][3];
 GLhandleARB GH_TC;
 GLhandleARB GH_TE;
@@ -61,17 +62,32 @@ void Deinit_GLSL_light()
 	ClearShaderObject(GH_PO[MULTIBONE][GLSL150],GH_VS[MULTIBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);
 	ClearShaderObject(GH_PO[SINGLBONE][GLSL400],GH_VS[SINGLBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);
 	ClearShaderObject(GH_PO[MULTIBONE][GLSL400],GH_VS[MULTIBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);
+
+	DelShader(GH_VS[SINGLBONE][GLSL120]);
+	DelShader(GH_VS[MULTIBONE][GLSL120]);
+	DelShader(GH_VS[SINGLBONE][GLSL150]);
+	DelShader(GH_VS[MULTIBONE][GLSL150]);
+	DelShader(GH_VS[SINGLBONE][GLSL400]);
+	DelShader(GH_VS[MULTIBONE][GLSL400]);
+	DelShader(GH_TC);
+	DelShader(GH_TE);
+	DelShader(GH_GS[GLSL120]);
+	DelShader(GH_GS[GLSL150]);
+	DelShader(GH_GS[GLSL400]);
+	DelShader(GH_PS[GLSL120]);
+	DelShader(GH_PS[GLSL150]);
+	DelShader(GH_PS[GLSL400]);
 }
 void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightNum,int TessLevel)
 {
-		int LightNums[2]={OmniLightNum,SpotLightNum};
+	int LightNums[2]={OmniLightNum,SpotLightNum};
 	
 	CO_SetGlslPO(GH_PO[boneType][GLSLver]);
 	glUseProgramObjectARB( GH_PO[boneType][GLSLver] );
 	glUniform1i(GLSL_Light_DiffuseTex[MULTIBONE][GLSL400],0);
 	glUniform2iv(GLSL_Light_LightNums[MULTIBONE][GLSL400],1,LightNums);
 	glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
-	glUniform1f(GLSL_Light_TessLevel[MULTIBONE][GLSL400],(float)TessLevel);
+	glUniform1f(GLSL_Light_TessLevel[MULTIBONE][GLSL400],(float)max(1,TessLevel));
 
 	CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),

@@ -7,6 +7,7 @@
 #define GLSL400 2
 #define SINGLBONE 0
 #define MULTIBONE 1
+
 void Init_GLSL_light(int LightSet);
 void Deinit_GLSL_light();
 void Init_GLSL_light_Uniform(int boneType,int GLSLver);

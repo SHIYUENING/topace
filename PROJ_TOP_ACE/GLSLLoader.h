@@ -10,6 +10,7 @@ char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject);
 bool LinkShader(GLhandleARB GLSL_programObj);
 bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS);
 void ClearShaderObject(GLhandleARB GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS);
+void DelShader(GLhandleARB ShaderOBJ);
 class CGLSLLoader
 {
 public:
