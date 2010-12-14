@@ -101,6 +101,10 @@ void ClearShaderObject(GLhandleARB GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Att
 		glDeleteObjectARB(GLSL_PO);
 	}
 }
+void DelShader(GLhandleARB ShaderOBJ)
+{
+	if(glIsShader(ShaderOBJ)!=GL_FALSE) glDeleteObjectARB(ShaderOBJ);
+}
 CGLSLLoader::CGLSLLoader(void)
 	:g_VS(0)
 	,g_TC(0)
