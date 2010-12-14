@@ -828,11 +828,11 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 		if(TAM_Mat->Tex_diffuse->TexType==IS_DDS)
 		{
 			glLoadMatrixf(&IdentityDDSTexMatrix[0][0]);
-			GSLS_SetPhoneLight_DiffuseTexTurnY(-1.0f);
+			CO_SetDiffuseTexTurnYToGLSL(-1.0f);
 		}
 		else
 		{
-			GSLS_SetPhoneLight_DiffuseTexTurnY(1.0f);
+			CO_SetDiffuseTexTurnYToGLSL(1.0f);
 			glLoadIdentity();
 		}
 		glMatrixMode(GL_MODELVIEW);

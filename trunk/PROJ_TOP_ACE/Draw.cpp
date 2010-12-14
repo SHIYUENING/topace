@@ -411,7 +411,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	DrawTestLines();
-	if(GameSet.Light==1) glEnable(GL_LIGHTING);
+	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
@@ -452,7 +452,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	*/
 	GLSL_Disable();
 	
-	if(GameSet.Light==1) glDisable(GL_LIGHTING);
+	//if(GameSet.Light==1) glDisable(GL_LIGHTING);
 	
 	RenderPass2Units();
 	

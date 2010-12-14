@@ -60,4 +60,6 @@ void CO_SetMMatrixToGlsl(GLfloat * Matrix);
 void CO_SetPMatrixToGlsl(GLfloat * Matrix);
 void CO_SetMVPMatrixToGlsl(GLfloat * Matrix);
 GLuint CO_GetGlslPO();
+void CO_SetDiffuseTexTurnYGLSLLoc(GLint DiffuseTexTurnY_Loc);
+void CO_SetDiffuseTexTurnYToGLSL(GLfloat DiffuseTexTurnY);
 #endif

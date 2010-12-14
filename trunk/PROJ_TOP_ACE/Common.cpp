@@ -394,3 +394,14 @@ void CO_SetMVPMatrixToGlsl(GLfloat * Matrix)
 		glUniformMatrix4fv(CO_MVPMatrixGLSLLoc,1,false,MatrixTMPF);
 	}
 }
+GLint CO_DiffuseTexTurnY=-1;
+
+void CO_SetDiffuseTexTurnYGLSLLoc(GLint DiffuseTexTurnY_Loc)
+{
+	CO_DiffuseTexTurnY=DiffuseTexTurnY_Loc;
+}
+
+void CO_SetDiffuseTexTurnYToGLSL(GLfloat DiffuseTexTurnY)
+{
+	glUniform1f(CO_DiffuseTexTurnY,DiffuseTexTurnY);
+}
