@@ -2,6 +2,7 @@
 #ifndef _GLSLLOADER_H
 #define _GLSLLOADER_H
 #include <GL/glew.h>
+#include "GLSL_Light.h"
 #include "TALogSys.h"
 #define ShaderPath L"data/shader/GLSL/"
 GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);

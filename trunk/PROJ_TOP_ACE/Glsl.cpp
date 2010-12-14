@@ -68,7 +68,7 @@ void InitGLSL()
 	PhoneLight_Material = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Material");
 	PhoneLight_Global_Ambient = glGetUniformLocation(GLSL_PhoneLight.g_PO,"Global_Ambient");
 	PhoneLight_TessLevel = glGetUniformLocation(GLSL_PhoneLight.g_PO,"TessLevel");
-
+	Init_GLSL_light(GameSet.Light);
 	//GLSL_StarPass0.LoadShader(NULL,L"data/shader/Glsl_StarPass0_Pixel.ps");
 	//GLSL_StarPass1.LoadShader(NULL,L"data/shader/Glsl_StarPass1_Pixel.ps");
 	
@@ -121,6 +121,8 @@ void DeinitGLSL()
 	GLSL_DrawBloomMap.ClearShader();
 	GLSL_ToneMapping.ClearShader();
 	GLSL_Common.ClearShader();
+
+	Deinit_GLSL_light();
 }
 
 void GLSL_Enable_PhoneLight(int OmniLightNum,int SpotLightNum)
