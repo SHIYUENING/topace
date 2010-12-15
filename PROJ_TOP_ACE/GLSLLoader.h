@@ -3,13 +3,16 @@
 #define _GLSLLOADER_H
 #include <GL/glew.h>
 #include "GLSL_Light.h"
+#include "GLSL_Bloom.h"
 #include "TALogSys.h"
 #define ShaderPath L"data/shader/GLSL/"
 GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
 GLhandleARB CompileShader(char *ShaderAssembly,GLenum ShaderObject,GLint * bCompiled);
 char * GetGLSLInfoLog(GLhandleARB GLSLShaderObject);
 bool LinkShader(GLhandleARB GLSL_programObj);
+bool CGLSL_Light_Link_ProgramObject(GLhandleARB GLSL_PO);
 bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS);
+void CGLSL_Light_Attach(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS);
 void ClearShaderObject(GLhandleARB GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS);
 void DelShader(GLhandleARB ShaderOBJ);
 class CGLSLLoader

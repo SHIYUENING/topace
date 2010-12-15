@@ -63,6 +63,21 @@ bool LinkShader(GLhandleARB GLSL_programObj)
 	glGetObjectParameterivARB( GLSL_programObj, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
 	return bLinked!=0?true:false;
 }
+bool CGLSL_Light_Link_ProgramObject(GLhandleARB GLSL_PO)
+{
+	GLint bLinked=0;
+	glLinkProgramARB( GLSL_PO );
+	glGetObjectParameterivARB( GLSL_PO, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
+	CTALogSys TALogSysCS;
+	if(bLinked) TALogSysCS.AddLOG("\n  ****** GLSL Log ******\n    ");
+	else TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+	char * logbuffer=GetGLSLInfoLog(GLSL_PO);
+	TALogSysCS.AddLOG(logbuffer,true);
+	TALogSysCS.WriteLOGFile(true);
+	TALogSysCS.ClearLOG();
+	delete[] logbuffer;
+	return bLinked!=0?true:false;
+}
 bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS)
 {
 	if(!GLSL_PO) return false;
@@ -88,6 +103,16 @@ bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB At
 	TALogSysCS.ClearLOG();
 	delete[] logbuffer;
 	return bLinked!=0?true:false;
+}
+void CGLSL_Light_Attach(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS)
+{
+	if(!GLSL_PO) return;
+	GLSL_PO[0]=glCreateProgramObjectARB();
+	if(Attach_VS) glAttachObjectARB(GLSL_PO[0],Attach_VS);
+	if(Attach_TC) glAttachObjectARB(GLSL_PO[0],Attach_TC);
+	if(Attach_TE) glAttachObjectARB(GLSL_PO[0],Attach_TE);
+	if(Attach_GS) glAttachObjectARB(GLSL_PO[0],Attach_GS);
+	if(Attach_PS) glAttachObjectARB(GLSL_PO[0],Attach_PS);
 }
 void ClearShaderObject(GLhandleARB GLSL_PO,GLhandleARB Attach_VS,GLhandleARB Attach_TC,GLhandleARB Attach_TE,GLhandleARB Attach_GS,GLhandleARB Attach_PS)
 {

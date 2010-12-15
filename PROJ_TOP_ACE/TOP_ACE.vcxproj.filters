@@ -85,6 +85,7 @@
     <ClCompile Include="GLSL_Light.cpp">
       <Filter>GLSL_EFF</Filter>
     </ClCompile>
+    <ClCompile Include="GLSL_Bloom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -183,6 +184,7 @@
     <ClInclude Include="GLSL_Light.h">
       <Filter>GLSL_EFF</Filter>
     </ClInclude>
+    <ClInclude Include="GLSL_Bloom.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\shader\BloomMap_pixel.glsl">
