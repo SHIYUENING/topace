@@ -223,15 +223,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico" />
-    <None Include="data\shader\BloomMap_pixel.glsl" />
-    <None Include="data\shader\BlurTex.ps" />
-    <None Include="data\shader\Glsl_PhoneLight_Pixel_Multi.ps" />
-    <None Include="data\shader\Glsl_PhoneLight_Pixel_Singe.ps" />
-    <None Include="data\shader\Glsl_PhoneLight_Vertex.vs" />
-    <None Include="data\shader\Glsl_SSAO_Pass0.ps" />
-    <None Include="data\shader\Glsl_SSAO_Pass1.ps" />
-    <None Include="data\shader\Glsl_StarPass1_Pixel.ps" />
-    <None Include="data\shader\ToneMapping_pixel.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TOP_ACE.rc" />

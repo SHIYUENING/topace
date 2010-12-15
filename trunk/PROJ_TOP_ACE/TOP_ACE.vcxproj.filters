@@ -187,33 +187,6 @@
     <ClInclude Include="GLSL_Bloom.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\shader\BloomMap_pixel.glsl">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\BlurTex.ps">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\Glsl_PhoneLight_Pixel_Multi.ps">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\Glsl_PhoneLight_Pixel_Singe.ps">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\Glsl_PhoneLight_Vertex.vs">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\Glsl_SSAO_Pass0.ps">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\Glsl_SSAO_Pass1.ps">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\Glsl_StarPass1_Pixel.ps">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="data\shader\ToneMapping_pixel.glsl">
-      <Filter>Shader</Filter>
-    </None>
     <None Include="TOP_ACE.ico">
       <Filter>Resource Files</Filter>
     </None>
@@ -224,9 +197,6 @@
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{205d04a3-584f-42da-ace0-ceecf922ee14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{dcd84e97-1421-4424-bd85-58a8ddc47c36}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{43324375-2d7e-4216-9c5b-93d7a83a2f2e}</UniqueIdentifier>
