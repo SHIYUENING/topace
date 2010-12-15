@@ -220,20 +220,20 @@ void FBOS_BLOOM()
 	glEnableVertexAttribArray(AbLoc_Tex0);
 	glEnableVertexAttribArray(AbLoc_Pos);
 	CO_MatrixOrthogonalProjection(0.0,float(ScreemTexW/BloomScale),0.0,float(ScreemTexH/BloomScale),-1.0,1.0,FBOMatrixTMP);
-	GLSL_Enable_DrawBloomMapGLSL(FBOWinW,FBOWinH);
+	GLSL_Enable_Bloom_Map(FBOWinW,FBOWinH);
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 
 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex1);
-	GLSL_Enable_BlurTex(FBOWinW/4,true);
+	GLSL_Enable_Bloom_BlurTex(FBOWinW/4,true);
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 	
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
 	glBindTexture(GL_TEXTURE_2D, BloomTex2);
-	GLSL_Enable_BlurTex(FBOWinH/4,false);
+	GLSL_Enable_Bloom_BlurTex(FBOWinH/4,false);
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 	
@@ -245,7 +245,7 @@ void FBOS_BLOOM()
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
 	CO_MatrixOrthogonalProjection(float(-FBOWinW/2),float(FBOWinW/2),float(-FBOWinH/2),float(FBOWinH/2),-1.0,1.0,FBOMatrixTMP);
-	GLSL_Enable_ToneMappingGLSL();
+	GLSL_Enable_Bloom_ToneMapping();
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD_Att(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2,AbLoc_Tex0,AbLoc_Pos);
 	GLSL_Disable();
