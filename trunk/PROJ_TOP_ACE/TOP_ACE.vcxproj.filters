@@ -85,7 +85,10 @@
     <ClCompile Include="GLSL_Light.cpp">
       <Filter>GLSL_EFF</Filter>
     </ClCompile>
-    <ClCompile Include="GLSL_Bloom.cpp" />
+    <ClCompile Include="GLSL_Bloom.cpp">
+      <Filter>GLSL_EFF</Filter>
+    </ClCompile>
+    <ClCompile Include="CPUTess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -184,7 +187,10 @@
     <ClInclude Include="GLSL_Light.h">
       <Filter>GLSL_EFF</Filter>
     </ClInclude>
-    <ClInclude Include="GLSL_Bloom.h" />
+    <ClInclude Include="GLSL_Bloom.h">
+      <Filter>GLSL_EFF</Filter>
+    </ClInclude>
+    <ClInclude Include="CPUTess.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">
