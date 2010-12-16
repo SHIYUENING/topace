@@ -106,7 +106,7 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	glGenFramebuffersEXT(1, &FBOID);
 //	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	ScreemTex=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-	ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+	//ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 
 	
 	if(BloomSet>0)
@@ -120,6 +120,12 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 
 		BloomTex1=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
 		BloomTex2=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
+		
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0); 
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
+		CheckFBOError();
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 
 
@@ -256,6 +262,7 @@ void FBOS_BLOOM()
 	glEnable(GL_DEPTH_TEST);
 	
 }
+/*
 void FBOS_Star_Begin()
 {
 	
@@ -274,22 +281,22 @@ void FBOS_Star_Begin()
 	glEnable( GL_BLEND );
 	glEnable( GL_CULL_FACE );
 	glViewport(0,0,FBOWinW, FBOWinH);
-	/*
-	glPushAttrib(GL_VIEWPORT_BIT);
-	glViewport(0,0,1024, 1024);
-	glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();	
-	glLoadIdentity();	
-	*/
+	
+	//glPushAttrib(GL_VIEWPORT_BIT);
+	//glViewport(0,0,1024, 1024);
+	//glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
+	//glMatrixMode(GL_PROJECTION);
+	//glPushMatrix();	
+	//glLoadIdentity();	
+	
 }
 void FBOS_Star_End()
 {
-	/*
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPopMatrix();	
-	glPopAttrib();
-	*/
+	
+	//glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	//glPopMatrix();	
+	//glPopAttrib();
+	
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, StarTex1, 0);
 	//CheckFBOError();
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, StarTexDepth, 0);
@@ -415,7 +422,6 @@ void FBOS_Star_End()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
 }
-/*
 void FBOS_SSAO()
 {
 	glBindTexture(GL_TEXTURE_2D, ScreemTexDepth);
