@@ -968,8 +968,8 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 			Easy_vector_add(&pDrawRAMMeshFiexibleDSTTMP[i],pDrawRAMMeshFiexibleDSTTMP[i],DrawRAMMeshFiexibleTMPvec2);
 			Easy_vector_add(&pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum],pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum],DrawRAMMeshFiexibleTMPnol2);
 		}
-		pDrawRAMMeshFiexibleDSTTMP[i].m128_f32[3]=1.0f;
-		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum].m128_f32[3]=0.0f;
+		pDrawRAMMeshFiexibleDSTTMP[i].m128_f32[3]=TAM_Mesh->vertices[i].m128_f32[3];
+		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum].m128_f32[3]=TAM_Mesh->Normals[i].m128_f32[3];
 		Easy_vector_normalize(&pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum],pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum]);
 	}
 	glColor3f(1.0f,1.0f,1.0f);
