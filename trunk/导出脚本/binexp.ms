@@ -320,19 +320,22 @@ if(umeshs.count>0) then
 				WriteFloat w ((getVert temmesh faceidx[1])[1] * worldscale)
 				WriteFloat w ((getVert temmesh faceidx[1])[2] * worldscale)
 				WriteFloat w ((getVert temmesh faceidx[1])[3] * worldscale)
-				WriteFloat w 1.0
+				--WriteFloat w 1.0
+				WriteFloat w (faceidx[1])
 				
 				
 				WriteFloat w ((getVert temmesh faceidx[2])[1] * worldscale)
 				WriteFloat w ((getVert temmesh faceidx[2])[2] * worldscale)
 				WriteFloat w ((getVert temmesh faceidx[2])[3] * worldscale)
-				WriteFloat w 1.0
+				--WriteFloat w 1.0
+				WriteFloat w (faceidx[2])
 				
 				
 				WriteFloat w ((getVert temmesh faceidx[3])[1] * worldscale)
 				WriteFloat w ((getVert temmesh faceidx[3])[2] * worldscale)
 				WriteFloat w ((getVert temmesh faceidx[3])[3] * worldscale)
-				WriteFloat w 1.0
+				--WriteFloat w 1.0
+				WriteFloat w (faceidx[3])
 			)
 		)
 
@@ -375,11 +378,15 @@ if(umeshs.count>0) then
 			for v=1 to temmesh.numfaces do
 			(
 				local faceidx=meshop.getFaceRNormals temmesh v
+				local nverts=getface temmesh v
 				--local temnor=(normalize (in coordsys temmesh (getNormal temmesh faceidx[1])))
 				WriteFloat w  (faceidx[1][1] * flipnormal.x)
 				WriteFloat w  (faceidx[1][2] * flipnormal.y)
 				WriteFloat w  (faceidx[1][3] * flipnormal.z)
-				WriteFloat w 0.0
+				if(faceidx[1]==getnormal nverts[1]) then
+					WriteFloat w 0.0
+				else				
+					WriteFloat w 1.0
 					
 					--format "%\t%\t\n" faceidx[1] temnor
 					
@@ -387,7 +394,10 @@ if(umeshs.count>0) then
 				WriteFloat w  (faceidx[2][1] * flipnormal.x)
 				WriteFloat w  (faceidx[2][2] * flipnormal.y)
 				WriteFloat w  (faceidx[2][3] * flipnormal.z)
-				WriteFloat w 0.0
+				if(faceidx[2]==getnormal nverts[2]) then
+					WriteFloat w 0.0
+				else				
+					WriteFloat w 1.0
 					
 					--format "%\t%\t\n" faceidx[2] temnor
 					
@@ -395,7 +405,10 @@ if(umeshs.count>0) then
 				WriteFloat w  (faceidx[3][1] * flipnormal.x)
 				WriteFloat w  (faceidx[3][2] * flipnormal.y)
 				WriteFloat w  (faceidx[3][3] * flipnormal.z)
-				WriteFloat w 0.0
+				if(faceidx[3]==getnormal nverts[3]) then
+					WriteFloat w 0.0
+				else				
+					WriteFloat w 1.0
 					
 					--format "%\t%\t\n" faceidx[3] temnor
 			)
