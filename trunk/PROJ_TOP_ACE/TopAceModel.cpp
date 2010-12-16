@@ -642,7 +642,7 @@ void CTopAceModel::CreatVAO(tMeshVBOID * MeshVBOID)
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->NormalID );
 		glEnableVertexAttribArray(AbLoc_Normal);
-		glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,sizeof(__m128),0);
+		glVertexAttribPointer(AbLoc_Normal,4,GL_FLOAT,0,sizeof(__m128),0);
 	}
 	if(MeshVBOID->TexCoordID)
 	{
@@ -992,7 +992,7 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 	if((TAM_Mesh->Normals)&&(unsigned int(TAM_Mesh->Normals)!=0xFFFFFFFF))
 	{
 		glEnableVertexAttribArray(AbLoc_Normal);
-		glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,sizeof(__m128),pDrawRAMMeshFiexibleDSTTMP+TAM_Mesh->vecNum);
+		glVertexAttribPointer(AbLoc_Normal,4,GL_FLOAT,0,sizeof(__m128),pDrawRAMMeshFiexibleDSTTMP+TAM_Mesh->vecNum);
 	}
 	if((TAM_Mesh->texcos)&&(unsigned int(TAM_Mesh->texcos)!=0xFFFFFFFF))
 	{
@@ -1000,11 +1000,6 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 		glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,TAM_Mesh->texcos);
 	}
 	glDrawArrays(GL_TRIANGLES,0,TAM_Mesh->vecNum);
-	glBindVertexArray(0);
-	glDisableVertexAttribArray(AbLoc_Color);
-	glDisableVertexAttribArray(AbLoc_Normal);
-	glDisableVertexAttribArray(AbLoc_Pos);
-	glDisableVertexAttribArray(AbLoc_Tex0);
 	return true;
 }
 

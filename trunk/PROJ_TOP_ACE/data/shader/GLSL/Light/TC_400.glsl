@@ -2,12 +2,12 @@
 layout(vertices = 3) out;
 
 in vec3 vPosition[];
-in vec3 vNormal[]; 
+in vec4 vNormal[]; 
 in vec2 vTexCoord0[];
 in vec4 vColor[];
 
 out vec3 tcPosition[];
-out vec3 tcNormal[];
+out vec4 tcNormal[];
 out vec2 tcTexCoord0[];
 out vec4 tcColor[];
 out vec3 b210[];
@@ -36,7 +36,7 @@ void main()
 		vec3 ANormal = vPosition[2] - vPosition[0];
 		vec3 BNormal = vPosition[1] - vPosition[0];
 		vec3 gFacetNormal = normalize(cross(ANormal, BNormal));
-		vec3 gFacetNormal2=normalize(vNormal[0]+vNormal[1]+vNormal[2]);
+		vec3 gFacetNormal2=normalize(vNormal[0].xyz+vNormal[1].xyz+vNormal[2].xyz);
 		if(dot(gFacetNormal,gFacetNormal2)<0.0)
 		gFacetNormal=-gFacetNormal;
 		//gFacetNormal=abs(gFacetNormal);
@@ -45,9 +45,9 @@ void main()
 		float3 b030 = vPosition[1];
 		float3 b300 = vPosition[2];
 		// And Normals
-		float3 n002 = vNormal[0];
-		float3 n020 = vNormal[1];
-		float3 n200 = vNormal[2];
+		float3 n002 = vNormal[0].xyz;
+		float3 n020 = vNormal[1].xyz;
+		float3 n200 = vNormal[2].xyz;
 			// Compute the cubic geometry control points
 		// Edge control points
 		b210[ID] = (2 * b003 + b030 - (dot(b030 - b003, n002) * n002)) / 3;
@@ -68,14 +68,18 @@ void main()
 		n011[ID] = normalize(n020 + n200 - v23 * (b300 - b030));
 		float v31 = 2 * dot(b003 - b300, n200 + n002) / dot(b003 - b300, b003 - b300);
 		n101[ID] = normalize(n200 + n002 - v31 * (b003 - b300));
-
-		float DotN=dot(vNormal[0],vNormal[1])+dot(vNormal[2],vNormal[1]);
+		vec3 NearNormalSet=vec3(
+		vNormal[0].w+vNormal[1].w,
+		vNormal[0].w+vNormal[2].w,
+		vNormal[2].w+vNormal[1].w
+		);
+		float DotN=dot(vNormal[0].xyz,vNormal[1].xyz)+dot(vNormal[2].xyz,vNormal[1].xyz);
 		if((dot(gFacetNormal,vec3(0.0,0.0,1.0))>-0.25)&&(DotN<1.9999))
 		{
 			gl_TessLevelInner[0] = TessLevel;
-			gl_TessLevelOuter[0] = TessLevel;
-			gl_TessLevelOuter[1] = TessLevel;
-			gl_TessLevelOuter[2] = TessLevel;
+			gl_TessLevelOuter[0] = NearNormalSet.x>1.9?1.0:TessLevel;
+			gl_TessLevelOuter[1] = NearNormalSet.y>1.9?1.0:TessLevel;
+			gl_TessLevelOuter[2] = NearNormalSet.z>1.9?1.0:TessLevel;
 		}
 		else
 		{
