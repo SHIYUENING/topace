@@ -20,7 +20,7 @@ w = fopen out_name "w+"
 	fseek w 4 #seek_set 
 	filesize=ftell w
 	WriteLong w 0
-	WriteLong w 0
+	WriteLong w 1
 	WriteLong w 0
 	
 	WriteLong w 5	
