@@ -16,11 +16,13 @@
 #include "Common.h"
 #include "EasyMatrix.h"
 #include "TexManager.h"
+#define _TAM_VERSION 1 
 typedef enum _TAM_File_States {
 	_TAM_File_States_NoRead =0x01,
 	_TAM_File_States_ReadOK =0x02,
 	_TAM_File_States_NoFile =0x03,
-	_TAM_File_States_ReadFail = 0x04
+	_TAM_File_States_ReadFail = 0x04,
+	_TAM_File_States_ErrorVer = 0x05
 }_TAM_File_States;
 typedef enum _TAM_Camera_Type {
     TAM_Camera_Type_Target		= 0x01, 
@@ -134,6 +136,8 @@ struct _TAM_Mat
 	_TAM_Mat_Texture * Tex_Normal;
 	unsigned char Name_Refract[60];
 	_TAM_Mat_Texture * Tex_Refract;
+	unsigned char Name_BumpMAP[60];
+	_TAM_Mat_Texture * Tex_BumpMAP;
 };
 struct _TAM_Bone_Frame//帧
 {
@@ -249,7 +253,7 @@ struct _TAM_FileHead
 {
 	unsigned char HeadName[4];
 	unsigned int FileSize;
-	unsigned char UnUse1[4];
+	unsigned int TAMVer;
 	unsigned char UnUse2[4];
 
 	unsigned int ChunkNum;//0x10地址表数量
