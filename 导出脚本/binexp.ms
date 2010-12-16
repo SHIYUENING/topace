@@ -383,7 +383,7 @@ if(umeshs.count>0) then
 				WriteFloat w  (faceidx[1][1] * flipnormal.x)
 				WriteFloat w  (faceidx[1][2] * flipnormal.y)
 				WriteFloat w  (faceidx[1][3] * flipnormal.z)
-				if(faceidx[1]==getnormal nverts[1]) then
+				if(faceidx[1]==getnormal temmesh nverts[1]) then
 					WriteFloat w 0.0
 				else				
 					WriteFloat w 1.0
@@ -394,7 +394,7 @@ if(umeshs.count>0) then
 				WriteFloat w  (faceidx[2][1] * flipnormal.x)
 				WriteFloat w  (faceidx[2][2] * flipnormal.y)
 				WriteFloat w  (faceidx[2][3] * flipnormal.z)
-				if(faceidx[2]==getnormal nverts[2]) then
+				if(faceidx[2]==getnormal temmesh nverts[2]) then
 					WriteFloat w 0.0
 				else				
 					WriteFloat w 1.0
@@ -405,7 +405,7 @@ if(umeshs.count>0) then
 				WriteFloat w  (faceidx[3][1] * flipnormal.x)
 				WriteFloat w  (faceidx[3][2] * flipnormal.y)
 				WriteFloat w  (faceidx[3][3] * flipnormal.z)
-				if(faceidx[3]==getnormal nverts[3]) then
+				if(faceidx[3]==getnormal temmesh nverts[3]) then
 					WriteFloat w 0.0
 				else				
 					WriteFloat w 1.0
