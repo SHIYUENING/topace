@@ -24,23 +24,6 @@ uniform mat4x4 PMatrix;
 
 void main()
 {
-
-		vec3 FixedNormal[3];
-		FixedNormal[0]=tcNormal[0].xyz;
-		FixedNormal[1]=tcNormal[1].xyz;
-		FixedNormal[2]=tcNormal[2].xyz;
-	/*	if(((gl_TessCoord.x+gl_TessCoord.y)>=0.99)||((gl_TessCoord.x+gl_TessCoord.z)>=0.99)||((gl_TessCoord.y+gl_TessCoord.z)>=0.99))
-		{
-		vec3 ANormal = tcPosition[2] - tcPosition[0];
-		vec3 BNormal = tcPosition[1] - tcPosition[0];
-		vec3 gFacetNormal = normalize(cross(ANormal, BNormal));
-		vec3 gFacetNormal2=normalize(tcNormal[0].xyz+tcNormal[1].xyz+tcNormal[2].xyz);
-		if(dot(gFacetNormal,gFacetNormal2)<0.0)
-		gFacetNormal=-gFacetNormal;
-		 FixedNormal[0]=tcNormal[0].w>0.9?gFacetNormal:tcNormal[0].xyz;
-		 FixedNormal[1]=tcNormal[1].w>0.9?gFacetNormal:tcNormal[1].xyz;
-		 FixedNormal[2]=tcNormal[2].w>0.9?gFacetNormal:tcNormal[2].xyz;
-		 }*/
 	// The barycentric coordinates
 	float u = gl_TessCoord.x;
 	float v = gl_TessCoord.y;
@@ -75,9 +58,9 @@ void main()
 					+ n110[0] * w * u
 					+ n011[0] * u * v
 					+ n101[0] * w * v;*/
-	vec3 Normal=gl_TessCoord.x*FixedNormal[1].xyz
-			 +gl_TessCoord.y*FixedNormal[2].xyz
-			 +gl_TessCoord.z*FixedNormal[0].xyz;
+	vec3 Normal=gl_TessCoord.x*tcNormal[1].xyz
+			 +gl_TessCoord.y*tcNormal[2].xyz
+			 +gl_TessCoord.z*tcNormal[0].xyz;
 	teNormal=Normal;
 
 	teTexCoord0=gl_TessCoord.z*tcTexCoord0[0]

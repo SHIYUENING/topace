@@ -136,8 +136,8 @@ struct _TAM_Mat
 	_TAM_Mat_Texture * Tex_Normal;
 	unsigned char Name_Refract[60];
 	_TAM_Mat_Texture * Tex_Refract;
-	unsigned char Name_BumpMAP[60];
-	_TAM_Mat_Texture * Tex_BumpMAP;
+	//unsigned char Name_BumpMAP[60];
+	//_TAM_Mat_Texture * Tex_BumpMAP;
 };
 struct _TAM_Bone_Frame//帧
 {

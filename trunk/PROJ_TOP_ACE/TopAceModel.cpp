@@ -358,6 +358,8 @@ void CTopAceModel::DeinitTAMMatAll()
 }
 bool CTopAceModel::InitTAMBone(_TAM_Bone * TAM_BoneData_IN)
 {
+	if(!TAM_BoneData_IN)
+		return false;
 	for(unsigned int i=0;i<TAM_BoneData_IN->FrameChunkNum;i++)
 	{
 		if(unsigned int(TAM_BoneData_IN->FramesHeadAddress[i])==0xFFFFFFFF)
