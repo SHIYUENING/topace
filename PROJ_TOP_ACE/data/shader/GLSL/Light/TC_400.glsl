@@ -68,18 +68,14 @@ void main()
 		n011[ID] = normalize(n020 + n200 - v23 * (b300 - b030));
 		float v31 = 2 * dot(b003 - b300, n200 + n002) / dot(b003 - b300, b003 - b300);
 		n101[ID] = normalize(n200 + n002 - v31 * (b003 - b300));
-		vec3 NearNormalSet=vec3(
-		vNormal[0].w+vNormal[1].w,
-		vNormal[0].w+vNormal[2].w,
-		vNormal[2].w+vNormal[1].w
-		);
+		
 		float DotN=dot(vNormal[0].xyz,vNormal[1].xyz)+dot(vNormal[2].xyz,vNormal[1].xyz);
 		if((dot(gFacetNormal,vec3(0.0,0.0,1.0))>-0.25)&&(DotN<1.9999))
 		{
 			gl_TessLevelInner[0] = TessLevel;
-			gl_TessLevelOuter[0] = NearNormalSet.x>1.9?1.0:TessLevel;
-			gl_TessLevelOuter[1] = NearNormalSet.y>1.9?1.0:TessLevel;
-			gl_TessLevelOuter[2] = NearNormalSet.z>1.9?1.0:TessLevel;
+			gl_TessLevelOuter[0] = TessLevel;
+			gl_TessLevelOuter[1] = TessLevel;
+			gl_TessLevelOuter[2] = TessLevel;
 		}
 		else
 		{
