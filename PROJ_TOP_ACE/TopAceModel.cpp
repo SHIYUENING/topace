@@ -146,7 +146,7 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 	if(TAM_FileHeadTMP.TAMVer!=_TAM_VERSION)
 	{
 		::MessageBoxA(HWND_DESKTOP,"Load TAM File Error","TAM File Ver Error",MB_OK | MB_ICONEXCLAMATION);
-		TAM_File_States=_TAM_File_States::_TAM_File_States_ErrorVer;
+		TAM_File_States=_TAM_File_States_ErrorVer;
 		TAM_FileData = NULL;
 		CloseHandle(hFile);
 		return false;
