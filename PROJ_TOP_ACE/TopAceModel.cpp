@@ -143,14 +143,14 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		CloseHandle(hFile);
 		return false;
 	}
-	if(TAM_FileHeadTMP.TAMVer!=_TAM_VERSION)
+	/*if(TAM_FileHeadTMP.TAMVer!=_TAM_VERSION)
 	{
 		::MessageBoxA(HWND_DESKTOP,"Load TAM File Error","TAM File Ver Error",MB_OK | MB_ICONEXCLAMATION);
 		TAM_File_States=_TAM_File_States_ErrorVer;
 		TAM_FileData = NULL;
 		CloseHandle(hFile);
 		return false;
-	}
+	}*/
 	TAM_FileData = (unsigned char * ) _aligned_malloc (TAM_FileHeadTMP.FileSize,16);
 
 	Readedsize = 0;
