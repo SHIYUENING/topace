@@ -51,7 +51,7 @@ fn addfac tobj=
 		local fg2=getFaceSmoothGroup tobj fac2
 		if((bit.and fg1 fg2)==0) then
 		(
-			local temvtid=edgeVerts tobj redge
+			--local temvtid=edgeVerts tobj redge
 			local fa=vertidinface redge
 			local fb=vertidinface edgecol[i]
 			
