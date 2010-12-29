@@ -3,7 +3,95 @@ fn yus a b=
 	return a-(a/b)*b
 )
 
-fn expfile flip worldscale= 
+
+struct tamvert (pos,normal,tver)
+struct tammesh (vts,facs)
+
+fn vertidinface edg=
+(
+	local fa
+	local modr=((mod (edg-1) 3) as integer)
+	if(modr==0) then
+	(
+		fa=[1,2]
+	)
+	else if(modr==1) then fa=[2,3]
+	else if(modr==2) then fa=[3,1]
+	return fa
+)
+
+
+fn addfac tobj=
+(
+	local edgecol=#()
+	for i=1 to tobj.numfaces*3 do
+	(
+		local redge=(meshop.getEdgesReverseEdge tobj i) as array
+		if(redge.count>0) then
+		(
+			if((findItem edgecol redge[1])==0) then
+			(
+				append edgecol i
+			--format "%\t%\n" i redge[1]
+			)
+		)
+	)
+	--setEdgeSelection tobj edgecol 
+	
+	local tavert=#()
+	local taface=#()
+	local tafaceidx=0
+	
+	for i=1 to edgecol.count do
+	(
+		local redge=((meshop.getEdgesReverseEdge tobj edgecol[i]) as array)[1]
+		local fac1=(edgecol[i]-1)/3+1
+		local fac2=(redge-1)/3+1
+		local fg1=getFaceSmoothGroup tobj fac1
+		local fg2=getFaceSmoothGroup tobj fac2
+		if((bit.and fg1 fg2)==0) then
+		(
+			local temvtid=edgeVerts tobj redge
+			local fa=vertidinface redge
+			local fb=vertidinface edgecol[i]
+			
+			--(fac2-1)*3+fa[2]		(fac2-1)*3+fa[1]		(fac1-1)*3+fb[1]		(fac1-1)*3+fb[2]		
+			
+			/*
+			local a1=tamvert ((getVert tobj (getFace tobj fac2)[fa[2]])) \
+								(meshop.getFaceRNormals tobj fac2)[fa[2]] \
+								(getTVert tobj (gettvFace tobj fac2)[fa[2]])
+			local a2=tamvert ((getVert tobj (getFace tobj fac2)[fa[1]])) \
+								(meshop.getFaceRNormals tobj fac2)[fa[1]] \
+								(getTVert tobj (gettvFace tobj fac2)[fa[1]])
+			
+			local b2=tamvert ((getVert tobj (getFace tobj fac1)[fb[2]])) \
+								(meshop.getFaceRNormals tobj fac1)[fb[2]] \
+								(getTVert tobj (gettvFace tobj fac1)[fb[2]])
+			local b1=tamvert ((getVert tobj (getFace tobj fac1)[fb[1]])) \
+								(meshop.getFaceRNormals tobj fac1)[fb[1]] \
+								(getTVert tobj (gettvFace tobj fac1)[fb[1]])
+			local pows=0.0
+			--format "%\t%\t%\t%\n" fac1 fac2 edgecol[i] redge
+			tavert[tavertidx+1]=a1.pos+a1.normal*pows
+			tavert[tavertidx+2]=a2.pos+a2.normal*pows
+			tavert[tavertidx+3]=b1.pos+b1.normal*pows
+			tavert[tavertidx+4]=b2.pos+b2.normal*pows
+			tavertidx=tavertidx+4
+			--*/
+			
+			taface[tafaceidx+1]=[(fac2-1)*3+fa[2],(fac2-1)*3+fa[1],(fac1-1)*3+fb[1]]
+			taface[tafaceidx+2]=[(fac1-1)*3+fb[2],(fac1-1)*3+fb[1],(fac2-1)*3+fa[1]]
+			tafaceidx=tafaceidx+2
+			
+		)
+	)
+	--print tavert
+	--print taface
+  return (tammesh tavert taface)
+)
+
+fn expfile flip worldscale addgface= 
 (
 --/*
 out_name = GetSaveFileName \
@@ -194,10 +282,26 @@ if(umeshs.count>0) then
 		WriteLong w -1
 
 		--0x30-------------------
+		
+		local temsh
+		if(addgface) then
+		(
+			temsh=addfac temmesh
+		)
+		
+		
 		fptr=ftell w
 		WriteLong w -1
-		WriteLong w temmesh.numfaces
-		WriteLong w (temmesh.numfaces*3)
+		if(addgface) then
+		(
+			WriteLong w (temmesh.numfaces+temsh.facs.count)
+			WriteLong w (temmesh.numfaces*3)
+		)
+		else
+		(
+			WriteLong w temmesh.numfaces
+			WriteLong w (temmesh.numfaces*3)
+		)
 		boneptr=ftell w
 		WriteLong w -1
 
@@ -505,6 +609,15 @@ if(umeshs.count>0) then
 				WriteLong w ((v-1)*3+2)
 			)
 		)
+		if (addgface) then
+		(
+			for v=1 to temsh.facs.count do
+			(
+				WriteLong w (temsh.facs[v][1]-1)
+				WriteLong w (temsh.facs[v][2]-1)
+				WriteLong w (temsh.facs[v][3]-1)
+			)
+		)
 		
 		-------bone---------
 		local haspartbone=false
@@ -564,6 +677,28 @@ if(umeshs.count>0) then
 			fseek w nowaddr #seek_set
 			
 			bonnum=1
+			for v=1 to umeshs[i].numfaces do
+			(
+				local j=1
+				local k=1
+				local tvertidxs=(getFace temmesh v)
+				local boneidxs=#(fatherid,0,0,0)
+				
+				for vv=1 to 3 do
+				(
+					WriteFloat w 1
+							
+					for j = 2 to 4 do
+					(
+						WriteFloat w 0
+					)
+					for j = 1 to 4 do
+					(
+							WriteLong w boneidxs[j]
+					)
+				)
+			)
+			
 			for v=1 to umeshs[i].numfaces do
 			(
 				local j=1
@@ -1940,12 +2075,13 @@ label lab1 "TOP ACE Model(TEST)" height:17
 button theButton "exporter" width:77 height:25
 spinner worldscale "Scale:" range:[0,5555,1] type:#float pos:[27,64]
 checkbox flipyz "flip YZ"  enabled:false
+checkbox adfac "Add Face"  enabled:true
 	
 	--worldscale.pos=[0,0]
 	--flipyz.enabled=false
 on theButton pressed do 
 (
-	local ret=expfile false worldscale.value
+	local ret=expfile false worldscale.value adfac.checked
 	if(ret) then
 	Messagebox "Finished"
 	else
@@ -1956,4 +2092,4 @@ on theButton pressed do
 
 
 
-createDialog TOP_ACE_MODEL_Exporter 170 100
+createDialog TOP_ACE_MODEL_Exporter 170 127
