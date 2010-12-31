@@ -263,7 +263,7 @@ void FBOS_BLOOM()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	glPopAttrib();
-	glBindTexture(TexTGT, BloomTex1);//BloomTex1
+	glBindTexture(TexTGT, BloomTex1);
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
