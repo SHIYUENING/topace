@@ -10,7 +10,7 @@ void main()
 	//float dy = 1.0/imgH;
 
 	vec4 color = texture2DRect(texColor,TexCoord0.xy);
-	/*color += texture2DRect(texColor,TexCoord0.xy+vec2(3.0,0.0));
+	color += texture2DRect(texColor,TexCoord0.xy+vec2(3.0,0.0));
 
 	color += texture2DRect(texColor,TexCoord0.xy+vec2(0.0,1.0));
 	color += texture2DRect(texColor,TexCoord0.xy+vec2(3.0,1.0));
@@ -20,7 +20,7 @@ void main()
 
 	color += texture2DRect(texColor,TexCoord0.xy+vec2(0.0,3.0));
 	color += texture2DRect(texColor,TexCoord0.xy+vec2(3.0,3.0));
-	color /= 8.0;*/
+	color /= 8.0;
 
 	vec4 cout = vec4(0.0,0.0,0.0,0.0);
 	float lum = color.x * 0.3 + color.y *0.59 + color.z * 0.11;
