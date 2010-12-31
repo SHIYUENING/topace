@@ -14,7 +14,7 @@ void DeinitFBO();
 void FBOS_BLOOM();
 //void FBOS_Star_Begin();
 //void FBOS_Star_End();
-void TestTexFBO();
+//void TestTexFBO();
 //void FBOS_SSAO();
 
 
