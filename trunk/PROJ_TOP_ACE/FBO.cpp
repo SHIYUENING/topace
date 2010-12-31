@@ -67,17 +67,17 @@ void CheckFBOError()
 	}
 	FBOLOG.WriteLOGFile(true);
 	FBOLOG.ClearLOG();
-}
-GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint Format,GLuint DataType)
+}//GL_TEXTURE_RECTANGLE
+GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint Format,GLuint DataType,int TexTGT)
 {
 	GLuint Tex2DID=0;
 	glGenTextures(1, &Tex2DID);
-	glBindTexture(GL_TEXTURE_2D, Tex2DID);
-	glTexImage2D(GL_TEXTURE_2D, 0, FormatI,  TexSizeX, TexSizeY, 0, Format, DataType, NULL);//GL_RGBA16F_ARB
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, FILTER);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, FILTER);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(TexTGT, Tex2DID);
+	glTexImage2D(TexTGT, 0, FormatI,  TexSizeX, TexSizeY, 0, Format, DataType, NULL);//GL_RGBA16F_ARB
+	glTexParameterf(TexTGT, GL_TEXTURE_MIN_FILTER, FILTER);
+	glTexParameterf(TexTGT, GL_TEXTURE_MAG_FILTER, FILTER);
+	glTexParameterf(TexTGT, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(TexTGT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	return Tex2DID;
 }
 GLuint InitFBO(int winW,int winH,int BloomSet)
