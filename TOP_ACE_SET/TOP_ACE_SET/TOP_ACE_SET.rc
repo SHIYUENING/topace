@@ -16,13 +16,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(中华人民共和国) resources
+// 中文(简体，中国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-#ifdef _WIN32
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 #pragma code_page(936)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -78,7 +76,7 @@ IDR_TOP_ACE_SETTYPE     ICON                    "res\\TOP_ACE_SETDoc.ico"
 // Menu
 //
 
-IDR_MAINFRAME MENU 
+IDR_MAINFRAME MENU
 BEGIN
     POPUP "帮助(&H)"
     BEGIN
@@ -92,7 +90,7 @@ END
 // Accelerator
 //
 
-IDR_MAINFRAME ACCELERATORS 
+IDR_MAINFRAME ACCELERATORS
 BEGIN
     "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
@@ -139,7 +137,7 @@ IDD_DIALOG_SET_SYS DIALOGEX 0, 0, 207, 256
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    GROUPBOX        "分辨率",IDC_STATIC,7,7,193,55
+    GROUPBOX        "分辨率",IDC_STATIC,7,7,193,67
     COMBOBOX        IDC_COMBO1,57,16,128,30,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     CONTROL         "全屏",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,15,18,34,10
     CONTROL         "窗口",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,15,42,37,10
@@ -147,13 +145,14 @@ BEGIN
     LTEXT           "高",IDC_STATIC,99,41,9,8
     EDITTEXT        IDC_EDIT1,65,38,31,14,ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_EDIT2,110,38,31,14,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "垂直同步",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,64,48,10
-    LTEXT           "反锯齿",IDC_STATIC,7,80,25,8
-    COMBOBOX        IDC_COMBO2,37,76,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "垂直同步",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,76,48,10
+    LTEXT           "反锯齿",IDC_STATIC,7,92,25,8
+    COMBOBOX        IDC_COMBO2,37,88,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "色深",IDC_STATIC,143,42,17,8
     COMBOBOX        IDC_COMBO3,161,38,35,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "FPS限制",IDC_STATIC,7,97,29,8
-    EDITTEXT        IDC_EDIT3,38,92,27,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "FPS限制",IDC_STATIC,7,109,29,8
+    EDITTEXT        IDC_EDIT3,38,104,27,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "窗口模式高宽必须都是4的倍数",IDC_STATIC,45,58,115,9
 END
 
 IDD_DIALOG_KEYSET DIALOGEX 0, 0, 241, 311
@@ -243,7 +242,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -346,23 +345,23 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDP_OLE_INIT_FAILED     "OLE 初始化失败。请确保 OLE 库是正确的版本。"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "TOP_ACE_SET\n\nTOP_ACE_SET\n\n\nTOPACESET.Document\nTOP_ACE_SET.Document"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "TOP_ACE_SET"
     AFX_IDS_IDLEMESSAGE     "就绪"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_INDICATOR_EXT        "EXT"
     ID_INDICATOR_CAPS       "CAP"
@@ -372,7 +371,7 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_NEW             "创建新文档\n新建"
     ID_FILE_OPEN            "打开现有文档\n打开"
@@ -381,13 +380,13 @@ BEGIN
     ID_FILE_SAVE_AS         "用新名称保存活动文档\n另存为"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_APP_ABOUT            "显示程序信息、版本号和版权\n关于"
     ID_APP_EXIT             "退出应用程序；提示保存文档\n退出"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_FILE_MRU_FILE1       "打开此文档"
     ID_FILE_MRU_FILE2       "打开此文档"
@@ -407,18 +406,18 @@ BEGIN
     ID_FILE_MRU_FILE16      "打开此文档"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_NEXT_PANE            "切换到下一个窗格\n下一窗格"
     ID_PREV_PANE            "切换回上一个窗格\n上一窗格"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_WINDOW_SPLIT         "将活动窗口拆分为多个窗格\n拆分"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     ID_EDIT_CLEAR           "清除选定内容\n清除"
     ID_EDIT_CLEAR_ALL       "清除全部内容\n全部清除"
@@ -433,7 +432,7 @@ BEGIN
     ID_EDIT_REDO            "恢复上次撤消的操作\n重做"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCSIZE          "更改窗口大小"
     AFX_IDS_SCMOVE          "更改窗口位置"
@@ -444,13 +443,13 @@ BEGIN
     AFX_IDS_SCCLOSE         "关闭活动窗口并提示保存文档"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_SCRESTORE       "将窗口恢复到正常大小"
     AFX_IDS_SCTASKLIST      "激活任务列表"
 END
 
-#endif    // 中文(中华人民共和国) resources
+#endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -458,10 +457,8 @@ END
 // 英语(美国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
