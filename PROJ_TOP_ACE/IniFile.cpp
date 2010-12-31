@@ -81,8 +81,8 @@ void loadIniFile()
 		WritePrivateProfileString("KeyBoardSet","JOY_KEY_NO_USE","96",".\\gameset.ini");
 	}
 
-		GameSet.winW=GetPrivateProfileInt("GameSet","winW",800,".\\gameset.ini");
-		GameSet.winH=GetPrivateProfileInt("GameSet","winH",600,".\\gameset.ini");
+		GameSet.winW=GetPrivateProfileInt("GameSet","winW",800,".\\gameset.ini");GameSet.winW=GameSet.winW-GameSet.winW%4;
+		GameSet.winH=GetPrivateProfileInt("GameSet","winH",600,".\\gameset.ini");GameSet.winH=GameSet.winH-GameSet.winH%4;
 		GameSet.bits=GetPrivateProfileInt("GameSet","bits",32,".\\gameset.ini");
 		GameSet.depth=GetPrivateProfileInt("GameSet","depth",24,".\\gameset.ini");
 		if(GetPrivateProfileInt("GameSet","isFullScreem",0,".\\gameset.ini")>0)

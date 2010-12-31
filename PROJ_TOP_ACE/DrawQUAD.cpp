@@ -34,6 +34,7 @@ void DrawQUAD(GLuint Left,GLuint Right,GLuint Up,GLuint Down)
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
 }
+/*
 void DrawQUAD_Att(GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLint AttIndexTexCoord,GLint AttIndexVertex)
 {
 	QUADArrayVertex[2]=QUADArrayVertex[6]=Left;
@@ -43,6 +44,22 @@ void DrawQUAD_Att(GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLint AttIndexT
 
 	glEnableClientState( GL_VERTEX_ARRAY );
 	glVertexAttribPointer(AttIndexTexCoord,2,GL_FLOAT,0,0,QUADArrayTexCoord);
+	glVertexAttribPointer(AttIndexVertex,2,GL_INT,0,0,QUADArrayVertex);
+	glDrawArrays(GL_TRIANGLE_STRIP,0,4);
+	glDisableClientState( GL_VERTEX_ARRAY );
+}*/
+void DrawQUAD_Att(GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLint AttIndexTexCoord,GLint AttIndexVertex,int winW,int winH)
+{
+	QUADArrayTexCoord2[0]=QUADArrayTexCoord2[4]=float(winW);
+	QUADArrayTexCoord2[1]=QUADArrayTexCoord2[3]=float(winH);
+	QUADArrayVertex[2]=QUADArrayVertex[6]=Left;
+	QUADArrayVertex[0]=QUADArrayVertex[4]=Right;
+	QUADArrayVertex[1]=QUADArrayVertex[3]=Up;
+	QUADArrayVertex[5]=QUADArrayVertex[7]=Down;
+	
+
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glVertexAttribPointer(AttIndexTexCoord,2,GL_FLOAT,0,0,QUADArrayTexCoord2);
 	glVertexAttribPointer(AttIndexVertex,2,GL_INT,0,0,QUADArrayVertex);
 	glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 	glDisableClientState( GL_VERTEX_ARRAY );

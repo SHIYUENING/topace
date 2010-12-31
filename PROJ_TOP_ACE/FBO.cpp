@@ -22,11 +22,15 @@ int ScreemTexW=0;
 int ScreemTexH=0;
 int FBOWinW=0;
 int FBOWinH=0;
+int BloomTexW=0;
+int BloomTexH=0;
 CTALogSys FBOLOG;
 int BloomScale=4;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
 GLfloat FBOMatrixTMP[16];
+bool TexTect=false;
+GLenum TexTGT=GL_TEXTURE_2D;
 int next_p2 ( int a )
 {
 	int rval=1;
@@ -35,6 +39,7 @@ int next_p2 ( int a )
 }
 void CheckFBOError()
 {
+	//GL_TEXTURE_RECTANGLE
 	FBOLOG.AddLOG("******Check Framebuffer Status******");
 	FBOLOG.AddLOG("******ERROR******");
 	GLenum status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
@@ -82,10 +87,6 @@ GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint 
 }
 GLuint InitFBO(int winW,int winH,int BloomSet)
 {
-	FBOWinW=winW;
-	FBOWinH=winH;
-	ScreemTexW=next_p2(winW);
-	ScreemTexH=next_p2(winH);
 
 	if(SuppotFBO)
 		return 0;
@@ -96,16 +97,26 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		SuppotFBO=false;
 		return 0;
 	}
+	TexTect=(glewIsSupported("GL_ARB_texture_rectangle")||glewIsSupported("GL_EXT_texture_rectangle"))?true:false;
+	if(!TexTect) return 0;
+	FBOWinW=winW;
+	FBOWinH=winH;
+	ScreemTexW=TexTect?winW:next_p2(winW);
+	ScreemTexH=TexTect?winH:next_p2(winH);
+	BloomTexW=ScreemTexW/BloomScale;BloomTexW=BloomTexW-BloomTexW%4;
+	BloomTexH=ScreemTexH/BloomScale;BloomTexH=BloomTexH-BloomTexH%4;
+	TexTGT=TexTect?GL_TEXTURE_RECTANGLE:GL_TEXTURE_2D;
+
 	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&MAX_COLOR_ATTACHMENTS);
 
 	if(GameSet.SSAO>0)
 	{
-		SSAOTex1=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-		SSAOTex2=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+		SSAOTex1=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,TexTGT);
+		SSAOTex2=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,TexTGT);
 	}
 	glGenFramebuffersEXT(1, &FBOID);
 //	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
-	ScreemTex=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+	ScreemTex=InitTex2D(FBOWinW, FBOWinH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,TexTGT);
 	//ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 
 	
@@ -118,12 +129,12 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		if(BloomSet>=3)
 			BloomTexFormatISet=GL_RGBA32F_ARB;*/
 
-		BloomTex1=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
-		BloomTex2=InitTex2D(ScreemTexW/BloomScale, ScreemTexH/BloomScale,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE);
+		BloomTex1=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE,TexTGT);
+		BloomTex2=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE,TexTGT);
 		
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0); 
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex1, 0); 
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex2, 0);
 		CheckFBOError();
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
@@ -169,6 +180,7 @@ void DeinitFBO()
 	if(SSAOTex2)
 		glDeleteTextures(1,&SSAOTex2);
 }
+/*
 void TestTexFBO()
 {
 	glEnable( GL_TEXTURE_2D );
@@ -205,59 +217,65 @@ void TestTexFBO()
 	glEnable(GL_DEPTH_TEST);
 	glEnable( GL_BLEND );
 	glEnable( GL_CULL_FACE );
-}
+}*/
 void FBOS_BLOOM()
 {
 	if(MAX_COLOR_ATTACHMENTS<1)
 		return;
-	glBindTexture(GL_TEXTURE_2D, ScreemTex);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (FBOWinW-ScreemTexW)/2, (FBOWinH-ScreemTexH)/2,ScreemTexW, ScreemTexH, 0);
+
+	glEnable(GL_TEXTURE_RECTANGLE);
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_RECTANGLE, ScreemTex);
+	glCopyTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGBA, 0, 0,FBOWinW, FBOWinH, 0);
+
 	glPushAttrib(GL_VIEWPORT_BIT);
+	glViewport(0,0,BloomTexW, BloomTexH);
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex1, 0);
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glClear (GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
-	glViewport(0,0,ScreemTexW/BloomScale, ScreemTexH/BloomScale);
 	
 	glEnableVertexAttribArray(AbLoc_Tex0);
 	glEnableVertexAttribArray(AbLoc_Pos);
-	CO_MatrixOrthogonalProjection(0.0,float(ScreemTexW/BloomScale),0.0,float(ScreemTexH/BloomScale),-1.0,1.0,FBOMatrixTMP);
-	GLSL_Enable_Bloom_Map(FBOWinW,FBOWinH);
+	CO_MatrixOrthogonalProjection(0.0,float(BloomTexW),0.0,float(BloomTexH),-1.0,1.0,FBOMatrixTMP);
+	GLSL_Enable_Bloom_Map();
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
+	DrawQUAD_Att(0,BloomTexW,BloomTexH,0,AbLoc_Tex0,AbLoc_Pos,FBOWinW,FBOWinH);
 
-
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex2, 0);
-	glBindTexture(GL_TEXTURE_2D, BloomTex1);
-	GLSL_Enable_Bloom_BlurTex(FBOWinW/4,true);
-	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
 	
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, BloomTex1, 0);
-	glBindTexture(GL_TEXTURE_2D, BloomTex2);
-	GLSL_Enable_Bloom_BlurTex(FBOWinH/4,false);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex2, 0);
+	glBindTexture(TexTGT, BloomTex1);
+	GLSL_Enable_Bloom_BlurTex(1.0f,true);
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD_Att(0,ScreemTexW/BloomScale,ScreemTexH/BloomScale,0,AbLoc_Tex0,AbLoc_Pos);
+	DrawQUAD_Att(0,BloomTexW,BloomTexH,0,AbLoc_Tex0,AbLoc_Pos,BloomTexW,BloomTexH);
+	
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex1, 0);
+	glBindTexture(TexTGT, BloomTex2);
+	GLSL_Enable_Bloom_BlurTex(1.0f,false);
+	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
+	DrawQUAD_Att(0,BloomTexW,BloomTexH,0,AbLoc_Tex0,AbLoc_Pos,BloomTexW,BloomTexH);
 	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	glPopAttrib();
-	glBindTexture(GL_TEXTURE_2D, BloomTex1);
+	glBindTexture(TexTGT, BloomTex1);//BloomTex1
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
-	CO_MatrixOrthogonalProjection(float(-FBOWinW/2),float(FBOWinW/2),float(-FBOWinH/2),float(FBOWinH/2),-1.0,1.0,FBOMatrixTMP);
+	CO_MatrixOrthogonalProjection(0,float(FBOWinW),0,float(FBOWinH),-1.0,1.0,FBOMatrixTMP);
 	GLSL_Enable_Bloom_ToneMapping();
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
-	DrawQUAD_Att(-ScreemTexW/2,ScreemTexW/2,ScreemTexH/2,-ScreemTexH/2,AbLoc_Tex0,AbLoc_Pos);
+	DrawQUAD_Att(0,FBOWinW,FBOWinH,0,AbLoc_Tex0,AbLoc_Pos,BloomTexW,BloomTexH);
 	GLSL_Disable();
 	glDisableVertexAttribArray(AbLoc_Tex0);
 	glDisableVertexAttribArray(AbLoc_Pos);
 
+	glDisable(TexTGT);
 	glEnable( GL_CULL_FACE );
 	glEnable(GL_DEPTH_TEST);
 	
