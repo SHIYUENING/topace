@@ -157,6 +157,7 @@
     <ClCompile Include="FileSysBace.cpp" />
     <ClCompile Include="Font2D.cpp" />
     <ClCompile Include="Font3D.cpp" />
+    <ClCompile Include="FONTS2D.cpp" />
     <ClCompile Include="Glsl.cpp" />
     <ClCompile Include="GLSLLoader.cpp" />
     <ClCompile Include="GLSL_Bloom.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="FileSysBace.h" />
     <ClInclude Include="Font2D.h" />
     <ClInclude Include="Font3D.h" />
+    <ClInclude Include="FONTS2D.h" />
     <ClInclude Include="Glsl.h" />
     <ClInclude Include="GLSLLoader.h" />
     <ClInclude Include="GLSL_Bloom.h" />
