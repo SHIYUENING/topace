@@ -89,6 +89,7 @@
       <Filter>GLSL_EFF</Filter>
     </ClCompile>
     <ClCompile Include="CPUTess.cpp" />
+    <ClCompile Include="FONTS2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -191,6 +192,7 @@
       <Filter>GLSL_EFF</Filter>
     </ClInclude>
     <ClInclude Include="CPUTess.h" />
+    <ClInclude Include="FONTS2D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">
