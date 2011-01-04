@@ -48,6 +48,23 @@ void DrawQUAD_Att(GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLint AttIndexT
 	glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 	glDisableClientState( GL_VERTEX_ARRAY );
 }*/
+void DrawQUAD(GLfloat Left,GLfloat Right,GLfloat Up,GLfloat Down,GLuint QUADW,GLuint QUADH)
+{
+	
+	QUADArrayTexCoord2[0]=QUADArrayTexCoord2[4]=float(QUADW);
+	QUADArrayTexCoord2[1]=QUADArrayTexCoord2[3]=float(QUADH);
+	QUADArrayVertexF[2]=QUADArrayVertexF[6]=Left;
+	QUADArrayVertexF[0]=QUADArrayVertexF[4]=Right;
+	QUADArrayVertexF[1]=QUADArrayVertexF[3]=Up;
+	QUADArrayVertexF[5]=QUADArrayVertexF[7]=Down;
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
+	glTexCoordPointer( 2, GL_FLOAT, 0, QUADArrayTexCoord2 );
+	glVertexPointer( 2, GL_FLOAT, 0, QUADArrayVertexF );
+	glDrawArrays(GL_TRIANGLE_STRIP,0,4);
+	glDisableClientState( GL_VERTEX_ARRAY );
+	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+}
 void DrawQUAD_Att(GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLint AttIndexTexCoord,GLint AttIndexVertex,int winW,int winH)
 {
 	QUADArrayTexCoord2[0]=QUADArrayTexCoord2[4]=float(winW);

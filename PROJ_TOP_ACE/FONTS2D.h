@@ -29,5 +29,6 @@ public:
 	unsigned char* FontDataTMP_FullWidth;
 	unsigned char* FontDataTMP_HalfWidth;
 	void SetCharTex(const wchar_t CharIn);
+	void DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH);
 };
 #endif

@@ -29,8 +29,6 @@ int BloomScale=4;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
 GLfloat FBOMatrixTMP[16];
-bool TexTect=false;
-GLenum TexTGT=GL_TEXTURE_2D;
 int next_p2 ( int a )
 {
 	int rval=1;
@@ -39,7 +37,6 @@ int next_p2 ( int a )
 }
 void CheckFBOError()
 {
-	//GL_TEXTURE_RECTANGLE
 	FBOLOG.AddLOG("******Check Framebuffer Status******");
 	FBOLOG.AddLOG("******ERROR******");
 	GLenum status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
@@ -97,26 +94,23 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		SuppotFBO=false;
 		return 0;
 	}
-	TexTect=(glewIsSupported("GL_ARB_texture_rectangle")||glewIsSupported("GL_EXT_texture_rectangle"))?true:false;
-	if(!TexTect) return 0;
+	if(!(glewIsSupported("GL_ARB_texture_rectangle")||glewIsSupported("GL_EXT_texture_rectangle"))) return 0;
 	FBOWinW=winW;
 	FBOWinH=winH;
-	ScreemTexW=TexTect?winW:next_p2(winW);
-	ScreemTexH=TexTect?winH:next_p2(winH);
-	BloomTexW=ScreemTexW/BloomScale;BloomTexW=BloomTexW-BloomTexW%4;
-	BloomTexH=ScreemTexH/BloomScale;BloomTexH=BloomTexH-BloomTexH%4;
-	TexTGT=TexTect?GL_TEXTURE_RECTANGLE:GL_TEXTURE_2D;
+	ScreemTexW=winW;
+	ScreemTexH=winH;
+	BloomTexW=240;
+	BloomTexH=240*winH/winW;
 
 	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&MAX_COLOR_ATTACHMENTS);
 
-	if(GameSet.SSAO>0)
+	/*if(GameSet.SSAO>0)
 	{
-		SSAOTex1=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,TexTGT);
-		SSAOTex2=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,TexTGT);
-	}
+		SSAOTex1=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
+		SSAOTex2=InitTex2D(ScreemTexW/2, ScreemTexH/2,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
+	}*/
 	glGenFramebuffersEXT(1, &FBOID);
-//	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
-	ScreemTex=InitTex2D(FBOWinW, FBOWinH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,TexTGT);
+	ScreemTex=InitTex2D(FBOWinW, FBOWinH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
 	//ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 
 	
@@ -129,12 +123,12 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		if(BloomSet>=3)
 			BloomTexFormatISet=GL_RGBA32F_ARB;*/
 
-		BloomTex1=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE,TexTGT);
-		BloomTex2=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE,TexTGT);
+		BloomTex1=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
+		BloomTex2=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_RED,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
 		
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex1, 0); 
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex2, 0);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex1, 0); 
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex2, 0);
 		CheckFBOError();
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
@@ -232,7 +226,7 @@ void FBOS_BLOOM()
 	glViewport(0,0,BloomTexW, BloomTexH);
 
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex1, 0);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex1, 0);
 
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
 	glClear (GL_COLOR_BUFFER_BIT);
@@ -248,14 +242,14 @@ void FBOS_BLOOM()
 	DrawQUAD_Att(0,BloomTexW,BloomTexH,0,AbLoc_Tex0,AbLoc_Pos,FBOWinW,FBOWinH);
 
 	
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex2, 0);
-	glBindTexture(TexTGT, BloomTex1);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex2, 0);
+	glBindTexture(GL_TEXTURE_RECTANGLE, BloomTex1);
 	GLSL_Enable_Bloom_BlurTex(1.0f,true);
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD_Att(0,BloomTexW,BloomTexH,0,AbLoc_Tex0,AbLoc_Pos,BloomTexW,BloomTexH);
 	
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, TexTGT, BloomTex1, 0);
-	glBindTexture(TexTGT, BloomTex2);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex1, 0);
+	glBindTexture(GL_TEXTURE_RECTANGLE, BloomTex2);
 	GLSL_Enable_Bloom_BlurTex(1.0f,false);
 	GLSL_SetMVPMatrixToGlsl(FBOMatrixTMP);
 	DrawQUAD_Att(0,BloomTexW,BloomTexH,0,AbLoc_Tex0,AbLoc_Pos,BloomTexW,BloomTexH);
@@ -263,7 +257,7 @@ void FBOS_BLOOM()
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	glPopAttrib();
-	glBindTexture(TexTGT, BloomTex1);
+	glBindTexture(GL_TEXTURE_RECTANGLE, BloomTex1);
 	glEnable( GL_BLEND );
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 
@@ -275,7 +269,7 @@ void FBOS_BLOOM()
 	glDisableVertexAttribArray(AbLoc_Tex0);
 	glDisableVertexAttribArray(AbLoc_Pos);
 
-	glDisable(TexTGT);
+	glDisable(GL_TEXTURE_RECTANGLE);
 	glEnable( GL_CULL_FACE );
 	glEnable(GL_DEPTH_TEST);
 	
