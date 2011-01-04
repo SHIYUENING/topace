@@ -17,7 +17,7 @@ CFONTS2D::~CFONTS2D(void)
 	if(FontDataTMP_HalfWidth) delete [] FontDataTMP_HalfWidth;
 }
 
-bool CFONTS2D::LoadFullWidthFont(const char * FontPath,int FontW,int FontH,int CHARSET=GB2312_CHARSET)
+bool CFONTS2D::LoadFullWidthFont(const char * FontPath,int FontW,int FontH,int CHARSET)
 {
 	if (FT_Init_FreeType( &library )) return false;
 	if (FT_New_Face( library, FontPath, 0, &Face_FullWidth ))  return false;
@@ -25,7 +25,7 @@ bool CFONTS2D::LoadFullWidthFont(const char * FontPath,int FontW,int FontH,int C
 	FontDataTMP_FullWidth = new unsigned char[FontW*FontH*2];
 	return true;
 }
-bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int CHARSET=GB2312_CHARSET)
+bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int CHARSET)
 {
 	if (FT_Init_FreeType( &library )) return false;
 	if (FT_New_Face( library, FontPath, 0, &Face_HalfWidth ))  return false;
@@ -36,6 +36,10 @@ bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int C
 
 void CFONTS2D::SetCharTex(const wchar_t CharIn)
 {
+	
+	FT_Glyph glyph;
+	FT_BitmapGlyph bitmap_glyph;
+	;
 	if(FontSets[CharIn].TexID) return;
 	face=CharIn>=0xff?Face_FullWidth:Face_HalfWidth;
 	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, CharIn ), FT_LOAD_DEFAULT )) return;
@@ -43,7 +47,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
     if(FT_Get_Glyph( face->glyph, &glyph )) return;
 	FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 );
     bitmap_glyph = (FT_BitmapGlyph)glyph;
-	bitmap=bitmap_glyph->bitmap;
+	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
 	FontSets[CharIn].SizeW=bitmap.width;
 	FontSets[CharIn].SizeH=bitmap.rows;
 

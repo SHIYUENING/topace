@@ -25,9 +25,6 @@ public:
 	FT_Face Face_HalfWidth;
 	FT_Face face;
 	FT_Library library;
-	FT_Glyph glyph;
-	FT_BitmapGlyph bitmap_glyph;
-	FT_Bitmap& bitmap;
 	tFonts2Dset FontSets[0xFFFF];
 	unsigned char* FontDataTMP_FullWidth;
 	unsigned char* FontDataTMP_HalfWidth;
