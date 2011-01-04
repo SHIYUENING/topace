@@ -8,6 +8,7 @@
 #include <string.h>	
 //#include "Load3DS.h"
 #include "Font2D.h"
+#include "FONTS2D.h"
 #include "Textures.h"
 #include "IniFile.h"
 #include "FBO.h"
@@ -24,6 +25,7 @@ float extern moveY;
 float extern moveX;
 int extern ReadingThreadNum;
 CFont2D * Font2D=NULL; 
+CFONTS2D FONTS2D;
 bool Inited=false;
 bool IsFirstInit=true;
 LARGE_INTEGER TimeStart,TimeEnd,Timefeq,RunTimeStart,RunTimeEnd,CPUTestStart,CPUTestEnd;
@@ -188,16 +190,17 @@ void InitDraw()
 	{
 		Test3dsModelHanger->LoadToVRAM();
 	}*/
-
-	if(!Font2D)
+	
+	char szPath[MAX_PATH];
+	GetWindowsDirectory(szPath,sizeof(szPath));
+	char FontPath[MAX_PATH];
+	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
+	FONTS2D.LoadFullWidthFont(FontPath,24,24);
+	/*if(!Font2D)
 	{
-		char szPath[MAX_PATH];
-		GetWindowsDirectory(szPath,sizeof(szPath));
-		char FontPath[MAX_PATH];
-		sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
 		Font2D=new CFont2D;
 		Font2D->LoadFont(FontPath,32,32);
-	}
+	}*/
 	swprintf_s(ShowFPS,64,L"-");
 	QueryPerformanceCounter(&TimeStart);
 	if(IsFirstInit)
@@ -321,12 +324,13 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
 		swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%, GPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
-		Font2D->inputTxt(ShowFPS);
+		//Font2D->inputTxt(ShowFPS);
 	}
 	FPSNum=FPSNum+1;
 	glColor4f(1.0f,1.0f,0.0f,1.0f);
 	glEnable( GL_TEXTURE_2D );
-	Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
+	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
+	FONTS2D.DrawTexts(L"测",100,100,400,300,300,32);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 void DrawTestLines()
