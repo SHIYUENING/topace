@@ -48,11 +48,13 @@ void DrawQUAD_Att(GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLint AttIndexT
 	glDrawArrays(GL_TRIANGLE_STRIP,0,4);
 	glDisableClientState( GL_VERTEX_ARRAY );
 }*/
-void DrawQUAD(GLfloat Left,GLfloat Right,GLfloat Up,GLfloat Down,GLuint QUADW,GLuint QUADH)
+void DrawQUAD(GLfloat Left,GLfloat Right,GLfloat Up,GLfloat Down,GLfloat QUADW,GLfloat QUADH)
 {
 	
-	QUADArrayTexCoord2[0]=QUADArrayTexCoord2[4]=float(QUADW);
-	QUADArrayTexCoord2[1]=QUADArrayTexCoord2[3]=float(QUADH);
+	QUADArrayTexCoord2[0]=QUADArrayTexCoord2[4]=QUADW;
+	//QUADArrayTexCoord2[1]=QUADArrayTexCoord2[3]=QUADH;
+	QUADArrayTexCoord2[1]=QUADArrayTexCoord2[3]=1.0f-QUADH;
+	QUADArrayTexCoord2[5]=QUADArrayTexCoord2[7]=1.0f;
 	QUADArrayVertexF[2]=QUADArrayVertexF[6]=Left;
 	QUADArrayVertexF[0]=QUADArrayVertexF[4]=Right;
 	QUADArrayVertexF[1]=QUADArrayVertexF[3]=Up;

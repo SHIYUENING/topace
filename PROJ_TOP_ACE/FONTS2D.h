@@ -12,6 +12,9 @@ struct tFonts2Dset
 {
 	int SizeW;
 	int SizeH;
+	int TexSizeX;
+	int TexSizeY;
+	int MoveY;
 	GLuint TexID;
 };
 class CFONTS2D
@@ -30,5 +33,10 @@ public:
 	unsigned char* FontDataTMP_HalfWidth;
 	void SetCharTex(const wchar_t CharIn);
 	void DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH);
+	int next_p2 ( int a );
+	int FontSizeFX;
+	int FontSizeFY;
+	int FontSizeHX;
+	int FontSizeHY;
 };
 #endif

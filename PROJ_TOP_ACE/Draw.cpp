@@ -195,7 +195,7 @@ void InitDraw()
 	GetWindowsDirectory(szPath,sizeof(szPath));
 	char FontPath[MAX_PATH];
 	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
-	FONTS2D.LoadFullWidthFont(FontPath,24,24);
+	FONTS2D.LoadFullWidthFont(FontPath,64,64);
 	/*if(!Font2D)
 	{
 		Font2D=new CFont2D;
@@ -330,7 +330,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glColor4f(1.0f,1.0f,0.0f,1.0f);
 	glEnable( GL_TEXTURE_2D );
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
-	FONTS2D.DrawTexts(L"测",100,100,400,300,300,32);
+	FONTS2D.DrawTexts(L"asdfasdfFFF456456测试天地任何.-",100,500,GameSet.winW*2,GameSet.winH*2,1500,64);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 void DrawTestLines()
