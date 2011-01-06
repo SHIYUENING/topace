@@ -15,6 +15,7 @@ struct tFonts2Dset
 	int TexSizeX;
 	int TexSizeY;
 	int MoveY;
+	int UseCount;
 	GLuint TexID;
 };
 class CFONTS2D
@@ -38,5 +39,6 @@ public:
 	int FontSizeFY;
 	int FontSizeHX;
 	int FontSizeHY;
+	unsigned int DrawCount;
 };
 #endif
