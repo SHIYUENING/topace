@@ -13,6 +13,7 @@ CFONTS2D::CFONTS2D(void)
 	,FontSizeFY(0)
 	,FontSizeHX(0)
 	,FontSizeHY(0)
+	,DrawCount(0)
 {
 	ZeroMemory(FontSets,sizeof(FontSets));
 }
@@ -50,6 +51,12 @@ bool CFONTS2D::LoadFullWidthFont(const char * FontPath,int FontW,int FontH,int C
 	if(FontDataTMP_FullWidth) delete [] FontDataTMP_FullWidth;
 	FontDataTMP_FullWidth = new unsigned char[next_p2(FontW)*next_p2(FontH)*2];
 	ZeroMemory(FontDataTMP_FullWidth,next_p2(FontW)*next_p2(FontH)*2);
+	for(int i=0x100;i<0xFFFF;i++)
+	{
+		if(FontSets[i].TexID!=0)
+			glDeleteTextures(1, &FontSets[i].TexID);
+		FontSets[i].TexID=0;
+	}
 	return true;
 }
 bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int CHARSET)
@@ -65,6 +72,12 @@ bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int C
 	if(FontDataTMP_HalfWidth) delete [] FontDataTMP_HalfWidth;
 	FontDataTMP_HalfWidth = new unsigned char[next_p2(FontW)*next_p2(FontH)*2];
 	ZeroMemory(FontDataTMP_HalfWidth,next_p2(FontW)*next_p2(FontH)*2);
+	for(int i=0;i<0x100;i++)
+	{
+		if(FontSets[i].TexID!=0)
+			glDeleteTextures(1, &FontSets[i].TexID);
+		FontSets[i].TexID=0;
+	}
 	return true;
 }
 
@@ -101,6 +114,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	//	Ymove=bitmap.rows/2;
 	if(CharIn<0xFF) FontSets[CharIn].MoveY=bitmap.rows/6;
 	if(CharIn==L'-') FontSets[CharIn].MoveY=FontSets[CharIn].TexSizeY/2-bitmap.rows*2;
+	if(CharIn==L'.') FontSets[CharIn].MoveY=bitmap.rows/2;
 	for(int j=Ymove; j <FontSets[CharIn].TexSizeY;j++) {
 		for(int i=0; i < FontSets[CharIn].TexSizeX; i++){
 			FontDataTMP[i+(j-Ymove)*FontSets[CharIn].TexSizeX] = (i>=bitmap.width || j<(FontSets[CharIn].TexSizeY-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-FontSets[CharIn].TexSizeY+bitmap.rows)];
@@ -142,9 +156,10 @@ void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int W
 	for (int i=0;i<CharInCount;i++)
 	{
 		SetCharTex(CharIn[i]);
+		FontSets[CharIn[i]].UseCount++;
 		glBindTexture(GL_TEXTURE_2D, FontSets[CharIn[i]].TexID);
 		MaxLineY=max(MaxLineY,float(FontSets[CharIn[i]].SizeH));
-		if(LineW<=(DrawX+float(FontSets[CharIn[i]].SizeW)))
+		if((LineW<=(DrawX+float(FontSets[CharIn[i]].SizeW)))||(CharIn[i]==0x0A))
 		{
 			DrawY=DrawY-MaxLineY;
 			DrawX=float(PosX);
