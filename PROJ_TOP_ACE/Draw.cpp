@@ -188,14 +188,16 @@ void InitDraw()
 	}
 	if(!Test3dsModelHanger->isVRAM)
 	{
-		Test3dsModelHanger->LoadToVRAM();
+		Test3dsModelHanger->LoadToVRAM();ARIAL.TTF
 	}*/
 	
 	char szPath[MAX_PATH];
-	GetWindowsDirectory(szPath,sizeof(szPath));
 	char FontPath[MAX_PATH];
+	GetWindowsDirectory(szPath,sizeof(szPath));
 	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
-	FONTS2D.LoadFullWidthFont(FontPath,64,64);
+	FONTS2D.LoadFullWidthFont(FontPath,16,16);
+	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
+	FONTS2D.LoadHalfWidthFont(FontPath,16,16);
 	/*if(!Font2D)
 	{
 		Font2D=new CFont2D;
@@ -330,7 +332,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glColor4f(1.0f,1.0f,0.0f,1.0f);
 	glEnable( GL_TEXTURE_2D );
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
-	FONTS2D.DrawTexts(L"asdfasdfFFF456456测试天地任何.-",100,500,GameSet.winW*2,GameSet.winH*2,1500,64);
+	FONTS2D.DrawTexts(ShowFPS,8,GameSet.winH-24,GameSet.winW,GameSet.winH,GameSet.winW,24,3.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 void DrawTestLines()
@@ -429,7 +431,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
+	/*TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false,true);
 	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
@@ -441,7 +443,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	TopAceModelTest.Draw(true,false);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
-	TopAceModelTest.Draw(true,true);
+	TopAceModelTest.Draw(true,true);*/
 	//glDepthMask(GL_TRUE);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
