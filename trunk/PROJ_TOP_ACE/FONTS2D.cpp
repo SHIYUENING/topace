@@ -45,11 +45,11 @@ bool CFONTS2D::LoadFullWidthFont(const char * FontPath,int FontW,int FontH,int C
 	Face_FullWidth=FaceTMP;
 	FT_Set_Char_Size( Face_FullWidth, FontW << 6, FontH << 6, 66, 64);
 	//FT_Set_Pixel_Sizes(Face_FullWidth,FontW,FontH);
-	FontSizeFX=next_p2(FontW);
-	FontSizeFY=next_p2(FontH);
+	FontSizeFX=FontW;
+	FontSizeFY=FontH;
 	if(FontDataTMP_FullWidth) delete [] FontDataTMP_FullWidth;
-	FontDataTMP_FullWidth = new unsigned char[FontSizeFX*FontSizeFY*2];
-	ZeroMemory(FontDataTMP_FullWidth,FontSizeFX*FontSizeFY*2);
+	FontDataTMP_FullWidth = new unsigned char[next_p2(FontW)*next_p2(FontH)*2];
+	ZeroMemory(FontDataTMP_FullWidth,next_p2(FontW)*next_p2(FontH)*2);
 	return true;
 }
 bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int CHARSET)
@@ -60,11 +60,11 @@ bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int C
 	if(Face_HalfWidth) FT_Done_Face(Face_HalfWidth);
 	Face_HalfWidth=FaceTMP;
 	FT_Set_Char_Size( Face_HalfWidth, FontW << 6, FontH << 6, 64, 64);
-	FontSizeHX=next_p2(FontW);
-	FontSizeHY=next_p2(FontH);
+	FontSizeHX=FontW;
+	FontSizeHY=FontH;
 	if(FontDataTMP_HalfWidth) delete [] FontDataTMP_HalfWidth;
-	FontDataTMP_HalfWidth = new unsigned char[FontSizeHX*FontSizeHY*2];
-	ZeroMemory(FontDataTMP_HalfWidth,FontSizeFX*FontSizeFY*2);
+	FontDataTMP_HalfWidth = new unsigned char[next_p2(FontW)*next_p2(FontH)*2];
+	ZeroMemory(FontDataTMP_HalfWidth,next_p2(FontW)*next_p2(FontH)*2);
 	return true;
 }
 
@@ -77,8 +77,8 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	face=CharIn>=0xff?Face_FullWidth:Face_HalfWidth;
 	if(!Face_FullWidth) face=Face_HalfWidth;
 	if(!Face_HalfWidth) face=Face_FullWidth;
-	FontSets[CharIn].TexSizeX=face==Face_FullWidth?FontSizeFX:FontSizeHX;
-	FontSets[CharIn].TexSizeY=face==Face_FullWidth?FontSizeFY:FontSizeHY;
+	FontSets[CharIn].TexSizeX=face==Face_FullWidth?FontSizeFX:FontSizeHX;FontSets[CharIn].TexSizeX=next_p2(FontSets[CharIn].TexSizeX);
+	FontSets[CharIn].TexSizeY=face==Face_FullWidth?FontSizeFY:FontSizeHY;FontSets[CharIn].TexSizeY=next_p2(FontSets[CharIn].TexSizeY);
 	unsigned char* FontDataTMP=face==Face_FullWidth?FontDataTMP_FullWidth:FontDataTMP_HalfWidth;
 	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, CharIn ), FT_LOAD_DEFAULT )) return;
 	FT_Outline_Embolden( &(face->glyph->outline), 30 );
@@ -88,7 +88,10 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	FT_Bitmap& bitmap=bitmap_glyph->bitmap;
 	FontSets[CharIn].SizeW=bitmap.width;
 	FontSets[CharIn].SizeH=bitmap.rows;
-
+	if(CharIn==L' ') 
+		FontSets[CharIn].SizeW=(face==Face_FullWidth?FontSizeFX:FontSizeHX)/2;
+	if(CharIn==L'Å@') 
+		FontSets[CharIn].SizeW=(face==Face_FullWidth?FontSizeFX:FontSizeHX);
 	int Ymove=0;
 	//if(CharIn<0xFF)
 	//	Ymove=FontSets[CharIn].TexSizeY/20;
@@ -124,7 +127,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 }
 
 
-void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH)
+void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH,float IntervalW)
 {
 	glEnable(GL_TEXTURE_2D);
 	//glDisable(GL_TEXTURE_2D); glEnable(GL_TEXTURE_RECTANGLE);
@@ -156,7 +159,8 @@ void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int W
 			);
 		
 		//DrawQUAD(DrawX,DrawX+float(FontSets[CharIn[i]].SizeW),DrawY+float(FontSets[CharIn[i]].SizeH),DrawY,(float)FontSets[CharIn[i]].TexSizeX,(float)FontSets[CharIn[i]].TexSizeY);
-		DrawX=DrawX+float(FontSets[CharIn[i]].SizeW)+2.0f;
+		DrawX=DrawX+float(FontSets[CharIn[i]].SizeW)-IntervalW;
+		if((CharIn[i]!=L' ')&&(CharIn[i]!=L'Å@')) DrawX=DrawX+IntervalW*2.0f;
 	}
 	glMatrixMode(GL_MODELVIEW);glPopMatrix();
 	glMatrixMode(GL_PROJECTION);glPopMatrix();

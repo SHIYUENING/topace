@@ -32,7 +32,7 @@ public:
 	unsigned char* FontDataTMP_FullWidth;
 	unsigned char* FontDataTMP_HalfWidth;
 	void SetCharTex(const wchar_t CharIn);
-	void DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH);
+	void DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH,float IntervalW=2.0f);
 	int next_p2 ( int a );
 	int FontSizeFX;
 	int FontSizeFY;
