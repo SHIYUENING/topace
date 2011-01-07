@@ -4,7 +4,7 @@ fn yus a b=
 )
 
 
-struct tamvert (pos,normal,tver)
+struct tamvert (pos,normal,tver,verid)
 struct tammesh (vts,facs)
 
 fn vertidinface edg=
@@ -40,7 +40,9 @@ fn addfac tobj=
 	
 	local tavert=#()
 	local taface=#()
+	local tavertidx=0
 	local tafaceidx=0
+	local tafacemax=0
 	
 	for i=1 to edgecol.count do
 	(
@@ -54,34 +56,51 @@ fn addfac tobj=
 			--local temvtid=edgeVerts tobj redge
 			local fa=vertidinface redge
 			local fb=vertidinface edgecol[i]
-			
-			--(fac2-1)*3+fa[2]		(fac2-1)*3+fa[1]		(fac1-1)*3+fb[1]		(fac1-1)*3+fb[2]		
-			
-			/*
+			--/*
 			local a1=tamvert ((getVert tobj (getFace tobj fac2)[fa[2]])) \
 								(meshop.getFaceRNormals tobj fac2)[fa[2]] \
-								(getTVert tobj (gettvFace tobj fac2)[fa[2]])
+								(getTVert tobj (gettvFace tobj fac2)[fa[2]]) \
+								(fac2*3+fa[2])
+								
 			local a2=tamvert ((getVert tobj (getFace tobj fac2)[fa[1]])) \
 								(meshop.getFaceRNormals tobj fac2)[fa[1]] \
-								(getTVert tobj (gettvFace tobj fac2)[fa[1]])
+								(getTVert tobj (gettvFace tobj fac2)[fa[1]]) \
+								(fac2*3+fa[1])
 			
 			local b2=tamvert ((getVert tobj (getFace tobj fac1)[fb[2]])) \
 								(meshop.getFaceRNormals tobj fac1)[fb[2]] \
-								(getTVert tobj (gettvFace tobj fac1)[fb[2]])
+								(getTVert tobj (gettvFace tobj fac1)[fb[2]]) \
+								(fac1*3+fa[2])
+								
+								
 			local b1=tamvert ((getVert tobj (getFace tobj fac1)[fb[1]])) \
 								(meshop.getFaceRNormals tobj fac1)[fb[1]] \
-								(getTVert tobj (gettvFace tobj fac1)[fb[1]])
+								(getTVert tobj (gettvFace tobj fac1)[fb[1]]) \
+								(fac1*3+fa[1])
+								
 			local pows=0.0
 			--format "%\t%\t%\t%\n" fac1 fac2 edgecol[i] redge
-			tavert[tavertidx+1]=a1.pos+a1.normal*pows
-			tavert[tavertidx+2]=a2.pos+a2.normal*pows
-			tavert[tavertidx+3]=b1.pos+b1.normal*pows
-			tavert[tavertidx+4]=b2.pos+b2.normal*pows
-			tavertidx=tavertidx+4
+			tavert[tavertidx+1]=a1
+			tavert[tavertidx+2]=a2
+			tavert[tavertidx+3]=b1
+			tavert[tavertidx+4]=b2
+			tavert[tavertidx+5]=b1
+			tavert[tavertidx+6]=a2
+			
+			--/*
+			tavert[tavertidx+1].pos=a1.pos+a1.normal*pows
+			tavert[tavertidx+2].pos=a2.pos+a2.normal*pows
+			tavert[tavertidx+3].pos=b1.pos+b1.normal*pows
+			tavert[tavertidx+4].pos=b2.pos+b2.normal*pows
+			--tavert[tavertidx+5].pos=b1.pos+b1.normal*pows
+			--tavert[tavertidx+6].pos=a2.pos+a2.normal*pows
 			--*/
 			
-			taface[tafaceidx+1]=[(fac2-1)*3+fa[2],(fac2-1)*3+fa[1],(fac1-1)*3+fb[1]]
-			taface[tafaceidx+2]=[(fac1-1)*3+fb[2],(fac1-1)*3+fb[1],(fac2-1)*3+fa[1]]
+			taface[tafaceidx+1]=[1+tafacemax,2+tafacemax,3+tafacemax]
+			taface[tafaceidx+2]=[4+tafacemax,5+tafacemax,6+tafacemax]
+			
+			tafacemax=tafacemax+6
+			tavertidx=tavertidx+6
 			tafaceidx=tafaceidx+2
 			
 		)
@@ -295,7 +314,7 @@ if(umeshs.count>0) then
 		if(addgface) then
 		(
 			WriteLong w (temmesh.numfaces+temsh.facs.count)
-			WriteLong w (temmesh.numfaces*3)
+			WriteLong w (temmesh.numfaces*3+temsh.vts.count)
 		)
 		else
 		(
@@ -441,6 +460,18 @@ if(umeshs.count>0) then
 				--WriteFloat w 1.0
 				WriteFloat w (faceidx[3])
 			)
+			
+			
+			if (addgface) then
+			(
+				for v=1 to temsh.vts.count do
+				(
+					WriteFloat w (temsh.vts[v].pos[1])
+					WriteFloat w (temsh.vts[v].pos[2])
+					WriteFloat w (temsh.vts[v].pos[3])
+					WriteFloat w (temmesh.numverts+v)
+				)
+			)
 		)
 
 		-------Normal---------
@@ -516,6 +547,16 @@ if(umeshs.count>0) then
 					
 					--format "%\t%\t\n" faceidx[3] temnor
 			)
+			if (addgface) then
+			(
+				for v=1 to temsh.vts.count do
+				(
+					WriteFloat w (temsh.vts[v].normal[1])
+					WriteFloat w (temsh.vts[v].normal[2])
+					WriteFloat w (temsh.vts[v].normal[3])
+					WriteFloat w 0.0
+				)
+			)
 		)
 		
 		-------tex---------
@@ -574,6 +615,14 @@ if(umeshs.count>0) then
 			)
 			
 		)
+			if (addgface) then
+			(
+				for v=1 to temsh.vts.count do
+				(
+					WriteFloat w (temsh.vts[v].tver[1])
+					WriteFloat w (temsh.vts[v].tver[2])
+				)
+			)
 		
 
 		-------face---------
@@ -613,9 +662,9 @@ if(umeshs.count>0) then
 		(
 			for v=1 to temsh.facs.count do
 			(
-				WriteLong w (temsh.facs[v][1]-1)
-				WriteLong w (temsh.facs[v][2]-1)
-				WriteLong w (temsh.facs[v][3]-1)
+				WriteLong w (temsh.facs[v][1]-1+temmesh.numfaces*3)
+				WriteLong w (temsh.facs[v][2]-1+temmesh.numfaces*3)
+				WriteLong w (temsh.facs[v][3]-1+temmesh.numfaces*3)
 			)
 		)
 		
@@ -659,6 +708,7 @@ if(umeshs.count>0) then
 				fatherid=(findItem ubones umeshs[i].parent)
 		)
 		
+		local boneweigthadr=0
 		 if(haspartbone==true) then
 		(
 			nowaddr=ftell w
@@ -671,6 +721,7 @@ if(umeshs.count>0) then
 				)
 			)
 			nowaddr=ftell w
+			boneweigthadr=nowaddr
 			
 			fseek w boneptr #seek_set
 			WriteLong w nowaddr
@@ -733,6 +784,7 @@ if(umeshs.count>0) then
 				)
 			)
 			nowaddr=ftell w
+			boneweigthadr=nowaddr
 			
 			fseek w boneptr #seek_set
 			WriteLong w nowaddr
@@ -782,6 +834,26 @@ if(umeshs.count>0) then
 			)
 			deselect umeshs[i]
 		)
+		if (addgface and (haspartbone==true or (umeshs[i].modifiers[#Skin]!=undefined))) then
+		(
+			for v=1 to temsh.vts.count do
+			(
+				nowaddr=ftell w
+				fseek w (temsh.vts[v].verid*0x20+boneweigthadr) #seek_set
+				local tembuff=#()
+				for temv= 1 to 8 do
+				(
+					tembuff[temv]=ReadLong w
+				)				
+				
+				fseek w nowaddr #seek_set
+				for temv= 1 to 8 do
+				(
+					WriteLong w tembuff[temv]
+				)
+			)
+		)
+		
 	)
 	nowaddr=ftell w
 		
