@@ -59,26 +59,42 @@ fn addfac tobj=
 			--/*
 			local a1=tamvert ((getVert tobj (getFace tobj fac2)[fa[2]])) \
 								(meshop.getFaceRNormals tobj fac2)[fa[2]] \
-								(getTVert tobj (gettvFace tobj fac2)[fa[2]]) \
+								[0,0] \
 								(fac2*3+fa[2])
+			try
+			(
+				a1.tver=(getTVert tobj (gettvFace tobj fac2)[fa[2]])
+			)catch()
 								
 			local a2=tamvert ((getVert tobj (getFace tobj fac2)[fa[1]])) \
 								(meshop.getFaceRNormals tobj fac2)[fa[1]] \
-								(getTVert tobj (gettvFace tobj fac2)[fa[1]]) \
+								[0,0] \
 								(fac2*3+fa[1])
+			try
+			(
+				a2.tver=(getTVert tobj (gettvFace tobj fac2)[fa[1]])
+			)catch()
 			
 			local b2=tamvert ((getVert tobj (getFace tobj fac1)[fb[2]])) \
 								(meshop.getFaceRNormals tobj fac1)[fb[2]] \
-								(getTVert tobj (gettvFace tobj fac1)[fb[2]]) \
+								[0,0] \
 								(fac1*3+fa[2])
+			try
+			(
+				b1.tver=(getTVert tobj (gettvFace tobj fac1)[fa[2]])
+			)catch()
 								
 								
 			local b1=tamvert ((getVert tobj (getFace tobj fac1)[fb[1]])) \
 								(meshop.getFaceRNormals tobj fac1)[fb[1]] \
-								(getTVert tobj (gettvFace tobj fac1)[fb[1]]) \
+								[0,0] \
 								(fac1*3+fa[1])
+			try
+			(
+				b2.tver=(getTVert tobj (gettvFace tobj fac1)[fa[1]])
+			)catch()
 								
-			local pows=0.0
+			local pows=0.001
 			--format "%\t%\t%\t%\n" fac1 fac2 edgecol[i] redge
 			tavert[tavertidx+1]=a1
 			tavert[tavertidx+2]=a2
