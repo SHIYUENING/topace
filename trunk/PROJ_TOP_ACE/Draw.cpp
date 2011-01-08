@@ -325,14 +325,14 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\n GPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
+		swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}
 	FPSNum=FPSNum+1;
 	glColor4f(1.0f,1.0f,0.0f,1.0f);
 	glEnable( GL_TEXTURE_2D );
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
-	FONTS2D.DrawTexts(ShowFPS,8,GameSet.winH-24,GameSet.winW,GameSet.winH,GameSet.winW,24,1.0f);
+	FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 }
 void DrawTestLines()
@@ -431,7 +431,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	/*TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
+	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false,true);
 	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
@@ -443,7 +443,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	TopAceModelTest.Draw(true,false);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
-	TopAceModelTest.Draw(true,true);*/
+	TopAceModelTest.Draw(true,true);
 	//glDepthMask(GL_TRUE);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );

@@ -1,4 +1,4 @@
-#ifndef _FONTS2D_H
+﻿#ifndef _FONTS2D_H
 #define _FONTS2D_H
 //#pragma once
 #include <windows.h> 
