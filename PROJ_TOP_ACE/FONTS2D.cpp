@@ -1,4 +1,4 @@
-#include "FONTS2D.h"
+Ôªø#include "FONTS2D.h"
 #include "CharSysBace.h"
 #include "Common.h"
 #include "DrawQUAD.h"
@@ -83,6 +83,7 @@ bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int C
 
 void CFONTS2D::SetCharTex(const wchar_t CharIn)
 {
+	if(CharIn==0x0A) return;
 	if((!Face_FullWidth)&&(!Face_HalfWidth)) return;
 	FT_Glyph glyph;
 	FT_BitmapGlyph bitmap_glyph;
@@ -103,7 +104,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	FontSets[CharIn].SizeH=bitmap.rows;
 	if(CharIn==L' ') 
 		FontSets[CharIn].SizeW=(face==Face_FullWidth?FontSizeFX:FontSizeHX)/2;
-	if(CharIn==L'Å@') 
+	if(CharIn==L'„ÄÄ') 
 		FontSets[CharIn].SizeW=(face==Face_FullWidth?FontSizeFX:FontSizeHX);
 	int Ymove=0;
 	//if(CharIn<0xFF)
@@ -161,7 +162,7 @@ void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int W
 		MaxLineY=max(MaxLineY,float(FontSets[CharIn[i]].SizeH));
 		if((LineW<=(DrawX+float(FontSets[CharIn[i]].SizeW)))||(CharIn[i]==0x0A))
 		{
-			DrawY=DrawY-MaxLineY;
+			DrawY=DrawY-(lineH==0?MaxLineY:(float)lineH);
 			DrawX=float(PosX);
 		}
 		DrawQUAD(
@@ -175,7 +176,7 @@ void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int W
 		
 		//DrawQUAD(DrawX,DrawX+float(FontSets[CharIn[i]].SizeW),DrawY+float(FontSets[CharIn[i]].SizeH),DrawY,(float)FontSets[CharIn[i]].TexSizeX,(float)FontSets[CharIn[i]].TexSizeY);
 		DrawX=DrawX+float(FontSets[CharIn[i]].SizeW)-IntervalW;
-		if((CharIn[i]!=L' ')&&(CharIn[i]!=L'Å@')) DrawX=DrawX+IntervalW*2.0f;
+		if((CharIn[i]!=L' ')&&(CharIn[i]!=L'„ÄÄ')) DrawX=DrawX+IntervalW*2.0f;
 	}
 	glMatrixMode(GL_MODELVIEW);glPopMatrix();
 	glMatrixMode(GL_PROJECTION);glPopMatrix();
