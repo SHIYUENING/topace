@@ -83,6 +83,7 @@ bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int C
 
 void CFONTS2D::SetCharTex(const wchar_t CharIn)
 {
+	if(CharIn==0x0D) return;
 	if(CharIn==0x0A) return;
 	if((!Face_FullWidth)&&(!Face_HalfWidth)) return;
 	FT_Glyph glyph;
