@@ -829,6 +829,7 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 		MaterialDataTAMTMP.emission[i]=TAM_Mat->self_illum[i];
 		MaterialDataTAMTMP.specular[i]=TAM_Mat->specular[i];
 	}
+	MaterialDataTAMTMP.diffuse[3]=TAM_Mat->opacity/100.0f;
 	MaterialDataTAMTMP.emission[3]=max(1.0f,TAM_Mat->specularLv);
 	CO_SetMaterialToGLSL(&MaterialDataTAMTMP);
 	if(TAM_Mat->Tex_diffuse)
@@ -875,13 +876,16 @@ void CTopAceModel::DrawRAM(void)
 }
 bool CTopAceModel::IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh)
 {
+
 	if(!TAM_Mesh) return false;
-	MeshUseAlphaTMP=TAM_Mesh->UseAlpha>0?true:false;
+	//MeshUseAlphaTMP=TAM_Mesh->UseAlpha>0?true:false;
 	if(TAM_Mesh->OBJMATID) if(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse)
-		MeshUseAlphaTMP=pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse->UseAlpha||MeshUseAlphaTMP;
+		MeshUseAlphaTMP=pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse->UseAlpha;
+	MeshUseAlphaTMP=MeshUseAlphaTMP||(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].opacity<99.8?true:false);
 	if(MeshUseAlphaTMP!=DrawTranslucent) return false;
 	if(MeshUseAlphaTMP) glEnable(GL_BLEND);
 	else glDisable(GL_BLEND);
+	//glColorMask(1.0f,1.0f,1.0f,pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].opacity/100.0f);
 	return true;
 }
 bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
