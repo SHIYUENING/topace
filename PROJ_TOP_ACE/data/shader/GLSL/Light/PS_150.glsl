@@ -86,7 +86,7 @@ void main()
 	}
 
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
-	FragColor.w=DiffuseTexColor.w;
+	FragColor.w=DiffuseTexColor.w*Material_diffuse.w;
     return;
 } 
 
