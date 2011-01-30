@@ -617,6 +617,7 @@ bool CTopAceModel::LoadToVRAM(void)
 		MeshVBOIDs[i].FaceID=0;
 		MeshVBOIDs[i].NormalID=0;
 		MeshVBOIDs[i].TexCoordID=0;
+		MeshVBOIDs[i].ColorID=0;
 		MeshVBOIDs[i].VerticeID=0;
 		MeshVBOIDs[i].VAOID=0;
 	}
@@ -651,6 +652,12 @@ void CTopAceModel::CreatVAO(tMeshVBOID * MeshVBOID)
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->TexCoordID );
 		glEnableVertexAttribArray(AbLoc_Tex0);
 		glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
+	}
+	if(MeshVBOID->ColorID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->ColorID );
+		glEnableVertexAttribArray(AbLoc_Color);
+		glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
 	}
 	glBindVertexArray(0);
 }
@@ -891,14 +898,14 @@ bool CTopAceModel::IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh)
 bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 {
 	if(TAM_Mesh->vecNum==0) return false;
-	tMeshVBOID * MeshVBOID = &MeshVBOIDs[TAM_Mesh->OBJID];
+	tMeshVBOID * MeshVBOID = MeshVBOIDs+TAM_Mesh->OBJID;
 	if(MeshVBOID->VerticeID==0) return false;
 	
 	if(!IsDrawWithAlpha(TAM_Mesh))return false;
 
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
-		SetDrawMeshMat(&(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1]));
+		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
 	
 	glBindVertexArray(MeshVBOID->VAOID);
 	glDrawArrays(TAMDrawMode,0,TAM_Mesh->vecNum);
@@ -919,19 +926,19 @@ bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
-		SetDrawMeshMat(&(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1]));
+		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
 	glEnableClientState( GL_VERTEX_ARRAY );
 	if((TAM_Mesh->Normals)&&(unsigned int(TAM_Mesh->Normals)!=0xFFFFFFFF))
 	{
 		glEnableClientState( GL_NORMAL_ARRAY );
-		glNormalPointer( GL_FLOAT, 16, (float*)&(TAM_Mesh->Normals[0].m128_f32[0]) );
+		glNormalPointer( GL_FLOAT, 16, TAM_Mesh->Normals[0].m128_f32 );
 	}
 	if((TAM_Mesh->texcos)&&(unsigned int(TAM_Mesh->texcos)!=0xFFFFFFFF))
 	{
 		glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 		glTexCoordPointer( 2, GL_FLOAT, 0, TAM_Mesh->texcos );
 	}
-	glVertexPointer( 3, GL_FLOAT, 16, (float*)&(TAM_Mesh->vertices[0].m128_f32[0]) );
+	glVertexPointer( 3, GL_FLOAT, 16, TAM_Mesh->vertices[0].m128_f32 );
 	//glDrawElements(GL_TRIANGLES,TAM_Mesh->FaceNum*3,GL_UNSIGNED_INT,(GLvoid*)&(TAM_Mesh->Faces[0]));
 	glDrawArrays(GL_TRIANGLES,0,TAM_Mesh->vecNum);
 	glDisableClientState( GL_VERTEX_ARRAY );
@@ -989,7 +996,7 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 	glColor3f(1.0f,1.0f,1.0f);
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
-		SetDrawMeshMat(&(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1]));
+		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 
