@@ -280,6 +280,7 @@ struct tMeshVBOID
 	unsigned int VerticeID;
 	unsigned int NormalID;
 	unsigned int TexCoordID;
+	unsigned int ColorID;
 	unsigned int FaceID;
 	unsigned int VAOID;
 	unsigned int BoneIDsID;
