@@ -39,6 +39,7 @@ void main()
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0] * Material_diffuse;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
+
 	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
 	gl_FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+max(0.0f,NOF)*0.25;
     return;
