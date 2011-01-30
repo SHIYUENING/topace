@@ -59,6 +59,7 @@ struct _TestMeshVBOID
 _TestMeshVBOID TestMeshVBOID;
 extern int TessLevel;
 extern bool DrawFrame;
+__m128 CameraMatrix[4];
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -204,6 +205,7 @@ void InitDraw()
 		Font2D->LoadFont(FontPath,32,32);
 	}*/
 	swprintf_s(ShowFPS,64,L"-");
+	Easy_matrix_identity(CameraMatrix);
 	QueryPerformanceCounter(&TimeStart);
 	if(IsFirstInit)
 	{
@@ -253,15 +255,13 @@ void UnitMatrix()
 }
 void SetCameraMatrix()
 {
-	__m128 MatrixOut[4];
 	ThreadExchangeToDraw(&ThreadDataDraw);
-	Easy_matrix_copy(MatrixOut,ThreadDataDraw.DataList[1].Matrix);
+	Easy_matrix_copy(CameraMatrix,ThreadDataDraw.DataList[1].Matrix);
 	Easy_matrix_copy(MatrixDrawTestUnit,ThreadDataDraw.DataList[2].Matrix);
 	
-	Easy_matrix_inv(MatrixOut,MatrixOut);
-	glLoadMatrixf(&(MatrixOut[0].m128_f32[0]));
-	CO_SetMMatrix(MatrixOut[0].m128_f32);
-	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
+	Easy_matrix_inv(CameraMatrix,CameraMatrix);
+	glLoadMatrixf(&(CameraMatrix[0].m128_f32[0]));
+	CO_SetMMatrix(CameraMatrix[0].m128_f32);
 }
 void SetLights()
 {
@@ -429,6 +429,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	int GLSLver=min(max(GameSet.Light-2,0),2);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
+	CO_SetMMatrix(CameraMatrix[0].m128_f32);
+	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
@@ -437,14 +439,14 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,GLSLver,OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false,false);
-	//glDepthMask(GL_FALSE);
+	glDepthMask(GL_FALSE);
 	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,GLSLver,OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(true,false);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(true,true);
-	//glDepthMask(GL_TRUE);
+	glDepthMask(GL_TRUE);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 	glMatrixMode(GL_TEXTURE);
