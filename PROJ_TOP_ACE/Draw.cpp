@@ -423,7 +423,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
 	
-
 	if(GameSet.Light>=4)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
 	int GLSLver=min(max(GameSet.Light-2,0),2);
