@@ -70,9 +70,9 @@ void DrawLoadingTex(Textures * pLoadingTex)
 void InitTestLight()
 {
 	_OmniLightData SetOmniLightData;
-	SetOmniLightData.Color[0]=0.7f;
-	SetOmniLightData.Color[1]=0.7f;
-	SetOmniLightData.Color[2]=0.7f;
+	SetOmniLightData.Color[0]=0.8f;
+	SetOmniLightData.Color[1]=0.8f;
+	SetOmniLightData.Color[2]=0.8f;
 	SetOmniLightData.Color[3]=1.0f;
 	SetOmniLightData.Pos[0]=0.0f;
 	SetOmniLightData.Pos[1]=0.0f;
@@ -285,6 +285,15 @@ void SetLights()
 		//glLightfv(GL_LIGHT0,GL_DIFFUSE,TMPLightColor);
 		//glLightfv(GL_LIGHT0,GL_AMBIENT,TMPLightColor);
 	}*/
+	_OmniLightData SetOmniLightData;
+	float LightPosTest[]={0.0f,100.0f,0.0f,1.0f};
+	for(int i=0;i<OmniLightNumBase;i++)
+	{
+		CO_GetOmniLight(&SetOmniLightData,i);
+		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTest);
+		CO_SetOmniLight(&SetOmniLightData,i);
+		//SetOmniLightData.Pos
+	}
 }
 void RenderUnits(bool OnlySelfIllumUnit=false)
 {

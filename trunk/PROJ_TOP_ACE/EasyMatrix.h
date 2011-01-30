@@ -684,6 +684,41 @@ inline void Easy_matrix_mult_vector4X4(__m128 * vOut ,const __m128 MatrixIn[4],c
 	}
 
 }
+inline void Easy_matrix_mult_vector4X4(float vOut[4] ,const __m128 MatrixIn[4],const float vIN[4])
+{
+
+	_asm
+	{
+		mov edx,MatrixIn
+		movaps xmm4,[edx]
+		movaps xmm5,[edx+16]
+		movaps xmm6,[edx+32]
+		movaps xmm7,[edx+48]
+
+		mov edx,vIN
+		movups xmm0,[edx]
+		movaps xmm1,xmm0
+		movaps xmm2,xmm0
+		movaps xmm3,xmm0
+
+		shufps xmm3,xmm3,0xff
+		shufps xmm2,xmm2,0xaa
+		shufps xmm1,xmm1,0x55
+		shufps xmm0,xmm0,0x00
+
+		mulps xmm0,xmm4
+		mulps xmm1,xmm5
+		mulps xmm2,xmm6
+		mulps xmm3,xmm7
+
+		addps xmm0,xmm1
+		addps xmm0,xmm2
+		addps xmm0,xmm3
+		mov    ecx, vOut
+		movups [ecx], xmm0
+	}
+
+}
 inline __m128 _mm_dot_ps(__m128 v1, __m128 v2)
 {
 	__m128 mul0,swp0,add0,swp1,add1;
