@@ -99,6 +99,7 @@ void DrawQUADF(GLfloat Left,GLfloat Right,GLfloat Up,GLfloat Down)
 }
 void DrawQUADEX(GLuint TexID,GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLuint winW,GLuint winH)
 {
+	glDisable( GL_CULL_FACE );
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, TexID);			// Select Our Font Texture
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
@@ -116,4 +117,5 @@ void DrawQUADEX(GLuint TexID,GLuint Left,GLuint Right,GLuint Up,GLuint Down,GLui
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glEnable( GL_CULL_FACE );
 }

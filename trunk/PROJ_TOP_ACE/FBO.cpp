@@ -16,6 +16,10 @@ GLuint BloomTexDepth=0;
 GLuint SSAOTex1=0;
 GLuint SSAOTex2=0;
 
+GLuint ShadowFBOID=0;
+GLuint ShadowTex=0;
+GLuint ShadowTexDepth=0;
+
 extern tGameSet GameSet;
 bool SuppotFBO=false;
 int ScreemTexW=0;
@@ -24,8 +28,8 @@ int FBOWinW=0;
 int FBOWinH=0;
 int BloomTexW=0;
 int BloomTexH=0;
+int ShadowTexSize=512;
 CTALogSys FBOLOG;
-int BloomScale=4;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
 GLfloat FBOMatrixTMP[16];
@@ -112,7 +116,20 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	glGenFramebuffersEXT(1, &FBOID);
 	ScreemTex=InitTex2D(FBOWinW, FBOWinH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
 	//ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
-
+	
+	if((GameSet.Shadow>0)||(GameSet.Light>1))
+	{ 
+		if(GameSet.Light==3) ShadowTexSize=1024;
+		if(GameSet.Light>=4) ShadowTexSize=2048;
+		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_NEAREST,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+		glGenFramebuffersEXT(1,&ShadowFBOID);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
+		CheckFBOError();
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	}
 	
 	if(BloomSet>0)
 	{
@@ -145,34 +162,28 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 }
 void DeinitFBO()
 {
-	if(!SuppotFBO)
-		return;
+	if(!SuppotFBO) return;
 	SuppotFBO=false;
 
-	if(FBOID)
-		glDeleteFramebuffersEXT(1,&FBOID);
+	if(FBOID) glDeleteFramebuffersEXT(1,&FBOID);
 
-	if(ScreemTex)
-		glDeleteTextures(1,&ScreemTex);
-	if(ScreemTexDepth)
-		glDeleteTextures(1,&ScreemTexDepth);
+	if(ScreemTex) glDeleteTextures(1,&ScreemTex);
+	if(ScreemTexDepth) glDeleteTextures(1,&ScreemTexDepth);
 
-	if(StarTex1)
-		glDeleteTextures(1,&StarTex1);
-	if(StarTex2)
-		glDeleteTextures(1,&StarTex2);
-	if(StarTexDepth)
-		glDeleteTextures(1,&StarTexDepth);
+	if(StarTex1) glDeleteTextures(1,&StarTex1);
+	if(StarTex2) glDeleteTextures(1,&StarTex2);
+	if(StarTexDepth) glDeleteTextures(1,&StarTexDepth);
 
-	if(BloomTex1)
-		glDeleteTextures(1,&BloomTex1);
-	if(BloomTex2)
-		glDeleteTextures(1,&BloomTex2);
+	if(BloomTex1) glDeleteTextures(1,&BloomTex1);
+	if(BloomTex2) glDeleteTextures(1,&BloomTex2);
 
-	if(SSAOTex1)
-		glDeleteTextures(1,&SSAOTex1);
-	if(SSAOTex2)
-		glDeleteTextures(1,&SSAOTex2);
+	if(SSAOTex1) glDeleteTextures(1,&SSAOTex1);
+	if(SSAOTex2) glDeleteTextures(1,&SSAOTex2);
+
+	if(ShadowFBOID) glDeleteFramebuffersEXT(1,&ShadowFBOID);
+	
+	if(ShadowTex) glDeleteTextures(1,&ShadowTex);
+	if(ShadowTexDepth) glDeleteTextures(1,&ShadowTexDepth);
 }
 /*
 void TestTexFBO()
