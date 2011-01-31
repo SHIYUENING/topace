@@ -90,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="CPUTess.cpp" />
     <ClCompile Include="FONTS2D.cpp" />
+    <ClCompile Include="GLSL_Shadow.cpp">
+      <Filter>GLSL_EFF</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="CPUTess.h" />
     <ClInclude Include="FONTS2D.h" />
+    <ClInclude Include="GLSL_Shadow.h">
+      <Filter>GLSL_EFF</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">

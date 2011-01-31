@@ -25,6 +25,7 @@ void InitGLSL()
 	if(GameSet.Light<2) { GlslVer=0;return;}
 	Init_GLSL_light(GameSet.Light);
 	if(GameSet.Bloom>0) Init_GLSL_Bloom();
+	if(GameSet.Shadow>0) Init_GLSL_Shadow();
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 	
 	
@@ -49,6 +50,7 @@ void DeinitGLSL()
 
 	Deinit_GLSL_light();
 	Deinit_GLSL_Bloom();
+	Deinit_GLSL_Shadow();
 }
 void GLSL_Disable()
 {

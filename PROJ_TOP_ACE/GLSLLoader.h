@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include "GLSL_Light.h"
 #include "GLSL_Bloom.h"
+#include "GLSL_Shadow.h"
 #include "TALogSys.h"
 #define ShaderPath L"data/shader/GLSL/"
 GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject);
