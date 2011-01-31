@@ -504,8 +504,11 @@ void DrawShadowMap()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_GREATER);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+	GLSL_Enable_Shadow();
 
 
+
+	GLSL_Disable();
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
 	glDepthFunc(GL_LEQUAL);

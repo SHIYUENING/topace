@@ -162,6 +162,7 @@
     <ClCompile Include="GLSLLoader.cpp" />
     <ClCompile Include="GLSL_Bloom.cpp" />
     <ClCompile Include="GLSL_Light.cpp" />
+    <ClCompile Include="GLSL_Shadow.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="Load3DS.cpp">
@@ -208,6 +209,7 @@
     <ClInclude Include="GLSLLoader.h" />
     <ClInclude Include="GLSL_Bloom.h" />
     <ClInclude Include="GLSL_Light.h" />
+    <ClInclude Include="GLSL_Shadow.h" />
     <ClInclude Include="IniFile.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="Load3DS.h" />
