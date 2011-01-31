@@ -287,10 +287,14 @@ void SetLights()
 	}*/
 	_OmniLightData SetOmniLightData;
 	float LightPosTest[]={0.0f,100.0f,0.0f,1.0f};
+	__m128 LightPosTestMatrix[4];
+	__m128 LightPosTestM;
+	Easy_matrix_copy(LightPosTestMatrix,ThreadDataDraw.DataList[5].Matrix);
+	Easy_matrix_mult_vector4X4(&LightPosTestM,LightPosTestMatrix,_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
 	for(int i=0;i<OmniLightNumBase;i++)
 	{
 		CO_GetOmniLight(&SetOmniLightData,i);
-		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTest);
+		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTestM.m128_f32);
 		CO_SetOmniLight(&SetOmniLightData,i);
 		//SetOmniLightData.Pos
 	}
@@ -422,7 +426,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
 
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
-	//glEnable(GL_MULTISAMPLE_ARB);
+	if(GameSet.Light<4) glEnable(GL_MULTISAMPLE_ARB);
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	DrawTestLines();
