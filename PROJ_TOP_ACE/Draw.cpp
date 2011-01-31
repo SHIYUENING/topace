@@ -39,15 +39,15 @@ int SpotLightNumBase=0;
 CTopAceModel TopAceModelTest;
 Textures LoadingTex;
 extern HDC SwapHdc; 
-//CUnitMath ViewUnit;
-//CUnitMath UnitMath1;
 float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
 __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
-//float MatrixTMPF4X4[16];
-//GLfloat DrawMatrixTMP[16];
 GLuint TestModelVAO=0;
+extern GLuint ShadowFBOID;
+extern GLuint ShadowTex;
+extern GLuint ShadowTexDepth;
+extern int ShadowTexSize;
 struct _TestMeshVBOID
 {
 	unsigned int VerticeID;
@@ -426,6 +426,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
 
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
+	
+	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	if(GameSet.Light<4) glEnable(GL_MULTISAMPLE_ARB);
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
@@ -478,7 +480,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
-
+	
 	glDisable(GL_MULTISAMPLE_ARB);
 	QueryPerformanceCounter(&CPUTestStart);
 	UnitMatrix();
@@ -487,6 +489,28 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	Test_matrix();
 	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
 	QueryPerformanceCounter(&CPUTestEnd);
+}
+void DrawShadowMap()
+{
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glClear (GL_DEPTH_BUFFER_BIT);
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glViewport(0,0,ShadowTexSize, ShadowTexSize);
+	glDisable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_GREATER);
+	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+	glDepthFunc(GL_LEQUAL);
+	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+
 }
 void InitTestModel()
 {

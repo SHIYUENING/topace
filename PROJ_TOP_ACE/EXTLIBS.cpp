@@ -28,7 +28,7 @@ bool CEXTLIBS_init()
 	if(InitOK)
 		return false;
 	hgl::SystemInfo si;
-	InitOK=hgl::InitCore(si,true);
+	InitOK=hgl::InitCore(si,false);
 	if(!InitOK)
 		return false;
 	InitOK=InitOpenAL((const wchar_t *)0,(const wchar_t *)0);
