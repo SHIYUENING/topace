@@ -89,7 +89,7 @@ void DataUpdata()
 	UnitMathDraw2.RotInternal(-90,1.0f,0.0f,0.0f);
 	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	TestLight.RotInternal(float(TotalFrame%360),0.0f,1.0f,0.0f);
-	TestLight.MovInternal(_mm_set_ps(1.0f,0.0f,10000.0f,10000.0f));
+	TestLight.MovInternal(_mm_set_ps(1.0f,0.0f,0.0f,10000.0f));
 
 	ThreadDataUpdata.DataCount=6;
 	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;

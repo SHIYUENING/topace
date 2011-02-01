@@ -1,4 +1,5 @@
 ﻿#include"Draw.h"
+#include "UnitsList.h"
 #include <stdlib.h>
 #include <GL/glew.h>
 #include <math.h>
@@ -60,6 +61,7 @@ _TestMeshVBOID TestMeshVBOID;
 extern int TessLevel;
 extern bool DrawFrame;
 __m128 CameraMatrix[4];
+__m128 ShadowMatrix[4];
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -427,17 +429,17 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
 	
-	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	if(GameSet.Light<4) glEnable(GL_MULTISAMPLE_ARB);
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	DrawTestLines();
 	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
-
+	
+	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
-	
+	DrawShadowMap();
 	if(GameSet.Light>=4)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
 	int GLSLver=min(max(GameSet.Light-2,0),2);
@@ -492,6 +494,20 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void DrawShadowMap()
 {
+	CUnitMath ShadowUnitMath;
+	ShadowUnitMath.UnitPos.m128_f32[0]=ThreadDataDraw.DataList[4].Matrix[12];
+	ShadowUnitMath.UnitPos.m128_f32[1]=ThreadDataDraw.DataList[4].Matrix[13];
+	ShadowUnitMath.UnitPos.m128_f32[2]=ThreadDataDraw.DataList[4].Matrix[14];
+	ShadowUnitMath.UnitPos.m128_f32[3]=1.0f;
+	__m128 ShadowUnitMathTGT;
+	Easy_vector_copy(&ShadowUnitMathTGT,ThreadDataDraw.DataList[5].Matrix+12);
+	ShadowUnitMath.PosTo(ShadowUnitMathTGT);
+	ShadowUnitMath.RotInternal(180.0f,0.0f,1.0f,0.0f);
+	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,300.0f,0.0f,0.0f));
+	__m128 ShadowMM[4];ShadowUnitMath.GetMatrix(ShadowMM);
+	Easy_matrix_inv(ShadowMM,ShadowMM);
+	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
+	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
@@ -502,10 +518,17 @@ void DrawShadowMap()
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_GREATER);
+	//glDepthFunc(GL_GREATER);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();
+	CO_SetMMatrix(ShadowMF);
+	//CO_SetMMatrix(CameraMatrix[0].m128_f32);
+	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
+	//CO_MultMMatrix(ShadowMF);
 
+	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
+	TopAceModelTest.Draw(false,false);
+	TopAceModelTest.Draw(false,true);
 
 
 	GLSL_Disable();
