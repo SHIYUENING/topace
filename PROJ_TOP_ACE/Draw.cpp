@@ -522,9 +522,7 @@ void DrawShadowMap()
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();
 	CO_SetMMatrix(ShadowMF);
-	//CO_SetMMatrix(CameraMatrix[0].m128_f32);
 	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
-	//CO_MultMMatrix(ShadowMF);
 
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	TopAceModelTest.Draw(false,false);
