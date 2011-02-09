@@ -494,6 +494,12 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void DrawShadowMap()
 {
+	
+	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+	
+	glBindTexture(GL_TEXTURE_2D, 0);
 	CUnitMath ShadowUnitMath;
 	ShadowUnitMath.UnitPos.m128_f32[0]=ThreadDataDraw.DataList[4].Matrix[12];
 	ShadowUnitMath.UnitPos.m128_f32[1]=ThreadDataDraw.DataList[4].Matrix[13];
@@ -534,6 +540,10 @@ void DrawShadowMap()
 	glPopAttrib();
 	glDepthFunc(GL_LEQUAL);
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+
+	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 
 }
 void InitTestModel()
