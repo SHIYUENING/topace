@@ -436,7 +436,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	
-	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	if(GameSet.Shadow>0) DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
 	DrawShadowMap();
@@ -494,7 +494,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void DrawShadowMap()
 {
-	
+	if(GameSet.Shadow<=0) return;
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
