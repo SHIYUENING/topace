@@ -1,4 +1,5 @@
 #version 120
+#extension GL_ARB_texture_rectangle : enable
 varying vec2 TexCoord0;
 uniform sampler2DRect texColor;
 uniform float AveLum;
