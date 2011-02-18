@@ -10,6 +10,11 @@ GLhandleARB GH_TE;
 GLhandleARB GH_GS[3];
 GLhandleARB GH_PS[3];
 GLhandleARB GH_PO[2][3];
+GLint GLSL_Light_MMatrix[2][3];
+GLint GLSL_Light_PMatrix[2][3];
+GLint GLSL_Light_MVPMatrix[2][3];
+GLint GLSL_Light_WMatrix[2][3];
+GLint GLSL_Light_RefCubeTex[2][3];
 GLint GLSL_Light_DiffuseTex[2][3];
 GLint GLSL_Light_DiffuseTexTurnY[2][3];
 GLint GLSL_Light_LightNums[2][3];
@@ -45,6 +50,7 @@ void Init_GLSL_light(int LightSet)
 }
 void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 {
+	GLSL_Light_RefCubeTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"RefCubeTex");
 	GLSL_Light_DiffuseTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTex");
 	GLSL_Light_LightNums[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"LightNums");
 	GLSL_Light_DiffuseTexTurnY[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTexTurnY");
