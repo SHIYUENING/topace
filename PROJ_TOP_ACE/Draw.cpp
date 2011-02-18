@@ -297,6 +297,10 @@ void SetLights()
 	{
 		CO_GetOmniLight(&SetOmniLightData,i);
 		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTestM.m128_f32);
+		SetOmniLightData.Pos[0]=0.0f;
+		SetOmniLightData.Pos[1]=0.0f;
+		SetOmniLightData.Pos[2]=0.0f;
+		SetOmniLightData.Pos[3]=1.0f;
 		CO_SetOmniLight(&SetOmniLightData,i);
 		//SetOmniLightData.Pos
 	}
