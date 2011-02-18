@@ -42,6 +42,7 @@ Textures LoadingTex;
 extern HDC SwapHdc; 
 float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
+extern float moveZSpeed;
 __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
 GLuint TestModelVAO=0;
@@ -168,6 +169,7 @@ void InitDraw()
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[1]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[1]))),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[2]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[2])));
 		PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
+		moveZSpeed=PosOrgZ/240.0f;
 		maxFreme=(float)TopAceModelTest.testMAXFrame;
 	}
 	/*
@@ -440,6 +442,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	
+
 	if(GameSet.Shadow>0) 
 	{
 		DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
@@ -447,6 +450,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	}
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
 	//SetPMatrix(DrawMatrixTMP);
+
 	if(GameSet.Light>=4)
 		glPatchParameteri(GL_PATCH_VERTICES, 3);
 	int GLSLver=min(max(GameSet.Light-2,0),2);

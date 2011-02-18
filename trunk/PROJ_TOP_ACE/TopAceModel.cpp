@@ -296,7 +296,7 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 	TAM_MatData_IN->diffuse[3]=1.0f;
 	TAM_MatData_IN->self_illum[3]=1.0f;
 	TAM_MatData_IN->specular[3]=1.0f;
-	TAM_MatData_IN->specularLv=min(TAM_MatData_IN->specularLv,128);
+	TAM_MatData_IN->specularLv=max(5.0,min(TAM_MatData_IN->specularLv,128));
 	if(TAM_MatData_IN->Name_diffuseMap[0]!=0)
 	{
 		TAM_MatData_IN->Tex_diffuse=new _TAM_Mat_Texture;

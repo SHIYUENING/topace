@@ -49,6 +49,7 @@ int WindowHeight=600;
 float moveZ=-250.0f;
 float moveY=0.0f;
 float moveX=0.0f;
+float moveZSpeed=2.0f;
 HGLRC	 m_hrc;
 CLockFPS LockFPSSYS,LockFPSRender;
 CTALogSys MainLOG;
@@ -71,9 +72,9 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 	//	ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	//}
 	if(g_keys->keyDown [VK_PRIOR] == TRUE)
-		moveZ=moveZ+2.0f;
+		moveZ=moveZ+moveZSpeed;
 	if(g_keys->keyDown [VK_NEXT] == TRUE)
-		moveZ=moveZ-2.0f;
+		moveZ=moveZ-moveZSpeed;
 
 	if((g_keys->keyDown ['1'] == TRUE)&&(!Gdown1))
 	{
