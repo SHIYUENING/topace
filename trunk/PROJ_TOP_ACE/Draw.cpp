@@ -290,7 +290,7 @@ void SetLights()
 		//glLightfv(GL_LIGHT0,GL_AMBIENT,TMPLightColor);
 	}*/
 	_OmniLightData SetOmniLightData;
-	float LightPosTest[]={0.0f,100.0f,0.0f,1.0f};
+	float LightPosTest[]={5000000.0f,5000000.0f,5000000.0f,1.0f};
 	__m128 LightPosTestMatrix[4];
 	__m128 LightPosTestM;
 	Easy_matrix_copy(LightPosTestMatrix,ThreadDataDraw.DataList[5].Matrix);
@@ -298,11 +298,11 @@ void SetLights()
 	for(int i=0;i<OmniLightNumBase;i++)
 	{
 		CO_GetOmniLight(&SetOmniLightData,i);
-		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTestM.m128_f32);
-		SetOmniLightData.Pos[0]=0.0f;
-		SetOmniLightData.Pos[1]=0.0f;
-		SetOmniLightData.Pos[2]=0.0f;
-		SetOmniLightData.Pos[3]=1.0f;
+		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTest);
+		/*SetOmniLightData.Pos[0]=1000000.0f;
+		SetOmniLightData.Pos[1]=1000000.0f;
+		SetOmniLightData.Pos[2]=5000000.0f;
+		SetOmniLightData.Pos[3]=1.0f;*/
 		CO_SetOmniLight(&SetOmniLightData,i);
 		//SetOmniLightData.Pos
 	}

@@ -1,8 +1,9 @@
 #version 120
+uniform mat4x4 WMatrix;
 uniform ivec2 LightNums;
 uniform sampler2D DiffuseTex;
 uniform float DiffuseTexTurnY;
-
+uniform samplerCube RefCubeTex;
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];
 uniform vec4 Material[3];
