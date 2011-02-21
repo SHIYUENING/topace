@@ -17,6 +17,8 @@ float extern moveY;
 float extern moveX;
 float extern PosOrgY;
 float extern PosOrgZ;
+float extern GoX;
+float extern GoZ;
 CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
 CUnitsList UnitsList;
@@ -74,6 +76,8 @@ void DataUpdata()
 	TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
 	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
 	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,PosOrgY,0));
+	TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
+	//GoZ=GoX=0.0f;
 	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
 	//SceneUnitTest.SetPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
 	SceneUnitTest.SetTGTPos(TestView.UnitPos);

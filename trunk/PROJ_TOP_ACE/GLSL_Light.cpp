@@ -23,6 +23,8 @@ GLint GLSL_Light_OmniLight_Color[2][3];
 GLint GLSL_Light_Material[2][3];
 GLint GLSL_Light_Global_Ambient[2][3];
 GLint GLSL_Light_TessLevel[2][3];
+extern float WorldMatrix[16];
+extern GLuint RefCubeTexID;
 void Init_GLSL_light(int LightSet)
 {
 	if(LightSet<2) return;
@@ -50,6 +52,11 @@ void Init_GLSL_light(int LightSet)
 }
 void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 {
+	GLSL_Light_MMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"MMatrix");
+	GLSL_Light_PMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"PMatrix");
+	GLSL_Light_MVPMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"MVPMatrix");
+	GLSL_Light_WMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"WMatrix");
+
 	GLSL_Light_RefCubeTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"RefCubeTex");
 	GLSL_Light_DiffuseTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTex");
 	GLSL_Light_LightNums[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"LightNums");
@@ -94,12 +101,25 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	glUniform2iv(GLSL_Light_LightNums[boneType][GLSLver],1,LightNums);
 	//glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
 	glUniform1f(GLSL_Light_TessLevel[boneType][GLSLver],(float)max(1,TessLevel));
+	
+	glUniformMatrix4fv(GLSL_Light_WMatrix[boneType][GLSLver],1,false,WorldMatrix);
+
+	
+	glActiveTexture(GL_TEXTURE1);	
+	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,RefCubeTexID);	
+	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],1);
+	glActiveTexture(GL_TEXTURE0);
+
 	CO_SetDiffuseTexTurnYGLSLLoc(GLSL_Light_DiffuseTexTurnY[boneType][GLSLver]);
 	CO_SetDiffuseTexTurnYToGLSL(1.0f);
-	CO_SetMatrixsGLSLLoc(
+	/*CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
-		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));
+		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));*/
+	CO_SetMatrixsGLSLLoc(
+		GLSL_Light_MMatrix[boneType][GLSLver],
+		GLSL_Light_PMatrix[boneType][GLSLver],
+		GLSL_Light_MVPMatrix[boneType][GLSLver]);
 
 	CO_SetOmniLightGLSLLoc(GLSL_Light_OmniLight_Pos[boneType][GLSLver],GLSL_Light_OmniLight_Color[boneType][GLSLver]);
 	CO_SetOmniLightToGLSL();
