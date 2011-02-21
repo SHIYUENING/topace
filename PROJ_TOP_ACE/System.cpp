@@ -50,6 +50,8 @@ float moveZ=-250.0f;
 float moveY=0.0f;
 float moveX=0.0f;
 float moveZSpeed=2.0f;
+float GoX=0.0f;
+float GoZ=0.0f;
 HGLRC	 m_hrc;
 CLockFPS LockFPSSYS,LockFPSRender;
 CTALogSys MainLOG;
@@ -75,7 +77,10 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 		moveZ=moveZ+moveZSpeed;
 	if(g_keys->keyDown [VK_NEXT] == TRUE)
 		moveZ=moveZ-moveZSpeed;
-
+	if(g_keys->keyDown ['W'] == TRUE) GoZ=GoZ+moveZSpeed;
+	if(g_keys->keyDown ['S'] == TRUE) GoZ=GoZ-moveZSpeed;
+	if(g_keys->keyDown ['A'] == TRUE) GoX=GoX+moveZSpeed;
+	if(g_keys->keyDown ['D'] == TRUE) GoX=GoX-moveZSpeed;
 	if((g_keys->keyDown ['1'] == TRUE)&&(!Gdown1))
 	{
 		Gdown1=true;
@@ -105,7 +110,7 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 		moveX=moveX-2.0f;
 	if(g_keys->keyDown [VK_HOME] == TRUE)
 	{
-		moveX=moveY=moveZ=0.0f;
+		GoX=GoZ=moveX=moveY=moveZ=0.0f;
 	}
 
 	if((g_keys->keyDown [VK_SPACE] == TRUE)&&(!GdownSPACE))
@@ -519,7 +524,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	ZeroMemory (&window, sizeof (GL_Window));							// Make Sure Memory Is Zeroed
 	window.keys					= &keys;								// Window Key Structure
 	window.init.application		= &application;							// Window Application
-	window.init.title			= "TOP_ACE";
+	window.init.title			= "3DVR实时渲染样品2011_2_001";
 	window.init.width			= GameSet.winW;									// Window Width
 	window.init.height			= GameSet.winH;									// Window Height
 	window.init.bitsPerPixel	= GameSet.bits;									// Bits Per Pixel

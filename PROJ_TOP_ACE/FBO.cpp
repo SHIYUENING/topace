@@ -103,8 +103,8 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	FBOWinH=winH;
 	ScreemTexW=winW;
 	ScreemTexH=winH;
-	BloomTexW=240;
-	BloomTexH=240*winH/winW;
+	BloomTexW=480;
+	BloomTexH=480*winH/winW;
 
 	glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS_EXT,&MAX_COLOR_ATTACHMENTS);
 

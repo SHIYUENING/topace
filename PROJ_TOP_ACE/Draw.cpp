@@ -63,6 +63,8 @@ extern int TessLevel;
 extern bool DrawFrame;
 __m128 CameraMatrix[4];
 __m128 ShadowMatrix[4];
+float WorldMatrix[16];
+GLuint RefCubeTexID=0;
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -119,6 +121,36 @@ void InitTestLight()
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SHININESS,mat_shininess);
 	*/
 }
+void LoadCubeTexTga(wchar_t * filename,GLenum target)
+{
+	TGA * CubeTGA=new TGA;
+	CubeTGA->LoadFile(filename);
+	if(CubeTGA->TGAerror!=TGA_NO_ERROR) 
+	{
+		unsigned char DefTexData[64*64*4];
+		for(int i=0;i<64*64*4;i++)
+			DefTexData[i]=255;
+		glTexImage2D(target, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, DefTexData);
+	}
+	else
+		glTexImage2D(target, 0, CubeTGA->type, CubeTGA->width, CubeTGA->height, 0, CubeTGA->type, GL_UNSIGNED_BYTE, CubeTGA->imageData);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+}
+void LoadCubeTex()
+{
+	
+	glGenTextures(1, &RefCubeTexID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT, RefCubeTexID);
+	LoadCubeTexTga(L"data/SkyBox/LF.tga",GL_TEXTURE_CUBE_MAP_NEGATIVE_X_EXT);
+	LoadCubeTexTga(L"data/SkyBox/RT.tga",GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT);
+
+	LoadCubeTexTga(L"data/SkyBox/UP.tga",GL_TEXTURE_CUBE_MAP_NEGATIVE_Y_EXT);
+	LoadCubeTexTga(L"data/SkyBox/DN.tga",GL_TEXTURE_CUBE_MAP_POSITIVE_Y_EXT);
+
+	LoadCubeTexTga(L"data/SkyBox/FR.tga",GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT);
+	LoadCubeTexTga(L"data/SkyBox/BK.tga",GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT);
+}
 void InitDraw()
 {
 	glewInit();
@@ -128,7 +160,7 @@ void InitDraw()
 	//WritePrivateProfileString("PC Info","GL_EXTENSIONS",(char *)glGetString(GL_EXTENSIONS),".\\gameset.ini");
 	wchar_t  TestModelPath[512];
 	GetPrivateProfileStringW(L"other",L"TestModelPath",L"data/1234.tam",TestModelPath,512,L".\\gameset.ini");
-	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=3;
+	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=min(3,GameSet.Light);
 	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=2;
 	if (!glewIsSupported("GL_VERSION_2_0"))
 	{
@@ -147,6 +179,7 @@ void InitDraw()
 	LoadingTex.loadfile(L"data/loading");
 	LoadingTex.LoadToVRAM(GL_LINEAR);
 	DrawLoadingTex(&LoadingTex);
+	LoadCubeTex();
 	if(GameSet.Light>1)
 		InitFBO(GameSet.winW,GameSet.winH,GameSet.Bloom);
 	InitGLSL();
@@ -160,7 +193,6 @@ void InitDraw()
 	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
 	InitTestLight();
 
-
 	TopAceModelTest.ReadTAMFile(TestModelPath);
 	TopAceModelTest.LoadToVRAM();
 	if(TopAceModelTest.TAM_FileData)
@@ -168,8 +200,10 @@ void InitDraw()
 		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[1]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[1]))),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[2]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[2])));
-		PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
-		moveZSpeed=PosOrgZ/240.0f;
+		PosOrgZ=PosOrgZ*0.285f;
+		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
+		PosOrgY=500.0f;
+		moveZSpeed=PosOrgZ/360.0f;
 		maxFreme=(float)TopAceModelTest.testMAXFrame;
 	}
 	/*
@@ -263,6 +297,7 @@ void SetCameraMatrix()
 	Easy_matrix_copy(CameraMatrix,ThreadDataDraw.DataList[1].Matrix);
 	Easy_matrix_copy(MatrixDrawTestUnit,ThreadDataDraw.DataList[2].Matrix);
 	
+	Easy_matrix_copy(WorldMatrix,CameraMatrix);
 	Easy_matrix_inv(CameraMatrix,CameraMatrix);
 	glLoadMatrixf(&(CameraMatrix[0].m128_f32[0]));
 	CO_SetMMatrix(CameraMatrix[0].m128_f32);
@@ -290,7 +325,7 @@ void SetLights()
 		//glLightfv(GL_LIGHT0,GL_AMBIENT,TMPLightColor);
 	}*/
 	_OmniLightData SetOmniLightData;
-	float LightPosTest[]={5000000.0f,5000000.0f,5000000.0f,1.0f};
+	float LightPosTest[]={5000000.0f,7000000.0f,9000000.0f,1.0f};
 	__m128 LightPosTestMatrix[4];
 	__m128 LightPosTestM;
 	Easy_matrix_copy(LightPosTestMatrix,ThreadDataDraw.DataList[5].Matrix);
@@ -346,7 +381,8 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
+		swprintf_s(ShowFPS,64,L"操作说明:方向键改变视角,PAGE UP/PAGE DN前进后退\nFPS:%d",FPSNumShow);
+		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}
 	FPSNum=FPSNum+1;
@@ -438,7 +474,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	if(GameSet.Light<4) glEnable(GL_MULTISAMPLE_ARB);
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
-	DrawTestLines();
+	//DrawTestLines();
 	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	
