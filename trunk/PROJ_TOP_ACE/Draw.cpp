@@ -200,10 +200,10 @@ void InitDraw()
 		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[1]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[1]))),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[2]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[2])));
-		PosOrgZ=PosOrgZ*0.285f;
+		//PosOrgZ=PosOrgZ*0.285f;
 		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
-		PosOrgY=500.0f;
-		moveZSpeed=PosOrgZ/360.0f;
+		//PosOrgY=500.0f;
+		moveZSpeed=PosOrgZ/60.0f;
 		maxFreme=(float)TopAceModelTest.testMAXFrame;
 	}
 	/*
