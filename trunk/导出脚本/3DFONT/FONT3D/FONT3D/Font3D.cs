@@ -99,7 +99,7 @@ namespace FONT3D
 
         public Font3D()
         {
-            Head = new byte[] { (byte)'T', (byte)'A', (byte)'M', (byte)'F', (byte)'N', (byte)'T', (byte)'3', (byte)'D' };
+            Head = new byte[] { (byte)'T', (byte)'A', (byte)'M', (byte)'F', (byte)'T', (byte)'3', (byte)'D', 0 };
             //filesize = 0;
             pageCode = 1200;
 
