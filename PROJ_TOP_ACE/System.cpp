@@ -225,7 +225,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		CWX=0;
 		CWY=0;
 	}
-	window->hWnd = CreateWindowEx (windowExtendedStyle,					// Extended Style
+	window->hWnd = CreateWindowExW (windowExtendedStyle,					// Extended Style
 								   window->init.application->className,	// Class Name
 								   window->init.title,					// Window Title
 								   windowStyle,							// Window Style
@@ -449,13 +449,13 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;															// Break
 	}
 
-	return DefWindowProc (hWnd, uMsg, wParam, lParam);					// Pass Unhandled Messages To DefWindowProc
+	return DefWindowProcW (hWnd, uMsg, wParam, lParam);					// Pass Unhandled Messages To DefWindowProc
 }
 
 BOOL RegisterWindowClass (Application* application)						// Register A Window Class For This Application.
 {																		// TRUE If Successful
 	// Register A Window Class
-	WNDCLASSEX windowClass;												// Window Class
+	WNDCLASSEXW windowClass;												// Window Class
 	ZeroMemory (&windowClass, sizeof (WNDCLASSEX));						// Make Sure Memory Is Cleared
 	windowClass.cbSize			= sizeof (WNDCLASSEX);					// Size Of The windowClass Structure
 	windowClass.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;	// Redraws The Window For Any Movement / Resizing
@@ -464,7 +464,7 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 	windowClass.hbrBackground	= (HBRUSH)(COLOR_APPWORKSPACE);			// Class Background Brush Color
 	windowClass.hCursor			= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
 	windowClass.lpszClassName	= application->className;				// Sets The Applications Classname
-	if (RegisterClassEx (&windowClass) == 0)							// Did Registering The Class Fail?
+	if (RegisterClassExW (&windowClass) == 0)							// Did Registering The Class Fail?
 	{
 		// NOTE: Failure, Should Never Happen
 		MessageBox (HWND_DESKTOP, "RegisterClassEx Failed!", "Error", MB_OK | MB_ICONEXCLAMATION);
@@ -517,14 +517,14 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	BOOL				isMessagePumpActive;
 	MSG					msg;
 	loadIniFile();
-	application.className = "TOP_ACE";
+	application.className = L"TOP_ACE";
 	application.hInstance = hInst;
 
 	// Fill Out Window
 	ZeroMemory (&window, sizeof (GL_Window));							// Make Sure Memory Is Zeroed
 	window.keys					= &keys;								// Window Key Structure
 	window.init.application		= &application;							// Window Application
-	window.init.title			= "3DVR实时渲染样品2011_2_001";
+	window.init.title			= L"TOP_ACE";
 	window.init.width			= GameSet.winW;									// Window Width
 	window.init.height			= GameSet.winH;									// Window Height
 	window.init.bitsPerPixel	= GameSet.bits;									// Bits Per Pixel
@@ -591,7 +591,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		}
 	}
 	DeinitDraw();
-	UnregisterClass (application.className, application.hInstance);
+	UnregisterClassW (application.className, application.hInstance);
 	isRun=false;
 	return 0;
 }
