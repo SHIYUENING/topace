@@ -155,8 +155,8 @@ void InitDraw()
 {
 	glewInit();
 
-	WritePrivateProfileString("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
-	WritePrivateProfileString("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
+	WritePrivateProfileStringA("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
+	WritePrivateProfileStringA("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
 	//WritePrivateProfileString("PC Info","GL_EXTENSIONS",(char *)glGetString(GL_EXTENSIONS),".\\gameset.ini");
 	wchar_t  TestModelPath[512];
 	GetPrivateProfileStringW(L"other",L"TestModelPath",L"data/1234.tam",TestModelPath,512,L".\\gameset.ini");
@@ -164,7 +164,7 @@ void InitDraw()
 	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=2;
 	if (!glewIsSupported("GL_VERSION_2_0"))
 	{
-		MessageBox( NULL, "Please Updata Video Card Driver", "OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
+		MessageBoxA( NULL, "Please Updata Video Card Driver", "OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
 		GameSet.Light=1;
 	}
 	if((!glewIsSupported("GL_ARB_pixel_buffer_object"))&&(!glewIsSupported("GL_EXT_pixel_buffer_object")))
@@ -232,7 +232,7 @@ void InitDraw()
 	
 	char szPath[MAX_PATH];
 	char FontPath[MAX_PATH];
-	GetWindowsDirectory(szPath,sizeof(szPath));
+	GetWindowsDirectoryA(szPath,sizeof(szPath));
 	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
 	FONTS2D.LoadFullWidthFont(FontPath,16,16);
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
