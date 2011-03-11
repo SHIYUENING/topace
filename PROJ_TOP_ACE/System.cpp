@@ -152,8 +152,8 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change The Screen Resolution
 {
 	DEVMODEW dmScreenSettings;											// Device Mode
-	ZeroMemory (&dmScreenSettings, sizeof (DEVMODE));					// Make Sure Memory Is Cleared
-	dmScreenSettings.dmSize				= sizeof (DEVMODE);				// Size Of The Devmode Structure
+	ZeroMemory (&dmScreenSettings, sizeof (DEVMODEW));					// Make Sure Memory Is Cleared
+	dmScreenSettings.dmSize				= sizeof (DEVMODEW);				// Size Of The Devmode Structure
 	dmScreenSettings.dmPelsWidth		= width;						// Select Screen Width
 	dmScreenSettings.dmPelsHeight		= height;						// Select Screen Height
 	dmScreenSettings.dmBitsPerPel		= bitsPerPixel;					// Select Bits Per Pixel
@@ -456,8 +456,8 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 {																		// TRUE If Successful
 	// Register A Window Class
 	WNDCLASSEXW windowClass;												// Window Class
-	ZeroMemory (&windowClass, sizeof (WNDCLASSEX));						// Make Sure Memory Is Cleared
-	windowClass.cbSize			= sizeof (WNDCLASSEX);					// Size Of The windowClass Structure
+	ZeroMemory (&windowClass, sizeof (WNDCLASSEXW));						// Make Sure Memory Is Cleared
+	windowClass.cbSize			= sizeof (WNDCLASSEXW);					// Size Of The windowClass Structure
 	windowClass.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;	// Redraws The Window For Any Movement / Resizing
 	windowClass.lpfnWndProc		= (WNDPROC)(WindowProc);				// WindowProc Handles Messages
 	windowClass.hInstance		= application->hInstance;				// Set The Instance
