@@ -124,13 +124,13 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 
 void TerminateApplication (GL_Window* window)							// Terminate The Application
 {
-	PostMessage (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
+	PostMessageW (window->hWnd, WM_QUIT, 0, 0);							// Send A WM_QUIT Message
 	g_isProgramLooping = FALSE;											// Stop Looping Of The Program
 }
 
 void ToggleFullscreen (GL_Window* window)								// Toggle Fullscreen/Windowed
 {
-	PostMessage (window->hWnd, WM_TOGGLEFULLSCREEN, 0, 0);				// Send A WM_TOGGLEFULLSCREEN Message
+	PostMessageW (window->hWnd, WM_TOGGLEFULLSCREEN, 0, 0);				// Send A WM_TOGGLEFULLSCREEN Message
 }
 
 void ReshapeGL (int width, int height)									// Reshape The Window When It's Moved Or Resized
@@ -151,14 +151,14 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 
 BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change The Screen Resolution
 {
-	DEVMODE dmScreenSettings;											// Device Mode
+	DEVMODEW dmScreenSettings;											// Device Mode
 	ZeroMemory (&dmScreenSettings, sizeof (DEVMODE));					// Make Sure Memory Is Cleared
 	dmScreenSettings.dmSize				= sizeof (DEVMODE);				// Size Of The Devmode Structure
 	dmScreenSettings.dmPelsWidth		= width;						// Select Screen Width
 	dmScreenSettings.dmPelsHeight		= height;						// Select Screen Height
 	dmScreenSettings.dmBitsPerPel		= bitsPerPixel;					// Select Bits Per Pixel
 	dmScreenSettings.dmFields			= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-	if (ChangeDisplaySettings (&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+	if (ChangeDisplaySettingsW (&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 	{
 		return FALSE;													// Display Change Failed, Return False
 	}
@@ -201,7 +201,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		if (ChangeScreenResolution (window->init.width, window->init.height, window->init.bitsPerPixel) == FALSE)
 		{
 			// Fullscreen Mode Failed.  Run In Windowed Mode Instead
-			MessageBox (HWND_DESKTOP, "Mode Switch Failed.\nRunning In Windowed Mode.", "Error", MB_OK | MB_ICONEXCLAMATION);
+			MessageBoxA (HWND_DESKTOP, "Mode Switch Failed.\nRunning In Windowed Mode.", "Error", MB_OK | MB_ICONEXCLAMATION);
 			window->init.isFullScreen = FALSE;							// Set isFullscreen To False (Windowed Mode)
 		}
 		else															// Otherwise (If Fullscreen Mode Was Successful)
@@ -368,7 +368,7 @@ BOOL DestroyWindowGL (GL_Window* window)								// Destroy The OpenGL Window & R
 
 	if (window->init.isFullScreen)										// Is Window In Fullscreen Mode
 	{
-		ChangeDisplaySettings (NULL,0);									// Switch Back To Desktop Resolution
+		ChangeDisplaySettingsW (NULL,0);									// Switch Back To Desktop Resolution
 		ShowCursor (TRUE);												// Show The Cursor
 	}	
 	return TRUE;														// Return True
@@ -396,9 +396,9 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		case WM_CREATE:													// Window Creation
 		{
-			CREATESTRUCT* creation = (CREATESTRUCT*)(lParam);			// Store Window Structure Pointer
+			CREATESTRUCTW* creation = (CREATESTRUCTW*)(lParam);			// Store Window Structure Pointer
 			window = (GL_Window*)(creation->lpCreateParams);
-			SetWindowLong (hWnd, GWL_USERDATA, (LONG)(window));
+			SetWindowLongW (hWnd, GWL_USERDATA, (LONG)(window));
 		}
 		return 0;														// Return
 
@@ -445,7 +445,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_TOGGLEFULLSCREEN:										// Toggle FullScreen Mode On/Off
 			GameSet.isFullScreem = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
-			PostMessage (hWnd, WM_QUIT, 0, 0);
+			PostMessageW (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 	}
 
@@ -462,12 +462,12 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 	windowClass.lpfnWndProc		= (WNDPROC)(WindowProc);				// WindowProc Handles Messages
 	windowClass.hInstance		= application->hInstance;				// Set The Instance
 	windowClass.hbrBackground	= (HBRUSH)(COLOR_APPWORKSPACE);			// Class Background Brush Color
-	windowClass.hCursor			= LoadCursor(NULL, IDC_ARROW);			// Load The Arrow Pointer
+	windowClass.hCursor			= LoadCursorW(NULL, MAKEINTRESOURCEW(32512));			// Load The Arrow Pointer IDC_ARROW
 	windowClass.lpszClassName	= application->className;				// Sets The Applications Classname
 	if (RegisterClassExW (&windowClass) == 0)							// Did Registering The Class Fail?
 	{
 		// NOTE: Failure, Should Never Happen
-		MessageBox (HWND_DESKTOP, "RegisterClassEx Failed!", "Error", MB_OK | MB_ICONEXCLAMATION);
+		MessageBoxA (HWND_DESKTOP, "RegisterClassEx Failed!", "Error", MB_OK | MB_ICONEXCLAMATION);
 		return FALSE;													// Return False (Failure)
 	}
 	return TRUE;														// Return True (Success)
@@ -543,8 +543,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		return -1;														// Terminate Application
 	}
 
-	gl_dll=LoadLibrary("OpenGL32.DLL");
-	if(!gl_dll) MessageBox (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
+	gl_dll=LoadLibraryW(L"OpenGL32.DLL");
+	if(!gl_dll) MessageBoxA (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
 	if(gl_dll) hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
 	g_isProgramLooping = TRUE;
 	g_createFullScreen = window.init.isFullScreen;
@@ -562,9 +562,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
 			{
-				if (PeekMessage (&msg, window.hWnd, 0, 0, PM_REMOVE) != 0)
+				if (PeekMessageW (&msg, window.hWnd, 0, 0, PM_REMOVE) != 0)
 				{
-					if (msg.message != WM_QUIT) DispatchMessage (&msg);
+					if (msg.message != WM_QUIT) DispatchMessageW (&msg);
 					else	isMessagePumpActive = FALSE;
 				}
 				else
@@ -586,7 +586,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		}
 		else
 		{
-			MessageBox (HWND_DESKTOP, "Error Creating OpenGL Window", "Error", MB_OK | MB_ICONEXCLAMATION);
+			MessageBoxA (HWND_DESKTOP, "Error Creating OpenGL Window", "Error", MB_OK | MB_ICONEXCLAMATION);
 			g_isProgramLooping = FALSE;
 		}
 	}

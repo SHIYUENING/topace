@@ -6,7 +6,7 @@ CFont3D::CFont3D(void)
 {
 	for(unsigned int i=0;i<MAX_FONT_LIST;i++)
 		FontList[i]=0;
-	hDC=CreateDC( "DISPLAY", "", "", NULL );
+	hDC=CreateDCA( "DISPLAY", "", "", NULL );
 }
 
 CFont3D::~CFont3D(void)
@@ -19,7 +19,7 @@ CFont3D::~CFont3D(void)
 bool CFont3D::LoadFont(const char * FontName,int CHARSET)
 {
 	HFONT	font;										// Windows Font ID
-	font = CreateFont(	-MulDiv(16,GetDeviceCaps(hDC,LOGPIXELSY),72),//							// Height Of Font
+	font = CreateFontA(	-MulDiv(16,GetDeviceCaps(hDC,LOGPIXELSY),72),//							// Height Of Font
 						0,								// Width Of Font
 						0,								// Angle Of Escapement
 						0,								// Orientation Angle

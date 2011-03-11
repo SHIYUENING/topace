@@ -1,6 +1,6 @@
 ﻿#ifndef _INIFILE_H
 #define _INIFILE_H
-
+#define IniFileName L".\\gameset.ini"
 #define JOY_KEY_UP 1
 #define JOY_KEY_DOWN 2
 #define JOY_KEY_LEFT 3
