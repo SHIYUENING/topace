@@ -83,75 +83,75 @@ void loadIniFile()
 		WritePrivateProfileStringW(L"KeyBoardSet",L"JOY_KEY_NO_USE",L"96",IniFileName);
 	}
 
-		GameSet.winW=GetPrivateProfileInt(L"GameSet",L"winW",800,IniFileName);GameSet.winW=GameSet.winW-GameSet.winW%4;
-		GameSet.winH=GetPrivateProfileInt(L"GameSet",L"winH",600,IniFileName);GameSet.winH=GameSet.winH-GameSet.winH%4;
-		GameSet.bits=GetPrivateProfileInt(L"GameSet",L"bits",32,IniFileName);
-		GameSet.depth=GetPrivateProfileInt(L"GameSet",L"depth",24,IniFileName);
-		if(GetPrivateProfileInt(L"GameSet",L"isFullScreem",0,IniFileName)>0)
+		GameSet.winW=GetPrivateProfileIntW(L"GameSet",L"winW",800,IniFileName);GameSet.winW=GameSet.winW-GameSet.winW%4;
+		GameSet.winH=GetPrivateProfileIntW(L"GameSet",L"winH",600,IniFileName);GameSet.winH=GameSet.winH-GameSet.winH%4;
+		GameSet.bits=GetPrivateProfileIntW(L"GameSet",L"bits",32,IniFileName);
+		GameSet.depth=GetPrivateProfileIntW(L"GameSet",L"depth",24,IniFileName);
+		if(GetPrivateProfileIntW(L"GameSet",L"isFullScreem",0,IniFileName)>0)
 			GameSet.isFullScreem=true;
 		else
 			GameSet.isFullScreem=false;
-		if(GetPrivateProfileInt(L"GameSet",L"SYNC",0,IniFileName)>0)
+		if(GetPrivateProfileIntW(L"GameSet",L"SYNC",0,IniFileName)>0)
 			GameSet.SYNC=true;
 		else
 			GameSet.SYNC=false;
-		if(GetPrivateProfileInt(L"GameSet",L"LOW",0,IniFileName)>0)
+		if(GetPrivateProfileIntW(L"GameSet",L"LOW",0,IniFileName)>0)
 			GameSet.LOW=true;
 		else
 			GameSet.LOW=false;
-		GameSet.AA=GetPrivateProfileInt(L"GameSet",L"AA",0,IniFileName);
-		GameSet.AF=float(GetPrivateProfileInt(L"GameSet",L"AF",1,IniFileName));
-		GameSet.FPS=GetPrivateProfileInt(L"GameSet",L"FPS",60,IniFileName);
-		GameSet.Light=GetPrivateProfileInt(L"GameSet",L"Light",0,IniFileName);
-		GameSet.Water=GetPrivateProfileInt(L"GameSet",L"Water",0,IniFileName);
-		GameSet.Bloom=GetPrivateProfileInt(L"GameSet",L"Bloom",0,IniFileName);
-		GameSet.SSAO=GetPrivateProfileInt(L"GameSet",L"SSAO",0,IniFileName);
-		GameSet.Shadow=GetPrivateProfileInt(L"GameSet",L"Shadow",0,IniFileName);
-		GameSet.MoveBlur=GetPrivateProfileInt(L"GameSet",L"MoveBlur",0,IniFileName);
-		GameSet.Cloud=GetPrivateProfileInt(L"GameSet",L"Cloud",0,IniFileName);
+		GameSet.AA=GetPrivateProfileIntW(L"GameSet",L"AA",0,IniFileName);
+		GameSet.AF=float(GetPrivateProfileIntW(L"GameSet",L"AF",1,IniFileName));
+		GameSet.FPS=GetPrivateProfileIntW(L"GameSet",L"FPS",60,IniFileName);
+		GameSet.Light=GetPrivateProfileIntW(L"GameSet",L"Light",0,IniFileName);
+		GameSet.Water=GetPrivateProfileIntW(L"GameSet",L"Water",0,IniFileName);
+		GameSet.Bloom=GetPrivateProfileIntW(L"GameSet",L"Bloom",0,IniFileName);
+		GameSet.SSAO=GetPrivateProfileIntW(L"GameSet",L"SSAO",0,IniFileName);
+		GameSet.Shadow=GetPrivateProfileIntW(L"GameSet",L"Shadow",0,IniFileName);
+		GameSet.MoveBlur=GetPrivateProfileIntW(L"GameSet",L"MoveBlur",0,IniFileName);
+		GameSet.Cloud=GetPrivateProfileIntW(L"GameSet",L"Cloud",0,IniFileName);
 
-		SoundSet.BGM=GetPrivateProfileInt(L"SoundSet",L"BGM",100,IniFileName);
-		SoundSet.Effect=GetPrivateProfileInt(L"SoundSet",L"Effect",100,IniFileName);
-		SoundSet.Voice=GetPrivateProfileInt(L"SoundSet",L"Voice",100,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_UP]			=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_UP",			32,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_DOWN]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_DOWN",			22,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_LEFT]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_LEFT",			12,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_RIGHT]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_RIGHT",		2,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_MAIN_WEAPON]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_MAIN_WEAPON",	11,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_SUB_WEAPON]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_SUB_WEAPON",	1,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_LOCK]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_LOCK",			31,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_MAP]			=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_MAP",			21,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_SPEED_UP]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_SPEED_UP",		41,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_SPEED_DOWN]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_SPEED_DOWN",	51,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_L]			=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_L",			61,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_R]			=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_R",			71,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_VIEW_UP]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_VIEW_UP",		52,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_VIEW_DOWN]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_VIEW_DOWN",	42,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_VIEW_LEFT]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_VIEW_LEFT",	112,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_VIEW_RIGHT]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_VIEW_RIGHT",	102,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_VIEW_RESET]	=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_VIEW_RESET",	111,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_SELECT]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_SELECT",		81,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_START]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_START",		91,IniFileName);
-		JoyStictSet.KeySet[JOY_KEY_NO_USE]		=GetPrivateProfileInt(L"JoyStictSet",L"JOY_KEY_NO_USE",		101,IniFileName);
+		SoundSet.BGM=GetPrivateProfileIntW(L"SoundSet",L"BGM",100,IniFileName);
+		SoundSet.Effect=GetPrivateProfileIntW(L"SoundSet",L"Effect",100,IniFileName);
+		SoundSet.Voice=GetPrivateProfileIntW(L"SoundSet",L"Voice",100,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_UP]			=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_UP",			32,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_DOWN]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_DOWN",			22,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_LEFT]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_LEFT",			12,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_RIGHT]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_RIGHT",		2,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_MAIN_WEAPON]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_MAIN_WEAPON",	11,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_SUB_WEAPON]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_SUB_WEAPON",	1,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_LOCK]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_LOCK",			31,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_MAP]			=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_MAP",			21,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_SPEED_UP]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_SPEED_UP",		41,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_SPEED_DOWN]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_SPEED_DOWN",	51,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_L]			=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_L",			61,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_R]			=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_R",			71,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_VIEW_UP]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_VIEW_UP",		52,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_VIEW_DOWN]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_VIEW_DOWN",	42,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_VIEW_LEFT]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_VIEW_LEFT",	112,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_VIEW_RIGHT]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_VIEW_RIGHT",	102,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_VIEW_RESET]	=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_VIEW_RESET",	111,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_SELECT]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_SELECT",		81,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_START]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_START",		91,IniFileName);
+		JoyStictSet.KeySet[JOY_KEY_NO_USE]		=GetPrivateProfileIntW(L"JoyStictSet",L"JOY_KEY_NO_USE",		101,IniFileName);
 
-		KeyBoardSet.KeySet[JOY_KEY_UP]			=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_UP",			119,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_DOWN]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_DOWN",			115,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_LEFT]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_LEFT",			97,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_RIGHT]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_RIGHT",		100,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_MAIN_WEAPON]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_MAIN_WEAPON",	102,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_SUB_WEAPON]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_SUB_WEAPON",	101,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_LOCK]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_LOCK",			113,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_MAP]			=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_MAP",			116,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_SPEED_UP]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_SPEED_UP",		38,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_SPEED_DOWN]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_SPEED_DOWN",	40,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_L]			=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_L",			37,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_R]			=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_R",			39,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_VIEW_UP]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_VIEW_UP",		56,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_VIEW_DOWN]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_VIEW_DOWN",	50,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_VIEW_LEFT]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_VIEW_LEFT",	52,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_VIEW_RIGHT]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_VIEW_RIGHT",	54,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_VIEW_RESET]	=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_VIEW_RESET",	53,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_SELECT]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_SELECT",		118,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_START]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_START",		98,IniFileName);
-		KeyBoardSet.KeySet[JOY_KEY_NO_USE]		=GetPrivateProfileInt(L"KeyBoardSet",L"JOY_KEY_NO_USE",		96,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_UP]			=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_UP",			119,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_DOWN]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_DOWN",			115,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_LEFT]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_LEFT",			97,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_RIGHT]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_RIGHT",		100,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_MAIN_WEAPON]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_MAIN_WEAPON",	102,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_SUB_WEAPON]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_SUB_WEAPON",	101,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_LOCK]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_LOCK",			113,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_MAP]			=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_MAP",			116,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_SPEED_UP]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_SPEED_UP",		38,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_SPEED_DOWN]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_SPEED_DOWN",	40,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_L]			=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_L",			37,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_R]			=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_R",			39,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_UP]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_VIEW_UP",		56,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_DOWN]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_VIEW_DOWN",	50,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_LEFT]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_VIEW_LEFT",	52,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_RIGHT]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_VIEW_RIGHT",	54,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_VIEW_RESET]	=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_VIEW_RESET",	53,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_SELECT]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_SELECT",		118,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_START]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_START",		98,IniFileName);
+		KeyBoardSet.KeySet[JOY_KEY_NO_USE]		=GetPrivateProfileIntW(L"KeyBoardSet",L"JOY_KEY_NO_USE",		96,IniFileName);
 }
