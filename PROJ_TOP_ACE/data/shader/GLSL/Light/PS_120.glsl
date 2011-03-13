@@ -41,7 +41,7 @@ void main()
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
 	NOF=max(0.0f,NOF)*0.25;
-	vec3 Reflective=reflect(vec3(0.0,0.0,1.0),Normal);
+	vec3 Reflective=reflect( - normalize(VertexEyeDir.xyz),Normal);
     vec4 ReflectiveWorld = WMatrix*vec4(Reflective,0.0);
 	float REFC=Material_shininess*0.002;
 	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor+textureCube(RefCubeTex, ReflectiveWorld.xyz)*REFC;
