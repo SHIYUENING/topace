@@ -9,7 +9,7 @@ public:
 	~CTALogSys(void);
 	bool AddLOG(const char * LOGStr,bool NoN=false);
 	bool ADDhtmLog(const char * LOGStr,const char * LogColor=0 ,const char * LogLink=0);
-	bool ADDLinkLOG(const char * LOGStr,const char * LogColor ,const char * LogLink,const char * LogLinkPath);
+	bool ADDLinkLOG(const char * LOGStr,const char * LogColor ,const char * LogLink);
 	char * LOGString;
 	wchar_t * LOGFileName;
 	wchar_t * LOGFilePath;

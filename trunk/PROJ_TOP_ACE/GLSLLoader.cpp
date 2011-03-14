@@ -25,22 +25,19 @@ GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
 	WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
 	if(!GLSLFileBuffer)
 	{
-		TALogSysCS.ADDhtmLog("\n  ****** GLSL ERROR ******\n    ","#FF0000");
-		TALogSysCS.ADDhtmLog("Cannot open shader file\n");
-		TALogSysCS.ADDhtmLog(shaderfilenameANSI);
+		TALogSysCS.ADDLinkLOG("ERROR:Cannot open shader file ","#FF0000",shaderfilenameANSI);
 		TALogSysCS.WriteLOGFile(true);
 		TALogSysCS.ClearLOG();
 		delete [] shaderfilenameANSI;
 		return 0;
 	}
-	TALogSysCS.AddLOG("\n  ****** GLSL Loading File ******\n    ");
-	TALogSysCS.AddLOG(shaderfilenameANSI,true);
+	TALogSysCS.ADDLinkLOG("Loading File :","#000000",shaderfilenameANSI);
 	GLint bCompiled=0;
 	GLhandleARBTMP = CompileShader(GLSLFileBuffer,ShaderObject,&bCompiled);
-	if(!bCompiled) TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
-	else TALogSysCS.AddLOG("\n  ****** GLSL Log ******\n    ");
+	if(!bCompiled) TALogSysCS.ADDhtmLog("ERROR: GLSL Compile Fail.","#FF0000");
+	TALogSysCS.ADDhtmLog("GLSL Compile LOG:");
 	char * logbuffer=GetGLSLInfoLog(GLhandleARBTMP);
-	TALogSysCS.AddLOG(logbuffer,true);
+	TALogSysCS.ADDhtmLog(logbuffer);
 	TALogSysCS.WriteLOGFile(true);
 	TALogSysCS.ClearLOG();
 	delete [] logbuffer;
@@ -69,10 +66,10 @@ bool CGLSL_Light_Link_ProgramObject(GLhandleARB GLSL_PO)
 	glLinkProgramARB( GLSL_PO );
 	glGetObjectParameterivARB( GLSL_PO, GL_OBJECT_LINK_STATUS_ARB, &bLinked );
 	CTALogSys TALogSysCS;
-	if(bLinked) TALogSysCS.AddLOG("\n  ****** GLSL Log ******\n    ");
-	else TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+	if(!bLinked) TALogSysCS.ADDhtmLog("ERROR: GLSL Link Fail.","#FF0000");
+	TALogSysCS.ADDhtmLog("GLSL Link LOG");
 	char * logbuffer=GetGLSLInfoLog(GLSL_PO);
-	TALogSysCS.AddLOG(logbuffer,true);
+	TALogSysCS.ADDhtmLog(logbuffer);
 	TALogSysCS.WriteLOGFile(true);
 	TALogSysCS.ClearLOG();
 	delete[] logbuffer;
@@ -95,10 +92,10 @@ bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB At
 	glLinkProgramARB( GLSL_PO[0] );
 	glGetObjectParameterivARB( GLSL_PO[0], GL_OBJECT_LINK_STATUS_ARB, &bLinked );
 	CTALogSys TALogSysCS;
-	if(bLinked) TALogSysCS.AddLOG("\n  ****** GLSL Log ******\n    ");
-	else TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
+	if(bLinked) TALogSysCS.ADDhtmLog("GLSL Link LOG");
+	else TALogSysCS.ADDhtmLog("ERROR: GLSL Link Fail.","#FF0000");
 	char * logbuffer=GetGLSLInfoLog(GLSL_PO[0]);
-	TALogSysCS.AddLOG(logbuffer,true);
+	TALogSysCS.ADDhtmLog(logbuffer,true);
 	TALogSysCS.WriteLOGFile(true);
 	TALogSysCS.ClearLOG();
 	delete[] logbuffer;
@@ -152,8 +149,8 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	if( bLinked == false )
 	{
 		char * logbuffer=GetGLSLInfoLog(g_programObj);
-		GLSLLOG.AddLOG("\n  ****** GLSL ERROR ******\n    ");
-		GLSLLOG.AddLOG(logbuffer,true);
+		GLSLLOG.ADDhtmLog("ERROR: GLSL Link Fail.","#FF0000");
+		GLSLLOG.ADDhtmLog(logbuffer);
 		GLSLLOG.WriteLOGFile(true);
 		GLSLLOG.ClearLOG();
 		delete[] logbuffer;
@@ -162,8 +159,8 @@ bool CGLSLLoader::GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 	else
 	{
 		char * logbuffer=GetGLSLInfoLog(g_programObj);
-		GLSLLOG.AddLOG("\n  ****** GLSL Log ******\n    ");
-		GLSLLOG.AddLOG(logbuffer,true);
+		GLSLLOG.ADDhtmLog("GLSL Link LOG");
+		GLSLLOG.ADDhtmLog(logbuffer);
 		GLSLLOG.WriteLOGFile(true);
 		GLSLLOG.ClearLOG();
 		delete[] logbuffer;
