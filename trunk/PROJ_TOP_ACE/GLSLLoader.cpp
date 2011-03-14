@@ -95,7 +95,7 @@ bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB At
 	if(bLinked) TALogSysCS.ADDhtmLog("GLSL Link LOG");
 	else TALogSysCS.ADDhtmLog("ERROR: GLSL Link Fail.","#FF0000");
 	char * logbuffer=GetGLSLInfoLog(GLSL_PO[0]);
-	TALogSysCS.ADDhtmLog(logbuffer,true);
+	TALogSysCS.ADDhtmLog(logbuffer);
 	TALogSysCS.WriteLOGFile(true);
 	TALogSysCS.ClearLOG();
 	delete[] logbuffer;
