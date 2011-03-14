@@ -73,9 +73,9 @@ int ADDTwoChar(wchar_t *ResultsChar,int ResultsCharArrayMAXSize,const wchar_t * 
 	}
 	for(int i=0;i<CharLenth2;i++)
 	{
-		if(i>=(ResultsCharArrayMAXSize-1))
+		if((i+CharLenth1)>=(ResultsCharArrayMAXSize-1))
 		{
-			ResultsChar[i]=0;
+			ResultsChar[i+CharLenth1]=0;
 			return i;
 		}
 		ResultsChar[i+CharLenth1]=Char2[i];
@@ -102,9 +102,9 @@ int ADDTwoChar(char *ResultsChar,int ResultsCharArrayMAXSize,const char * Char1,
 	}
 	for(int i=0;i<CharLenth2;i++)
 	{
-		if(i>=(ResultsCharArrayMAXSize-1))
+		if((i+CharLenth1)>=(ResultsCharArrayMAXSize-1))
 		{
-			ResultsChar[i]=0;
+			ResultsChar[i+CharLenth1]=0;
 			return i;
 		}
 		ResultsChar[i+CharLenth1]=Char2[i];

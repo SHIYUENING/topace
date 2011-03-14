@@ -34,7 +34,7 @@ bool CTALogSys::AddLOG(const char * LOGStr,bool NoN)
 	LOGString=StrTmp;
 	return true;
 }
-bool CTALogSys::ADDLinkLOG(const char * LOGStr,const char * LogColor ,const char * LogLink,const char * LogLinkPath)
+bool CTALogSys::ADDLinkLOG(const char * LOGStr,const char * LogColor ,const char * LogLink)
 {
 	if(!LOGStr) return false;
 	if(GetCharLenth(LOGStr)==0) return false;
@@ -42,11 +42,35 @@ bool CTALogSys::ADDLinkLOG(const char * LOGStr,const char * LogColor ,const char
 	if(GetCharLenth(LogColor)==0) return false;
 	if(!LogLink) return false;
 	if(GetCharLenth(LogLink)==0) return false;
+	char LogLinkPath[MAX_PATH];
+	GetCurrentDirectoryA(MAX_PATH,LogLinkPath);
+	
+	int StrTmpSize=
+		GetCharLenth(LOGStr)+
+		GetCharLenth(LogColor)+
+		GetCharLenth(LogLink)*2+
+		GetCharLenth(LogLinkPath)*2+
+		GetCharLenth("<p><font color=%s>%s</font><a href=\"File%s%s\\%s\">%s\\%s</a></p>")+
+		GetCharLenth(":\\localhost")+
+		10;
 
-	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)*2+GetCharLenth(LogLinkPath)*2+GetCharLenth("<p><font color=>   </font><a href=\"\"></a></p>")+10;
-
-	char * StrTmp= new char[StrTmpSize];
-	sprintf_s(StrTmp,StrTmpSize,"<p><font color=%s>%s:</font><a href=\"%s%s\">%s%s</a></p>",LogColor,LOGStr,LogLinkPath,LogLink,LogLinkPath,LogLink);
+	char * StrTmp= new char[StrTmpSize+1];StrTmp[StrTmpSize]=0;
+	sprintf_s(
+		StrTmp,
+		StrTmpSize,
+		"<p><font color=%s>%s</font><a href=\"File%s%s\\%s\">%s\\%s</a></p>",
+		LogColor,
+		LOGStr,
+		":\\localhost\\",
+		LogLinkPath,
+		LogLink,
+		LogLinkPath,
+		LogLink
+		);
+	for(unsigned int i=0;i<GetCharLenth(StrTmp);i++)
+	{
+		if(StrTmp[i]=='\\') StrTmp[i]='/';
+	}
 	AddLOG(StrTmp);
 	delete [] StrTmp;
 	return true;
@@ -60,7 +84,7 @@ bool CTALogSys::ADDhtmLog(const char * LOGStr,const char * LogColor ,const char 
 		return false;
 
 	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)+GetCharLenth("<p><a href=\"\"><font color=></font></a></p>")+5;
-	char * StrTmp= new char[StrTmpSize];
+	char * StrTmp= new char[StrTmpSize+1];StrTmp[StrTmpSize]=0;
 	//<p><a href="123"><font color=#FF0000>测试</font></a> </p>
 	bool UseLogLink=false;
 	if(LogLink) if(GetCharLenth(LogLink)) UseLogLink=true;
