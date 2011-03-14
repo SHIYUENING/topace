@@ -177,6 +177,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="TALogSys.cpp" />
+    <ClCompile Include="TAMFT3D.cpp" />
     <ClCompile Include="TexManager.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TGA.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="SoundSys.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TALogSys.h" />
+    <ClInclude Include="TAMFT3D.h" />
     <ClInclude Include="TexManager.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Tga.h" />
