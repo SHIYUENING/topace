@@ -445,6 +445,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_TOGGLEFULLSCREEN:										// Toggle FullScreen Mode On/Off
 			GameSet.isFullScreem = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			g_createFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
+			window->init.isFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessageW (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 	}
