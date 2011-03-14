@@ -41,8 +41,8 @@ int next_p2 ( int a )
 }
 void CheckFBOError()
 {
-	FBOLOG.AddLOG("******Check Framebuffer Status******");
-	FBOLOG.AddLOG("******ERROR******");
+	FBOLOG.ADDhtmLog("******Check Framebuffer Status******","#00FF00");
+	FBOLOG.ADDhtmLog("******ERROR******","#FF0000");
 	GLenum status = (GLenum) glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	switch(status) 
 	{
@@ -50,25 +50,25 @@ void CheckFBOError()
 			FBOLOG.ClearLOG(); 
 			return;
 		case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-			FBOLOG.AddLOG("Unsupported framebuffer format");
+			FBOLOG.ADDhtmLog("Unsupported framebuffer format","#FF0000");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-			FBOLOG.AddLOG("Framebuffer incomplete, missing attachment");
+			FBOLOG.ADDhtmLog("Framebuffer incomplete, missing attachment","#FF0000");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-			FBOLOG.AddLOG("Framebuffer incomplete, attached images must have same dimensions");
+			FBOLOG.ADDhtmLog("Framebuffer incomplete, attached images must have same dimensions","#FF0000");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-			FBOLOG.AddLOG("Framebuffer incomplete, attached images must have same format");
+			FBOLOG.ADDhtmLog("Framebuffer incomplete, attached images must have same format","#FF0000");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
-			FBOLOG.AddLOG("Framebuffer incomplete, missing draw buffer");
+			FBOLOG.ADDhtmLog("Framebuffer incomplete, missing draw buffer","#FF0000");
 			break;
 		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
-			FBOLOG.AddLOG("Framebuffer incomplete, missing read buffer");
+			FBOLOG.ADDhtmLog("Framebuffer incomplete, missing read buffer","#FF0000");
 			break;
 		default:
-			FBOLOG.AddLOG("unknown error");
+			FBOLOG.ADDhtmLog("unknown error");
 	         
 	}
 	FBOLOG.WriteLOGFile(true);
