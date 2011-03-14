@@ -477,6 +477,11 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 // Program Entry (WinMain)
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	MainLOG.AddLOG("<HTML>");
+	MainLOG.AddLOG("<head>");
+	MainLOG.AddLOG("<TITLE>TOP ACE LOG</TITLE>");
+	MainLOG.AddLOG("</head>");
+	MainLOG.AddLOG("<BODY>");
 	MainLOG.AddLOG("******TOP ACE LOG Start******");
 	MainLOG.WriteLOGFile(false);
 	CEXTLIBS_init();
@@ -495,6 +500,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	MainLOG.ClearLOG();
 	
 	MainLOG.AddLOG("******TOP ACE LOG End******");
+	MainLOG.AddLOG("</BODY>");
+	MainLOG.AddLOG("</HTML>");
 	MainLOG.WriteLOGFile(true);
 	return 0;
 }																		// End Of WinMain()

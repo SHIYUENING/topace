@@ -1,6 +1,7 @@
 ﻿#include "TALogSys.h"
 #include "FileSysBace.h"
 #include "CharSysBace.h"
+#include <string.h>
 CTALogSys::CTALogSys(void)
 	:LOGString(NULL)
 	,LOGFileName(NULL)
@@ -33,6 +34,47 @@ bool CTALogSys::AddLOG(const char * LOGStr,bool NoN)
 	LOGString=StrTmp;
 	return true;
 }
+bool CTALogSys::ADDLinkLOG(const char * LOGStr,const char * LogColor ,const char * LogLink,const char * LogLinkPath)
+{
+	if(!LOGStr) return false;
+	if(GetCharLenth(LOGStr)==0) return false;
+	if(!LogColor) return false;
+	if(GetCharLenth(LogColor)==0) return false;
+	if(!LogLink) return false;
+	if(GetCharLenth(LogLink)==0) return false;
+
+	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)*2+GetCharLenth(LogLinkPath)*2+GetCharLenth("<p><font color=>   </font><a href=\"\"></a></p>")+10;
+
+	char * StrTmp= new char[StrTmpSize];
+	sprintf_s(StrTmp,StrTmpSize,"<p><font color=%s>%s:</font><a href=\"%s%s\">%s%s</a></p>",LogColor,LOGStr,LogLinkPath,LogLink,LogLinkPath,LogLink);
+	AddLOG(StrTmp);
+	delete [] StrTmp;
+	return true;
+}
+
+bool CTALogSys::ADDhtmLog(const char * LOGStr,const char * LogColor ,const char * LogLink)
+{
+	if(!LOGStr)
+		return false;
+	if(GetCharLenth(LOGStr)==0)
+		return false;
+
+	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)+GetCharLenth("<p><a href=\"\"><font color=></font></a></p>")+5;
+	char * StrTmp= new char[StrTmpSize];
+	//<p><a href="123"><font color=#FF0000>测试</font></a> </p>
+	bool UseLogLink=false;
+	if(LogLink) if(GetCharLenth(LogLink)) UseLogLink=true;
+	bool UseLogColor=false;
+	if(LogColor) if(GetCharLenth(LogColor)) UseLogColor=true;
+	if(UseLogLink&&UseLogColor)		sprintf_s(StrTmp,StrTmpSize,"<p><a href=\"%s\"><font color=%s>%s</font></a></p>",LogLink,LogColor,LOGStr);
+	if(UseLogLink)					sprintf_s(StrTmp,StrTmpSize,"<p><a href=\"%s\">%s</a></p>",LogLink,LOGStr);
+	if(UseLogColor)					sprintf_s(StrTmp,StrTmpSize,"<p><font color=%s>%s</font></p>",LogColor,LOGStr);
+	if((!UseLogLink)&&(!UseLogColor)) sprintf_s(StrTmp,StrTmpSize,"<p>%s</p>",LOGStr);
+	AddLOG(StrTmp);
+	delete [] StrTmp;
+	return true;
+}
+
 void CTALogSys::ClearLOG()
 {
 	delete [] LOGString;
@@ -47,7 +89,7 @@ bool CTALogSys::WriteLOGFile(bool ADD)
 	if(LOGFileName)
 		return WriteLocFile(LOGFileName,LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
 	else
-		return WriteLocFile(L"TOP_ACE_SYS.log",LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
+		return WriteLocFile(DEFLOGFileName,LOGFilePath,(unsigned char *)LOGString,GetCharLenth(LOGString),ADD);
 }
 void CTALogSys::SetFileNameAndPath(wchar_t * FileName,wchar_t * FilePath)
 {
@@ -64,3 +106,6 @@ void CTALogSys::SetFileNameAndPath(wchar_t * FileName,wchar_t * FilePath)
 		LOGFilePath = FilePath;
 	}
 }
+
+
+

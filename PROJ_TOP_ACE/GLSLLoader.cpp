@@ -25,9 +25,9 @@ GLhandleARB CompileShader(const wchar_t* shaderfilename,GLenum ShaderObject)
 	WideCharToMultiByte(CP_ACP,0,shaderfilename,-1,shaderfilenameANSI,dwNum,NULL,NULL);
 	if(!GLSLFileBuffer)
 	{
-		TALogSysCS.AddLOG("\n  ****** GLSL ERROR ******\n    ");
-		TALogSysCS.AddLOG("Cannot open shader file\n");
-		TALogSysCS.AddLOG(shaderfilenameANSI);
+		TALogSysCS.ADDhtmLog("\n  ****** GLSL ERROR ******\n    ","#FF0000");
+		TALogSysCS.ADDhtmLog("Cannot open shader file\n");
+		TALogSysCS.ADDhtmLog(shaderfilenameANSI);
 		TALogSysCS.WriteLOGFile(true);
 		TALogSysCS.ClearLOG();
 		delete [] shaderfilenameANSI;
