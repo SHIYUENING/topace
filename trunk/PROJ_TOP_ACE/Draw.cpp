@@ -574,7 +574,8 @@ void DrawShadowMap()
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_GREATER);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();
 	CO_SetMMatrix(ShadowMF);
@@ -590,7 +591,7 @@ void DrawShadowMap()
 	glPopAttrib();
 	glDepthFunc(GL_LEQUAL);
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
-
+	glCullFace(GL_BACK);
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);

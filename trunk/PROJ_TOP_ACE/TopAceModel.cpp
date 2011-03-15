@@ -759,13 +759,10 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 		TAM_Mesh_Draw=pTAM_FileHead->MeshHeadAddress[i];
 		if(TAM_Mesh_Draw)
 		{
-			if(TAM_Mesh_Draw->OneFace)
+			/*if(TAM_Mesh_Draw->OneFace)
 				glEnable(GL_CULL_FACE);
-				//glCullFace(GL_BACK);
 			else
-				glDisable(GL_CULL_FACE);
-				//glCullFace(GL_NONE);
-			//glDisable(GL_CULL_FACE);
+				glDisable(GL_CULL_FACE);*/
 			if(TAM_Mesh_Draw->IsFiexible)
 			{
 				if(!Fiexible) continue;
