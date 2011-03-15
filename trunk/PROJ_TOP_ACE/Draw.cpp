@@ -18,6 +18,7 @@
 #include "ExchangeThread.h"
 #include "DrawQUAD.h"
 #include "Common.h"
+#include "TAMFT3D.h"
 float extern angleR;
 float extern Test3dsFrame;
 float extern maxFreme;
@@ -27,6 +28,7 @@ float extern moveX;
 int extern ReadingThreadNum;
 CFont2D * Font2D=NULL; 
 CFONTS2D FONTS2D;
+CTAMFT3D TAMFT3D;
 bool Inited=false;
 bool IsFirstInit=true;
 LARGE_INTEGER TimeStart,TimeEnd,Timefeq,RunTimeStart,RunTimeEnd,CPUTestStart,CPUTestEnd;
@@ -242,6 +244,7 @@ void InitDraw()
 		Font2D=new CFont2D;
 		Font2D->LoadFont(FontPath,32,32);
 	}*/
+	TAMFT3D.LoadFontFile();
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
 	QueryPerformanceCounter(&TimeStart);
