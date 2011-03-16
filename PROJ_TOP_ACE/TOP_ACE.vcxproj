@@ -145,6 +145,7 @@
     </ClCompile>
     <ClCompile Include="CharSysBace.cpp" />
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="CommonMatrix.cpp" />
     <ClCompile Include="CPUTess.cpp" />
     <ClCompile Include="DataUpdata.cpp" />
     <ClCompile Include="DDS.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="ARB_Multisample.h" />
     <ClInclude Include="CharSysBace.h" />
     <ClInclude Include="Common.h" />
+    <ClInclude Include="CommonMatrix.h" />
     <ClInclude Include="CPUTess.h" />
     <ClInclude Include="DataUpdata.h" />
     <ClInclude Include="DDS.h" />

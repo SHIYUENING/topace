@@ -94,6 +94,7 @@
       <Filter>GLSL_EFF</Filter>
     </ClCompile>
     <ClCompile Include="TAMFT3D.cpp" />
+    <ClCompile Include="CommonMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -201,6 +202,7 @@
       <Filter>GLSL_EFF</Filter>
     </ClInclude>
     <ClInclude Include="TAMFT3D.h" />
+    <ClInclude Include="CommonMatrix.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">

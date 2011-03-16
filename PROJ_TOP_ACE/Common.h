@@ -1,9 +1,9 @@
 //#pragma once
 #ifndef _COMMON_H
 #define _COMMON_H
-
 #include <GL/glew.h>
 #include <windows.h>
+#include "CommonMatrix.h"
 #define OmniLightDataNum 8
 struct _OmniLightData{
 	GLfloat Pos[4];
