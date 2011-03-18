@@ -137,14 +137,17 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 {
 	GameSet.winW=WindowWidth=width;
 	GameSet.winH=WindowHeight=height;
-	CO_MatrixPerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0); 
-	GLdouble PMatrix[16];
-	CO_GetPMatrixD(PMatrix);
+	CommonMatrixs[CO_Matrix_Proj].PerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0);
+	//CO_MatrixPerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0); 
+	//CO_SetPMatrixD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+	//GLdouble PMatrix[16];
+	//CO_GetPMatrixD(PMatrix);
 	glViewport (0, 0, (GLsizei)(width), (GLsizei)(height));				// Reset The Current Viewport
 	glMatrixMode (GL_PROJECTION);										// Select The Projection Matrix
 	//glLoadIdentity ();													// Reset The Projection Matrix
 	//gluPerspective(50, (float)width/(float)height, 5.0,  100000.0f);
-	glLoadMatrixd(PMatrix);
+	//glLoadMatrixd(PMatrix);
+	glLoadMatrixd(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
 	glMatrixMode (GL_MODELVIEW);										// Select The Modelview Matrix
 	glLoadIdentity ();													// Reset The Modelview Matrix
 }

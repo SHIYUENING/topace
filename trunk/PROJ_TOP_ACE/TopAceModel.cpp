@@ -769,6 +769,9 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 				CO_SetMMatrixToGlsl(NULL);
 				CO_SetPMatrixToGlsl(NULL);
 				CO_SetMVPMatrixToGlsl(NULL);
+				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
+				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
+				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
 				DrawRAMMeshFiexible(TAM_Mesh_Draw);
 			}
 			else
@@ -787,6 +790,9 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 				CO_SetMMatrixToGlsl(NULL);
 				CO_SetPMatrixToGlsl(NULL);
 				CO_SetMVPMatrixToGlsl(NULL);
+				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
+				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
+				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
 				if(SuppotVBO)
 					DrawMeshRigid(TAM_Mesh_Draw);
 				else
