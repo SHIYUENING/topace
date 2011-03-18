@@ -95,7 +95,10 @@ void GLSL_SetMMatrixToGlsl(GLfloat * MMatrix)
 	if(MMatrix)
 		memcpy(GlslMatrixTMP, MMatrix, 16 * sizeof(GLfloat));
 	else
+	{
+		CommonMatrixs[CO_Matrix_ModelView].GetF(GlslMatrixTMP);
 		CO_GetMMatrix(GlslMatrixTMP);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),1,false,GlslMatrixTMP);
 }
 void GLSL_SetPMatrixToGlsl(GLfloat * PMatrix)
@@ -103,7 +106,10 @@ void GLSL_SetPMatrixToGlsl(GLfloat * PMatrix)
 	if(PMatrix)
 		memcpy(GlslMatrixTMP, PMatrix, 16 * sizeof(GLfloat));
 	else
+	{
+		CommonMatrixs[CO_Matrix_Proj].GetF(GlslMatrixTMP);
 		CO_GetPMatrix(GlslMatrixTMP);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),1,false,GlslMatrixTMP);
 }
 void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix)
@@ -111,6 +117,9 @@ void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix)
 	if(MVPMatrix)
 		memcpy(GlslMatrixTMP, MVPMatrix, 16 * sizeof(GLfloat));
 	else
+	{
+		CommonMatrixs[CO_Matrix_ModelViewProj].GetF(GlslMatrixTMP);
 		CO_GetMVPMatrix(GlslMatrixTMP);
+	}
 	glUniformMatrix4fv(glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"),1,false,GlslMatrixTMP);
 }

@@ -116,6 +116,9 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));*/
+	CommonMatrixs[CO_Matrix_ModelViewProj].GLSLLoc=GLSL_Light_MVPMatrix[boneType][GLSLver];
+	CommonMatrixs[CO_Matrix_Proj].GLSLLoc=GLSL_Light_PMatrix[boneType][GLSLver];
+	CommonMatrixs[CO_Matrix_ModelView].GLSLLoc=GLSL_Light_MMatrix[boneType][GLSLver];
 	CO_SetMatrixsGLSLLoc(
 		GLSL_Light_MMatrix[boneType][GLSLver],
 		GLSL_Light_PMatrix[boneType][GLSLver],

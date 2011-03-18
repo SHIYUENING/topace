@@ -304,6 +304,7 @@ void SetCameraMatrix()
 	Easy_matrix_inv(CameraMatrix,CameraMatrix);
 	glLoadMatrixf(&(CameraMatrix[0].m128_f32[0]));
 	CO_SetMMatrix(CameraMatrix[0].m128_f32);
+	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
 }
 void SetLights()
 {
@@ -496,7 +497,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
 	CO_SetMMatrix(CameraMatrix[0].m128_f32);
+	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
 	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
+	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
@@ -579,8 +582,9 @@ void DrawShadowMap()
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();
 	CO_SetMMatrix(ShadowMF);
+	CommonMatrixs[CO_Matrix_ModelView].LoadF(ShadowMF);
 	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
-
+	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	TopAceModelTest.Draw(false,false);
 	TopAceModelTest.Draw(false,true);

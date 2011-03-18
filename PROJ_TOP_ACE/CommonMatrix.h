@@ -20,7 +20,9 @@ public:
 	~CCommonMatrix(void);
 	_CO_Matrix_LinkList * LinkList;
 	GLdouble MatrixTMP[16];
+	GLfloat MatrixTMPF[16];
 	unsigned int List_Count;
+	GLint GLSLLoc;
 	void LoadF(GLfloat * Matrix);
 	void LoadD(GLdouble * Matrix);
 	void Identity(void);
@@ -31,8 +33,14 @@ public:
 	void MultD(GLdouble * Matrix);
 	void GetF(GLfloat * Matrix);
 	void GetD(GLdouble * Matrix);
+	void SetMatrixToGlsl(void);
+	void PerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio,
+                      GLdouble znear, GLdouble zfar);
+	void OrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
 };
-
+static CCommonMatrix CommonMatrixs[CO_MatrixCount];
+/*
+static int text;
 void CO_Matrix_LoadF(GLfloat * Matrix,unsigned int CO_Matrix_ID);
 void CO_Matrix_LoadD(GLdouble * Matrix,unsigned int CO_Matrix_ID);
 void CO_Matrix_Identity(unsigned int CO_Matrix_ID);
@@ -42,5 +50,5 @@ void CO_Matrix_Clear(unsigned int CO_Matrix_ID);
 void CO_Matrix_MultF(GLfloat * Matrix,unsigned int CO_Matrix_ID);
 void CO_Matrix_MultD(GLdouble * Matrix,unsigned int CO_Matrix_ID);
 void CO_Matrix_GetF(GLfloat * Matrix,unsigned int CO_Matrix_ID);
-void CO_Matrix_GetD(GLdouble * Matrix,unsigned int CO_Matrix_ID);
+void CO_Matrix_GetD(GLdouble * Matrix,unsigned int CO_Matrix_ID);*/
 #endif
