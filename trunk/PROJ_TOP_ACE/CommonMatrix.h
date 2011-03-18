@@ -21,13 +21,26 @@ public:
 	_CO_Matrix_LinkList * LinkList;
 	GLdouble MatrixTMP[16];
 	unsigned int List_Count;
-	void Load(GLdouble * MatrixD);
+	void LoadF(GLfloat * Matrix);
+	void LoadD(GLdouble * Matrix);
 	void Identity(void);
 	void Push(void);
 	void Pop(void);
 	void Clear(void);
-	void Mult(GLfloat * Matrix);
-	void Get(GLfloat * Matrix);
+	void MultF(GLfloat * Matrix);
+	void MultD(GLdouble * Matrix);
+	void GetF(GLfloat * Matrix);
+	void GetD(GLdouble * Matrix);
 };
-void CO_IdentityMatrixD(GLdouble * MatrixD);
+
+void CO_Matrix_LoadF(GLfloat * Matrix,unsigned int CO_Matrix_ID);
+void CO_Matrix_LoadD(GLdouble * Matrix,unsigned int CO_Matrix_ID);
+void CO_Matrix_Identity(unsigned int CO_Matrix_ID);
+void CO_Matrix_Push(unsigned int CO_Matrix_ID);
+void CO_Matrix_Pop(unsigned int CO_Matrix_ID);
+void CO_Matrix_Clear(unsigned int CO_Matrix_ID);
+void CO_Matrix_MultF(GLfloat * Matrix,unsigned int CO_Matrix_ID);
+void CO_Matrix_MultD(GLdouble * Matrix,unsigned int CO_Matrix_ID);
+void CO_Matrix_GetF(GLfloat * Matrix,unsigned int CO_Matrix_ID);
+void CO_Matrix_GetD(GLdouble * Matrix,unsigned int CO_Matrix_ID);
 #endif
