@@ -303,7 +303,7 @@ void SetCameraMatrix()
 	Easy_matrix_copy(WorldMatrix,CameraMatrix);
 	Easy_matrix_inv(CameraMatrix,CameraMatrix);
 	glLoadMatrixf(&(CameraMatrix[0].m128_f32[0]));
-	CO_SetMMatrix(CameraMatrix[0].m128_f32);
+//	CO_SetMMatrix(CameraMatrix[0].m128_f32);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
 }
 void SetLights()
@@ -496,9 +496,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	int GLSLver=min(max(GameSet.Light-2,0),2);
 	//glLoadMatrixf(&MatrixTMPF4X4[0]);
 	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
-	CO_SetMMatrix(CameraMatrix[0].m128_f32);
+//	CO_SetMMatrix(CameraMatrix[0].m128_f32);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
-	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
+//	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
@@ -566,7 +566,7 @@ void DrawShadowMap()
 	__m128 ShadowMM[4];ShadowUnitMath.GetMatrix(ShadowMM);
 	Easy_matrix_inv(ShadowMM,ShadowMM);
 	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
-	
+	CommonMatrixs[CO_Matrix_ShadowViewProj].LoadD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
@@ -581,9 +581,10 @@ void DrawShadowMap()
 	glEnable(GL_CULL_FACE);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();
-	CO_SetMMatrix(ShadowMF);
+//	CO_SetMMatrix(ShadowMF);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(ShadowMF);
-	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
+	CommonMatrixs[CO_Matrix_ShadowViewProj].MultF(ShadowMF);
+//	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	TopAceModelTest.Draw(false,false);

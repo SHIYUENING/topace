@@ -1,4 +1,5 @@
 #version 150
+uniform mat4x4 ShadowMatrix;
 uniform mat4x4 MMatrix;
 uniform mat4x4 MVPMatrix;
 in vec3 Position_in;
