@@ -5,7 +5,7 @@ static const GLdouble IdentityMatrixD[16]={1.0,0.0,0.0,0.0,
 										   0.0,0.0,1.0,0.0,
 										   0.0,0.0,0.0,1.0};
 
-
+CCommonMatrix CommonMatrixs[CO_MatrixCount];
 CCommonMatrix::CCommonMatrix(void)
 	:List_Count(0)
 	,GLSLLoc(-1)
@@ -62,7 +62,7 @@ void CCommonMatrix::Clear(void)
 		List_Count--;
 	}
 	this->Identity();
-	CO_MMatrixGLSLLoc=-1;
+	GLSLLoc=-1;
 }
 
 void CCommonMatrix::MultF(GLfloat * Matrix)
@@ -117,8 +117,24 @@ void CCommonMatrix::GetD(GLdouble * Matrix)
 void CCommonMatrix::SetMatrixToGlsl(void)
 {
 	if(GLSLLoc<0) return;
+	this->Push();
+	if(this==(&CommonMatrixs[CO_Matrix_ModelViewProj]))
+	{
+		this->LoadD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+		this->MultD(CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
+		this->MultD(CommonMatrixs[CO_Matrix_World].LinkList->Matrix);
+	}
+	if(this==(&CommonMatrixs[CO_Matrix_ModelView]))
+	{
+		this->MultD(CommonMatrixs[CO_Matrix_World].LinkList->Matrix);
+	}
+	if(this==(&CommonMatrixs[CO_Matrix_ShadowViewProj]))
+	{
+		this->MultD(CommonMatrixs[CO_Matrix_World].LinkList->Matrix);
+	}
 	for (int i=0;i<16;i++) MatrixTMPF[i]=GLfloat(this->LinkList->Matrix[i]);
-		glUniformMatrix4fv(GLSLLoc,1,false,MatrixTMPF);
+	glUniformMatrix4fv(GLSLLoc,1,false,MatrixTMPF);
+	this->Pop();
 }
 /*
 void CO_Matrix_LoadF(GLfloat * Matrix,unsigned int CO_Matrix_ID)

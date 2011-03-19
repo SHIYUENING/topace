@@ -17,6 +17,7 @@ varying vec4 VertexEyeDir;
 varying vec3 Normal; 
 varying vec2 TexCoord0;
 varying vec4 Color;
+varying vec4 ShadowDir;
 vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 {
 	vec3 Nor=normalize(Normal);

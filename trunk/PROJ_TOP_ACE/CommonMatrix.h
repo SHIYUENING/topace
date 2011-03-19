@@ -5,7 +5,7 @@
 #define CO_Matrix_Proj 1
 #define CO_Matrix_ModelView 2
 #define CO_Matrix_World 3
-#define CO_Matrix_ShadowView 4
+#define CO_Matrix_ShadowViewProj 4
 #define CO_MatrixCount 5
 #include <GL/glew.h>
 #include <windows.h>
@@ -38,7 +38,7 @@ public:
                       GLdouble znear, GLdouble zfar);
 	void OrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
 };
-static CCommonMatrix CommonMatrixs[CO_MatrixCount];
+extern CCommonMatrix CommonMatrixs[CO_MatrixCount];
 /*
 static int text;
 void CO_Matrix_LoadF(GLfloat * Matrix,unsigned int CO_Matrix_ID);

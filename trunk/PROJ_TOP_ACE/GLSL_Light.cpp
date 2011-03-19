@@ -14,6 +14,7 @@ GLint GLSL_Light_MMatrix[2][3];
 GLint GLSL_Light_PMatrix[2][3];
 GLint GLSL_Light_MVPMatrix[2][3];
 GLint GLSL_Light_WMatrix[2][3];
+GLint GLSL_Light_ShadowMatrix[2][3];
 GLint GLSL_Light_RefCubeTex[2][3];
 GLint GLSL_Light_DiffuseTex[2][3];
 GLint GLSL_Light_DiffuseTexTurnY[2][3];
@@ -56,6 +57,7 @@ void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 	GLSL_Light_PMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"PMatrix");
 	GLSL_Light_MVPMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"MVPMatrix");
 	GLSL_Light_WMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"WMatrix");
+	GLSL_Light_ShadowMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"ShadowMatrix");
 
 	GLSL_Light_RefCubeTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"RefCubeTex");
 	GLSL_Light_DiffuseTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTex");
@@ -115,14 +117,16 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	/*CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
-		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));*/
+		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));ShadowMatrix*/
 	CommonMatrixs[CO_Matrix_ModelViewProj].GLSLLoc=GLSL_Light_MVPMatrix[boneType][GLSLver];
 	CommonMatrixs[CO_Matrix_Proj].GLSLLoc=GLSL_Light_PMatrix[boneType][GLSLver];
 	CommonMatrixs[CO_Matrix_ModelView].GLSLLoc=GLSL_Light_MMatrix[boneType][GLSLver];
-	CO_SetMatrixsGLSLLoc(
+	CommonMatrixs[CO_Matrix_World].GLSLLoc=-1;
+	CommonMatrixs[CO_Matrix_ShadowViewProj].GLSLLoc=GLSL_Light_ShadowMatrix[boneType][GLSLver];
+	/*CO_SetMatrixsGLSLLoc(
 		GLSL_Light_MMatrix[boneType][GLSLver],
 		GLSL_Light_PMatrix[boneType][GLSLver],
-		GLSL_Light_MVPMatrix[boneType][GLSLver]);
+		GLSL_Light_MVPMatrix[boneType][GLSLver]);*/
 
 	CO_SetOmniLightGLSLLoc(GLSL_Light_OmniLight_Pos[boneType][GLSLver],GLSL_Light_OmniLight_Color[boneType][GLSLver]);
 	CO_SetOmniLightToGLSL();

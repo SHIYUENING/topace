@@ -766,14 +766,14 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 			if(TAM_Mesh_Draw->IsFiexible)
 			{
 				if(!Fiexible) continue;
-				CO_SetMMatrixToGlsl(NULL);
-				CO_SetPMatrixToGlsl(NULL);
-				CO_SetMVPMatrixToGlsl(NULL);
+				//CO_SetMMatrixToGlsl(NULL);
+				//CO_SetPMatrixToGlsl(NULL);
+				//CO_SetMVPMatrixToGlsl(NULL);
 				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_ShadowView].SetMatrixToGlsl();
+				CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
 				DrawRAMMeshFiexible(TAM_Mesh_Draw);
 			}
 			else
@@ -782,23 +782,23 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 				if(TAM_Mesh_Draw->BoneWeightNum>0)
 				{
 					glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&NodeBoneMatrixTMP[0]);
-					CO_GetMMatrixD(NodeBoneMatrixTMPD);
+					//CO_GetMMatrixD(NodeBoneMatrixTMPD);
 					CommonMatrixs[CO_Matrix_World].Push();
 					if(TAM_Mesh_Draw->FaceNum>0)
 					{
 						glMultMatrixf((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
-						CO_MultMMatrix((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
+						//CO_MultMMatrix((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
 						CommonMatrixs[CO_Matrix_World].MultF((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
 					}
 				}
-				CO_SetMMatrixToGlsl(NULL);
-				CO_SetPMatrixToGlsl(NULL);
-				CO_SetMVPMatrixToGlsl(NULL);
+				//CO_SetMMatrixToGlsl(NULL);
+				//CO_SetPMatrixToGlsl(NULL);
+				//CO_SetMVPMatrixToGlsl(NULL);
 				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_ShadowView].SetMatrixToGlsl();
+				CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
 				if(SuppotVBO)
 					DrawMeshRigid(TAM_Mesh_Draw);
 				else
@@ -806,7 +806,7 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 				if(TAM_Mesh_Draw->BoneWeightNum>0)
 				{
 					glLoadMatrixf((float *)&NodeBoneMatrixTMP[0]);
-					CO_SetMMatrixD(NodeBoneMatrixTMPD);
+					//CO_SetMMatrixD(NodeBoneMatrixTMPD);
 					CommonMatrixs[CO_Matrix_World].Pop();
 				}
 			}

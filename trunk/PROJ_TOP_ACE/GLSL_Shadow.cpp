@@ -32,9 +32,9 @@ void GLSL_Enable_Shadow()
 	CommonMatrixs[CO_Matrix_Proj].GLSLLoc=-1;
 	CommonMatrixs[CO_Matrix_ModelView].GLSLLoc=-1;
 	CommonMatrixs[CO_Matrix_World].GLSLLoc=-1;
-	CommonMatrixs[CO_Matrix_ShadowView].GLSLLoc=-1;
-	CO_SetMatrixsGLSLLoc(
+	CommonMatrixs[CO_Matrix_ShadowViewProj].GLSLLoc=-1;
+	/*CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
-		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));
+		glGetUniformLocation(CO_GetGlslPO(),"MVPMatrix"));*/
 }
