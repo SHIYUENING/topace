@@ -338,9 +338,9 @@ void SetLights()
 	{
 		CO_GetOmniLight(&SetOmniLightData,i);
 		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTest);
-		/*SetOmniLightData.Pos[0]=1000000.0f;
-		SetOmniLightData.Pos[1]=1000000.0f;
-		SetOmniLightData.Pos[2]=5000000.0f;
+		/*SetOmniLightData.Pos[0]=LightPosTestM.m128_f32[0];
+		SetOmniLightData.Pos[1]=LightPosTestM.m128_f32[1];
+		SetOmniLightData.Pos[2]=LightPosTestM.m128_f32[2];
 		SetOmniLightData.Pos[3]=1.0f;*/
 		CO_SetOmniLight(&SetOmniLightData,i);
 		//SetOmniLightData.Pos
@@ -485,7 +485,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 
 	if(GameSet.Shadow>0) 
 	{
-		DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 		DrawShadowMap();
 	}
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
@@ -551,6 +550,7 @@ void DrawShadowMap()
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+		DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
 	CUnitMath ShadowUnitMath;
@@ -562,11 +562,18 @@ void DrawShadowMap()
 	Easy_vector_copy(&ShadowUnitMathTGT,ThreadDataDraw.DataList[5].Matrix+12);
 	ShadowUnitMath.PosTo(ShadowUnitMathTGT);
 	ShadowUnitMath.RotInternal(180.0f,0.0f,1.0f,0.0f);
-	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,300.0f,0.0f,0.0f));
+	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,270.0f,0.0f,0.0f));
 	__m128 ShadowMM[4];ShadowUnitMath.GetMatrix(ShadowMM);
 	Easy_matrix_inv(ShadowMM,ShadowMM);
 	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
-	CommonMatrixs[CO_Matrix_ShadowViewProj].LoadD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+
+	GLdouble Biasmatrix[16]={
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0};
+	CommonMatrixs[CO_Matrix_ShadowViewProj].LoadD(Biasmatrix);
+	CommonMatrixs[CO_Matrix_ShadowViewProj].MultD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
@@ -577,7 +584,7 @@ void DrawShadowMap()
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_FRONT);
+	//glCullFace(GL_FRONT);
 	glEnable(GL_CULL_FACE);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();

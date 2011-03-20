@@ -17,6 +17,7 @@ GLint GLSL_Light_WMatrix[2][3];
 GLint GLSL_Light_ShadowMatrix[2][3];
 GLint GLSL_Light_RefCubeTex[2][3];
 GLint GLSL_Light_DiffuseTex[2][3];
+GLint GLSL_Light_ShadowTex[2][3];
 GLint GLSL_Light_DiffuseTexTurnY[2][3];
 GLint GLSL_Light_LightNums[2][3];
 GLint GLSL_Light_OmniLight_Pos[2][3];
@@ -26,6 +27,7 @@ GLint GLSL_Light_Global_Ambient[2][3];
 GLint GLSL_Light_TessLevel[2][3];
 extern float WorldMatrix[16];
 extern GLuint RefCubeTexID;
+extern GLuint ShadowTexDepth;
 void Init_GLSL_light(int LightSet)
 {
 	if(LightSet<2) return;
@@ -61,6 +63,7 @@ void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 
 	GLSL_Light_RefCubeTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"RefCubeTex");
 	GLSL_Light_DiffuseTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTex");
+	GLSL_Light_ShadowTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"ShadowTex");
 	GLSL_Light_LightNums[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"LightNums");
 	GLSL_Light_DiffuseTexTurnY[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTexTurnY");
 	GLSL_Light_OmniLight_Pos[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"OmniLight_Pos");
@@ -110,6 +113,11 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	glActiveTexture(GL_TEXTURE1);	
 	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,RefCubeTexID);	
 	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],1);
+	
+	glActiveTexture(GL_TEXTURE2);	
+	glBindTexture(GL_TEXTURE_2D,ShadowTexDepth);
+	glUniform1i(GLSL_Light_ShadowTex[boneType][GLSLver],2);
+
 	glActiveTexture(GL_TEXTURE0);
 
 	CO_SetDiffuseTexTurnYGLSLLoc(GLSL_Light_DiffuseTexTurnY[boneType][GLSLver]);
