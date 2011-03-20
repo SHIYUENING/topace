@@ -28,7 +28,7 @@ int FBOWinW=0;
 int FBOWinH=0;
 int BloomTexW=0;
 int BloomTexH=0;
-int ShadowTexSize=512;
+int ShadowTexSize=1024;
 CTALogSys FBOLOG;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
@@ -121,8 +121,8 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	{ 
 		if(GameSet.Light==3) ShadowTexSize=1024;
 		if(GameSet.Light>=4) ShadowTexSize=2048;
-		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_NEAREST,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
-		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_NEAREST,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
+		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
+		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 		glGenFramebuffersEXT(1,&ShadowFBOID);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 

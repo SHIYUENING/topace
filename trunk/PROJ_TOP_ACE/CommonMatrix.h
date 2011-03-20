@@ -38,6 +38,7 @@ public:
                       GLdouble znear, GLdouble zfar);
 	void OrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
 };
+
 extern CCommonMatrix CommonMatrixs[CO_MatrixCount];
 /*
 static int text;
