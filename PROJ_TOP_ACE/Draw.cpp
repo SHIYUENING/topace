@@ -586,7 +586,7 @@ void DrawShadowMap()
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
-	//glCullFace(GL_FRONT);
+	glCullFace(GL_FRONT);
 	glEnable(GL_CULL_FACE);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();

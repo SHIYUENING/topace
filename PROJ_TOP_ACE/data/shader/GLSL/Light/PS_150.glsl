@@ -70,9 +70,23 @@ void main()
 	TexCoordDiffuse.x=TexCoord0.x;
 	TexCoordDiffuse.y=DiffuseTexTurnY*TexCoord0.y;
 
+	vec4 MX=vec4 (0.001,0.0,0.0,0.0);
+	vec4 MU=vec4 (0.0,0.001,0.0,0.0);
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
-
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MU ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MU ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX+MU ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX+MU ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX-MU ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX-MU ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX*2 ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX*2 ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MU*2 ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MU*2 ).x;
+	Shadow=Shadow/13.0;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
 	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;

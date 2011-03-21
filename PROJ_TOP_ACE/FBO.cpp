@@ -28,7 +28,7 @@ int FBOWinW=0;
 int FBOWinH=0;
 int BloomTexW=0;
 int BloomTexH=0;
-int ShadowTexSize=1024;
+int ShadowTexSize=512;
 CTALogSys FBOLOG;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
