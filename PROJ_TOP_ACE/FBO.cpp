@@ -130,6 +130,17 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		CheckFBOError();
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
+	if(GameSet.Shadow==0)
+	{
+		float ShadowTexData[]={1.0f};
+		glGenTextures(1, &ShadowTexDepth);
+		glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,  1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, ShadowTexData);//GL_RGBA16F_ARB
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
 	
 	if(BloomSet>0)
 	{
