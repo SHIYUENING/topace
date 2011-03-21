@@ -1,7 +1,11 @@
 #version 150
+uniform mat4x4 WMatrix;
 uniform ivec2 LightNums;
-uniform sampler2D DiffuseTex;
 uniform float DiffuseTexTurnY;
+
+uniform sampler2D DiffuseTex;
+uniform samplerCube RefCubeTex;
+uniform sampler2DShadow ShadowTex;
 
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];
@@ -16,6 +20,7 @@ in vec4 VertexEyeDir;
 in vec3 Normal; 
 in vec2 TexCoord0;
 in vec4 Color;
+in vec4 ShadowDir;
 out vec4 FragColor;
 vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 {
@@ -64,11 +69,13 @@ void main()
 	vec2 TexCoordDiffuse;
 	TexCoordDiffuse.x=TexCoord0.x;
 	TexCoordDiffuse.y=DiffuseTexTurnY*TexCoord0.y;
+	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
+	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
-	vec2 LightVal=vec2(0.0,0.0);
-	vec4 DiffuseColor=vec4(0.0,0.0,0.0,0.0);
-	vec4 SpecularColor=vec4(0.0,0.0,0.0,0.0);
-	for(int i=0;i<8;i++)
+	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
+	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
+	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
+	for(int i=1;i<8;i++)
 	{
 		if(i<LightNums.x)
 		{
@@ -81,9 +88,11 @@ void main()
 		//		LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent,Material_shininess);
 		//	}
 		//}
-		DiffuseColor += LightVal.x * OmniLight_Color[i] * Material_diffuse ;
-		SpecularColor += LightVal.y * OmniLight_Color[i] * Material_specular ;
+		DiffuseColor += LightVal.x * OmniLight_Color[i] ;
+		SpecularColor += LightVal.y * OmniLight_Color[i] ;
 	}
+	DiffuseColor=DiffuseColor*Material_diffuse;
+	SpecularColor=SpecularColor*Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;

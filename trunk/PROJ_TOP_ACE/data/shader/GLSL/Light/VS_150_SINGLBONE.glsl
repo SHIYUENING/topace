@@ -10,10 +10,12 @@ out vec4 VertexEyeDir;
 out vec3 Normal; 
 out vec2 TexCoord0;
 out vec4 Color;
+out vec4 ShadowDir;
 void main()
 {
 	VertexEyeDir = MMatrix * vec4(Position_in,1.0);
 	gl_Position = MVPMatrix * vec4(Position_in,1.0);
+	ShadowDir = ShadowMatrix * vec4(Position_in,1.0);
     Color = Color_in;
     Normal =( MMatrix * vec4(Normal_in.xyz,0.0)).xyz;
 	TexCoord0=TexCoord0_in .xy;

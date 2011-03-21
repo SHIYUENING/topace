@@ -73,8 +73,8 @@ void DataUpdata()
 	angleR=angleR+0.2f;
 
 	TestView.Reset();
-	TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
-	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
+	//TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
+	//TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
 	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,PosOrgY,0));
 	TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
 	//GoZ=GoX=0.0f;
@@ -91,11 +91,13 @@ void DataUpdata()
 	UnitMathDraw.UnitQuat=SceneUnitTest.UnitQuat;
 	UnitMathDraw.RotInternal(-90,1.0f,0.0f,0.0f);
 	UnitMathDraw2.RotInternal(-90,1.0f,0.0f,0.0f);
+	UnitMathDraw2.RotExternal(moveX,0.0f,1.0f,0.0f);
+	UnitMathDraw2.RotExternal(moveY,1.0f,0.0f,0.0f);
 	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	TestLight.RotInternal(float(TotalFrame%360),0.0f,1.0f,0.0f);
 	TestLight.MovInternal(_mm_set_ps(1.0f,0.0f,0.0f,10000.0f));
 	
-	//TestLight.UnitPos=_mm_set_ps(1.0f,9000000.0f,7000000.0f,5000000.0f);
+	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,10000.0f,0.01f);
 
 	ThreadDataUpdata.DataCount=6;
 	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;
