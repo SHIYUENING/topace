@@ -234,3 +234,12 @@ void CCommonMatrix::OrthogonalProjection(GLdouble left, GLdouble right, GLdouble
 	this->LinkList->Matrix[2] = 0;						this->LinkList->Matrix[6] = 0;						this->LinkList->Matrix[10] = -2 / (f - n);		this->LinkList->Matrix[14] = -(f + n) / (f - n);
 	this->LinkList->Matrix[3] = 0;						this->LinkList->Matrix[7] = 0;						this->LinkList->Matrix[11] = 0;				this->LinkList->Matrix[15] = 1;
 }
+
+
+void CCommonMatrix::PerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f)
+{
+		this->LinkList->Matrix[0] = (2 * n) / (right - left);		this->LinkList->Matrix[4] = 0;								this->LinkList->Matrix[8] = (right + left) / (right - left);		this->LinkList->Matrix[12] = 0;
+	this->LinkList->Matrix[1] = 0;								this->LinkList->Matrix[5] = (2 * n) / (top - bottom);		this->LinkList->Matrix[9] = (top + bottom) / (top - bottom);		this->LinkList->Matrix[13] = 0;
+	this->LinkList->Matrix[2] = 0;								this->LinkList->Matrix[6] = 0;								this->LinkList->Matrix[10] = -(f + n) / (f - n);					this->LinkList->Matrix[14] = -(2 * f * n) / (f - n);
+	this->LinkList->Matrix[3] = 0;								this->LinkList->Matrix[7] = 0;								this->LinkList->Matrix[11] = -1;									this->LinkList->Matrix[15] = 0;
+}

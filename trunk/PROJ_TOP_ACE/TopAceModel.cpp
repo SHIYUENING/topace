@@ -234,7 +234,8 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 			InitTAMCamera(&(TAM_FileHead_IN->CameraAddress[i]));
 		}
 	}
-	
+	TAM_FileHead_IN->BoxMax[3]=Easy_vector_norm2(TAM_FileHead_IN->BoxMax);
+	TAM_FileHead_IN->BoxMin[3]=-Easy_vector_norm2(TAM_FileHead_IN->BoxMin);
 	InitTAMBoneMatrixs();
 	TAM_File_States = _TAM_File_States_ReadOK;
 	return true;
