@@ -37,6 +37,7 @@ public:
 	void PerspectiveProjectionFov(GLdouble fovyInDegrees, GLdouble aspectRatio,
                       GLdouble znear, GLdouble zfar);
 	void OrthogonalProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
+	void PerspectiveProjection(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble n, GLdouble f);
 };
 
 extern CCommonMatrix CommonMatrixs[CO_MatrixCount];

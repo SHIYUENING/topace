@@ -337,7 +337,7 @@ void SetLights()
 	for(int i=0;i<OmniLightNumBase;i++)
 	{
 		CO_GetOmniLight(&SetOmniLightData,i);
-		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,LightPosTest);
+		Easy_matrix_mult_vector4X4(SetOmniLightData.Pos,CameraMatrix,ThreadDataDraw.DataList[5].Matrix+12);
 		/*SetOmniLightData.Pos[0]=LightPosTestM.m128_f32[0];
 		SetOmniLightData.Pos[1]=LightPosTestM.m128_f32[1];
 		SetOmniLightData.Pos[2]=LightPosTestM.m128_f32[2];
@@ -550,8 +550,8 @@ void DrawShadowMap()
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
-		DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
-	
+	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	float Shadowdepth=1.05f*max(TopAceModelTest.pTAM_FileHead->BoxMax[3],-TopAceModelTest.pTAM_FileHead->BoxMin[3]);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	CUnitMath ShadowUnitMath;
 	ShadowUnitMath.UnitPos.m128_f32[0]=ThreadDataDraw.DataList[4].Matrix[12];
@@ -562,11 +562,13 @@ void DrawShadowMap()
 	Easy_vector_copy(&ShadowUnitMathTGT,ThreadDataDraw.DataList[5].Matrix+12);
 	ShadowUnitMath.PosTo(ShadowUnitMathTGT);
 	ShadowUnitMath.RotInternal(180.0f,0.0f,1.0f,0.0f);
-	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,270.0f,0.0f,0.0f));
+	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,Shadowdepth+50.0f,0.0f,0.0f));
 	__m128 ShadowMM[4];ShadowUnitMath.GetMatrix(ShadowMM);
 	Easy_matrix_inv(ShadowMM,ShadowMM);
 	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
 
+	CommonMatrixs[CO_Matrix_Proj].Push();
+	CommonMatrixs[CO_Matrix_Proj].OrthogonalProjection(-Shadowdepth,Shadowdepth,-Shadowdepth,Shadowdepth,50.0f,50.0f+Shadowdepth*2.0f);
 	GLdouble Biasmatrix[16]={
 		0.5, 0.0, 0.0, 0.0,
 		0.0, 0.5, 0.0, 0.0,
@@ -607,7 +609,7 @@ void DrawShadowMap()
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
-
+	CommonMatrixs[CO_Matrix_Proj].Pop();
 }
 void InitTestModel()
 {
