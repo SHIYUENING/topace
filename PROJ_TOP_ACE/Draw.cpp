@@ -163,16 +163,16 @@ void InitDraw()
 	wchar_t  TestModelPath[512];
 	GetPrivateProfileStringW(L"other",L"TestModelPath",L"data/1234.tam",TestModelPath,512,L".\\gameset.ini");
 	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=min(3,GameSet.Light);
-	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=2;
+	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=min(2,GameSet.Light);
 	if (!glewIsSupported("GL_VERSION_2_0"))
 	{
 		MessageBoxA( NULL, "Please Updata Video Card Driver", "OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
-		GameSet.Light=1;
+		GameSet.Light=min(1,GameSet.Light);
 	}
 	if((!glewIsSupported("GL_ARB_pixel_buffer_object"))&&(!glewIsSupported("GL_EXT_pixel_buffer_object")))
 	{
 		GameSet.SSAO=0;
-		GameSet.Light=2;
+		GameSet.Light=min(2,GameSet.Light);
 	}
 	if (!glewIsSupported("GL_ARB_texture_float"))
 		GameSet.Bloom=0;
@@ -550,7 +550,7 @@ void DrawShadowMap()
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
-	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	DrawQUADEX(ShadowTex,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	float Shadowdepth=1.05f*max(TopAceModelTest.pTAM_FileHead->BoxMax[3],-TopAceModelTest.pTAM_FileHead->BoxMin[3]);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	CUnitMath ShadowUnitMath;
@@ -580,7 +580,7 @@ void DrawShadowMap()
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glClear (GL_DEPTH_BUFFER_BIT);
+	glClear (GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glViewport(0,0,ShadowTexSize, ShadowTexSize);
 	glDisable(GL_BLEND);
@@ -588,7 +588,7 @@ void DrawShadowMap()
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_FRONT);
 	glEnable(GL_CULL_FACE);
-	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+	if(GameSet.Light<3) glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
 	GLSL_Enable_Shadow();
 //	CO_SetMMatrix(ShadowMF);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(ShadowMF);
