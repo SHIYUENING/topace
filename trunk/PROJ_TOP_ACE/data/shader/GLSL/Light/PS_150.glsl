@@ -5,7 +5,7 @@ uniform float DiffuseTexTurnY;
 
 uniform sampler2D DiffuseTex;
 uniform samplerCube RefCubeTex;
-uniform sampler2D ShadowTex;
+uniform sampler2DShadow ShadowTex;
 
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];
@@ -22,40 +22,6 @@ in vec2 TexCoord0;
 in vec4 Color;
 in vec4 ShadowDir;
 out vec4 FragColor;
-float ChebyshevUpperBound( vec2 moments, float t, float minVariance)
-{
- // Standard shadow map comparison
- float p = t<=moments.x?1.0:0.0;
-
- // compute probabilistic upper bound
- float variance = moments.y - ( moments.x*moments.x);
- variance = max( variance, minVariance);
-
- // compute probabilistic upper bound
- float d = t - moments.x;
- float p_max = variance / ( variance + d*d);
-
- return max( p, p_max);
-}
-
-//--------------------------------------------------------
-// variance shadow map
-//
-#define g_lbrAmount  0.18f;
-
-float tex2DSM(vec4 posInLightSpace)
-{
- vec4 projPos = posInLightSpace / posInLightSpace.w;
-
- // soft shadow
- vec2 moments = texture2D( ShadowTex, projPos.xy).xw;
-
- float shadowContrib = ChebyshevUpperBound( moments, projPos.z, 0.00001f);
-
-
- return clamp( smoothstep( 0.18f, 1.0, shadowContrib) + 0.4f, 0.0, 1.0);
-}
-
 vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 {
 	vec3 Nor=normalize(Normal);
@@ -107,7 +73,7 @@ void main()
 	vec4 MX=vec4 (0.001,0.0,0.0,0.0);
 	vec4 MU=vec4 (0.0,0.001,0.0,0.0);
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
-	/*float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
+	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX ).x;
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX ).x;
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MU ).x;
@@ -116,8 +82,11 @@ void main()
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX+MU ).x;
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX-MU ).x;
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX-MU ).x;
-	Shadow=Shadow/9.0;*/
-	float Shadow=tex2DSM(shadowPos);
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX*2 ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX*2 ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MU*2 ).x;
+	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MU*2 ).x;
+	Shadow=Shadow/13.0;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
 	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;

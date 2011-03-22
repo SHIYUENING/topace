@@ -28,7 +28,7 @@ int FBOWinW=0;
 int FBOWinH=0;
 int BloomTexW=0;
 int BloomTexH=0;
-int ShadowTexSize=1024;
+int ShadowTexSize=512;
 CTALogSys FBOLOG;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
@@ -39,7 +39,7 @@ int next_p2 ( int a )
 	while(rval<a) rval<<=1;
 	return rval;
 }
-bool CheckFBOError()
+void CheckFBOError()
 {
 	FBOLOG.ADDhtmLog("******Check Framebuffer Status******","#00FF00");
 	FBOLOG.ADDhtmLog("******ERROR******","#FF0000");
@@ -48,7 +48,7 @@ bool CheckFBOError()
 	{
 		case GL_FRAMEBUFFER_COMPLETE_EXT: 
 			FBOLOG.ClearLOG(); 
-			return true;
+			return;
 		case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
 			FBOLOG.ADDhtmLog("Unsupported framebuffer format","#FF0000");
 			break;
@@ -73,7 +73,6 @@ bool CheckFBOError()
 	}
 	FBOLOG.WriteLOGFile(true);
 	FBOLOG.ClearLOG();
-	return false;
 }//GL_TEXTURE_RECTANGLE
 GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint Format,GLuint DataType,int TexTGT)
 {
@@ -120,16 +119,14 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	
 	if((GameSet.Shadow>0)||(GameSet.Light>1))
 	{ 
-		GLuint ShadowTexFormat=GL_RGBA8;
-		if(GameSet.Light>=3) ShadowTexFormat=GL_LUMINANCE_ALPHA32F_ARB;
 		ShadowTexSize=512<<max(GameSet.Shadow-1,0);
-		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,ShadowTexFormat,GL_RGBA,GL_UNSIGNED_BYTE);
+		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
 		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 		glGenFramebuffersEXT(1,&ShadowFBOID);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
-		if(!CheckFBOError()) {GameSet.Shadow=0;GameSet.Light=min(2,GameSet.Light);}
+		CheckFBOError();
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	}
 	if(GameSet.Shadow==0)
