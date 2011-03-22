@@ -27,7 +27,6 @@ GLint GLSL_Light_Global_Ambient[2][3];
 GLint GLSL_Light_TessLevel[2][3];
 extern float WorldMatrix[16];
 extern GLuint RefCubeTexID;
-extern GLuint ShadowTex;
 extern GLuint ShadowTexDepth;
 void Init_GLSL_light(int LightSet)
 {
@@ -116,7 +115,7 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],1);
 	
 	glActiveTexture(GL_TEXTURE2);	
-	glBindTexture(GL_TEXTURE_2D,GLSLver>GLSL120?ShadowTex:ShadowTexDepth);
+	glBindTexture(GL_TEXTURE_2D,ShadowTexDepth);
 	glUniform1i(GLSL_Light_ShadowTex[boneType][GLSLver],2);
 
 	glActiveTexture(GL_TEXTURE0);
