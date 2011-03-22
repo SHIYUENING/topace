@@ -2,6 +2,7 @@
 uniform mat4x4 WMatrix;
 uniform ivec2 LightNums;
 uniform float DiffuseTexTurnY;
+uniform vec2 ShadowTexSize;
 
 uniform sampler2D DiffuseTex;
 uniform samplerCube RefCubeTex;
@@ -70,8 +71,8 @@ void main()
 	TexCoordDiffuse.x=TexCoord0.x;
 	TexCoordDiffuse.y=DiffuseTexTurnY*TexCoord0.y;
 
-	vec4 MX=vec4 (0.001,0.0,0.0,0.0);
-	vec4 MU=vec4 (0.0,0.001,0.0,0.0);
+	vec4 MX=vec4 (1.0/ShadowTexSize.x,0.0,0.0,0.0);
+	vec4 MU=vec4 (0.0,1.0/ShadowTexSize.y,0.0,0.0);
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
 	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX ).x;
@@ -92,12 +93,12 @@ void main()
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
 
-	for(int i=1;i<8;i++)
+	for(int i=1;i<LightNums.x;i++)
 	{
-		if(i<LightNums.x)
-		{
+		//if(i<LightNums.x)
+		//{
 			LightVal=OmniLight (OmniLight_Pos[i],Material_shininess);
-		}
+		//}
 		//else
 		//{
 		//	if(i<(LightNums.x+LightNums.y))
