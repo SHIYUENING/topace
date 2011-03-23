@@ -102,7 +102,7 @@ void InitTestLight()
 	MaterialData.specular[3]=1.0f;
 	CO_SetMaterial(&MaterialData);
 
-	GLfloat GlobalAmbient_Set[]={0.2f,0.2f,0.2f,1.0f};
+	GLfloat GlobalAmbient_Set[]={0.4f,0.4f,0.4f,1.0f};
 	CO_SetGlobalAmbient(GlobalAmbient_Set);
 	OmniLightNumBase=1;
 
@@ -550,7 +550,7 @@ void DrawShadowMap()
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
-	DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	//DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	float Shadowdepth=1.05f*max(TopAceModelTest.pTAM_FileHead->BoxMax[3],-TopAceModelTest.pTAM_FileHead->BoxMin[3]);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	CUnitMath ShadowUnitMath;
