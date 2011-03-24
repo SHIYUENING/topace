@@ -487,19 +487,19 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	MainLOG.AddLOG("<BODY>");
 	MainLOG.AddLOG("******TOP ACE LOG Start******");
 	MainLOG.WriteLOGFile(false);
-	CEXTLIBS_init();
+	CEXTLIBS_init(); ADD_LOG_Q("CEXTLIBS_init() OK",NULL,NULL,NULL,NULL,true);
 	hInst=hInstance;
-	InitRenderThread();
-	InitThreadUpdata();
-	InitDataThread();
+	InitRenderThread(); ADD_LOG_Q("InitRenderThread() OK",NULL,NULL,NULL,NULL,true);
+	InitThreadUpdata(); ADD_LOG_Q("InitThreadUpdata() OK",NULL,NULL,NULL,NULL,true);
+	InitDataThread();ADD_LOG_Q("InitDataThread() OK",NULL,NULL,NULL,NULL,true);
 	LockFPSSYS.Init(60);
 	while(isRun)
 	{
 		DataUpdata();
 		LockFPSSYS.LockFPS();
 	}
-	CEXTLIBS_deinit();
-	DeinitThreadUpdata();
+	CEXTLIBS_deinit();ADD_LOG_Q("CEXTLIBS_deinit() OK",NULL,NULL,NULL,NULL,true);
+	DeinitThreadUpdata();ADD_LOG_Q("DeinitThreadUpdata() OK",NULL,NULL,NULL,NULL,true);
 	MainLOG.ClearLOG();
 	
 	MainLOG.AddLOG("******TOP ACE LOG End******");
