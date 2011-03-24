@@ -91,8 +91,7 @@ GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint 
 GLuint InitFBO(int winW,int winH,int BloomSet)
 {
 
-	if(SuppotFBO)
-		return 0;
+	if(SuppotFBO) return 0;
 	if (glewIsSupported("GL_EXT_framebuffer_object"))
 		SuppotFBO=true;
 	else

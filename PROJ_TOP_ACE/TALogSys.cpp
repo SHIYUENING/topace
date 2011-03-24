@@ -98,11 +98,15 @@ bool CTALogSys::ADDhtmLog(const char * LOGStr,const char * LogColor ,const char 
 	delete [] StrTmp;
 	return true;
 }
-bool ADD_LOG_Q(const wchar_t * LOGStr,const char * LogColor=0 ,const char * LogLink=0,wchar_t * LOGFileName=0,wchar_t * LOGFilePath=0,bool ADD=true)
+bool ADD_LOG_Q(const wchar_t * LOGStr,const char * LogColor ,const char * LogLink,wchar_t * LOGFileName,wchar_t * LOGFilePath,bool ADD)
 {
 	if(!LOGStr) return false;
 	if(GetCharLenth(LOGStr)==0) return false;
-
+	int dwNum=WideCharToMultiByte(CP_ACP,0,LOGStr,-1,NULL,0,NULL,NULL);
+	char * LOGStrMulti=new char[dwNum+1];LOGStrMulti[dwNum]=0;
+	WideCharToMultiByte(CP_ACP,0,LOGStr,-1,LOGStrMulti,dwNum,NULL,NULL);
+	ADD_LOG_Q(LOGStrMulti,LogColor,LogLink,LOGFileName,LOGFilePath,ADD);
+	delete [] LOGStrMulti;
 	return true;
 }
 bool ADD_LOG_Q(const char * LOGStr,const char * LogColor ,const char * LogLink,wchar_t * LOGFileName,wchar_t * LOGFilePath,bool ADD)
