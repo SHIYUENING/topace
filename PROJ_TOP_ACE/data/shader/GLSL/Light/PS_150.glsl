@@ -16,7 +16,7 @@ uniform vec4 Global_Ambient;
 #define Material_specular Material[1]
 #define Material_emission Material[2]
 #define Material_shininess Material[2].w
-
+#define shadow2DProj textureProj
 in vec4 VertexEyeDir; 
 in vec3 Normal; 
 in vec2 TexCoord0;
@@ -73,20 +73,20 @@ void main()
 
 	vec4 MX=vec4 (1.0/ShadowTexSize.x,0.0,0.0,0.0);
 	vec4 MU=vec4 (0.0,1.0/ShadowTexSize.y,0.0,0.0);
-	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
-	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MU ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MU ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX+MU ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX+MU ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX-MU ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX-MU ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MX*2 ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MX*2 ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos+MU*2 ).x;
-	Shadow=Shadow+shadow2DProj( ShadowTex, shadowPos-MU*2 ).x;
+	vec4 shadowPos=ShadowDir;
+	float Shadow=textureProj( ShadowTex, shadowPos );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MX );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MX );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MU );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MU );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MX+MU );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MX+MU );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MX-MU );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MX-MU );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MX*2 );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MX*2 );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MU*2 );
+	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MU*2 );
 	Shadow=Shadow/13.0;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
 	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
