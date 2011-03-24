@@ -123,6 +123,8 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 	{
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_NoFile;
+		ADD_LOG_Q("Load TAMFile Fail,Can not open file","#FF0000");
+		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 
@@ -134,6 +136,8 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_NoFile;
 		TAM_FileData = NULL;
+		ADD_LOG_Q("Load TAMFile Fail,Can not open file head","#FF0000");
+		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 	if(TAM_FileHeadTMP.FileSize<sizeof(TAM_FileHeadTMP))
@@ -141,6 +145,8 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		TAM_File_States=_TAM_File_States_ReadFail;
 		TAM_FileData = NULL;
 		CloseHandle(hFile);
+		ADD_LOG_Q("Load TAMFile Fail,file head fail","#FF0000");
+		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 	/*if(TAM_FileHeadTMP.TAMVer!=_TAM_VERSION)
@@ -163,6 +169,8 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		TAM_FileData = NULL;
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_ReadFail;
+		ADD_LOG_Q("Load TAMFile Fail,file read fail","#FF0000");
+		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 	if(!InitTAMFile(TAM_FileData))
@@ -171,6 +179,8 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		TAM_FileData = NULL;
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_ReadFail;
+		ADD_LOG_Q("Load TAMFile Fail,file Init fail","#FF0000");
+		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 
@@ -1052,7 +1062,7 @@ void CTopAceModel::GetBoneMatrix(float Frame,unsigned int BoneID)
 }
 void QuatSlerp(const __m128 from, const __m128 to, float frac, __m128 * out)
 {
-	float           cosom, absCosom, sinom, sinSqr, omega, scale0, scale1;
+	double           cosom, absCosom, sinom, sinSqr, omega, scale0, scale1;
 	cosom = from.m128_f32[0] * to.m128_f32[0] + from.m128_f32[1] * to.m128_f32[1] + from.m128_f32[2] * to.m128_f32[2] + from.m128_f32[3] * to.m128_f32[3];
 	absCosom = fabs(cosom);
 
@@ -1073,10 +1083,10 @@ void QuatSlerp(const __m128 from, const __m128 to, float frac, __m128 * out)
 
 	scale1 = (cosom >= 0.0f) ? scale1 : -scale1;
 
-	out->m128_f32[0] = scale0 * from.m128_f32[0] + scale1 * to.m128_f32[0];
-	out->m128_f32[1] = scale0 * from.m128_f32[1] + scale1 * to.m128_f32[1];
-	out->m128_f32[2] = scale0 * from.m128_f32[2] + scale1 * to.m128_f32[2];
-	out->m128_f32[3] = scale0 * from.m128_f32[3] + scale1 * to.m128_f32[3];
+	out->m128_f32[0] = (float)scale0 * from.m128_f32[0] + (float)scale1 * to.m128_f32[0];
+	out->m128_f32[1] = (float)scale0 * from.m128_f32[1] + (float)scale1 * to.m128_f32[1];
+	out->m128_f32[2] = (float)scale0 * from.m128_f32[2] + (float)scale1 * to.m128_f32[2];
+	out->m128_f32[3] = (float)scale0 * from.m128_f32[3] + (float)scale1 * to.m128_f32[3];
 }
 bool CTopAceModel::GetlinearBoneFrameData(_TAM_Bone_Frame * TAM_Bone_FrameFront,__m128 * linearFrameData,float Frame)
 {

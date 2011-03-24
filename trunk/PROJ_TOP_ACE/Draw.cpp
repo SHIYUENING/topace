@@ -188,8 +188,8 @@ void InitDraw()
 		ADD_LOG_Q("InitFBO OK");
 	}
 	InitGLSL();ADD_LOG_Q("InitGLSL OK");
-	CDDS::SetAFNum(GameSet.AF);
-	InitTestModel();ADD_LOG_Q("InitTestModel OK");
+	CDDS::SetAFNum(GameSet.AF);ADD_LOG_Q("SetAFNum OK");
+	//InitTestModel();ADD_LOG_Q("InitTestModel OK");
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
@@ -198,7 +198,7 @@ void InitDraw()
 	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
-	TopAceModelTest.ReadTAMFile(TestModelPath);
+	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
 	TopAceModelTest.LoadToVRAM();
 	if(TopAceModelTest.TAM_FileData)
 	{
@@ -239,17 +239,18 @@ void InitDraw()
 	char FontPath[MAX_PATH];
 	GetWindowsDirectoryA(szPath,sizeof(szPath));
 	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
-	FONTS2D.LoadFullWidthFont(FontPath,16,16);
+	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
-	FONTS2D.LoadHalfWidthFont(FontPath,16,16);
+	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	/*if(!Font2D)
 	{
 		Font2D=new CFont2D;
 		Font2D->LoadFont(FontPath,32,32);
 	}*/
-	TAMFT3D.LoadFontFile();
+	TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
+	ADD_LOG_Q("InitDraw() OK");
 	QueryPerformanceCounter(&TimeStart);
 	if(IsFirstInit)
 	{
