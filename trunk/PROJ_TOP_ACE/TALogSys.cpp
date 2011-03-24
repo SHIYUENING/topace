@@ -83,18 +83,50 @@ bool CTALogSys::ADDhtmLog(const char * LOGStr,const char * LogColor ,const char 
 	if(GetCharLenth(LOGStr)==0)
 		return false;
 
-	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)+GetCharLenth("<p><a href=\"\"><font color=></font></a></p>")+5;
+	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)+GetCharLenth("\n<p><a href=\"\"><font color=></font></a></p>")+5;
 	char * StrTmp= new char[StrTmpSize+1];StrTmp[StrTmpSize]=0;
 	//<p><a href="123"><font color=#FF0000>测试</font></a> </p>
 	bool UseLogLink=false;
 	if(LogLink) if(GetCharLenth(LogLink)) UseLogLink=true;
 	bool UseLogColor=false;
 	if(LogColor) if(GetCharLenth(LogColor)) UseLogColor=true;
-	if(UseLogLink&&UseLogColor)		sprintf_s(StrTmp,StrTmpSize,"<p><a href=\"%s\"><font color=%s>%s</font></a></p>",LogLink,LogColor,LOGStr);
-	if(UseLogLink)					sprintf_s(StrTmp,StrTmpSize,"<p><a href=\"%s\">%s</a></p>",LogLink,LOGStr);
-	if(UseLogColor)					sprintf_s(StrTmp,StrTmpSize,"<p><font color=%s>%s</font></p>",LogColor,LOGStr);
-	if((!UseLogLink)&&(!UseLogColor)) sprintf_s(StrTmp,StrTmpSize,"<p>%s</p>",LOGStr);
+	if(UseLogLink&&UseLogColor)		sprintf_s(StrTmp,StrTmpSize,"\n<p><a href=\"%s\"><font color=%s>%s</font></a></p>",LogLink,LogColor,LOGStr);
+	if(UseLogLink)					sprintf_s(StrTmp,StrTmpSize,"\n<p><a href=\"%s\">%s</a></p>",LogLink,LOGStr);
+	if(UseLogColor)					sprintf_s(StrTmp,StrTmpSize,"\n<p><font color=%s>%s</font></p>",LogColor,LOGStr);
+	if((!UseLogLink)&&(!UseLogColor)) sprintf_s(StrTmp,StrTmpSize,"\n<p>%s</p>",LOGStr);
 	AddLOG(StrTmp);
+	delete [] StrTmp;
+	return true;
+}
+bool ADD_LOG_Q(const wchar_t * LOGStr,const char * LogColor=0 ,const char * LogLink=0,wchar_t * LOGFileName=0,wchar_t * LOGFilePath=0,bool ADD=true)
+{
+	if(!LOGStr) return false;
+	if(GetCharLenth(LOGStr)==0) return false;
+
+	return true;
+}
+bool ADD_LOG_Q(const char * LOGStr,const char * LogColor ,const char * LogLink,wchar_t * LOGFileName,wchar_t * LOGFilePath,bool ADD)
+{
+	if(!LOGStr)
+		return false;
+	if(GetCharLenth(LOGStr)==0)
+		return false;
+
+	int StrTmpSize=GetCharLenth(LOGStr)+GetCharLenth(LogColor)+GetCharLenth(LogLink)+GetCharLenth("\n<p><a href=\"\"><font color=></font></a></p>")+5;
+	char * StrTmp= new char[StrTmpSize+1];StrTmp[StrTmpSize]=0;
+	//<p><a href="123"><font color=#FF0000>测试</font></a> </p>
+	bool UseLogLink=false;
+	if(LogLink) if(GetCharLenth(LogLink)) UseLogLink=true;
+	bool UseLogColor=false;
+	if(LogColor) if(GetCharLenth(LogColor)) UseLogColor=true;
+	if(UseLogLink&&UseLogColor)		sprintf_s(StrTmp,StrTmpSize,"\n<p><a href=\"%s\"><font color=%s>%s</font></a></p>",LogLink,LogColor,LOGStr);
+	if(UseLogLink)					sprintf_s(StrTmp,StrTmpSize,"\n<p><a href=\"%s\">%s</a></p>",LogLink,LOGStr);
+	if(UseLogColor)					sprintf_s(StrTmp,StrTmpSize,"\n<p><font color=%s>%s</font></p>",LogColor,LOGStr);
+	if((!UseLogLink)&&(!UseLogColor)) sprintf_s(StrTmp,StrTmpSize,"\n<p>%s</p>",LOGStr);
+	if(LOGFileName)
+		return WriteLocFile(LOGFileName,LOGFilePath,(unsigned char *)StrTmp,GetCharLenth(StrTmp),ADD);
+	else
+		return WriteLocFile(DEFLOGFileName,LOGFilePath,(unsigned char *)StrTmp,GetCharLenth(StrTmp),ADD);
 	delete [] StrTmp;
 	return true;
 }
@@ -130,6 +162,8 @@ void CTALogSys::SetFileNameAndPath(wchar_t * FileName,wchar_t * FilePath)
 		LOGFilePath = FilePath;
 	}
 }
+
+
 
 
 

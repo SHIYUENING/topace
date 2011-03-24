@@ -177,23 +177,26 @@ void InitDraw()
 	if (!glewIsSupported("GL_ARB_texture_float"))
 		GameSet.Bloom=0;
 
-	Textures::LoadDefineTex();
-	LoadingTex.loadfile(L"data/loading");
-	LoadingTex.LoadToVRAM(GL_LINEAR);
-	DrawLoadingTex(&LoadingTex);
-	LoadCubeTex();
+	Textures::LoadDefineTex();ADD_LOG_Q("LoadDefineTex OK");
+	LoadingTex.loadfile(L"data/loading");ADD_LOG_Q("LoadingTex OK");
+	LoadingTex.LoadToVRAM(GL_LINEAR);ADD_LOG_Q("LoadingTex.LoadToVRAM(GL_LINEAR) OK");
+	DrawLoadingTex(&LoadingTex);ADD_LOG_Q("DrawLoadingTex OK");
+	LoadCubeTex();ADD_LOG_Q("LoadCubeTex OK");
 	if(GameSet.Light>1)
+	{
 		InitFBO(GameSet.winW,GameSet.winH,GameSet.Bloom);
-	InitGLSL();
+		ADD_LOG_Q("InitFBO OK");
+	}
+	InitGLSL();ADD_LOG_Q("InitGLSL OK");
 	CDDS::SetAFNum(GameSet.AF);
-	InitTestModel();
+	InitTestModel();ADD_LOG_Q("InitTestModel OK");
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
-	InitTestLight();
+	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
 	TopAceModelTest.ReadTAMFile(TestModelPath);
 	TopAceModelTest.LoadToVRAM();

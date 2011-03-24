@@ -18,4 +18,6 @@ public:
 	void SetFileNameAndPath(wchar_t * FileName,wchar_t * FilePath);
 };
 
+bool ADD_LOG_Q(const char * LOGStr,const char * LogColor=0 ,const char * LogLink=0,wchar_t * LOGFileName=0,wchar_t * LOGFilePath=0,bool ADD=true);
+bool ADD_LOG_Q(const wchar_t * LOGStr,const char * LogColor=0 ,const char * LogLink=0,wchar_t * LOGFileName=0,wchar_t * LOGFilePath=0,bool ADD=true);
 #endif
