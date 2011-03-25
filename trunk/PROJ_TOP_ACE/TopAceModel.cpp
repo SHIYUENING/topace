@@ -112,6 +112,8 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 	wcscpy(FilePath,FileName);
 	HANDLE   hFile;     
       
+	ADD_LOG_Q("Load TAMFile:");
+	ADD_LOG_Q(FileName);
 	hFile   =   CreateFileW(FileName,                       //   open   MYFILE.TXT     
                                   GENERIC_READ,                             //   open   for   reading     
                                   FILE_SHARE_READ,                       //   share   for   reading     
@@ -124,7 +126,6 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_NoFile;
 		ADD_LOG_Q("Load TAMFile Fail,Can not open file","#FF0000");
-		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 
@@ -137,7 +138,6 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		TAM_File_States=_TAM_File_States_NoFile;
 		TAM_FileData = NULL;
 		ADD_LOG_Q("Load TAMFile Fail,Can not open file head","#FF0000");
-		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 	if(TAM_FileHeadTMP.FileSize<sizeof(TAM_FileHeadTMP))
@@ -146,7 +146,6 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		TAM_FileData = NULL;
 		CloseHandle(hFile);
 		ADD_LOG_Q("Load TAMFile Fail,file head fail","#FF0000");
-		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 	/*if(TAM_FileHeadTMP.TAMVer!=_TAM_VERSION)
@@ -170,7 +169,6 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_ReadFail;
 		ADD_LOG_Q("Load TAMFile Fail,file read fail","#FF0000");
-		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 	if(!InitTAMFile(TAM_FileData))
@@ -180,11 +178,10 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		CloseHandle(hFile);
 		TAM_File_States=_TAM_File_States_ReadFail;
 		ADD_LOG_Q("Load TAMFile Fail,file Init fail","#FF0000");
-		ADD_LOG_Q(FileName,"#FF0000");
 		return false;
 	}
 
-
+	ADD_LOG_Q("Load OK");
 	CloseHandle(hFile);
 	return true;
 }

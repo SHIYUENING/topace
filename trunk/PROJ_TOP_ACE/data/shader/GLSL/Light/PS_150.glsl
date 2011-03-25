@@ -73,7 +73,7 @@ void main()
 
 	vec4 MX=vec4 (1.0/ShadowTexSize.x,0.0,0.0,0.0);
 	vec4 MU=vec4 (0.0,1.0/ShadowTexSize.y,0.0,0.0);
-	vec4 shadowPos=ShadowDir;
+	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=textureProj( ShadowTex, shadowPos );
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MX );
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MX );

@@ -20,7 +20,8 @@ void CDDS::LoadFileT(wchar_t *filename)
 {
 
 	HANDLE   hFile;     
-      
+    ADD_LOG_Q("Read DDS file");
+	ADD_LOG_Q(filename);
 	hFile   =   CreateFileW(filename,                       //   open   MYFILE.TXT     
                                   GENERIC_READ,                             //   open   for   reading     
                                   FILE_SHARE_READ,                       //   share   for   reading     
@@ -30,6 +31,7 @@ void CDDS::LoadFileT(wchar_t *filename)
                                   NULL);  
 	if   (hFile   ==   INVALID_HANDLE_VALUE)  
 	{
+		ADD_LOG_Q("Can not open file.","#0000FF");
 		CloseHandle(hFile);
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
 		return;
@@ -38,6 +40,7 @@ void CDDS::LoadFileT(wchar_t *filename)
 	filesize = GetFileSize(hFile,NULL);
 	if(filesize<=0)
 	{
+		ADD_LOG_Q("File size fail.","#0000FF");
 		CloseHandle(hFile);
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
 		return;
@@ -62,6 +65,7 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
 	DDSFileData=FileData;
 	if(!glewIsSupported("GL_EXT_texture_compression_s3tc"))
 	{
+		ADD_LOG_Q("Can not suppot DDS,read cancel.","#0000FF");
 		DDSerror=DDS_ERROR_NO_SUPPOT;
 		return;
 	}
@@ -72,6 +76,7 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
 	}
 	if(strncmp( (char *)&FileData[0], "DDS ", 4 ) != 0)
 	{
+		ADD_LOG_Q("Not DDS file.","#0000FF");
 		DDSerror=DDS_ERROR_NOT_OPEN_FILE;
         return ;
 	}
@@ -112,12 +117,15 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
         default:
 
 			DDSerror=DDS_ERROR_DDS_FORMAT;
+			
+			ADD_LOG_Q("Not DXT1 2 3 format.","#0000FF");
             return ;
     } 
 
     if( ddsd->dwLinearSize == 0 )
     {
 		DDSerror=DDS_ERROR_DDS_FORMAT;
+			ADD_LOG_Q("dwLinearSize error.","#FF0000");
 		return ;
     } 
 
@@ -142,7 +150,7 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
         pDDSImageData->components = 3;
     else
         pDDSImageData->components = 4; 
-
+	ADD_LOG_Q("Read OK.");
 	isRAM=true;
     //return pDDSImageData;
 }
