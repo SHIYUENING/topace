@@ -90,11 +90,14 @@ bool TGA::LoadFile(wchar_t * filename)				// Load a TGA file
 {
 	FILE * fTGA;												// File pointer to texture file
 	_wfopen_s(&fTGA,filename, L"rb");									// Open file for reading
-
+	
+	ADD_LOG_Q("Read TGA file.");
+	ADD_LOG_Q(filename);
 	if(fTGA == NULL)											// If it didn't open....
 	{
 		//MessageBox(NULL, "Could not open texture file", "ERROR", MB_OK);	// Display an error message
 		TGAerror=TGA_ERROR_NOT_OPEN_FILE;
+		ADD_LOG_Q("Can not open file.","#0000FF");
 		return false;														// Exit function
 	}
 
@@ -102,6 +105,7 @@ bool TGA::LoadFile(wchar_t * filename)				// Load a TGA file
 	{
 		//MessageBox(NULL, "Could not read file header", "ERROR", MB_OK);		// If it fails, display an error message 
 		TGAerror=TGA_ERROR_NOT_READ_FILE_HEADER;
+		ADD_LOG_Q("Can not file head error.","#FF0000");
 		if(fTGA != NULL)													// Check to seeiffile is still open
 		{
 			fclose(fTGA);													// If it is, close it
@@ -121,6 +125,7 @@ bool TGA::LoadFile(wchar_t * filename)				// Load a TGA file
 	else																	// If header matches neither type
 	{
 		//MessageBox(NULL, "TGA file be type 2 or type 10 ", "Invalid Image", MB_OK);	// Display an error
+		ADD_LOG_Q("Can not read CompressedTGA.","#FF0000");
 		TGAerror=TGA_ERROR_FILE_HEADER_TYPE;
 		fclose(fTGA);
 		return false;																// Exit function
@@ -151,6 +156,7 @@ bool TGA::LoadUncompressedTGA(FILE * fTGA)	// Load an uncompressed TGA (note, mu
 	{
 		//MessageBox(NULL, "Invalid texture information", "ERROR", MB_OK);	// Display Error
 		TGAerror=TGA_ERROR_TEX_INFO;
+		ADD_LOG_Q("TGA info error.","#FF0000");
 		if(fTGA != NULL)													// Check if file is still open
 		{
 			fclose(fTGA);													// If so, close it
@@ -176,6 +182,7 @@ bool TGA::LoadUncompressedTGA(FILE * fTGA)	// Load an uncompressed TGA (note, mu
 	if(this->imageData == NULL)											// If no space was allocated
 	{
 		//MessageBox(NULL, "Could not allocate memory for image", "ERROR", MB_OK);	// Display Error
+		ADD_LOG_Q("Could not allocate memory for image.","#FF0000");
 		TGAerror=TGA_ERROR_NOT_ALLOCAT_RAM;
 		fclose(fTGA);														// Close the file
 		return false;														// Return failed
@@ -184,6 +191,7 @@ bool TGA::LoadUncompressedTGA(FILE * fTGA)	// Load an uncompressed TGA (note, mu
 	if(fread(this->imageData, 1, tga.imageSize, fTGA) != tga.imageSize)	// Attempt to read image data
 	{
 		//MessageBox(NULL, "Could not read image data", "ERROR", MB_OK);		// Display Error
+		ADD_LOG_Q("Could not read image data.","#FF0000");
 		TGAerror=TGA_ERROR_NOT_READ_IMAGE_DATA;
 		if(this->imageData != NULL)										// If imagedata has data in it
 		{
@@ -202,6 +210,7 @@ bool TGA::LoadUncompressedTGA(FILE * fTGA)	// Load an uncompressed TGA (note, mu
 	}
 
 	fclose(fTGA);															// Close file
+	ADD_LOG_Q("Read OK.");
 	return true;															// Return success
 }
 void TGA::DelTGA_RAM()

@@ -4,6 +4,7 @@
 //#ifdef _WIN32
 #include <windows.h>		// Header File For Windows
 //#endif
+#include "TALogSys.h"
 #include <stdio.h>			// Header File For Standard Input/Output
 #include <stdlib.h>
 #include <gl\glew.h>

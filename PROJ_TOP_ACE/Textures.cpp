@@ -95,23 +95,28 @@ bool Textures::loadfile(char * filename)
 }
 bool Textures::loadfile(wchar_t * filename)
 {
+	ADD_LOG_Q("Read Texture");
 	TexID=DefineTexID;
 	wchar_t LoadFileName[256]={0};
 	
 	DDSfile = new CDDS;
 	swprintf_s(LoadFileName,256,L"%s.%s",filename,L"dds");
 	//sprintf(LoadFileName,L"%s.%s",filename,L"dds");
+	ADD_LOG_Q(LoadFileName);
 	DDSfile->LoadFileT(LoadFileName);
 	if((DDSfile->pDDSImageData==NULL)||(DDSfile->DDSerror!=DDS_NO_ERROR))
 	{
+		ADD_LOG_Q("Read DDS fail,change TGA.","#0000FF");
 		delete DDSfile;
 		DDSfile = NULL;
 		swprintf_s(LoadFileName,256,L"%s.%s",filename,L"tga");
 		//sprintf(LoadFileName,"%s.%s",filename,"tga");
 		TGAfile = new TGA;
+		ADD_LOG_Q(LoadFileName);
 		TGAfile->LoadFile(LoadFileName);
 		if((TGAfile->imageData==NULL)||(TGAfile->TGAerror!=TGA_NO_ERROR))
 		{
+			ADD_LOG_Q("Read TGA fail.","#0000FF");
 			delete TGAfile;
 			TGAfile=NULL;
 			TexType = NO_TEX;
@@ -119,12 +124,14 @@ bool Textures::loadfile(wchar_t * filename)
 		}
 		else
 		{
+			ADD_LOG_Q("Read TGA OK.");
 			UseAlpha=TGAfile->UseAlpha;
 			TexType=IS_TGA;
 		}
 	}
 	else
 	{
+		ADD_LOG_Q("Read DDS OK.");
 		TexType=IS_DDS;
 		UseAlpha=DDSfile->UseAlpha;
 	}

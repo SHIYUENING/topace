@@ -6,7 +6,7 @@
 #define IS_DDS 1
 #define IS_TGA 2
 #define IS_DEF 3
-
+#include "TALogSys.h"
 class Textures
 {
 public:

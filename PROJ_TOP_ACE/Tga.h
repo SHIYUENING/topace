@@ -4,6 +4,7 @@
 #include <stdio.h>										// Standard I/O header 
 #include <gl\glew.h>
 #include <gl\gl.h>	
+#include "TALogSys.h"
 #define TGA_NO_ERROR 0
 #define TGA_ERROR_NOT_OPEN_FILE 1
 #define TGA_ERROR_NOT_READ_FILE_HEADER 2
