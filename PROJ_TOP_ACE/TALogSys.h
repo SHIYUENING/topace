@@ -20,4 +20,5 @@ public:
 
 bool ADD_LOG_Q(const char * LOGStr,const char * LogColor=0 ,const char * LogLink=0,wchar_t * LOGFileName=0,wchar_t * LOGFilePath=0,bool ADD=true);
 bool ADD_LOG_Q(const wchar_t * LOGStr,const char * LogColor=0 ,const char * LogLink=0,wchar_t * LOGFileName=0,wchar_t * LOGFilePath=0,bool ADD=true);
+void ADD_OGLEX_LOG(const char * LOGStr);
 #endif

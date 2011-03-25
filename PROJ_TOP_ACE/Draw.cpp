@@ -157,9 +157,12 @@ void InitDraw()
 {
 	glewInit();
 
-	WritePrivateProfileStringA("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
-	WritePrivateProfileStringA("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
+	//WritePrivateProfileStringA("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
+	//WritePrivateProfileStringA("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
 	//WritePrivateProfileString("PC Info","GL_EXTENSIONS",(char *)glGetString(GL_EXTENSIONS),".\\gameset.ini");
+	ADD_LOG_Q((char *)glGetString(GL_RENDERER));
+	ADD_LOG_Q((char *)glGetString(GL_VERSION));
+	ADD_OGLEX_LOG((char *)glGetString(GL_EXTENSIONS));
 	wchar_t  TestModelPath[512];
 	GetPrivateProfileStringW(L"other",L"TestModelPath",L"data/1234.tam",TestModelPath,512,L".\\gameset.ini");
 	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=min(3,GameSet.Light);

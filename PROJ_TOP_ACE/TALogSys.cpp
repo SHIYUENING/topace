@@ -98,6 +98,27 @@ bool CTALogSys::ADDhtmLog(const char * LOGStr,const char * LogColor ,const char 
 	delete [] StrTmp;
 	return true;
 }
+void ADD_OGLEX_LOG(const char * LOGStr)
+{
+	int StrBegin=0;
+	int StrEnd=0;
+	for(unsigned int i=0;i<GetCharLenth(LOGStr);i++)
+	{
+		StrEnd=i;
+		if((LOGStr[i]==' ')&&((StrEnd-StrBegin)>1))
+		{
+			char * LOGStrTMP=new char[StrEnd-StrBegin+1];LOGStrTMP[StrEnd-StrBegin]=0;
+			for (int j=0;j<(StrEnd-StrBegin);j++)
+			{
+				LOGStrTMP[j]=LOGStr[StrBegin+j];
+				
+			}
+			ADD_LOG_Q(LOGStrTMP);
+			delete [] LOGStrTMP;
+			StrBegin=StrEnd+1;
+		}
+	}
+}
 bool ADD_LOG_Q(const wchar_t * LOGStr,const char * LogColor ,const char * LogLink,wchar_t * LOGFileName,wchar_t * LOGFilePath,bool ADD)
 {
 	if(!LOGStr) return false;
