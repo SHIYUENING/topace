@@ -11,16 +11,21 @@ namespace FONT3D
         {
             public float x, y, z;
         }
+        struct FACE
+        {
+            public int x, y, z;
+        }
 
         struct CHAR3D
         {
             public int code;
             public string value;
             public VT3[] verts;
+            public FACE[] faces;
         }
 
         private byte[] Head;
-        private const int Verson = 1;
+        private const int Verson = 2;
 
         //private int filesize;
         private int pageCode; //1200 unicode
@@ -40,7 +45,7 @@ namespace FONT3D
             return chs[i].value;
         }
 
-        public void SetCharVert(int idx,float[] xyz)
+        public void SetCharVert(int idx, float[] xyz)
         {
             chs[idx].verts = new VT3[xyz.Length / 3];
             for (int i = 0; i < xyz.Length / 3; i++)
@@ -48,6 +53,18 @@ namespace FONT3D
                 chs[idx].verts[i].x = xyz[i * 3 + 0];
                 chs[idx].verts[i].y = xyz[i * 3 + 1];
                 chs[idx].verts[i].z = xyz[i * 3 + 2];
+            }
+        }
+
+
+        public void SetCharFace(int idx, int[] xyz)
+        {
+            chs[idx].faces = new FACE[xyz.Length / 3];
+            for (int i = 0; i < xyz.Length / 3; i++)
+            {
+                chs[idx].faces[i].x = xyz[i * 3 + 0];
+                chs[idx].faces[i].y = xyz[i * 3 + 1];
+                chs[idx].faces[i].z = xyz[i * 3 + 2];
             }
         }
 
@@ -65,7 +82,7 @@ namespace FONT3D
 
             for (int i = 0; i < 0x10000; i++)
             {
-                w.Write(0); w.Write(0);
+                w.Write(0); w.Write(0); w.Write(0);
             }
 
             MemoryStream vtms = new MemoryStream();
@@ -73,14 +90,21 @@ namespace FONT3D
 
             for (int i = 0; i < charscount; i++)
             {
-                w.BaseStream.Position = 0x20 + chs[i].code * 8;
-                w.Write((int)vw.BaseStream.Length + 0x80020);
+                w.BaseStream.Position = 0x20 + chs[i].code * 0xC;
+                w.Write((int)vw.BaseStream.Length + 0xC0020);
                 w.Write(chs[i].verts.Length);
+                w.Write(chs[i].faces.Length);
                 for (int j = 0; j < chs[i].verts.Length; j++)
                 {
                     vw.Write(chs[i].verts[j].x);
                     vw.Write(chs[i].verts[j].y);
                     vw.Write(chs[i].verts[j].z);
+                }
+                for (int j = 0; j < chs[i].faces.Length; j++)
+                {
+                    vw.Write(chs[i].faces[j].x);
+                    vw.Write(chs[i].faces[j].y);
+                    vw.Write(chs[i].faces[j].z);
                 }
                 vw.Flush();
             }
