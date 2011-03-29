@@ -78,9 +78,16 @@
 #define IDC_STATIC_WIND                 1045
 #define IDC_STATIC_Resolution           1046
 #define IDC_STATIC_BGM                  1047
-#define IDC_STATIC_SOUND                1048
 #define IDC_STATIC_EFFECT               1048
 #define IDC_STATIC_VOICE                1049
+#define IDC_STATIC_KEY_NOW              1050
+#define IDC_STATIC_KEY                  1051
+#define IDC_STATIC_KEY_NEXT             1051
+#define IDC_STATIC_SHADOW               1052
+#define IDC_COMBO_SHADOW                1053
+#define IDC_STATIC_LIHGT                1054
+#define IDC_COMBO_SHADOW2               1055
+#define IDC_COMBO_LIGHT                 1055
 
 // Next default values for new objects
 // 
@@ -88,7 +95,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

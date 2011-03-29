@@ -28,6 +28,8 @@ void CKeyMapDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_EDIT1, m_cEdit);
 	DDX_Text(pDX, IDC_EDIT2, m_strMapOld);
+	DDX_Control(pDX, IDC_STATIC_KEY_NOW, m_LTEXT_KEY_NOW);
+	DDX_Control(pDX, IDC_STATIC_KEY_NEXT, m_LTEXT_KEY_NEXT);
 }
 
 
@@ -60,6 +62,12 @@ BOOL CKeyMapDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
+	m_LTEXT_KEY_NOW.SetWindowText(_T("当前按键"));
+	m_LTEXT_KEY_NEXT.SetWindowText(_T("新按键"));
+	
+	((CButton *)GetDlgItem(IDC_BUTTON1))->SetWindowText(_T("清除"));
+	((CButton *)GetDlgItem(IDOK))->SetWindowText(_T("确定"));
+	((CButton *)GetDlgItem(IDCANCEL))->SetWindowText(_T("取消"));
 	// TODO:  在此添加额外的初始化
 	SetWindowText( m_strTitle );
 

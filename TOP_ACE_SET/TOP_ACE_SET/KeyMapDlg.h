@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Key.h"
+#include "afxwin.h"
 // CKeyMapDlg ¶Ô»°¿ò
 
 class CKeyMapDlg : public CDialog
@@ -45,6 +46,8 @@ public:
 		return m_uMapKey;
 	}
 	afx_msg void OnBnClickedButton1();
+	CStatic m_LTEXT_KEY_NOW;
+	CStatic m_LTEXT_KEY_NEXT;
 };
 
 CString GetKeyName( UINT a_uMapKey );
