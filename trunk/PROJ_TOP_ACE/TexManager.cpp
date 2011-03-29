@@ -26,7 +26,7 @@ void CTexManager::InitTexArray(int MaxTexNum,wchar_t * FilePathIn)
 	wcscpy(FilePath,FilePathIn);
 	for(int i=wcslen(FilePath)-1;i>0;i--)
 	{
-		if(FilePath[i]==L'/')
+		if((FilePath[i]==L'/')||(FilePath[i]==L'\\'))
 		{
 			FilePath[i+1]=0;
 			break;
