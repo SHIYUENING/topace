@@ -169,7 +169,7 @@ void InitDraw()
 	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=min(2,GameSet.Light);
 	if (!glewIsSupported("GL_VERSION_2_0"))
 	{
-		MessageBoxA( NULL, "Please Updata Video Card Driver", "OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
+		MessageBoxW( NULL, L"Please Updata Video Card Driver", L"OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
 		GameSet.Light=1;
 	}
 	if((!glewIsSupported("GL_ARB_pixel_buffer_object"))&&(!glewIsSupported("GL_EXT_pixel_buffer_object")))
@@ -177,8 +177,8 @@ void InitDraw()
 		GameSet.SSAO=0;
 		GameSet.Light=min(2,GameSet.Light);
 	}
-	if (!glewIsSupported("GL_ARB_texture_float"))
-		GameSet.Bloom=0;
+	//if (!glewIsSupported("GL_ARB_texture_float"))
+	//	GameSet.Bloom=0;
 
 	Textures::LoadDefineTex();ADD_LOG_Q("LoadDefineTex OK");
 	LoadingTex.loadfile(L"data/loading");ADD_LOG_Q("LoadingTex OK");
