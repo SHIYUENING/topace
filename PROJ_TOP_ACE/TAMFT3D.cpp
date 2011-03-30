@@ -4,6 +4,11 @@
 CTAMFT3D::CTAMFT3D(void)
 	: Font3DFile(NULL)
 	, pTAMFT3D_FileHead(NULL)
+	, isRAM(false)
+	, isVRAM(false)
+	, VBOID(0)
+	, TotelVecNum(0)
+	, TotelFaceNum(0)
 {
 }
 
@@ -59,6 +64,12 @@ bool CTAMFT3D::LoadFontFile(void)
 		TAMFT3DLOG.WriteLOGFile(true);
 		return false;
 	}
+	if(TAMFT3D_FileHead.FontVer!=TAMFT3D_Ver)
+	{
+		CloseHandle(hFile);
+		ADD_LOG_Q("3DFont file Ver Error","#FF0000");
+		return false;
+	}
 	if(FileSize!=TAMFT3D_FileHead.FontFileSize)
 	{
 		CloseHandle(hFile);
@@ -81,5 +92,21 @@ bool CTAMFT3D::LoadFontFile(void)
 	}
 	CloseHandle(hFile);
 	pTAMFT3D_FileHead=(_TAMFT3D_FileHead *)Font3DFile;
+	isRAM=true;
 	return true;
+}
+
+
+bool CTAMFT3D::ToVRAM(void)
+{
+	for(int i=0;i<0x10000;i++)
+	{
+		TotelVecNum=TotelVecNum+pTAMFT3D_FileHead->CharSet[i].VecNum;
+		TotelFaceNum=TotelFaceNum+pTAMFT3D_FileHead->CharSet[i].FaceNum;
+	}
+	float * VecBufferTMP=new float[TotelVecNum*3];
+	//glGenBuffersARB (1,&VBOID);
+	//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOID );
+	//glBufferDataARB( GL_ARRAY_BUFFER_ARB, pTAMFT3D_FileHead->FontFileSize-sizeof(_TAMFT3D_FileHead), pTAMFT3D_FileHead+sizeof(_TAMFT3D_FileHead), GL_STATIC_DRAW_ARB );
+	return false;
 }
