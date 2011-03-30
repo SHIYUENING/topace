@@ -251,6 +251,7 @@ void InitDraw()
 		Font2D->LoadFont(FontPath,32,32);
 	}*/
 	TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
+	TAMFT3D.ToVRAM();
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
 	ADD_LOG_Q("InitDraw() OK");
