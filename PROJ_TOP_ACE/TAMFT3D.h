@@ -3,18 +3,15 @@
 #define _TAMFT3D_H
 #define TAMFT3D_FILE_PATH L ## "data/Font/test.fnt"
 #define TAMFT3D_Ver 2
+#define VBOID_NUM 0x1000
 #include <GL/glew.h>
 #include <math.h>
 #include <stdio.h>	
 #include <windows.h>
-struct _VecData
-{
-	float * Vecs;
-	int * Faces;
-};
+
 struct _CharSet
 {
-	_VecData * VecData;
+	unsigned char * VecData;
 	unsigned int VecNum;
 	unsigned int FaceNum;
 };
@@ -41,11 +38,12 @@ public:
 	unsigned char *Font3DFile;
 	_TAMFT3D_FileHead * pTAMFT3D_FileHead;
 	bool isRAM;
-	bool isVRAM;
-	bool ToVRAM(void);
 	GLuint VBOID;
-	unsigned int TotelVecNum;
-	unsigned int TotelFaceNum;
+	unsigned int MaxVecNum;
+	unsigned int MaxFaceNum;
+	void DrawText(wchar_t * DrawChar);
+	GLuint CharVBOID_indexs[0x10000];
+	GLuint CharVBOIDs[VBOID_NUM*2];
 };
 
 

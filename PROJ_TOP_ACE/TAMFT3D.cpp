@@ -1,15 +1,19 @@
 #include "TAMFT3D.h"
 #include "TALogSys.h"
+#include "CharSysBace.h"
 
 CTAMFT3D::CTAMFT3D(void)
 	: Font3DFile(NULL)
 	, pTAMFT3D_FileHead(NULL)
 	, isRAM(false)
-	, isVRAM(false)
 	, VBOID(0)
-	, TotelVecNum(0)
-	, TotelFaceNum(0)
+	, MaxVecNum(0)
+	, MaxFaceNum(0)
 {
+	for(int i=0;i<0x10000;i++)
+		CharVBOID_indexs[i]=0;
+	for(int i=0;i<VBOID_NUM*2;i++)
+		CharVBOIDs[i]=0;
 }
 
 
@@ -93,20 +97,29 @@ bool CTAMFT3D::LoadFontFile(void)
 	CloseHandle(hFile);
 	pTAMFT3D_FileHead=(_TAMFT3D_FileHead *)Font3DFile;
 	isRAM=true;
+	for(int i=0;i<0x10000;i++)
+	{
+		MaxVecNum=max(MaxVecNum,pTAMFT3D_FileHead->CharSet[i].VecNum);
+		MaxFaceNum=max(MaxFaceNum,pTAMFT3D_FileHead->CharSet[i].FaceNum);
+	}
 	return true;
 }
 
 
-bool CTAMFT3D::ToVRAM(void)
+void CTAMFT3D::DrawText(wchar_t * DrawChar)
 {
-	for(int i=0;i<0x10000;i++)
+	if(!DrawChar) return;
+	if(!GetCharLenth(DrawChar)) return;
+	int CharIndex=0;
+	while(DrawChar[CharIndex])
 	{
-		TotelVecNum=TotelVecNum+pTAMFT3D_FileHead->CharSet[i].VecNum;
-		TotelFaceNum=TotelFaceNum+pTAMFT3D_FileHead->CharSet[i].FaceNum;
+		if(CharVBOIDs[CharVBOID_indexs[DrawChar[CharIndex]]])
+		{
+		}
+		else
+		{
+		}
+
+		CharIndex++;
 	}
-	float * VecBufferTMP=new float[TotelVecNum*3];
-	//glGenBuffersARB (1,&VBOID);
-	//glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBOID );
-	//glBufferDataARB( GL_ARRAY_BUFFER_ARB, pTAMFT3D_FileHead->FontFileSize-sizeof(_TAMFT3D_FileHead), pTAMFT3D_FileHead+sizeof(_TAMFT3D_FileHead), GL_STATIC_DRAW_ARB );
-	return false;
 }
