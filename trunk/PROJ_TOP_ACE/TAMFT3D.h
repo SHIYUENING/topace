@@ -3,12 +3,23 @@
 #define _TAMFT3D_H
 #define TAMFT3D_FILE_PATH L ## "data/Font/test.fnt"
 #define TAMFT3D_Ver 2
-#define VBOID_NUM 0x1000
+#define VBOID_NUM 0x200
+//#define CharSetTMP pTAMFT3D_FileHead->CharSet[DrawChar]
 #include <GL/glew.h>
 #include <math.h>
 #include <stdio.h>	
 #include <windows.h>
-
+struct _TestTTTTTT
+{
+	float xx[67*3];
+	int yy[53*3];
+};
+struct _CharVBO
+{
+	GLuint Vec;
+	GLuint Face;
+	GLuint NoDrawTimes;
+};
 struct _CharSet
 {
 	unsigned char * VecData;
@@ -41,9 +52,13 @@ public:
 	GLuint VBOID;
 	unsigned int MaxVecNum;
 	unsigned int MaxFaceNum;
-	void DrawText(wchar_t * DrawChar);
+	void Draw3DText(wchar_t * DrawChar);
 	GLuint CharVBOID_indexs[0x10000];
-	GLuint CharVBOIDs[VBOID_NUM*2];
+	_CharVBO CharVBO[VBOID_NUM];
+	unsigned int CharToVRAM(wchar_t DrawChar);
+	void ClearOneCharVBO(unsigned int VBOIndex);
+	void DrawOneChar(wchar_t DrawChar);
+	void ClearAllVBO(void);
 };
 
 

@@ -12,8 +12,12 @@ CTAMFT3D::CTAMFT3D(void)
 {
 	for(int i=0;i<0x10000;i++)
 		CharVBOID_indexs[i]=0;
-	for(int i=0;i<VBOID_NUM*2;i++)
-		CharVBOIDs[i]=0;
+	for(int i=0;i<VBOID_NUM;i++)
+	{
+		CharVBO[i].Face=0;
+		CharVBO[i].Vec=0;
+		CharVBO[i].NoDrawTimes=0;
+	}
 }
 
 
@@ -106,20 +110,109 @@ bool CTAMFT3D::LoadFontFile(void)
 }
 
 
-void CTAMFT3D::DrawText(wchar_t * DrawChar)
+void CTAMFT3D::DrawOneChar(wchar_t DrawChar)
+{
+	if((!CharVBOID_indexs[DrawChar])||(CharVBO[CharVBOID_indexs[DrawChar]].Face==0))
+	{
+		CharVBOID_indexs[DrawChar]=CharToVRAM(DrawChar);
+	}
+	_CharVBO * CharVBOTMP=CharVBO+CharVBOID_indexs[DrawChar];
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glEnableClientState( GL_INDEX_ARRAY );
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, CharVBOTMP->Vec );
+	glVertexPointer( 3, GL_FLOAT, 0, 0 );
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, CharVBOTMP->Face );
+	//glIndexPointer(GL_UNSIGNED_INT,0,0);
+	glDrawElements(GL_TRIANGLES,(pTAMFT3D_FileHead->CharSet[DrawChar].FaceNum)*3,GL_UNSIGNED_INT,0);
+	
+	glDisableClientState( GL_VERTEX_ARRAY );
+	glDisableClientState( GL_INDEX_ARRAY );
+	
+	CharVBO[CharVBOID_indexs[DrawChar]].NoDrawTimes=1;
+
+	
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
+}
+
+void CTAMFT3D::Draw3DText(wchar_t * DrawChar)
 {
 	if(!DrawChar) return;
 	if(!GetCharLenth(DrawChar)) return;
+	
+	glDisable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+	glDisable( GL_CULL_FACE );
+	glPushMatrix();
+	glScalef(100.0f,100.0f,100.0f);
 	int CharIndex=0;
+	for(int i=0;i<VBOID_NUM;i++)
+	{
+		CharVBO[i].NoDrawTimes++;
+	}
 	while(DrawChar[CharIndex])
 	{
-		if(CharVBOIDs[CharVBOID_indexs[DrawChar[CharIndex]]])
-		{
-		}
-		else
-		{
-		}
-
+		DrawOneChar(DrawChar[CharIndex]);
 		CharIndex++;
+	}
+	glPopMatrix();
+}
+
+
+unsigned int CTAMFT3D::CharToVRAM(wchar_t DrawChar)
+{
+	unsigned int MaxCharNoDrawTime=0;
+	unsigned int CharVBOIndexTMP=0;
+	_CharSet * CharSetTMP=pTAMFT3D_FileHead->CharSet+DrawChar;
+	for(int i=0;i<VBOID_NUM;i++)
+	{
+		if(MaxCharNoDrawTime<CharVBO[i].NoDrawTimes) CharVBOIndexTMP=i;
+		MaxCharNoDrawTime=max(MaxCharNoDrawTime,CharVBO[i].NoDrawTimes);
+		if(!CharVBO[i].Face)
+		{
+			CharVBOIndexTMP=i;
+			break;
+		}
+	}
+	unsigned int VecDataBuffer=(unsigned int)CharSetTMP->VecData+(unsigned int)pTAMFT3D_FileHead;
+	unsigned int FaceDataBuffer=(unsigned int)VecDataBuffer+CharSetTMP->VecNum*3*sizeof(float);
+	float * TestData=(float *)VecDataBuffer;
+	unsigned int * TestData2=(unsigned int *)FaceDataBuffer;
+	ClearOneCharVBO(CharVBOIndexTMP);
+	glGenBuffersARB( 1,&CharVBO[CharVBOIndexTMP].Vec);
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, CharVBO[CharVBOIndexTMP].Vec );
+	glBufferDataARB( GL_ARRAY_BUFFER_ARB, CharSetTMP->VecNum*3*sizeof(float), (void*)VecDataBuffer, GL_STATIC_DRAW_ARB );
+	glGenBuffersARB( 1,&CharVBO[CharVBOIndexTMP].Face);
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, CharVBO[CharVBOIndexTMP].Face );
+	glBufferDataARB( GL_ELEMENT_ARRAY_BUFFER_ARB, CharSetTMP->FaceNum*3*sizeof(int), (void*)FaceDataBuffer, GL_STATIC_DRAW_ARB );
+	CharVBO[CharVBOIndexTMP].NoDrawTimes=1;
+	return CharVBOIndexTMP;
+}
+
+
+void CTAMFT3D::ClearOneCharVBO(unsigned int VBOIndex)
+{
+	if(CharVBO[VBOIndex].Face)
+	{
+		if(glIsBufferARB(CharVBO[VBOIndex].Face))
+			glDeleteBuffersARB(1,&(CharVBO[VBOIndex].Face));
+		CharVBO[VBOIndex].Face=0;
+	}
+	if(CharVBO[VBOIndex].Vec)
+	{
+		if(glIsBufferARB(CharVBO[VBOIndex].Vec))
+			glDeleteBuffersARB(1,&(CharVBO[VBOIndex].Vec));
+		CharVBO[VBOIndex].Vec=0;
+	}
+	CharVBO[VBOIndex].NoDrawTimes=0;
+}
+
+
+
+void CTAMFT3D::ClearAllVBO(void)
+{
+	for(int i=0;i<VBOID_NUM;i++)
+	{
+		ClearOneCharVBO(i);
 	}
 }
