@@ -487,7 +487,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	//DrawTestLines();
 	
-	TAMFT3D.Draw3DText(L"A");
+	TAMFT3D.Draw3DText(L"以前解决这类任务的扩展方法是用VAR（Vertex Array Range顶点数组序列）。尽管该扩展仍然可以用，但我们建议您用VBO来代替",20,20,600);
 	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	
