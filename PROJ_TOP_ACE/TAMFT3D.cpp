@@ -131,8 +131,6 @@ void CTAMFT3D::DrawOneChar(wchar_t DrawChar)
 	CharVBO[CharVBOID_indexs[DrawChar]].NoDrawTimes=1;
 
 	
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 }
 
 void CTAMFT3D::Draw3DText(wchar_t * DrawChar)
@@ -156,6 +154,9 @@ void CTAMFT3D::Draw3DText(wchar_t * DrawChar)
 		CharIndex++;
 	}
 	glPopMatrix();
+	
+	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 }
 
 
