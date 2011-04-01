@@ -486,12 +486,15 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	//DrawTestLines();
+	
+	TAMFT3D.Draw3DText(L"测");
 	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
 	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
 	
 
 	if(GameSet.Shadow>0) 
 	{
+		if(TopAceModelTest.pTAM_FileHead)
 		DrawShadowMap();
 	}
 	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
@@ -541,7 +544,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
-	
 	glDisable(GL_MULTISAMPLE_ARB);
 	QueryPerformanceCounter(&CPUTestStart);
 	UnitMatrix();
