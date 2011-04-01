@@ -3,7 +3,7 @@
 #define _TAMFT3D_H
 #define TAMFT3D_FILE_PATH L ## "data/Font/test.fnt"
 #define TAMFT3D_Ver 2
-#define VBOID_NUM 0x200
+#define VBOID_NUM 0x400
 //#define CharSetTMP pTAMFT3D_FileHead->CharSet[DrawChar]
 #include <GL/glew.h>
 #include <math.h>
@@ -52,7 +52,7 @@ public:
 	GLuint VBOID;
 	unsigned int MaxVecNum;
 	unsigned int MaxFaceNum;
-	void Draw3DText(wchar_t * DrawChar);
+	void Draw3DText(wchar_t * DrawChar,float FontW,float FontH,float LineW,float lineH=0.0f,float IntervalW=0.0f);
 	GLuint CharVBOID_indexs[0x10000];
 	_CharVBO CharVBO[VBOID_NUM];
 	unsigned int CharToVRAM(wchar_t DrawChar);

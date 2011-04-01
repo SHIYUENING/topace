@@ -1,7 +1,7 @@
 #include "TAMFT3D.h"
 #include "TALogSys.h"
 #include "CharSysBace.h"
-
+float ASCIICharWides[0x100];
 CTAMFT3D::CTAMFT3D(void)
 	: Font3DFile(NULL)
 	, pTAMFT3D_FileHead(NULL)
@@ -133,7 +133,7 @@ void CTAMFT3D::DrawOneChar(wchar_t DrawChar)
 	
 }
 
-void CTAMFT3D::Draw3DText(wchar_t * DrawChar)
+void CTAMFT3D::Draw3DText(wchar_t * DrawChar,float FontW,float FontH,float LineW,float lineH,float IntervalW)
 {
 	if(!DrawChar) return;
 	if(!GetCharLenth(DrawChar)) return;
@@ -141,19 +141,29 @@ void CTAMFT3D::Draw3DText(wchar_t * DrawChar)
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 	glDisable( GL_CULL_FACE );
-	glPushMatrix();
-	glScalef(100.0f,100.0f,100.0f);
 	int CharIndex=0;
 	for(int i=0;i<VBOID_NUM;i++)
 	{
 		CharVBO[i].NoDrawTimes++;
 	}
+	float LinePosX=0.0f;
+	float LinePosY=0.0f;
 	while(DrawChar[CharIndex])
 	{
+		glPushMatrix();
+		glTranslatef(LinePosX,LinePosY,0.0f);
+		glScalef(FontW,FontH,1.0f);
+		if(DrawChar[CharIndex]>=0x20)
+		LinePosX=LinePosX+IntervalW+(DrawChar[CharIndex]>=0x100?1.0f:0.75f)*FontW;
+		if(LinePosX>LineW)
+		{
+			LinePosX=0;
+			LinePosY=LinePosY-max(FontH,lineH);
+		}
 		DrawOneChar(DrawChar[CharIndex]);
 		CharIndex++;
+		glPopMatrix();
 	}
-	glPopMatrix();
 	
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
@@ -165,7 +175,7 @@ unsigned int CTAMFT3D::CharToVRAM(wchar_t DrawChar)
 	unsigned int MaxCharNoDrawTime=0;
 	unsigned int CharVBOIndexTMP=0;
 	_CharSet * CharSetTMP=pTAMFT3D_FileHead->CharSet+DrawChar;
-	for(int i=0;i<VBOID_NUM;i++)
+	for(int i=1;i<VBOID_NUM;i++)
 	{
 		if(MaxCharNoDrawTime<CharVBO[i].NoDrawTimes) CharVBOIndexTMP=i;
 		MaxCharNoDrawTime=max(MaxCharNoDrawTime,CharVBO[i].NoDrawTimes);
