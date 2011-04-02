@@ -212,7 +212,7 @@ void InitDraw()
 		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
 		//PosOrgY=500.0f;
 		moveZSpeed=PosOrgZ/60.0f;
-		maxFreme=1.3*(float)TopAceModelTest.testMAXFrame;
+		maxFreme=1.4*(float)TopAceModelTest.testMAXFrame;
 	}
 	/*
 	if(GameSet.Light==1)
