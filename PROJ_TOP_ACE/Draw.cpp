@@ -212,7 +212,7 @@ void InitDraw()
 		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
 		//PosOrgY=500.0f;
 		moveZSpeed=PosOrgZ/60.0f;
-		maxFreme=(float)TopAceModelTest.testMAXFrame;
+		maxFreme=1.3*(float)TopAceModelTest.testMAXFrame;
 	}
 	/*
 	if(GameSet.Light==1)
@@ -392,7 +392,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,64,L"操作说明:方向键改变视角,PAGE UP/PAGE DN前进后退\nFPS:%d",FPSNumShow);
+		swprintf_s(ShowFPS,64,L"FPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%",FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}
@@ -550,7 +550,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	SetCameraMatrix();
 	SetLights();
 	Test_matrix();
-	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
+	TopAceModelTest.FrameTAMBoneMatrixs(max(0.0f,Test3dsFrame-0.3*TopAceModelTest.testMAXFrame));
 	QueryPerformanceCounter(&CPUTestEnd);
 }
 void DrawShadowMap()

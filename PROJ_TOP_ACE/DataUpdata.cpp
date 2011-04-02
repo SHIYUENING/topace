@@ -23,6 +23,12 @@ CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
 CUnitsList UnitsList;
 CSoundSys * SoundSysTest;
+unsigned char KeyNow[256];
+unsigned char KeyLast[256];
+void UpdataKeys()
+{
+	GetKeyboardState(KeyNow);
+}
 void InitDataThread()
 {
 	SoundSysTest=new CSoundSys;
@@ -51,22 +57,23 @@ void InitDataThread()
 }
 void DataUpdata()
 {
+	UpdataKeys();
 	TotalFrame=TotalFrame+1;
 	if(Test3dsFrameSwitch)
 	{
 		Test3dsFrame=Test3dsFrame+0.5f;
 		if(Test3dsFrame>=maxFreme)
 		{
-			Test3dsFrame=0.0f;
-			//Test3dsFrameSwitch=false;
+			//Test3dsFrame=0.0f;
+			Test3dsFrameSwitch=false;
 		}
 	}
 	else
 	{
-		Test3dsFrame=Test3dsFrame-1.0f;
+		Test3dsFrame=Test3dsFrame-0.5f;
 		if(Test3dsFrame<=0.0f)
 		{
-			Test3dsFrame=0.0f;
+			//Test3dsFrame=0.0f;
 			Test3dsFrameSwitch=true;
 		}
 	}
