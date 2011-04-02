@@ -21,6 +21,7 @@ static const GLdouble IdentityMatrixD[16]={1.0,0.0,0.0,0.0,
 										   0.0,1.0,0.0,0.0,
 										   0.0,0.0,1.0,0.0,
 										   0.0,0.0,0.0,1.0};
+int RenderFaces=0;
 void Easy_matrix_mult_Double(GLdouble Matrix[4][4], GLdouble a[4][4], GLdouble b[4][4]) 
 {
     GLdouble tmp[4][4];

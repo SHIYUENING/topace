@@ -59,6 +59,7 @@ public:
 	void ClearOneCharVBO(unsigned int VBOIndex);
 	void DrawOneChar(wchar_t DrawChar);
 	void ClearAllVBO(void);
+	int RenderFaceNum;
 };
 
 

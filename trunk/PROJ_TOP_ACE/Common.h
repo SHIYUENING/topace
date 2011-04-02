@@ -15,6 +15,7 @@ struct _MaterialData{
 	GLfloat emission[4];//shininess in emission[3]
 	//GLfloat shininess;
 };
+extern int RenderFaces;
 void CO_SetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_GetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_SetGlobalAmbientToGLSL(GLfloat * GlobalAmbient);

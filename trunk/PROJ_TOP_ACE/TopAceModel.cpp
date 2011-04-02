@@ -14,6 +14,7 @@ CTopAceModel::CTopAceModel(void)
 , FilePath(NULL)
 , TAMDrawMode(GL_TRIANGLES)
 , testMAXFrame(0)
+, TotelFaceNum(0)
 {
 	
 }
@@ -256,7 +257,7 @@ bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 	TAM_MeshData_IN->texcos=(float *)&TAM_FileData[(int)TAM_MeshData_IN->texcos];
 	TAM_MeshData_IN->Faces=(unsigned int *)&TAM_FileData[(int)TAM_MeshData_IN->Faces];
 	TAM_MeshData_IN->vecBoneWeightsAndBoneIDs=(_TAM_vecBoneWeightsAndBoneIDs *)&TAM_FileData[(int)TAM_MeshData_IN->vecBoneWeightsAndBoneIDs];
-
+	TotelFaceNum=TotelFaceNum+TAM_MeshData_IN->FaceNum;
 	if(TAM_MeshData_IN->IsFiexible)
 		TAM_MeshData_IN->UserPTR=_aligned_malloc(sizeof(__m128)*TAM_MeshData_IN->vecNum*2,16);
 	else
