@@ -30,10 +30,19 @@ struct _Global_Data_Sys
 {
 	int Tmp;
 };
+struct _Global_Data_Key
+{
+	BOOL keyDownLast [256];	
+	BOOL keyDown_Now [256];	
+};
 struct _Global_Data
 {
 	_Global_Data_Scene Scene;
 	_Global_Data_Sys Sys;
+};
+struct _DrawToData
+{
+	_Global_Data_Key Global_Data_Key;
 };
 class CExchangeThread
 {
@@ -49,6 +58,7 @@ public:
 	bool UpdataOneData(_UnitData * UnitData,int DataNum);
 	int GetOneUseAbleIndex(void);
 	_Global_Data Global_Data;
+	_DrawToData DrawToData;
 };
 void InitThreadUpdata();
 void DeinitThreadUpdata();
