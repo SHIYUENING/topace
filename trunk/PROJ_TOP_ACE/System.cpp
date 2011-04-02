@@ -60,6 +60,7 @@ bool Gdown1=false;
 bool Gdown2=false;
 bool GdownSPACE=false;
 bool DrawFrame=false;
+extern CExchangeThread ThreadDataDraw;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -581,6 +582,18 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 				else
 				{
 					UpdataKeyInput(&window.keys->keyDown[0]);
+					memcpy_s(
+						ThreadDataDraw.DrawToData.Global_Data_Key.keyDownLast,
+						sizeof(ThreadDataDraw.DrawToData.Global_Data_Key.keyDownLast),
+						ThreadDataDraw.DrawToData.Global_Data_Key.keyDown_Now,
+						sizeof(ThreadDataDraw.DrawToData.Global_Data_Key.keyDown_Now)
+						);
+					memcpy_s(
+						ThreadDataDraw.DrawToData.Global_Data_Key.keyDown_Now,
+						sizeof(ThreadDataDraw.DrawToData.Global_Data_Key.keyDown_Now),
+						keys.keyDown,
+						sizeof(keys.keyDown)
+						);
 					KeyUpdate (&keys,&window);
 					if (window.isVisible == FALSE) WaitMessage ();
 					else

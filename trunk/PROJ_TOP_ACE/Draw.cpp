@@ -303,7 +303,6 @@ void UnitMatrix()
 }
 void SetCameraMatrix()
 {
-	ThreadExchangeToDraw(&ThreadDataDraw);
 	Easy_matrix_copy(CameraMatrix,ThreadDataDraw.DataList[1].Matrix);
 	Easy_matrix_copy(MatrixDrawTestUnit,ThreadDataDraw.DataList[2].Matrix);
 	
@@ -546,6 +545,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	glDisable(GL_MULTISAMPLE_ARB);
 	QueryPerformanceCounter(&CPUTestStart);
+	ThreadExchangeToDraw(&ThreadDataDraw);
 	UnitMatrix();
 	SetCameraMatrix();
 	SetLights();

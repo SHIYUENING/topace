@@ -37,6 +37,11 @@ void ThreadUpdataToExchange(CExchangeThread * ThreadDataUpdata)
 		sizeof(_Global_Data),
 		&(ThreadDataUpdata->Global_Data),
 		sizeof(_Global_Data));
+	memcpy_s(
+		&(ThreadDataUpdata->DrawToData),
+		sizeof(_Global_Data),
+		&(ThreadDataExchange.DrawToData),
+		sizeof(_Global_Data));
 	
 	ReadingThread_States=_ReadingThread_States_NoThread;
 	ReleaseMutex(ThreadUpdataMutex);
@@ -63,6 +68,11 @@ void ThreadExchangeToDraw(CExchangeThread * ThreadDataDraw)
 		&(ThreadDataDraw->Global_Data),
 		sizeof(_Global_Data),
 		&(ThreadDataExchange.Global_Data),
+		sizeof(_Global_Data));
+	memcpy_s(
+		&(ThreadDataExchange.DrawToData),
+		sizeof(_Global_Data),
+		&(ThreadDataDraw->DrawToData),
 		sizeof(_Global_Data));
 
 	ReadingThread_States=_ReadingThread_States_NoThread;
