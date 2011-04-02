@@ -123,7 +123,7 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		ShadowTexSize=512<<max(GameSet.Shadow-1,0);
 		ShadowTexDepthSize[0]=float(ShadowTexSize);
 		ShadowTexDepthSize[1]=float(ShadowTexSize);
-		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_ALPHA4,GL_RGBA,GL_UNSIGNED_BYTE);
+		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_ALPHA,GL_RGBA,GL_UNSIGNED_BYTE);
 		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 		glGenFramebuffersEXT(1,&ShadowFBOID);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);

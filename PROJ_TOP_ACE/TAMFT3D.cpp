@@ -9,6 +9,7 @@ CTAMFT3D::CTAMFT3D(void)
 	, VBOID(0)
 	, MaxVecNum(0)
 	, MaxFaceNum(0)
+	, RenderFaceNum(0)
 {
 	for(int i=0;i<0x10000;i++)
 		CharVBOID_indexs[i]=0;
@@ -129,12 +130,13 @@ void CTAMFT3D::DrawOneChar(wchar_t DrawChar)
 	glDisableClientState( GL_INDEX_ARRAY );
 	
 	CharVBO[CharVBOID_indexs[DrawChar]].NoDrawTimes=1;
-
+	RenderFaceNum=RenderFaceNum+pTAMFT3D_FileHead->CharSet[DrawChar].FaceNum;
 	
 }
 
 void CTAMFT3D::Draw3DText(wchar_t * DrawChar,float FontW,float FontH,float LineW,float lineH,float IntervalW)
 {
+	RenderFaceNum=0;
 	if(!DrawChar) return;
 	if(!GetCharLenth(DrawChar)) return;
 	

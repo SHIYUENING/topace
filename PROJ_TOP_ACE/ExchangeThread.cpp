@@ -86,6 +86,11 @@ CExchangeThread::CExchangeThread(void)
 	Global_Data.Scene.PlayerID=0;
 	DataList = (_UnitData *)_aligned_malloc(sizeof(_UnitData)*ListCount,16);
 	DataList[0].UnitData_States=_UnitData_States_Use;
+	for(int i=0;i<256;i++)
+	{
+		DrawToData.Global_Data_Key.keyDownLast[i]=0;
+		DrawToData.Global_Data_Key.keyDown_Now[i]=0;
+	}
 }
 
 CExchangeThread::~CExchangeThread(void)

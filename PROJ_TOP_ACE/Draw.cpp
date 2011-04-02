@@ -34,7 +34,7 @@ bool IsFirstInit=true;
 LARGE_INTEGER TimeStart,TimeEnd,Timefeq,RunTimeStart,RunTimeEnd,CPUTestStart,CPUTestEnd;
 int FPSNum=0;
 int FPSNumShow=0; 
-wchar_t ShowFPS[64]={0};
+wchar_t ShowFPS[512]={0};
 //CLoad3DS  * Test3dsModelHanger=NULL;
 extern tGameSet GameSet;
 int OmniLightNumBase=0;
@@ -212,7 +212,7 @@ void InitDraw()
 		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
 		//PosOrgY=500.0f;
 		moveZSpeed=PosOrgZ/60.0f;
-		maxFreme=1.4*(float)TopAceModelTest.testMAXFrame;
+		maxFreme=1.4f*(float)TopAceModelTest.testMAXFrame;
 	}
 	/*
 	if(GameSet.Light==1)
@@ -391,7 +391,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,64,L"FPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%",FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU);
+		swprintf_s(ShowFPS,256,L"FPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d",FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU,RenderFaces);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}
@@ -401,6 +401,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
 	FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	RenderFaces=0;
 }
 void DrawTestLines()
 {
@@ -550,7 +551,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	SetCameraMatrix();
 	SetLights();
 	Test_matrix();
-	TopAceModelTest.FrameTAMBoneMatrixs(max(0.0f,Test3dsFrame-0.3*TopAceModelTest.testMAXFrame));
+	TopAceModelTest.FrameTAMBoneMatrixs(max(0.0f,Test3dsFrame-0.3f*TopAceModelTest.testMAXFrame));
+	RenderFaces=RenderFaces+TAMFT3D.RenderFaceNum+TopAceModelTest.TotelFaceNum;
 	QueryPerformanceCounter(&CPUTestEnd);
 }
 void DrawShadowMap()
