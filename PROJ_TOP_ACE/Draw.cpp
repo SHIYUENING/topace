@@ -241,7 +241,7 @@ void InitDraw()
 	char szPath[MAX_PATH];
 	char FontPath[MAX_PATH];
 	GetWindowsDirectoryA(szPath,sizeof(szPath));
-	sprintf(FontPath,"%s/Fonts/simsun.ttc",szPath);
+	sprintf(FontPath,"%s/Fonts/simhei.ttf",szPath);
 	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
@@ -391,7 +391,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,256,L"FPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d",FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU,RenderFaces);
+		swprintf_s(ShowFPS,sizeof(ShowFPS)/sizeof(ShowFPS[0]),L"FPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d",FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU,RenderFaces);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}
