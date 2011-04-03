@@ -80,7 +80,92 @@ bool CFONTS2D::LoadHalfWidthFont(const char * FontPath,int FontW,int FontH,int C
 	}
 	return true;
 }
+FT_Error Old_FT_Outline_Embolden( FT_Outline*  outline, FT_Pos strength )
+{
+    FT_Vector*    points;
+    FT_Vector    v_prev, v_first, v_next, v_cur;
+    FT_Angle    rotate, angle_in, angle_out;
+    FT_Int        c, n, first;
+    FT_Int        orientation;
 
+    if ( !outline )
+        return FT_Err_Invalid_Argument;
+
+    strength /= 2;
+    if ( strength == 0 )
+        return FT_Err_Ok;
+
+    orientation = FT_Outline_Get_Orientation( outline );
+    if ( orientation == FT_ORIENTATION_NONE )
+    {
+        if ( outline->n_contours )
+            return FT_Err_Invalid_Argument;
+        else
+            return FT_Err_Ok;
+    }
+
+    if ( orientation == FT_ORIENTATION_TRUETYPE )
+        rotate = -FT_ANGLE_PI2;
+    else
+        rotate = FT_ANGLE_PI2;
+
+    points = outline->points;
+
+    first = 0;
+    for ( c = 0; c < outline->n_contours; c++ )
+    {
+        int  last = outline->contours[c];
+
+        v_first = points[first];
+        v_prev  = points[last];
+        v_cur   = v_first;
+
+        for ( n = first; n <= last; n++ )
+        {
+            FT_Vector    in, out;
+            FT_Angle    angle_diff;
+            FT_Pos        d;
+            FT_Fixed    scale;
+
+            if ( n < last )
+                v_next = points[n + 1];
+            else
+                v_next = v_first;
+
+            /* compute the in and out vectors */
+            in.x = v_cur.x - v_prev.x;
+            in.y = v_cur.y - v_prev.y;
+
+            out.x = v_next.x - v_cur.x;
+            out.y = v_next.y - v_cur.y;
+
+            angle_in   = FT_Atan2( in.x, in.y );
+            angle_out  = FT_Atan2( out.x, out.y );
+            angle_diff = FT_Angle_Diff( angle_in, angle_out );
+            scale      = FT_Cos( angle_diff / 2 );
+
+            if ( scale < 0x4000L && scale > -0x4000L )
+                in.x = in.y = 0;
+            else
+            {
+                d = FT_DivFix( strength, scale );
+
+                FT_Vector_From_Polar( &in, d, angle_in + angle_diff / 2 - rotate );
+            }
+
+            outline->points[n].x = v_cur.x + strength + in.x;
+            //伀偙傟傪僐儊儞僩傾僂僩偟偨偩偗
+            //outline->points[n].y = v_cur.y + strength + in.y;
+
+            v_prev = v_cur;
+            v_cur  = v_next;
+        }
+
+        first = last + 1;
+    }
+
+    return FT_Err_Ok;
+}
 void CFONTS2D::SetCharTex(const wchar_t CharIn)
 {
 	if(CharIn==0x0D) return;
@@ -96,7 +181,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	FontSets[CharIn].TexSizeY=face==Face_FullWidth?FontSizeFY:FontSizeHY;FontSets[CharIn].TexSizeY=next_p2(FontSets[CharIn].TexSizeY);
 	unsigned char* FontDataTMP=face==Face_FullWidth?FontDataTMP_FullWidth:FontDataTMP_HalfWidth;
 	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, CharIn ), FT_LOAD_DEFAULT )) return;
-	FT_Outline_Embolden( &(face->glyph->outline), 30 );
+	Old_FT_Outline_Embolden( &(face->glyph->outline), 30 );
     if(FT_Get_Glyph( face->glyph, &glyph )) return;
 	FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 );
     bitmap_glyph = (FT_BitmapGlyph)glyph;
