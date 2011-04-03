@@ -757,7 +757,7 @@ void CTopAceModel::DeleteMeshVRAM(_TAM_Mesh * TAM_Mesh)
 	if(glIsVertexArray(MeshVBOID->VAOID))
 		glDeleteVertexArrays(1,&MeshVBOID->VAOID);
 }
-void CTopAceModel::Draw(bool Translucent,bool Fiexible)
+void CTopAceModel::Draw(bool Translucent)
 {
 	if(!pTAM_FileHead) return ;
 	if(unsigned int(pTAM_FileHead->MeshHeadAddress)==0xFFFFFFFF) return ;
@@ -774,10 +774,6 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 				glDisable(GL_CULL_FACE);*/
 			if(TAM_Mesh_Draw->IsFiexible)
 			{
-				if(!Fiexible) continue;
-				//CO_SetMMatrixToGlsl(NULL);
-				//CO_SetPMatrixToGlsl(NULL);
-				//CO_SetMVPMatrixToGlsl(NULL);
 				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
@@ -787,58 +783,31 @@ void CTopAceModel::Draw(bool Translucent,bool Fiexible)
 			}
 			else
 			{
-				if(Fiexible) continue;
 				if(TAM_Mesh_Draw->BoneWeightNum>0)
 				{
-					glGetFloatv(GL_MODELVIEW_MATRIX,(float *)&NodeBoneMatrixTMP[0]);
-					//CO_GetMMatrixD(NodeBoneMatrixTMPD);
 					CommonMatrixs[CO_Matrix_World].Push();
 					if(TAM_Mesh_Draw->FaceNum>0)
 					{
-						glMultMatrixf((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
-						//CO_MultMMatrix((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
 						CommonMatrixs[CO_Matrix_World].MultF((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
 					}
 				}
-				//CO_SetMMatrixToGlsl(NULL);
-				//CO_SetPMatrixToGlsl(NULL);
-				//CO_SetMVPMatrixToGlsl(NULL);
 				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
 				CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
-				if(SuppotVBO)
-					DrawMeshRigid(TAM_Mesh_Draw);
-				else
-					DrawRAMMeshRigid(TAM_Mesh_Draw);
+				SuppotVBO==true?DrawMeshRigid(TAM_Mesh_Draw):DrawRAMMeshRigid(TAM_Mesh_Draw);
 				if(TAM_Mesh_Draw->BoneWeightNum>0)
 				{
-					glLoadMatrixf((float *)&NodeBoneMatrixTMP[0]);
-					//CO_SetMMatrixD(NodeBoneMatrixTMPD);
 					CommonMatrixs[CO_Matrix_World].Pop();
 				}
 			}
 		}
 	}
-}
-void CTopAceModel::Draw(void)
-{
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
-	Draw(false,true);
-	Draw(false,false);
-	//glDepthMask(GL_FALSE);
-	Draw(true,false);
-	Draw(true,true);
-	//glDepthMask(GL_TRUE);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
-	glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glEnable(GL_CULL_FACE);
 }
+
 void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 {
 	if(!TAM_Mat)
@@ -877,29 +846,7 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 
 
 }
-void CTopAceModel::DrawRAM(void)
-{
-	glEnable(GL_CULL_FACE);
-	glDisable(GL_BLEND);
 
-	if(!pTAM_FileHead)
-		return ;
-	if(unsigned int(pTAM_FileHead->MeshHeadAddress)==0xFFFFFFFF)
-		return ;
-	_TAM_Mesh * TAM_Mesh_Draw=NULL;
-	for(unsigned int i=0;i<pTAM_FileHead->MeshNum;i++)
-	{
-		TAM_Mesh_Draw=pTAM_FileHead->MeshHeadAddress[i];
-		if(TAM_Mesh_Draw)
-		{
-			if(TAM_Mesh_Draw->IsFiexible)
-				DrawRAMMeshFiexible(TAM_Mesh_Draw);
-			else
-				DrawRAMMeshRigid(TAM_Mesh_Draw);
-		}
-	}
-	glEnable(GL_CULL_FACE);
-}
 bool CTopAceModel::IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh)
 {
 

@@ -95,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="TAMFT3D.cpp" />
     <ClCompile Include="CommonMatrix.cpp" />
+    <ClCompile Include="DrawTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="TAMFT3D.h" />
     <ClInclude Include="CommonMatrix.h" />
+    <ClInclude Include="DrawTests.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">

@@ -151,13 +151,18 @@
     <ClCompile Include="DDS.cpp" />
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="DrawQUAD.cpp" />
+    <ClCompile Include="DrawTests.cpp" />
     <ClCompile Include="EasyMatrix.cpp" />
     <ClCompile Include="ExchangeThread.cpp" />
     <ClCompile Include="EXTLIBS.cpp" />
     <ClCompile Include="FBO.cpp" />
     <ClCompile Include="FileSysBace.cpp" />
-    <ClCompile Include="Font2D.cpp" />
-    <ClCompile Include="Font3D.cpp" />
+    <ClCompile Include="Font2D.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Font3D.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="FONTS2D.cpp" />
     <ClCompile Include="Glsl.cpp" />
     <ClCompile Include="GLSLLoader.cpp" />
@@ -198,6 +203,7 @@
     <ClInclude Include="Def.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="DrawQUAD.h" />
+    <ClInclude Include="DrawTests.h" />
     <ClInclude Include="EasyMatrix.h" />
     <ClInclude Include="EasyQuat.h" />
     <ClInclude Include="EasyVector.h" />

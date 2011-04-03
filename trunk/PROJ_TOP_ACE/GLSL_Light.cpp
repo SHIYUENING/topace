@@ -101,6 +101,8 @@ void Deinit_GLSL_light()
 }
 void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightNum,int TessLevel)
 {
+	
+	if(GLSLver>=GLSL400) glPatchParameteri(GL_PATCH_VERTICES, 3);
 	int LightNums[2]={OmniLightNum,SpotLightNum};
 	
 	CO_SetGlslPO(GH_PO[boneType][GLSLver]);

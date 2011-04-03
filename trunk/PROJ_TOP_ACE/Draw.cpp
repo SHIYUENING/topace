@@ -8,7 +8,6 @@
 //#include <lib3ds.h>
 #include <string.h>	
 //#include "Load3DS.h"
-#include "Font2D.h"
 #include "FONTS2D.h"
 #include "Textures.h"
 #include "IniFile.h"
@@ -19,6 +18,7 @@
 #include "DrawQUAD.h"
 #include "Common.h"
 #include "TAMFT3D.h"
+#include "DrawTests.h"
 float extern angleR;
 float extern Test3dsFrame;
 float extern maxFreme;
@@ -26,7 +26,6 @@ float extern moveZ;
 float extern moveY;
 float extern moveX;
 int extern ReadingThreadNum;
-CFont2D * Font2D=NULL; 
 CFONTS2D FONTS2D;
 CTAMFT3D TAMFT3D;
 bool Inited=false;
@@ -47,20 +46,11 @@ float PosOrgZ=0.0f;
 extern float moveZSpeed;
 __m128 MatrixDrawTestUnit[4];
 CExchangeThread ThreadDataDraw;
-GLuint TestModelVAO=0;
 extern GLuint ShadowFBOID;
 extern GLuint ShadowTex;
 extern GLuint ShadowTexDepth;
 extern int ShadowTexSize;
-struct _TestMeshVBOID
-{
-	unsigned int VerticeID;
-	unsigned int NormalID;
-	unsigned int TexCoordID;
-	unsigned int ColorID;
-	unsigned int FaceID;
-};
-_TestMeshVBOID TestMeshVBOID;
+
 extern int TessLevel;
 extern bool DrawFrame;
 __m128 CameraMatrix[4];
@@ -153,13 +143,10 @@ void LoadCubeTex()
 	LoadCubeTexTga(L"data/SkyBox/FR.tga",GL_TEXTURE_CUBE_MAP_POSITIVE_Z_EXT);
 	LoadCubeTexTga(L"data/SkyBox/BK.tga",GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT);
 }
-void InitDraw()
+bool InitDraw()
 {
 	glewInit();
 
-	//WritePrivateProfileStringA("PC Info","Video Card",(char *)glGetString(GL_RENDERER),".\\gameset.ini");
-	//WritePrivateProfileStringA("PC Info","GL_VERSION",(char *)glGetString(GL_VERSION),".\\gameset.ini");
-	//WritePrivateProfileString("PC Info","GL_EXTENSIONS",(char *)glGetString(GL_EXTENSIONS),".\\gameset.ini");
 	ADD_LOG_Q((char *)glGetString(GL_RENDERER));
 	ADD_LOG_Q((char *)glGetString(GL_VERSION));
 	ADD_OGLEX_LOG((char *)glGetString(GL_EXTENSIONS));
@@ -171,6 +158,8 @@ void InitDraw()
 	{
 		MessageBoxW( NULL, L"Please Updata Video Card Driver", L"OpenGL Ver error", MB_OK|MB_ICONEXCLAMATION );
 		GameSet.Light=1;
+		ADD_LOG_Q("Opengl Ver too Low,maybe Video Card too old.","#FF0000");
+		return false;
 	}
 	if((!glewIsSupported("GL_ARB_pixel_buffer_object"))&&(!glewIsSupported("GL_EXT_pixel_buffer_object")))
 	{
@@ -214,29 +203,7 @@ void InitDraw()
 		moveZSpeed=PosOrgZ/60.0f;
 		maxFreme=1.4f*(float)TopAceModelTest.testMAXFrame;
 	}
-	/*
-	if(GameSet.Light==1)
-	{
-		glEnable(GL_LIGHTING);
-		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL,GL_SEPARATE_SPECULAR_COLOR);
-		//glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_TRUE);
-		//glEnable(GL_LIGHT0);
-	}
-	if(!Test3dsModelHanger)
-	{
-		
-		Test3dsModelHanger=new CLoad3DS;
-		//Test3dsModelHanger->Loadfile("data/model/hanger/Test3dsModelHanger.3DS");
-		//if(!Test3dsModelHanger->isRAM)
-		//	MessageBox( NULL, "Cannot open data/model/hanger/Test3dsModelHanger.3DS!", "ERROR",MB_OK | MB_ICONEXCLAMATION );
-		Test3dsModelHanger->LoadToVRAM();
-		if(Test3dsModelHanger->Model3ds)
-			maxFreme=float(Test3dsModelHanger->Model3ds->frames);
-	}
-	if(!Test3dsModelHanger->isVRAM)
-	{
-		Test3dsModelHanger->LoadToVRAM();ARIAL.TTF
-	}*/
+
 	
 	char szPath[MAX_PATH];
 	char FontPath[MAX_PATH];
@@ -245,11 +212,7 @@ void InitDraw()
 	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
-	/*if(!Font2D)
-	{
-		Font2D=new CFont2D;
-		Font2D->LoadFont(FontPath,32,32);
-	}*/
+
 	TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
@@ -261,7 +224,7 @@ void InitDraw()
 		IsFirstInit=false;
 	}
 	QueryPerformanceFrequency(&Timefeq);
-
+	return true;
 }
 void ClearVRAM()
 {
@@ -269,25 +232,14 @@ void ClearVRAM()
 	{
 		Test3dsModelHanger->Del_VRAM();
 	}*/
-	if(Font2D)
-	{
-		delete Font2D;
-		Font2D=NULL;
-	}
 }
 void DeinitDraw()
 {
 	if(GameSet.Light>1)
 		DeinitFBO();
 	DeinitGLSL();
-	if(Font2D)
-	{
-		delete Font2D;
-		Font2D=NULL;
-	}
 	TopAceModelTest.DeleteVRAM();
 	Inited=false;
-	DeinitTestModel();
 }
 void UnitMatrix()
 {
@@ -403,83 +355,9 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	RenderFaces=0;
 }
-void DrawTestLines()
-{
-	glDisable( GL_TEXTURE_2D );
-	glColor3f(1.0f,1.0f,1.0f);
-	glBegin(GL_LINES);
-		glColor3f(1.0f,1.0f,0.0f);
-		glVertex3f( 0.0f, 0.0f, 100000.0f);
-		glVertex3f( 0.0f, 0.0f,      0.0f);
 
-		glColor3f(1.0f,0.0f,1.0f);
-		glVertex3f( 0.0f, 0.0f,      0.0f);
-		glVertex3f( 0.0f, 0.0f,-100000.0f);
-
-		glColor3f(1.0f,1.0f,1.0f);
-		glVertex3f( 0.0f, 100000.0f, 0.0f);
-		glVertex3f( 0.0f,      0.0f, 0.0f);
-
-		glColor3f(0.0f,0.0f,0.0f);
-		glVertex3f( 0.0f,      0.0f, 0.0f);
-		glVertex3f( 0.0f,-100000.0f, 0.0f);
-
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f( 100000.0f, 0.0f, 0.0f);
-		glVertex3f(      0.0f, 0.0f, 0.0f);
-		glColor3f(0.0f,0.0f,1.0f);
-		glVertex3f(-100000.0f, 0.0f, 0.0f);
-		glVertex3f(      0.0f, 0.0f, 0.0f);
-
-
-		glColor3f(1.0f,1.0f,1.0f);
-		glVertex3f( 100.0f, 100.0f, 100.0f);
-		glVertex3f(-100.0f, 100.0f, 100.0f);
-
-		glVertex3f( 100.0f, 100.0f, 100.0f);
-		glVertex3f( 100.0f,-100.0f, 100.0f);
-
-		glVertex3f(-100.0f,-100.0f, 100.0f);
-		glVertex3f(-100.0f, 100.0f, 100.0f);
-
-		glVertex3f(-100.0f,-100.0f, 100.0f);
-		glVertex3f( 100.0f,-100.0f, 100.0f);
-
-
-		glVertex3f( 100.0f, 100.0f,-100.0f);
-		glVertex3f(-100.0f, 100.0f,-100.0f);
-
-		glVertex3f( 100.0f, 100.0f,-100.0f);
-		glVertex3f( 100.0f,-100.0f,-100.0f);
-
-		glVertex3f(-100.0f,-100.0f,-100.0f);
-		glVertex3f(-100.0f, 100.0f,-100.0f);
-
-		glVertex3f(-100.0f,-100.0f,-100.0f);
-		glVertex3f( 100.0f,-100.0f,-100.0f);
-
-
-
-		glVertex3f( 100.0f, 100.0f,-100.0f);
-		glVertex3f( 100.0f, 100.0f, 100.0f);
-
-		glVertex3f(-100.0f, 100.0f,-100.0f);
-		glVertex3f(-100.0f, 100.0f, 100.0f);
-
-		glVertex3f( 100.0f,-100.0f,-100.0f);
-		glVertex3f( 100.0f,-100.0f, 100.0f);
-
-		glVertex3f(-100.0f,-100.0f,-100.0f);
-		glVertex3f(-100.0f,-100.0f, 100.0f);
-
-	glEnd();
-
-	glEnable( GL_TEXTURE_2D );
-}
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
-	//glGetFloatv(GL_MODELVIEW_MATRIX,&MatrixTMPF4X4[0]);
-
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
 	
 	if(GameSet.Light<4) glEnable(GL_MULTISAMPLE_ARB);
@@ -487,64 +365,38 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	//DrawTestLines();
 	
-	TAMFT3D.Draw3DText(L"以前解决这类任务的扩展方法是用VAR（Vertex Array Range顶点数组序列）。尽管该扩展仍然可以用，但我们建议您用VBO来代替",20,20,600);
-	//if(GameSet.Light==1) glEnable(GL_LIGHTING);
-	//GLSL_Enable_PhoneLight(OmniLightNumBase,SpotLightNumBase);
+	TAMFT3D.Draw3DText(L"测试",20,20,600);
 	
-
 	if(GameSet.Shadow>0) 
 	{
 		if(TopAceModelTest.pTAM_FileHead)
 		DrawShadowMap();
 	}
-	//glGetFloatv(GL_PROJECTION_MATRIX,&DrawMatrixTMP[0]);
-	//SetPMatrix(DrawMatrixTMP);
 
-	if(GameSet.Light>=4)
-		glPatchParameteri(GL_PATCH_VERTICES, 3);
 	int GLSLver=min(max(GameSet.Light-2,0),2);
-	//glLoadMatrixf(&MatrixTMPF4X4[0]);
-	//glMultMatrixf(MatrixDrawTestUnit[0].m128_f32);
-//	CO_SetMMatrix(CameraMatrix[0].m128_f32);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
-//	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
-	TopAceModelTest.Draw(false,true);
-	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
-	GLSL_Enable_Light(SINGLBONE,GLSLver,OmniLightNumBase,SpotLightNumBase,TessLevel);
-	TopAceModelTest.Draw(false,false);
+	TopAceModelTest.Draw(false);
 	glDepthMask(GL_FALSE);
-	TopAceModelTest.TAMDrawMode=GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES;
-	GLSL_Enable_Light(SINGLBONE,GLSLver,OmniLightNumBase,SpotLightNumBase,TessLevel);
-	TopAceModelTest.Draw(true,false);
-	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
-	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
-	TopAceModelTest.Draw(true,true);
+	TopAceModelTest.Draw(true);
 	glDepthMask(GL_TRUE);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_CULL_FACE);
-	/*CO_MultMMatrix(ThreadDataDraw.DataList[3].Matrix);
-	GLSL_SetMMatrixToGlsl();
-	GLSL_SetMVPMatrixToGlsl();
-	DrawTestModel(GameSet.Light>=4?GL_PATCHES:GL_TRIANGLES);
-	*/
+
 	GLSL_Disable();
-	
-	//if(GameSet.Light==1) glDisable(GL_LIGHTING);
 	
 	RenderPass2Units();
 	
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	glDisable(GL_MULTISAMPLE_ARB);
+
+
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
 	UnitMatrix();
@@ -561,9 +413,11 @@ void DrawShadowMap()
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
-	//DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
-	float Shadowdepth=1.05f*max(TopAceModelTest.pTAM_FileHead->BoxMax[3],-TopAceModelTest.pTAM_FileHead->BoxMin[3]);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	
+	float Shadowdepth=1.05f*max(TopAceModelTest.pTAM_FileHead->BoxMax[3],-TopAceModelTest.pTAM_FileHead->BoxMin[3]);
 	CUnitMath ShadowUnitMath;
 	ShadowUnitMath.UnitPos.m128_f32[0]=ThreadDataDraw.DataList[4].Matrix[12];
 	ShadowUnitMath.UnitPos.m128_f32[1]=ThreadDataDraw.DataList[4].Matrix[13];
@@ -578,6 +432,7 @@ void DrawShadowMap()
 	Easy_matrix_inv(ShadowMM,ShadowMM);
 	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
 
+	
 	CommonMatrixs[CO_Matrix_Proj].Push();
 	CommonMatrixs[CO_Matrix_Proj].OrthogonalProjection(-Shadowdepth,Shadowdepth,-Shadowdepth,Shadowdepth,50.0f,50.0f+Shadowdepth*2.0f);
 	GLdouble Biasmatrix[16]={
@@ -587,10 +442,13 @@ void DrawShadowMap()
 		0.5, 0.5, 0.5, 1.0};
 	CommonMatrixs[CO_Matrix_ShadowViewProj].LoadD(Biasmatrix);
 	CommonMatrixs[CO_Matrix_ShadowViewProj].MultD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
-	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
+	//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, ShadowTex, 0); 
+	//glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+
 	glClear (GL_DEPTH_BUFFER_BIT);
 	glPushAttrib(GL_VIEWPORT_BIT);
 	glViewport(0,0,ShadowTexSize, ShadowTexSize);
@@ -600,196 +458,23 @@ void DrawShadowMap()
 	glCullFace(GL_FRONT);
 	glEnable(GL_CULL_FACE);
 	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+
+
 	GLSL_Enable_Shadow();
-//	CO_SetMMatrix(ShadowMF);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(ShadowMF);
 	CommonMatrixs[CO_Matrix_ShadowViewProj].MultF(ShadowMF);
-//	CO_MultMMatrix(ThreadDataDraw.DataList[4].Matrix);
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
-	TopAceModelTest.Draw(false,false);
-	TopAceModelTest.Draw(false,true);
+	TopAceModelTest.Draw(false);
 
 
 	GLSL_Disable();
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
-	glDepthFunc(GL_LEQUAL);
 	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
 	glCullFace(GL_BACK);
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 	CommonMatrixs[CO_Matrix_Proj].Pop();
-}
-void InitTestModel()
-{
-	int TestModelFaces[]={
-		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
-	};
-	float TestModelPos[]={
-			0.0f,   0.0f,-050.0f,
-			050.0f,   0.0f, 050.0f,
-			0.0f, 050.0f, 050.0f,
-
-			0.0f,   0.0f,-050.0f,
-			-050.0f,   0.0f, 050.0f,
-			0.0f, 050.0f, 050.0f,
-
-			0.0f,   0.0f,-050.0f,
-			050.0f,   0.0f, 050.0f,
-			0.0f,-050.0f, 050.0f,
-
-			0.0f,   0.0f,-050.0f,
-			-050.0f,   0.0f, 050.0f,
-			0.0f,-050.0f, 050.0f,
-
-			-050.0f,   0.0f, 050.0f,
-			0.0f,-050.0f, 050.0f,
-			0.0f, 050.0f, 050.0f,
-
-			0.0f, 050.0f, 050.0f,
-			050.0f,   0.0f, 050.0f,
-			0.0f,-050.0f, 050.0f
-	};
-	float TestModelNormal[]={
-			0.0f, 0.0f,-1.0f,
-			1.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-
-			0.0f, 0.0f,-1.0f,
-			-1.0f, 0.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-
-			0.0f, 0.0f,-1.0f,
-			1.0f, 0.0f, 0.0f,
-			0.0f,-1.0f, 0.0f,
-
-			0.0f, 0.0f,-1.0f,
-			-1.0f, 0.0f, 0.0f,
-			0.0f,-1.0f, 0.0f,
-	
-			-1.0f, 0.0f, 0.0f,
-			0.0f,-1.0f, 0.0f,
-			0.0f, 1.0f, 0.0f,
-
-			0.0f, 1.0f, 0.0f,
-			1.0f, 0.0f, 0.0f,
-			0.0f,-1.0f, 0.0f
-	};
-	float TestModelColor[]={
-			0.0f,1.0f,0.0f,1.0f,
-			0.0f,1.0f,0.0f,1.0f,
-			0.0f,1.0f,0.0f,1.0f,
-
-			0.0f,1.0f,0.0f,1.0f,
-			0.0f,1.0f,0.0f,1.0f,
-			0.0f,1.0f,0.0f,1.0f,
-
-			1.0f,1.0f,1.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f,
-
-			1.0f,1.0f,1.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f,
-
-			1.0f,1.0f,1.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f,
-			0.0f,1.0f,0.0f,1.0f,
-
-			0.0f,1.0f,0.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f,
-			1.0f,1.0f,1.0f,1.0f
-	};
-
-	float TestModelTexCoord[]={
-		0.0f,   0.0f,
-		1.0f,   0.0f,
-		0.0f,   1.0f,
-
-		0.0f,   0.0f,
-		1.0f,   0.0f,
-		0.0f,   1.0f,
-
-		0.0f,   0.0f,
-		1.0f,   0.0f,
-		0.0f,   1.0f,
-
-		0.0f,   0.0f,
-		1.0f,   0.0f,
-		0.0f,   1.0f,
-
-		0.0f,   0.0f,
-		1.0f,   0.0f,
-		0.0f,   1.0f,
-
-		0.0f,   0.0f,
-		1.0f,   0.0f,
-		0.0f,   1.0f
-	};
-	
-	glGenBuffersARB( 1,&TestMeshVBOID.VerticeID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelPos), TestModelPos, GL_STATIC_DRAW_ARB );
-	glGenBuffersARB( 1,&TestMeshVBOID.NormalID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelNormal), TestModelNormal, GL_STATIC_DRAW_ARB );
-	glGenBuffersARB( 1,&TestMeshVBOID.ColorID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelColor), TestModelColor, GL_STATIC_DRAW_ARB );
-	glGenBuffersARB( 1,&TestMeshVBOID.TexCoordID);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, sizeof(TestModelTexCoord), TestModelTexCoord, GL_STATIC_DRAW_ARB );
-	//glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	glGenBuffersARB( 1,&TestMeshVBOID.FaceID);
-	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, TestMeshVBOID.FaceID );
-	glBufferDataARB( GL_ELEMENT_ARRAY_BUFFER, sizeof(TestModelFaces), TestModelFaces, GL_STATIC_DRAW_ARB );
-	
-	glGenVertexArrays(1,&TestModelVAO);
-	glBindVertexArray(TestModelVAO);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.VerticeID );
-	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,0,0);
-	glEnableVertexAttribArray(AbLoc_Pos);
-	
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.NormalID );
-	glVertexAttribPointer(AbLoc_Normal,3,GL_FLOAT,0,0,0);
-	glEnableVertexAttribArray(AbLoc_Normal);
-	
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.ColorID );
-	glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
-	glEnableVertexAttribArray(AbLoc_Color);
-
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, TestMeshVBOID.TexCoordID );
-	glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
-	glEnableVertexAttribArray(AbLoc_Tex0);
-	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, TestMeshVBOID.FaceID );
-	glBindVertexArray(0);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER, 0);
-
-}
-void DrawTestModel(unsigned int TestModelDrawMode)
-{
-	glBindTexture(GL_TEXTURE_2D, LoadingTex.TexID);//
-	//glDisable( GL_TEXTURE_2D );
-	glDisable(GL_BLEND);
-	glDisable(GL_CULL_FACE);
-	glBindVertexArray(TestModelVAO);
-    glDrawElements(TestModelDrawMode, 18, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-	glDisableVertexAttribArray(AbLoc_Color);
-	glDisableVertexAttribArray(AbLoc_Normal);
-	glDisableVertexAttribArray(AbLoc_Pos);
-	glDisableVertexAttribArray(AbLoc_Tex0);
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-	glEnable( GL_TEXTURE_2D );
-	glEnable(GL_CULL_FACE);
-}
-void DeinitTestModel()
-{
-	glDeleteBuffersARB(1,&TestMeshVBOID.VerticeID);
-	glDeleteBuffersARB(1,&TestMeshVBOID.NormalID);
-	glDeleteBuffersARB(1,&TestMeshVBOID.ColorID);
-	glDeleteBuffersARB(1,&TestMeshVBOID.TexCoordID);
 }
