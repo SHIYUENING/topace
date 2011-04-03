@@ -326,8 +326,6 @@ public:
 	bool LoadMeshToVRAM(_TAM_Mesh * TAM_Mesh);
 	void DeleteVRAM(void);
 	void DeleteMeshVRAM(_TAM_Mesh * TAM_Mesh);
-	void Draw(void);
-	void DrawRAM(void);
 	bool DrawMeshRigid(_TAM_Mesh * TAM_Mesh);
 	bool DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh);
 	bool DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh);
@@ -380,7 +378,7 @@ public:
 	bool DrawTranslucent;
 	bool GetCamMatrix(unsigned int CamID, __m128 * CamMatrix);
 	void SetLight(unsigned int LightID,unsigned int LightBase=0);
-	void Draw(bool Translucent,bool Fiexible);
+	void Draw(bool Translucent);
 	void CreatVAO(tMeshVBOID * MeshVBOID);
 	bool MeshUseAlphaTMP;
 	bool IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh);

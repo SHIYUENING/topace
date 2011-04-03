@@ -139,6 +139,8 @@ void CTAMFT3D::Draw3DText(wchar_t * DrawChar,float FontW,float FontH,float LineW
 	RenderFaceNum=0;
 	if(!DrawChar) return;
 	if(!GetCharLenth(DrawChar)) return;
+	if(!isRAM) return;
+	if(!pTAMFT3D_FileHead) return;
 	
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);

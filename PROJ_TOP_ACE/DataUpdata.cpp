@@ -19,15 +19,34 @@ float extern PosOrgY;
 float extern PosOrgZ;
 float extern GoX;
 float extern GoZ;
+extern float moveZSpeed;
 CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
 CUnitsList UnitsList;
 CSoundSys * SoundSysTest;
-unsigned char KeyNow[256];
-unsigned char KeyLast[256];
 void UpdataKeys()
 {
-	GetKeyboardState(KeyNow);
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_PRIOR] == TRUE)
+		moveZ=moveZ+moveZSpeed;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_NEXT] == TRUE)
+		moveZ=moveZ-moveZSpeed;
+
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['W'] == TRUE)
+		GoZ=GoZ+moveZSpeed;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['S'] == TRUE)
+		GoZ=GoZ-moveZSpeed;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['A'] == TRUE)
+		GoX=GoX+moveZSpeed;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['D'] == TRUE)
+		GoX=GoX-moveZSpeed;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_UP] == TRUE)
+		moveY=moveY+2.0f;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_DOWN] == TRUE)
+		moveY=moveY-2.0f;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_RIGHT] == TRUE)
+		moveX=moveX+2.0f;
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_LEFT] == TRUE)
+		moveX=moveX-2.0f;
 }
 void InitDataThread()
 {

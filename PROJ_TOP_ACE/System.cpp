@@ -74,14 +74,14 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 	//{
 	//	ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
 	//}
-	if(g_keys->keyDown [VK_PRIOR] == TRUE)
-		moveZ=moveZ+moveZSpeed;
-	if(g_keys->keyDown [VK_NEXT] == TRUE)
-		moveZ=moveZ-moveZSpeed;
-	if(g_keys->keyDown ['W'] == TRUE) GoZ=GoZ+moveZSpeed;
-	if(g_keys->keyDown ['S'] == TRUE) GoZ=GoZ-moveZSpeed;
-	if(g_keys->keyDown ['A'] == TRUE) GoX=GoX+moveZSpeed;
-	if(g_keys->keyDown ['D'] == TRUE) GoX=GoX-moveZSpeed;
+	//if(g_keys->keyDown [VK_PRIOR] == TRUE)
+	//	moveZ=moveZ+moveZSpeed;
+	//if(g_keys->keyDown [VK_NEXT] == TRUE)
+	//	moveZ=moveZ-moveZSpeed;
+	//if(g_keys->keyDown ['W'] == TRUE) GoZ=GoZ+moveZSpeed;
+	//if(g_keys->keyDown ['S'] == TRUE) GoZ=GoZ-moveZSpeed;
+	//if(g_keys->keyDown ['A'] == TRUE) GoX=GoX+moveZSpeed;
+	//if(g_keys->keyDown ['D'] == TRUE) GoX=GoX-moveZSpeed;
 	if((g_keys->keyDown ['1'] == TRUE)&&(!Gdown1))
 	{
 		Gdown1=true;
@@ -99,16 +99,16 @@ void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Upda
 	glGetIntegerv(GL_MAX_TESS_GEN_LEVEL,&TessLevelMAX);
 	TessLevel=min(TessLevelMAX,TessLevel);
 
-	if(g_keys->keyDown [VK_UP] == TRUE)
-		moveY=moveY+2.0f;
-	if(g_keys->keyDown [VK_DOWN] == TRUE)
-		moveY=moveY-2.0f;
+	//if(g_keys->keyDown [VK_UP] == TRUE)
+	//	moveY=moveY+2.0f;
+	//if(g_keys->keyDown [VK_DOWN] == TRUE)
+	//	moveY=moveY-2.0f;
 
 
-	if(g_keys->keyDown [VK_RIGHT] == TRUE)
-		moveX=moveX+2.0f;
-	if(g_keys->keyDown [VK_LEFT] == TRUE)
-		moveX=moveX-2.0f;
+	//if(g_keys->keyDown [VK_RIGHT] == TRUE)
+	//	moveX=moveX+2.0f;
+	//if(g_keys->keyDown [VK_LEFT] == TRUE)
+	//	moveX=moveX-2.0f;
 	if(g_keys->keyDown [VK_HOME] == TRUE)
 	{
 		GoX=GoZ=moveX=moveY=moveZ=0.0f;
@@ -556,7 +556,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	}
 
 	gl_dll=LoadLibraryW(L"OpenGL32.DLL");
-	if(!gl_dll) MessageBoxA (HWND_DESKTOP, "Error Get OpenGL32.DLL!", "Error", MB_OK | MB_ICONEXCLAMATION);
+	if(!gl_dll) MessageBoxW (HWND_DESKTOP, L"Error Get OpenGL32.DLL!", L"Error", MB_OK | MB_ICONEXCLAMATION);
 	if(gl_dll) hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
 	g_isProgramLooping = TRUE;
 	g_createFullScreen = window.init.isFullScreen;
@@ -570,7 +570,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			if(GameSet.SYNC) wglSwapIntervalEXT(1);
 			else wglSwapIntervalEXT(0);
 			isMessagePumpActive = TRUE;
-			InitDraw();
+			if(!InitDraw()) TerminateApplication(&window);
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
 			{
