@@ -365,7 +365,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	//DrawTestLines();
 	
-	TAMFT3D.Draw3DText(L"测试",20,20,600);
+	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	
 	if(GameSet.Shadow>0) 
 	{
