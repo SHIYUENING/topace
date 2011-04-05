@@ -50,6 +50,9 @@ void UpdataKeys()
 }
 void InitDataThread()
 {
+	moveZ=-130.0f;
+	moveX=45.0f;
+	moveY=-45.0f;
 	SoundSysTest=new CSoundSys;
 	int ListNum=0;
 	ListNum=UnitsList.AddOneUnit();	
@@ -101,7 +104,7 @@ void DataUpdata()
 	TestView.Reset();
 	TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
 	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
-	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,PosOrgY,0));
+	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ+30,PosOrgY,0));
 	TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
 	//GoZ=GoX=0.0f;
 	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
@@ -121,9 +124,9 @@ void DataUpdata()
 	//UnitMathDraw2.RotExternal(moveY,1.0f,0.0f,0.0f);
 	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	TestLight.RotInternal(float(TotalFrame%360),0.0f,1.0f,0.0f);
-	TestLight.MovInternal(_mm_set_ps(1.0f,0.0f,0.0f,10000.0f));
+	TestLight.MovInternal(_mm_set_ps(1.0f,0.01f,10000.0f,10000.0f));
 	
-	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,10000.0f,0.01f);
+	//TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,10000.0f,0.01f);
 
 	ThreadDataUpdata.DataCount=6;
 	ThreadDataUpdata.DataList[1].UnitData_States=_UnitData_States_Use;
