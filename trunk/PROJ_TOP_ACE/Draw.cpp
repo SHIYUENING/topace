@@ -160,10 +160,10 @@ bool InitDraw()
 		ADD_LOG_Q("Opengl Ver too Low,maybe Video Card too old.","#FF0000");
 		return false;
 	}//
-	if (!glewIsSupported("GL_ARB_vertex_array_object"))
+	/*if (!glewIsSupported("GL_ARB_vertex_array_object"))
 	{
 		MessageBoxW( NULL, L"Can not suppot GL_ARB_vertex_array_object,\nmaybe OpenGL Driver too old.\nPlease Updata Video Card Driver", L"Waring", MB_OK|MB_ICONEXCLAMATION );
-	}
+	}*/
 	if((!glewIsSupported("GL_ARB_pixel_buffer_object"))&&(!glewIsSupported("GL_EXT_pixel_buffer_object")))
 	{
 		GameSet.SSAO=0;

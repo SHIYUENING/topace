@@ -1,4 +1,4 @@
-#version 150
+#version 140
 uniform mat4x4 WMatrix;
 uniform ivec2 LightNums;
 uniform float DiffuseTexTurnY;
