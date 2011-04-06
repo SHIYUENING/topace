@@ -192,6 +192,8 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 	if(!TAM_FileData_IN)
 		return false;
 	IsSuppotVAO=glewIsSupported("GL_ARB_vertex_array_object")>0?true:false;
+	if(!glewIsSupported("GL_ARB_vertex_array_object"))
+		ADD_LOG_Q("No suppot VAO.");
 	_TAM_FileHead  * TAM_FileHead_IN=(_TAM_FileHead*)TAM_FileData_IN;
 	pTAM_FileHead=TAM_FileHead_IN;
 
@@ -643,6 +645,7 @@ bool CTopAceModel::LoadToVRAM(void)
 }
 void CTopAceModel::CreatVAO(tMeshVBOID * MeshVBOID)
 {
+	::ADD_LOG_Q("CreatVAO");
 	if(!MeshVBOID)
 		return;
 	glGenVertexArrays(1,&MeshVBOID->VAOID);
@@ -682,6 +685,9 @@ bool CTopAceModel::LoadMeshToVRAM(_TAM_Mesh * TAM_Mesh)
 		return false;
 	if(TAM_Mesh->vecNum<=0)
 		return false;
+	
+	::ADD_LOG_Q("CreatVBO");
+	::ADD_LOG_Q((char *)&(TAM_Mesh->MeshName[0]));
 	tMeshVBOID * MeshVBOID = &MeshVBOIDs[TAM_Mesh->OBJID];
 
 	glGenBuffersARB( 1,&MeshVBOID->VerticeID);
@@ -923,6 +929,7 @@ bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
 		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
+	/*
 	glEnableClientState( GL_VERTEX_ARRAY );
 	if((TAM_Mesh->Normals)&&(unsigned int(TAM_Mesh->Normals)!=0xFFFFFFFF))
 	{
@@ -940,7 +947,25 @@ bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_NORMAL_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
-
+	*/
+	
+	glEnableVertexAttribArray(AbLoc_Pos);
+	glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,sizeof(__m128),TAM_Mesh->vertices);
+	if((TAM_Mesh->Normals)&&(unsigned int(TAM_Mesh->Normals)!=0xFFFFFFFF))
+	{
+		glEnableVertexAttribArray(AbLoc_Normal);
+		glVertexAttribPointer(AbLoc_Normal,4,GL_FLOAT,0,sizeof(__m128),TAM_Mesh->Normals);
+	}
+	if((TAM_Mesh->texcos)&&(unsigned int(TAM_Mesh->texcos)!=0xFFFFFFFF))
+	{
+		glEnableVertexAttribArray(AbLoc_Tex0);
+		glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,TAM_Mesh->texcos);
+	}
+	glDrawArrays(GL_TRIANGLES,0,TAM_Mesh->vecNum);
+	glDisableVertexAttribArray(AbLoc_Color);
+	glDisableVertexAttribArray(AbLoc_Normal);
+	glDisableVertexAttribArray(AbLoc_Pos);
+	glDisableVertexAttribArray(AbLoc_Tex0);
 	return true;
 }
 
