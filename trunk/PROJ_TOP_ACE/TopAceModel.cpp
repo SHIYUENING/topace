@@ -15,6 +15,7 @@ CTopAceModel::CTopAceModel(void)
 , TAMDrawMode(GL_TRIANGLES)
 , testMAXFrame(0)
 , TotelFaceNum(0)
+, IsSuppotVAO(false)
 {
 	
 }
@@ -190,7 +191,7 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 {
 	if(!TAM_FileData_IN)
 		return false;
-
+	IsSuppotVAO=!glewIsSupported("GL_ARB_vertex_array_object")>0?true:false;
 	_TAM_FileHead  * TAM_FileHead_IN=(_TAM_FileHead*)TAM_FileData_IN;
 	pTAM_FileHead=TAM_FileHead_IN;
 
@@ -704,8 +705,8 @@ bool CTopAceModel::LoadMeshToVRAM(_TAM_Mesh * TAM_Mesh)
 	//glGenBuffersARB( 1,&MeshVBOID->FaceID);
 	//glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, MeshVBOID->FaceID );
 	//glBufferDataARB( GL_ELEMENT_ARRAY_BUFFER_ARB, TAM_Mesh->FaceNum*3*sizeof(unsigned int), TAM_Mesh->Faces, GL_STATIC_DRAW_ARB );
-	
-	CreatVAO(MeshVBOID);
+	if(IsSuppotVAO)
+		CreatVAO(MeshVBOID);
 	return true;
 }
 void CTopAceModel::DeleteVRAM()
@@ -734,6 +735,7 @@ void CTopAceModel::DeleteVRAM()
 			glDeleteBuffersARB(1,&MeshVBOID->TexCoordID);
 		if(MeshVBOID->FaceID)
 			glDeleteBuffersARB(1,&MeshVBOID->FaceID);
+		if(IsSuppotVAO)
 		if(MeshVBOID->VAOID)
 			glDeleteVertexArrays(1,&MeshVBOID->VAOID);
 	}
@@ -872,10 +874,38 @@ bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
 		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
-	
-	glBindVertexArray(MeshVBOID->VAOID);
-	glDrawArrays(TAMDrawMode,0,TAM_Mesh->vecNum);
-	glBindVertexArray(0);
+	if(IsSuppotVAO)
+	{
+		glBindVertexArray(MeshVBOID->VAOID);
+		glDrawArrays(TAMDrawMode,0,TAM_Mesh->vecNum);
+		glBindVertexArray(0);
+	}
+	else
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->VerticeID );
+		glEnableVertexAttribArray(AbLoc_Pos);
+		glVertexAttribPointer(AbLoc_Pos,3,GL_FLOAT,0,sizeof(__m128),0);
+		if(MeshVBOID->NormalID)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->NormalID );
+			glEnableVertexAttribArray(AbLoc_Normal);
+			glVertexAttribPointer(AbLoc_Normal,4,GL_FLOAT,0,sizeof(__m128),0);
+		}
+		if(MeshVBOID->TexCoordID)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->TexCoordID );
+			glEnableVertexAttribArray(AbLoc_Tex0);
+			glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,0);
+		}
+		if(MeshVBOID->ColorID)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->ColorID );
+			glEnableVertexAttribArray(AbLoc_Color);
+			glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
+		}
+		
+		glDrawArrays(TAMDrawMode,0,TAM_Mesh->vecNum);
+	}
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
 	glDisableVertexAttribArray(AbLoc_Pos);
