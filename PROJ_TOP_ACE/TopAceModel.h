@@ -385,5 +385,6 @@ public:
 	unsigned int TAMDrawMode;
 	unsigned int testMAXFrame;
 	int TotelFaceNum;
+	bool IsSuppotVAO;
 };
 #endif
