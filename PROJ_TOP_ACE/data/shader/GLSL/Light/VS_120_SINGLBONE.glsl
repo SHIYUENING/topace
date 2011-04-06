@@ -1,7 +1,7 @@
-#version 120
-uniform mat4x4 ShadowMatrix;
-uniform mat4x4 MMatrix;
-uniform mat4x4 MVPMatrix;
+#version 110
+uniform mat4 ShadowMatrix;
+uniform mat4 MMatrix;
+uniform mat4 MVPMatrix;
 attribute vec3 Position_in;
 attribute vec2 TexCoord0_in;
 attribute vec4 Normal_in;

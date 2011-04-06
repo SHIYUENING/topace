@@ -191,7 +191,7 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 {
 	if(!TAM_FileData_IN)
 		return false;
-	IsSuppotVAO=!glewIsSupported("GL_ARB_vertex_array_object")>0?true:false;
+	IsSuppotVAO=glewIsSupported("GL_ARB_vertex_array_object")>0?true:false;
 	_TAM_FileHead  * TAM_FileHead_IN=(_TAM_FileHead*)TAM_FileData_IN;
 	pTAM_FileHead=TAM_FileHead_IN;
 
