@@ -635,7 +635,8 @@ bool CTopAceModel::LoadToVRAM(void)
 	}
 	for (unsigned int i=0;i<pTAM_FileHead->MeshNum;i++)
 		LoadMeshToVRAM(pTAM_FileHead->MeshHeadAddress[i]);
-	glBindVertexArray(0);
+	if(IsSuppotVAO)
+		glBindVertexArray(0);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 	LoadMatTexsToVRAM();
@@ -645,7 +646,6 @@ bool CTopAceModel::LoadToVRAM(void)
 }
 void CTopAceModel::CreatVAO(tMeshVBOID * MeshVBOID)
 {
-	::ADD_LOG_Q("CreatVAO");
 	if(!MeshVBOID)
 		return;
 	glGenVertexArrays(1,&MeshVBOID->VAOID);
@@ -686,8 +686,6 @@ bool CTopAceModel::LoadMeshToVRAM(_TAM_Mesh * TAM_Mesh)
 	if(TAM_Mesh->vecNum<=0)
 		return false;
 	
-	::ADD_LOG_Q("CreatVBO");
-	::ADD_LOG_Q((char *)&(TAM_Mesh->MeshName[0]));
 	tMeshVBOID * MeshVBOID = &MeshVBOIDs[TAM_Mesh->OBJID];
 
 	glGenBuffersARB( 1,&MeshVBOID->VerticeID);
