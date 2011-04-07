@@ -1,6 +1,6 @@
-#version 120
+#version 110
 varying vec2 TexCoord0;
-uniform mat4x4 MVPMatrix;
+uniform mat4 MVPMatrix;
 attribute vec2 Position_in;
 attribute vec2 TexCoord0_in;
 void main()
