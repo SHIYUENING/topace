@@ -4,8 +4,8 @@ uniform ivec2 LightNums;
 uniform float DiffuseTexTurnY;
 
 uniform sampler2D DiffuseTex;
-uniform samplerCube RefCubeTex;
 uniform sampler2DShadow ShadowTex;
+uniform samplerCube RefCubeTex;
 
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];
@@ -48,7 +48,7 @@ void main()
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0] * Material_diffuse;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
 
-	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
+	float NOF=1.0-abs(dot(Normal,- normalize(VertexEyeDir.xyz)));
 	NOF=max(0.0,NOF)*0.25;
 	vec3 Reflective=reflect( - normalize(VertexEyeDir.xyz),Normal);
     vec4 ReflectiveWorld = WMatrix*vec4(Reflective,0.0);

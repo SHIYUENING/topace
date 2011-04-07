@@ -130,7 +130,7 @@ bool InitFBO(int winW,int winH)
 		ShadowTexSize=512<<max(GameSet.Shadow-1,0);
 		ShadowTexDepthSize[0]=float(ShadowTexSize);
 		ShadowTexDepthSize[1]=float(ShadowTexSize);
-		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE);
+		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_RED,GL_ALPHA,GL_UNSIGNED_BYTE);
 		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 		glGenFramebuffersEXT(1,&ShadowFBOID);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
@@ -164,6 +164,8 @@ bool InitFBO(int winW,int winH)
 		
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex1, 0); 
+		GameSet.Bloom=CheckFBOError()==true?GameSet.Bloom:0;
+		if(GameSet.Bloom==0) ADD_LOG_Q("Can not create Bloom FBO,Bloom disable","#0000FF");
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex2, 0);
 		GameSet.Bloom=CheckFBOError()==true?GameSet.Bloom:0;
 		if(GameSet.Bloom==0) ADD_LOG_Q("Can not create Bloom FBO,Bloom disable","#0000FF");

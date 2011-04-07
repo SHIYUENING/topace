@@ -9,6 +9,7 @@
 #define CO_MatrixCount 5
 #include <GL/glew.h>
 #include <windows.h>
+
 struct _CO_Matrix_LinkList{
 	GLdouble Matrix[16];
 	_CO_Matrix_LinkList * pLastMatrix;

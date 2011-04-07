@@ -114,15 +114,15 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	glUniform2fv(GLSL_Light_ShadowTexSize[boneType][GLSLver],1,ShadowTexDepthSize);
 	
 	glUniformMatrix4fv(GLSL_Light_WMatrix[boneType][GLSLver],1,false,WorldMatrix);
-
 	
 	glActiveTexture(GL_TEXTURE1);	
-	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,RefCubeTexID);	
-	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],1);
+	glBindTexture(GL_TEXTURE_2D,ShadowTexDepth);
+	glUniform1i(GLSL_Light_ShadowTex[boneType][GLSLver],1);
 	
 	glActiveTexture(GL_TEXTURE2);	
-	glBindTexture(GL_TEXTURE_2D,ShadowTexDepth);
-	glUniform1i(GLSL_Light_ShadowTex[boneType][GLSLver],2);
+	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,RefCubeTexID);	
+	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],2);
+	
 
 	glActiveTexture(GL_TEXTURE0);
 
