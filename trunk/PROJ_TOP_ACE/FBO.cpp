@@ -88,18 +88,24 @@ GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint 
 	glTexParameterf(TexTGT, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	return Tex2DID;
 }
-GLuint InitFBO(int winW,int winH,int BloomSet)
+bool InitFBO(int winW,int winH)
 {
-
-	if(SuppotFBO) return 0;
 	if (glewIsSupported("GL_EXT_framebuffer_object"))
 		SuppotFBO=true;
 	else
 	{
+		ADD_LOG_Q("Can not suppot GL_EXT_framebuffer_object,Shadow and Bloom disable","#0000FF");
 		SuppotFBO=false;
-		return 0;
+		return SuppotFBO;
+		GameSet.Bloom=0;
+		GameSet.Shadow=0;
 	}
-	if(!(glewIsSupported("GL_ARB_texture_rectangle")||glewIsSupported("GL_EXT_texture_rectangle"))) return 0;
+	if(!(glewIsSupported("GL_ARB_texture_rectangle")||glewIsSupported("GL_EXT_texture_rectangle")))
+	{
+		
+		ADD_LOG_Q("Can not suppot GL_ARB_texture_rectangle and GL_EXT_texture_rectangle,Bloom disable","#0000FF");
+		GameSet.Bloom=0;
+	}
 	FBOWinW=winW;
 	FBOWinH=winH;
 	ScreemTexW=winW;
@@ -120,10 +126,11 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 	
 	if((GameSet.Shadow>0)||(GameSet.Light>1))
 	{ 
+		ADD_LOG_Q("Create Shadow FBO Start");
 		ShadowTexSize=512<<max(GameSet.Shadow-1,0);
 		ShadowTexDepthSize[0]=float(ShadowTexSize);
 		ShadowTexDepthSize[1]=float(ShadowTexSize);
-		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_ALPHA,GL_RGBA,GL_UNSIGNED_BYTE);
+		ShadowTex=InitTex2D(ShadowTexSize,ShadowTexSize,GL_LINEAR,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE);
 		ShadowTexDepth=InitTex2D(ShadowTexSize, ShadowTexSize,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
 		glGenFramebuffersEXT(1,&ShadowFBOID);
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
@@ -131,6 +138,8 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,  GL_TEXTURE_2D, ShadowTexDepth,0);
 		GameSet.Shadow=CheckFBOError()==true?GameSet.Shadow:0;
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		if(GameSet.Shadow==0) ADD_LOG_Q("Can not create Shadow FBO,Shadow disable","#0000FF");
+		ADD_LOG_Q("Create Shadow FBO End");
 	}
 	if(GameSet.Shadow==0)
 	{
@@ -143,15 +152,12 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
-	
-	if(BloomSet>0)
+	if(GameSet.Bloom>0)
 	{
+		ADD_LOG_Q("Create Bloom FBO Start");
 		GLuint BloomTexFormatISet=GL_RGBA;
-		/*if(BloomSet==2)
-			BloomTexFormatISet=GL_RGBA16F_ARB;
-
-		if(BloomSet>=3)
-			BloomTexFormatISet=GL_RGBA32F_ARB;*/
+		/*if(BloomSet==2) BloomTexFormatISet=GL_RGBA16F_ARB;
+		if(BloomSet>=3) BloomTexFormatISet=GL_RGBA32F_ARB;*/
 
 		BloomTex1=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_ALPHA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
 		BloomTex2=InitTex2D(BloomTexW, BloomTexH,GL_LINEAR,BloomTexFormatISet,GL_ALPHA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
@@ -160,8 +166,11 @@ GLuint InitFBO(int winW,int winH,int BloomSet)
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex1, 0); 
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BloomTex2, 0);
 		GameSet.Bloom=CheckFBOError()==true?GameSet.Bloom:0;
+		if(GameSet.Bloom==0) ADD_LOG_Q("Can not create Bloom FBO,Bloom disable","#0000FF");
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		ADD_LOG_Q("Create Bloom FBO End");
 	}
+
 
 
 	//StarTex1=InitTex2D(StarTexSizeX, StarTexSizeY,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE);
@@ -238,8 +247,8 @@ void TestTexFBO()
 }*/
 void FBOS_BLOOM()
 {
-	if(MAX_COLOR_ATTACHMENTS<1)
-		return;
+	if(!GameSet.Bloom) return;
+	if(MAX_COLOR_ATTACHMENTS<1) return;
 
 	glEnable(GL_TEXTURE_RECTANGLE);
 	glDisable(GL_TEXTURE_2D);

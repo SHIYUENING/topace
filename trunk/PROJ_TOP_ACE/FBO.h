@@ -9,7 +9,7 @@
 #define StarTexSizeY 256
 bool CheckFBOError();
 GLuint InitTex2D(int TexSizeX,int TexSizeY,GLfloat FILTER,GLuint FormatI,GLuint Format,GLuint DataType,int TexTGT=GL_TEXTURE_2D);
-GLuint InitFBO(int winW,int winH,int BloomSet);
+bool InitFBO(int winW,int winH);
 void DeinitFBO();
 void FBOS_BLOOM();
 //void FBOS_Star_Begin();
