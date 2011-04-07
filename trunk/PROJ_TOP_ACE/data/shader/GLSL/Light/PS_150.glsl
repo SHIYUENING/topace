@@ -5,8 +5,8 @@ uniform float DiffuseTexTurnY;
 uniform vec2 ShadowTexSize;
 
 uniform sampler2D DiffuseTex;
-uniform samplerCube RefCubeTex;
 uniform sampler2DShadow ShadowTex;
+uniform samplerCube RefCubeTex;
 
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];

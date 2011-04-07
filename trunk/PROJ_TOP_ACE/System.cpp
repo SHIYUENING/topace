@@ -494,7 +494,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	InitThreadUpdata(); ADD_LOG_Q("InitThreadUpdata() OK",NULL,NULL,NULL,NULL,true);
 	InitDataThread();ADD_LOG_Q("InitDataThread() OK",NULL,NULL,NULL,NULL,true);
 	LockFPSSYS.Init(60);
-	ADD_LOG_Q("MainThread Start",NULL,NULL,NULL,NULL,true);
+	ADD_LOG_Q("MainThread Start");
+	ResumeThread(RenderThreadHANDLE);
 	while(isRun)
 	{
 		DataUpdata();
@@ -515,7 +516,7 @@ HANDLE InitRenderThread()
 	isDraw=true;
 	RenderThreadHANDLE = (HANDLE)_beginthreadex(0,0,(unsigned int (__stdcall *)(void *))RenderThread,0,CREATE_SUSPENDED,0); 
 	//SetPriorityClass(RenderThreadHANDLE,THREAD_PRIORITY_TIME_CRITICAL);
-	ResumeThread(RenderThreadHANDLE);
+	//ResumeThread(RenderThreadHANDLE);
 	return RenderThreadHANDLE;
 }
 void ExitRenderThread()
@@ -524,13 +525,16 @@ void ExitRenderThread()
 }
 unsigned int __stdcall RenderThread(LPVOID lpvoid)
 {
-	ADD_LOG_Q("RenderThread Start",NULL,NULL,NULL,NULL,true);
+	ADD_LOG_Q("RenderThread Start");
 	Application			application;
 	GL_Window			window;
 	Keys				keys;
 	BOOL				isMessagePumpActive;
 	MSG					msg;
+	
+	ADD_LOG_Q("loadIniFile Start");
 	loadIniFile();
+	ADD_LOG_Q("loadIniFile End");
 	application.className = L"TOP_ACE";
 	application.hInstance = hInst;
 
