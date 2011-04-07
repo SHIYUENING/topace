@@ -494,6 +494,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	InitThreadUpdata(); ADD_LOG_Q("InitThreadUpdata() OK",NULL,NULL,NULL,NULL,true);
 	InitDataThread();ADD_LOG_Q("InitDataThread() OK",NULL,NULL,NULL,NULL,true);
 	LockFPSSYS.Init(60);
+	ADD_LOG_Q("MainThread Start",NULL,NULL,NULL,NULL,true);
 	while(isRun)
 	{
 		DataUpdata();
@@ -523,6 +524,7 @@ void ExitRenderThread()
 }
 unsigned int __stdcall RenderThread(LPVOID lpvoid)
 {
+	ADD_LOG_Q("RenderThread Start",NULL,NULL,NULL,NULL,true);
 	Application			application;
 	GL_Window			window;
 	Keys				keys;
@@ -554,21 +556,31 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		MainLOG.WriteLOGFile(false);
 		return -1;														// Terminate Application
 	}
-
+	ADD_LOG_Q("Registering Window Class OK",NULL,NULL,NULL,NULL,true);
 	gl_dll=LoadLibraryW(L"OpenGL32.DLL");
 	if(!gl_dll) MessageBoxW (HWND_DESKTOP, L"Error Get OpenGL32.DLL!", L"Error", MB_OK | MB_ICONEXCLAMATION);
 	if(gl_dll) hglSwapBuffers=(int (__stdcall *)(void *))GetProcAddress(gl_dll,"wglSwapBuffers");
 	g_isProgramLooping = TRUE;
 	g_createFullScreen = window.init.isFullScreen;
 	
+	ADD_LOG_Q("Render Loop Start",NULL,NULL,NULL,NULL,true);
 	while (g_isProgramLooping)
 	{
 		window.init.isFullScreen = g_createFullScreen;
 		if (CreateWindowGL (&window) == TRUE)
 		{
+			ADD_LOG_Q("CreateWindow OK",NULL,NULL,NULL,NULL,true);
 			SwapHdc=window.hDC;
-			if(GameSet.SYNC) wglSwapIntervalEXT(1);
-			else wglSwapIntervalEXT(0);
+			if(glewIsSupported("WGL_EXT_swap_control"))
+			{
+				if(GameSet.SYNC) wglSwapIntervalEXT(1);
+				else wglSwapIntervalEXT(0);
+			}
+			else
+			{
+				GameSet.SYNC=0;
+				MainLOG.AddLOG("Can not suppot WGL_EXT_swap_control. SYNC no set.","#0000FF");
+			}
 			isMessagePumpActive = TRUE;
 			if(!InitDraw()) TerminateApplication(&window);
 			LockFPSRender.Init(GameSet.FPS);
@@ -617,6 +629,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	DeinitDraw();
 	UnregisterClassW (application.className, application.hInstance);
 	isRun=false;
+	
+	ADD_LOG_Q("RenderThread End",NULL,NULL,NULL,NULL,true);
 	return 0;
 }
 void ExchangeData (void)

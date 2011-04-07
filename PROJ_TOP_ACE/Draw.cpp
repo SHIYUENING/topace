@@ -57,6 +57,7 @@ __m128 CameraMatrix[4];
 __m128 ShadowMatrix[4];
 float WorldMatrix[16];
 GLuint RefCubeTexID=0;
+wchar_t GPUName[512];
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -146,27 +147,45 @@ void LoadCubeTex()
 bool InitDraw()
 {
 	glewInit();
-
+	if((GetCharLenth((char *)glGetString(GL_RENDERER))+GetCharLenth((char *)glGetString(GL_VERSION)))>=512)
+	{
+		GPUName[0]=L' ';
+		GPUName[1]=0;
+	}
+	else
+	{
+		char GPUNameTMP[512];
+		sprintf_s(GPUNameTMP,"%s %s",(char *)glGetString(GL_RENDERER),(char *)glGetString(GL_VERSION));
+		int dwNum=MultiByteToWideChar(CP_ACP,0,GPUNameTMP,-1,NULL,0);
+		MultiByteToWideChar(CP_ACP,0,GPUNameTMP,-1,GPUName,dwNum);
+	}
 	ADD_LOG_Q((char *)glGetString(GL_RENDERER));
 	ADD_LOG_Q((char *)glGetString(GL_VERSION));
 	ADD_OGLEX_LOG((char *)glGetString(GL_EXTENSIONS));
 	wchar_t  TestModelPath[512];
 	GetPrivateProfileStringW(L"other",L"TestModelPath",L"data/1234.tam",TestModelPath,512,L".\\gameset.ini");
 	if(!glewIsSupported("GL_ARB_tessellation_shader")) GameSet.Light=min(3,GameSet.Light);
-	if (!glewIsSupported("GL_VERSION_3_0")) GameSet.Light=min(2,GameSet.Light);
+	if (!glewIsSupported("GL_VERSION_3_0"))
+	{
+		if(GameSet.Light>2) ADD_LOG_Q("Opengl ver low,Light set to lower.","#0000FF");
+		GameSet.Light=min(2,GameSet.Light);
+	}
 	if (!glewIsSupported("GL_VERSION_2_0"))
 	{
 		GameSet.Light=1;
 		ADD_LOG_Q("Opengl Ver too Low,maybe Video Card too old.","#FF0000");
+		MessageBoxW( NULL, L"Opengl Ver too Low,maybe Video Card too old.\nPlease Updata Video Card Driver.", L"Error!", MB_OK|MB_ICONEXCLAMATION );
 		return false;
 	}//
 	if (!glewIsSupported("GL_ARB_vertex_array_object"))
 	{
-		MessageBoxW( NULL, L"Can not suppot GL_ARB_vertex_array_object,\nmaybe OpenGL Driver too old.\nPlease Updata Video Card Driver", L"Waring", MB_OK|MB_ICONEXCLAMATION );
+		if(GameSet.Light>2) ADD_LOG_Q("Can not suppot GL_ARB_vertex_array_object. maybe OpenGL Driver too old . Please Updata Video Card Driver","#0000FF");
+		//MessageBoxW( NULL, L"Can not suppot GL_ARB_vertex_array_object,\nmaybe OpenGL Driver too old.\nPlease Updata Video Card Driver", L"Waring", MB_OK|MB_ICONEXCLAMATION );
 	}
 	if((!glewIsSupported("GL_ARB_pixel_buffer_object"))&&(!glewIsSupported("GL_EXT_pixel_buffer_object")))
 	{
 		GameSet.SSAO=0;
+		if(GameSet.Light>2) ADD_LOG_Q("Opengl ver low,Light set to lower.","#0000FF");
 		GameSet.Light=min(2,GameSet.Light);
 	}
 	//if (!glewIsSupported("GL_ARB_texture_float"))
@@ -179,8 +198,8 @@ bool InitDraw()
 	LoadCubeTex();ADD_LOG_Q("LoadCubeTex OK");
 	if(GameSet.Light>1)
 	{
-		InitFBO(GameSet.winW,GameSet.winH,GameSet.Bloom);
-		ADD_LOG_Q("InitFBO OK");
+		InitFBO(GameSet.winW,GameSet.winH)==true?ADD_LOG_Q("InitFBO OK"):ADD_LOG_Q("InitFBO false");
+		
 	}
 	InitGLSL();ADD_LOG_Q("InitGLSL OK");
 	CDDS::SetAFNum(GameSet.AF);ADD_LOG_Q("SetAFNum OK");
@@ -194,7 +213,7 @@ bool InitDraw()
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
 	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
-	TopAceModelTest.LoadToVRAM();
+	TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
 	if(TopAceModelTest.TAM_FileData)
 	{
 		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
@@ -346,7 +365,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,sizeof(ShowFPS)/sizeof(ShowFPS[0]),L"FPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d",FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU,RenderFaces);
+		swprintf_s(ShowFPS,sizeof(ShowFPS)/sizeof(ShowFPS[0]),L"%s\nFPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d",GPUName,FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU,RenderFaces);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}
