@@ -233,7 +233,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	}
 	else
 		VBMD[MID].TextureID=UserTexture;
-
+VBMD[MID].UseTangentArray=true;
 	if(VBMD[MID].UseTangentArray)
 	{
 			for(unsigned int i=0;i<VBMD[MID].VertexCount;i++)
@@ -353,7 +353,7 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 	{
 		if(VBMD[MID].VertexCount && MID<MAX_VBMD)
 		{
-		
+			::glColor3f(1.0,1.0,1.0);
 			if(BindSelfTexture)
 			glBindTexture( GL_TEXTURE_2D, VBMD[MID].TextureID );	 
 			glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
@@ -421,7 +421,7 @@ void CLoadVBMD::TBN(void)
          VerticesInToTBN[2][2] - VerticesInToTBN[0][2];
     
     Vector3d n;
-    n = normalize(cross(AB, AC));
+    n = normalize(cross(normalize(AB), normalize(AC)));
 
     Matrix44d XYZ;
     XYZ = VerticesInToTBN[0][0],  VerticesInToTBN[1][0],  VerticesInToTBN[2][0], n(0),
@@ -438,16 +438,18 @@ void CLoadVBMD::TBN(void)
     Vector4d T;
     T = M * TInTex;
 	Vector3d TOut,ONormal[3];
-	TOut=Vector3d(T(0),T(1),T(2));
-
+	TOut=normalize(Vector3d(T(0),T(1),T(2)));
+	
 	for(int i=0;i<3;i++)
 	{
 		ONormal[i]=normalize(Vector3d(NormalsInToTBN[i][0],NormalsInToTBN[i][1],NormalsInToTBN[i][2]));
-		TOut = TOut - ONormal[i] * dot(ONormal[i], TOut);
+		Vector3d TOutTMP ;
+		TOutTMP = TOut - ONormal[i] * dot(ONormal[i], TOut);
+		
+		TBNout[i][0] = (float)TOutTMP(0);
+		TBNout[i][1] = (float)TOutTMP(1);
+		TBNout[i][2] = (float)TOutTMP(2);
 
-		TBNout[i][0] = (float)TOut(0);
-		TBNout[i][1] = (float)TOut(1);
-		TBNout[i][2] = (float)TOut(2);
 	}
 }
 
