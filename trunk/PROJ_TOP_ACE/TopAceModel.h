@@ -69,8 +69,8 @@ struct _TAM_Mesh
 
 	unsigned char BoneWeightNum;
 	unsigned char IsFiexible;
-	unsigned char UnUse1[14];
-
+	unsigned char UnUse1[10];
+	float * pSelfTangent;
 	unsigned int OBJChunkNum;//0x40obj内数据数量
 	__m128 * vertices;
 	__m128 * Normals;
@@ -285,6 +285,7 @@ struct tMeshVBOID
 	unsigned int VAOID;
 	unsigned int BoneIDsID;
 	unsigned int BoneWGsID;
+	unsigned int TangentID;
 
 };
 class CTopAceModel
