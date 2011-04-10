@@ -1,5 +1,5 @@
 ﻿#include "TopAceModel.h"//文件头
-
+#include"IniFile.h"
 CTopAceModel::CTopAceModel(void)
 :TAM_File_States(_TAM_File_States_NoRead)
 , TAM_FileData(NULL)
@@ -262,9 +262,22 @@ bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 	TAM_MeshData_IN->vecBoneWeightsAndBoneIDs=(_TAM_vecBoneWeightsAndBoneIDs *)&TAM_FileData[(int)TAM_MeshData_IN->vecBoneWeightsAndBoneIDs];
 	TotelFaceNum=TotelFaceNum+TAM_MeshData_IN->FaceNum;
 	if(TAM_MeshData_IN->IsFiexible)
-		TAM_MeshData_IN->UserPTR=_aligned_malloc(sizeof(__m128)*TAM_MeshData_IN->vecNum*2,16);
+	{
+		if(GameSet.Light>=3)
+			TAM_MeshData_IN->UserPTR=_aligned_malloc(sizeof(__m128)*TAM_MeshData_IN->vecNum*3,16);
+		else
+			TAM_MeshData_IN->UserPTR=_aligned_malloc(sizeof(__m128)*TAM_MeshData_IN->vecNum*2,16);
+	}
 	else
 		TAM_MeshData_IN->UserPTR=NULL;
+	if(GameSet.Light>=3)
+	{
+		TAM_MeshData_IN->pSelfTangent=new float[3*TAM_MeshData_IN->vecNum];
+	}
+	else
+	{
+		TAM_MeshData_IN->pSelfTangent=NULL;
+	}
 	return true;
 }
 void CTopAceModel::DeinitTAMMesh()
@@ -278,6 +291,8 @@ void CTopAceModel::DeinitTAMMesh()
 		if(pTAM_Mesh_TMP->UserPTR)
 			_aligned_free(pTAM_Mesh_TMP->UserPTR);
 		pTAM_Mesh_TMP->UserPTR=NULL;
+		if(pTAM_Mesh_TMP->pSelfTangent)
+			delete[] pTAM_Mesh_TMP->pSelfTangent;
 	}
 }
 
@@ -672,6 +687,12 @@ void CTopAceModel::CreatVAO(tMeshVBOID * MeshVBOID)
 		glEnableVertexAttribArray(AbLoc_Color);
 		glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
 	}
+	if(MeshVBOID->TangentID)
+	{
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->TangentID );
+		glEnableVertexAttribArray(AbLoc_Tangent);
+		glVertexAttribPointer(AbLoc_Tangent,3,GL_FLOAT,0,0,0);
+	}
 	glBindVertexArray(0);
 }
 
@@ -704,6 +725,12 @@ bool CTopAceModel::LoadMeshToVRAM(_TAM_Mesh * TAM_Mesh)
 		glGenBuffersARB( 1,&MeshVBOID->TexCoordID);
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->TexCoordID );
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, TAM_Mesh->vecNum*2*sizeof(float), TAM_Mesh->texcos, GL_STATIC_DRAW_ARB );
+	}
+	if(TAM_Mesh->pSelfTangent)
+	{
+		glGenBuffersARB( 1,&MeshVBOID->TangentID);
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->TangentID );
+		glBufferDataARB( GL_ARRAY_BUFFER_ARB, TAM_Mesh->vecNum*3*sizeof(float), TAM_Mesh->pSelfTangent, GL_STATIC_DRAW_ARB );
 	}
 
 	//glGenBuffersARB( 1,&MeshVBOID->FaceID);
@@ -760,6 +787,9 @@ void CTopAceModel::DeleteMeshVRAM(_TAM_Mesh * TAM_Mesh)
 		glDeleteBuffersARB(1,&MeshVBOID->TexCoordID);
 	if(MeshVBOID->FaceID)
 		glDeleteBuffersARB(1,&MeshVBOID->FaceID);
+	if(MeshVBOID->TangentID)
+		glDeleteBuffersARB(1,&MeshVBOID->TangentID);
+	if(IsSuppotVAO)
 	if(glIsVertexArray(MeshVBOID->VAOID))
 		glDeleteVertexArrays(1,&MeshVBOID->VAOID);
 }
@@ -907,9 +937,17 @@ bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 			glEnableVertexAttribArray(AbLoc_Color);
 			glVertexAttribPointer(AbLoc_Color,4,GL_FLOAT,0,0,0);
 		}
+		if(MeshVBOID->TangentID)
+		{
+			glBindBufferARB( GL_ARRAY_BUFFER_ARB, MeshVBOID->TangentID );
+			glEnableVertexAttribArray(AbLoc_Color);
+			glVertexAttribPointer(AbLoc_Tangent,3,GL_FLOAT,0,0,0);
+		}
 		
 		glDrawArrays(TAMDrawMode,0,TAM_Mesh->vecNum);
 	}
+	
+	glDisableVertexAttribArray(AbLoc_Tangent);
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
 	glDisableVertexAttribArray(AbLoc_Pos);
@@ -959,7 +997,13 @@ bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 		glEnableVertexAttribArray(AbLoc_Tex0);
 		glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,TAM_Mesh->texcos);
 	}
+	if(TAM_Mesh->pSelfTangent)
+	{
+		glEnableVertexAttribArray(AbLoc_Tangent);
+		glVertexAttribPointer(AbLoc_Tangent,3,GL_FLOAT,0,0,TAM_Mesh->pSelfTangent);
+	}
 	glDrawArrays(GL_TRIANGLES,0,TAM_Mesh->vecNum);
+	glDisableVertexAttribArray(AbLoc_Tangent);
 	glDisableVertexAttribArray(AbLoc_Color);
 	glDisableVertexAttribArray(AbLoc_Normal);
 	glDisableVertexAttribArray(AbLoc_Pos);
@@ -984,15 +1028,31 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 		{
 			pDrawRAMMeshFiexibleDSTTMP[i]=TAM_Mesh->vertices[i];
 			pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum]=TAM_Mesh->Normals[i];
+			if(TAM_Mesh->pSelfTangent)
+			{
+				pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2].m128_f32[0]=TAM_Mesh->pSelfTangent[i*3+0];
+				pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2].m128_f32[1]=TAM_Mesh->pSelfTangent[i*3+1];
+				pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2].m128_f32[2]=TAM_Mesh->pSelfTangent[i*3+2];
+				pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2].m128_f32[3]=0.0f;
+			}
 			continue;
 		}
 		DrawRAMMeshFiexibleTMPvec=TAM_Mesh->vertices[i];
 		DrawRAMMeshFiexibleTMPnol=TAM_Mesh->Normals[i];
+		if(TAM_Mesh->pSelfTangent)
+		{
+			DrawRAMMeshFiexibleTMPtan.m128_f32[0]=TAM_Mesh->pSelfTangent[i*3+0];
+			DrawRAMMeshFiexibleTMPtan.m128_f32[1]=TAM_Mesh->pSelfTangent[i*3+1];
+			DrawRAMMeshFiexibleTMPtan.m128_f32[2]=TAM_Mesh->pSelfTangent[i*3+2];
+			DrawRAMMeshFiexibleTMPtan.m128_f32[3]=0.0f;
+		}
 
 		TAM_vecBoneWeightsAndBoneIDsTMP=TAM_Mesh->vecBoneWeightsAndBoneIDs[i];
 		
 		pDrawRAMMeshFiexibleDSTTMP[i]=IdentityMatrix3;
 		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum]=_mm_set_ps1(0.0f);
+		if(TAM_Mesh->pSelfTangent)
+			pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2]=_mm_set_ps1(0.0f);
 
 		for(j=0;j<min(TAM_Mesh->BoneWeightNum,4);j++)
 		{
@@ -1000,17 +1060,27 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 			if(TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneIDs[j]>pTAM_FileHead->BoneNum) continue;
 			Easy_matrix_mult_vector3X3(&DrawRAMMeshFiexibleTMPvec2,&BoneMatrixs[TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneIDs[j]*4],DrawRAMMeshFiexibleTMPvec);
 			Easy_matrix_mult_Normal3X3(&DrawRAMMeshFiexibleTMPnol2,&BoneMatrixs[TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneIDs[j]*4],DrawRAMMeshFiexibleTMPnol);
+			if(TAM_Mesh->pSelfTangent)
+			Easy_matrix_mult_Normal3X3(&DrawRAMMeshFiexibleTMPtan2,&BoneMatrixs[TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneIDs[j]*4],DrawRAMMeshFiexibleTMPtan);
 			if(TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneWeights[j]<1.0f)
 			{
 				Easy_vector_scalar_mul(&DrawRAMMeshFiexibleTMPvec2,DrawRAMMeshFiexibleTMPvec2,TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneWeights[j]);
 				Easy_vector_scalar_mul(&DrawRAMMeshFiexibleTMPnol2,DrawRAMMeshFiexibleTMPnol2,TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneWeights[j]);
+				if(TAM_Mesh->pSelfTangent)
+				Easy_vector_scalar_mul(&DrawRAMMeshFiexibleTMPtan2,DrawRAMMeshFiexibleTMPtan2,TAM_vecBoneWeightsAndBoneIDsTMP.vecBoneWeights[j]);
 			}
 			Easy_vector_add(&pDrawRAMMeshFiexibleDSTTMP[i],pDrawRAMMeshFiexibleDSTTMP[i],DrawRAMMeshFiexibleTMPvec2);
 			Easy_vector_add(&pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum],pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum],DrawRAMMeshFiexibleTMPnol2);
+			if(TAM_Mesh->pSelfTangent)
+			Easy_vector_add(&pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2],pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2],DrawRAMMeshFiexibleTMPtan2);
 		}
 		pDrawRAMMeshFiexibleDSTTMP[i].m128_f32[3]=TAM_Mesh->vertices[i].m128_f32[3];
-		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum].m128_f32[3]=TAM_Mesh->Normals[i].m128_f32[3];
+		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum].m128_f32[3]=0.0f;
+		if(TAM_Mesh->pSelfTangent)
+		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2].m128_f32[3]=0.0f;
 		Easy_vector_normalize(&pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum],pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum]);
+		Easy_vector_normalize(&pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2],pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum*2]);
+		pDrawRAMMeshFiexibleDSTTMP[i+TAM_Mesh->vecNum].m128_f32[3]=TAM_Mesh->Normals[i].m128_f32[3];
 	}
 	glColor3f(1.0f,1.0f,1.0f);
 	glBindTexture(GL_TEXTURE_2D, 1);
@@ -1030,6 +1100,11 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 	{
 		glEnableVertexAttribArray(AbLoc_Tex0);
 		glVertexAttribPointer(AbLoc_Tex0,2,GL_FLOAT,0,0,TAM_Mesh->texcos);
+	}
+	if(TAM_Mesh->pSelfTangent)
+	{
+		glEnableVertexAttribArray(AbLoc_Tangent);
+		glVertexAttribPointer(AbLoc_Tangent,3,GL_FLOAT,0,sizeof(__m128),pDrawRAMMeshFiexibleDSTTMP+TAM_Mesh->vecNum*2);
 	}
 	glDrawArrays(GL_TRIANGLES,0,TAM_Mesh->vecNum);
 	return true;

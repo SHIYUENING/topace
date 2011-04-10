@@ -356,6 +356,8 @@ public:
 	__m128 DrawRAMMeshFiexibleTMPvec2;
 	__m128 DrawRAMMeshFiexibleTMPnol;
 	__m128 DrawRAMMeshFiexibleTMPnol2;
+	__m128 DrawRAMMeshFiexibleTMPtan;
+	__m128 DrawRAMMeshFiexibleTMPtan2;
 	_TAM_vecBoneWeightsAndBoneIDs TAM_vecBoneWeightsAndBoneIDsTMP;
 	__m128 * pDrawRAMMeshFiexibleDSTTMP;
 	
