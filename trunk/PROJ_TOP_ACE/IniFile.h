@@ -59,4 +59,5 @@ struct tKeyBoardSet
 };
 
 void loadIniFile();
+extern tGameSet GameSet;
 #endif

@@ -12,7 +12,6 @@ CTALogSys GLSLLOG;
 CGLSLLoader GLSL_Sea;
 CGLSLLoader GLSL_StarPass0,GLSL_StarPass1;
 CGLSLLoader GLSL_SSAOPass0,GLSL_SSAOPass1;
-extern tGameSet GameSet;
 GLfloat GlslMatrixTMP[16];
 
 

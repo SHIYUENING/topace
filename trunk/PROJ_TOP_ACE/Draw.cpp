@@ -35,7 +35,7 @@ int FPSNum=0;
 int FPSNumShow=0; 
 wchar_t ShowFPS[512]={0};
 //CLoad3DS  * Test3dsModelHanger=NULL;
-extern tGameSet GameSet;
+
 int OmniLightNumBase=0;
 int SpotLightNumBase=0;
 CTopAceModel TopAceModelTest;

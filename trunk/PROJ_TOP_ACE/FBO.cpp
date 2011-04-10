@@ -20,7 +20,6 @@ GLuint ShadowFBOID=0;
 GLuint ShadowTex=0;
 GLuint ShadowTexDepth=0;
 
-extern tGameSet GameSet;
 bool SuppotFBO=false;
 int ScreemTexW=0;
 int ScreemTexH=0;
@@ -182,7 +181,7 @@ bool InitFBO(int winW,int winH)
 
 	//FBOS_Star_Begin();
 	//FBOS_Star_End();
-	return FBOID;
+	return true;
 }
 void DeinitFBO()
 {

@@ -35,7 +35,6 @@ static BOOL g_createFullScreen;											// If TRUE, Then Create Fullscreen
 int (__stdcall *hglSwapBuffers)(void *)=NULL;
 HMODULE gl_dll=false;
 HDC SwapHdc; 
-extern tGameSet GameSet;
 double oneframetimelimit=1.0/60.0;
 double oneframetime=0.0;
 bool isDraw=true;
