@@ -20,7 +20,6 @@
 
 bool	arbMultisampleSupported	= false;
 int		arbMultisampleFormat	= 0;
-extern tGameSet GameSet;
 // WGLisExtensionSupported: This Is A Form Of The Extension For WGL
 bool WGLisExtensionSupported(const char *extension)
 {
@@ -85,8 +84,8 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 	HDC hDC = GetDC(hWnd);
 
 	int		pixelFormat;
-	int		valid;
-	UINT	numFormats;
+	int		valid=0;
+	UINT	numFormats=0;
 	float	fAttributes[] = {0,0};
 
 	// These Attributes Are The Bits We Want To Test For In Our Sample
@@ -99,7 +98,7 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 		WGL_DRAW_TO_WINDOW_ARB,GL_TRUE,
 		WGL_SUPPORT_OPENGL_ARB,GL_TRUE,
 		WGL_ACCELERATION_ARB,WGL_FULL_ACCELERATION_ARB,
-		WGL_COLOR_BITS_ARB,24,
+		WGL_COLOR_BITS_ARB,GameSet.bits>16?24:16,
 		WGL_ALPHA_BITS_ARB,8,
 		WGL_DEPTH_BITS_ARB,GameSet.depth,
 		WGL_STENCIL_BITS_ARB,8,
@@ -108,11 +107,25 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 		WGL_SAMPLES_ARB,GameSet.AA,
 		0,0
 	};
-
-	// First We Check To See If We Can Get A Pixel Format For 4 Samples
+	while(!(valid && numFormats >= 1))
+	{
+		if(iAttributes[19]<2)
+		{
+			iAttributes[19]=0;
+			arbMultisampleSupported=false;
+			return arbMultisampleSupported;
+		}
+		GameSet.AA=iAttributes[19];
+		valid = wglChoosePixelFormatARB(hDC,iAttributes,fAttributes,1,&pixelFormat,&numFormats);
+		iAttributes[19] = iAttributes[19] /2;
+		
+	}
+	arbMultisampleSupported = true;
+	arbMultisampleFormat = pixelFormat;	
+	return arbMultisampleSupported;
+	/*
 	valid = wglChoosePixelFormatARB(hDC,iAttributes,fAttributes,1,&pixelFormat,&numFormats);
  
-	// If We Returned True, And Our Format Count Is Greater Than 1
 	if (valid && numFormats >= 1)
 	{
 		arbMultisampleSupported = true;
@@ -120,7 +133,6 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 		return arbMultisampleSupported;
 	}
 
-	// Our Pixel Format With 4 Samples Failed, Test For 2 Samples
 	iAttributes[19] = 0;
 	valid = wglChoosePixelFormatARB(hDC,iAttributes,fAttributes,1,&pixelFormat,&numFormats);
 	if (valid && numFormats >= 1)
@@ -131,5 +143,5 @@ bool InitMultisample(HINSTANCE hInstance,HWND hWnd,PIXELFORMATDESCRIPTOR pfd)
 	}
 	  
 	// Return The Valid Format
-	return  arbMultisampleSupported;
+	return  arbMultisampleSupported;*/
 }

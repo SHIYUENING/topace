@@ -8,6 +8,7 @@
 #define AbLoc_Color 3
 #define AbLoc_BID 4
 #define AbLoc_BWG 5
+#define AbLoc_Tangent 6
 void InitGLSL();
 void DeinitGLSL();
 void GLSL_Disable();
