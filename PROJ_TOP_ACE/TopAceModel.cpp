@@ -328,6 +328,7 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 	{
 		TAM_MatData_IN->Tex_diffuse=new _TAM_Mat_Texture;
 		TAM_MatData_IN->Tex_diffuse->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_diffuseMap[0]));
+		TAM_MatData_IN->Tex_diffuse->TexID=0;
 	}
 	else
 		TAM_MatData_IN->Tex_diffuse=NULL;

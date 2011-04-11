@@ -487,11 +487,11 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	MainLOG.AddLOG("<BODY>");
 	MainLOG.AddLOG("******TOP ACE LOG Start******");
 	MainLOG.WriteLOGFile(false);
-	CEXTLIBS_init(); ADD_LOG_Q("CEXTLIBS_init() OK",NULL,NULL,NULL,NULL,true);
+	CEXTLIBS_init(); ADD_LOG_Q("CEXTLIBS_init() OK");
 	hInst=hInstance;
-	InitRenderThread(); ADD_LOG_Q("InitRenderThread() OK",NULL,NULL,NULL,NULL,true);
-	InitThreadUpdata(); ADD_LOG_Q("InitThreadUpdata() OK",NULL,NULL,NULL,NULL,true);
-	InitDataThread();ADD_LOG_Q("InitDataThread() OK",NULL,NULL,NULL,NULL,true);
+	InitRenderThread(); ADD_LOG_Q("InitRenderThread() OK");
+	InitThreadUpdata(); ADD_LOG_Q("InitThreadUpdata() OK");
+	InitDataThread();ADD_LOG_Q("InitDataThread() OK");
 	LockFPSSYS.Init(60);
 	ADD_LOG_Q("MainThread Start");
 	ResumeThread(RenderThreadHANDLE);
@@ -500,8 +500,8 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 		DataUpdata();
 		LockFPSSYS.LockFPS();
 	}
-	CEXTLIBS_deinit();ADD_LOG_Q("CEXTLIBS_deinit() OK",NULL,NULL,NULL,NULL,true);
-	DeinitThreadUpdata();ADD_LOG_Q("DeinitThreadUpdata() OK",NULL,NULL,NULL,NULL,true);
+	CEXTLIBS_deinit();ADD_LOG_Q("CEXTLIBS_deinit() OK");
+	DeinitThreadUpdata();ADD_LOG_Q("DeinitThreadUpdata() OK");
 	MainLOG.ClearLOG();
 	
 	MainLOG.AddLOG("******TOP ACE LOG End******");
