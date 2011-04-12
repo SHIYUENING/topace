@@ -145,12 +145,12 @@ void CTexManager::GetTexSet(int TexManagerID,unsigned int * TexID,int * TexType,
 {
 	if(TexManagerID>=TexNum)
 	{
-		TexID[0]=Textures::DefineTexID;
+		TexID[0]=Textures::DefineTexID;//
+		TexType[0]=NO_TEX;
+		UseAlpha[0]=false;
+		return;
 	}
-	else
-	{
-		TexID[0]=TexArray[TexManagerID]->TexID;
-		TexType[0]=TexArray[TexManagerID]->TexType;
-		UseAlpha[0]=TexArray[TexManagerID]->UseAlpha;
-	}
+	TexID[0]=TexArray[TexManagerID]->TexID;
+	TexType[0]=TexArray[TexManagerID]->TexType;
+	UseAlpha[0]=TexArray[TexManagerID]->UseAlpha;
 }

@@ -213,7 +213,7 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 		TAM_FileHead_IN->MatsAddress=(_TAM_Mat * )&TAM_FileData_IN[(int)TAM_FileHead_IN->MatsAddress];
 		for (unsigned int i=0;i<TAM_FileHead_IN->MatNum;i++)
 		{
-			InitTAMMat(&(TAM_FileHead_IN->MatsAddress[i]));
+			InitTAMMat((_TAM_Mat_2 * )&(TAM_FileHead_IN->MatsAddress[i]));
 		}
 	}
 
@@ -301,9 +301,20 @@ void CTopAceModel::LoadMatTexsToVRAM(void)
 	if((unsigned int(pTAM_FileHead->MatsAddress)==0xFFFFFFFF)||(pTAM_FileHead->MatNum==0))
 		return;
 	TexManager.LoadToVRAM();
+	_TAM_Mat_2 * MatTMP;
 	for(unsigned int i=0;i<pTAM_FileHead->MatNum;i++)
 	{
-		if(!pTAM_FileHead->MatsAddress[i].Tex_diffuse)
+		MatTMP=(_TAM_Mat_2 *)(pTAM_FileHead->MatsAddress+i);
+		for(int j=0;j<TAM_MAT_MAX_MAP;j++)
+		{
+			if((MatTMP->Texs[j].pTex)&&(MatTMP->Texs[j].Name[0]))
+				TexManager.GetTexSet(
+				MatTMP->Texs[j].pTex->TexManagerID,
+				&(MatTMP->Texs[j].pTex->TexID),
+				&(MatTMP->Texs[j].pTex->TexType),
+				&(MatTMP->Texs[j].pTex->UseAlpha));
+		}
+		/*if(!pTAM_FileHead->MatsAddress[i].Tex_diffuse)
 			continue;
 		
 		_TAM_Mat_Texture * TAM_Mat_Texture_Tmp=pTAM_FileHead->MatsAddress[i].Tex_diffuse;
@@ -313,6 +324,10 @@ void CTopAceModel::LoadMatTexsToVRAM(void)
 			&(TAM_Mat_Texture_Tmp->TexType),
 			&(TAM_Mat_Texture_Tmp->UseAlpha)
 			);
+		if(pTAM_FileHead->MatsAddress[i].Tex_Normal)
+		{
+			_TAM_Mat_Texture * TAM_Mat_Texture_Tmp=pTAM_FileHead->MatsAddress[i].Tex_Normal;
+		}*/
 	}
 }
 bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
@@ -335,24 +350,55 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 	if(TAM_MatData_IN->Name_specularMap[0]!=0)
 	{
 		TAM_MatData_IN->Tex_specular=new _TAM_Mat_Texture;
+		TAM_MatData_IN->Tex_specular->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_specularMap[0]));
+		TAM_MatData_IN->Tex_specular->TexID=0;
 	}
 	else
 		TAM_MatData_IN->Tex_specular=NULL;
 	if(TAM_MatData_IN->Name_NormalMap[0]!=0)
 	{
 		TAM_MatData_IN->Tex_Normal=new _TAM_Mat_Texture;
+		TAM_MatData_IN->Tex_Normal->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_NormalMap[0]));
+		TAM_MatData_IN->Tex_Normal->TexID=0;
 	}
 	else
 		TAM_MatData_IN->Tex_Normal=NULL;
 	if(TAM_MatData_IN->Name_Refract[0]!=0)
 	{
 		TAM_MatData_IN->Tex_Refract=new _TAM_Mat_Texture;
+		TAM_MatData_IN->Tex_Refract->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_Refract[0]));
+		TAM_MatData_IN->Tex_Refract->TexID=0;
 	}
 	else
 		TAM_MatData_IN->Tex_Refract=NULL;
 
 	return true;
 }
+
+bool CTopAceModel::InitTAMMat(_TAM_Mat_2 * TAM_MatData_IN)
+{
+	if(!TAM_MatData_IN)
+		return false;
+	TAM_MatData_IN->ambient[3]=1.0f;
+	TAM_MatData_IN->diffuse[3]=1.0f;
+	TAM_MatData_IN->self_illum[3]=1.0f;
+	TAM_MatData_IN->specular[3]=1.0f;
+	TAM_MatData_IN->specularLv=max(5.0f,min(TAM_MatData_IN->specularLv,128.0f));
+	for(int i=0;i<TAM_MAT_MAX_MAP;i++)
+	{
+		if(TAM_MatData_IN->Texs[i].Name[0])
+		{
+			TAM_MatData_IN->Texs[i].pTex=new _TAM_Mat_Texture;
+			TAM_MatData_IN->Texs[i].pTex->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Texs[i].Name[0]));
+			TAM_MatData_IN->Texs[i].pTex->TexID=0;
+		}
+		else
+			TAM_MatData_IN->Texs[i].pTex=NULL;
+	}
+
+	return true;
+}
+
 void CTopAceModel::DeinitTAMMat(_TAM_Mat * TAM_MatData_IN)
 {
 	if(!TAM_MatData_IN)
@@ -867,18 +913,14 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 	if(TAM_Mat->Tex_diffuse)
 	{
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_diffuse->TexID);
-		glMatrixMode(GL_TEXTURE);
 		if(TAM_Mat->Tex_diffuse->TexType==IS_DDS)
 		{
-			glLoadMatrixf(&IdentityDDSTexMatrix[0][0]);
 			CO_SetDiffuseTexTurnYToGLSL(-1.0f);
 		}
 		else
 		{
 			CO_SetDiffuseTexTurnYToGLSL(1.0f);
-			glLoadIdentity();
 		}
-		glMatrixMode(GL_MODELVIEW);
 	}
 
 
