@@ -17,6 +17,8 @@ GLint GLSL_Light_WMatrix[2][3];
 GLint GLSL_Light_ShadowMatrix[2][3];
 GLint GLSL_Light_RefCubeTex[2][3];
 GLint GLSL_Light_DiffuseTex[2][3];
+GLint GLSL_Light_SpecularTex[2][3];
+GLint GLSL_Light_NormalTex[2][3];
 GLint GLSL_Light_ShadowTex[2][3];
 GLint GLSL_Light_ShadowTexSize[2][3];
 GLint GLSL_Light_DiffuseTexTurnY[2][3];
@@ -45,14 +47,14 @@ void Init_GLSL_light(int LightSet)
 	GH_PS			[GLSL150]=CompileShader(L"data/shader/GLSL/Light/PS_150.glsl",			GL_FRAGMENT_SHADER);
 	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL150]),GH_VS[SINGLBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(SINGLBONE,GLSL150);
 	//CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL150]),GH_VS[MULTIBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(MULTIBONE,GLSL150);
-	if(LightSet<4) return;
-	GH_VS[SINGLBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_SINGLBONE.glsl",GL_VERTEX_SHADER);
-	GH_VS[MULTIBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_MULTIBONE.glsl",GL_VERTEX_SHADER);
-	GH_TC					 =CompileShader(L"data/shader/GLSL/Light/TC_400.glsl",			GL_TESS_CONTROL_SHADER);
-	GH_TE					 =CompileShader(L"data/shader/GLSL/Light/TE_400.glsl",			GL_TESS_EVALUATION_SHADER);
-	GH_GS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/GS_400.glsl",			GL_GEOMETRY_SHADER);
-	GH_PS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/PS_400.glsl",			GL_FRAGMENT_SHADER);
-	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL400]),GH_VS[SINGLBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);Init_GLSL_light_Uniform(SINGLBONE,GLSL400);
+	//if(LightSet<4) return;
+	//GH_VS[SINGLBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_SINGLBONE.glsl",GL_VERTEX_SHADER);
+	//GH_VS[MULTIBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_MULTIBONE.glsl",GL_VERTEX_SHADER);
+	//GH_TC					 =CompileShader(L"data/shader/GLSL/Light/TC_400.glsl",			GL_TESS_CONTROL_SHADER);
+	//GH_TE					 =CompileShader(L"data/shader/GLSL/Light/TE_400.glsl",			GL_TESS_EVALUATION_SHADER);
+	//GH_GS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/GS_400.glsl",			GL_GEOMETRY_SHADER);
+	//GH_PS			[GLSL400]=CompileShader(L"data/shader/GLSL/Light/PS_400.glsl",			GL_FRAGMENT_SHADER);
+	//CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL400]),GH_VS[SINGLBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);Init_GLSL_light_Uniform(SINGLBONE,GLSL400);
 	//CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL400]),GH_VS[MULTIBONE][GLSL400],GH_TC,GH_TE,GH_GS[GLSL400],GH_PS[GLSL400]);Init_GLSL_light_Uniform(MULTIBONE,GLSL400);
 }
 void Init_GLSL_light_Uniform(int boneType,int GLSLver)
@@ -62,7 +64,9 @@ void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 	GLSL_Light_MVPMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"MVPMatrix");
 	GLSL_Light_WMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"WMatrix");
 	GLSL_Light_ShadowMatrix[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"ShadowMatrix");
-
+	
+	GLSL_Light_SpecularTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"SpecularTex");
+	GLSL_Light_NormalTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"NormalTex");
 	GLSL_Light_RefCubeTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"RefCubeTex");
 	GLSL_Light_DiffuseTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTex");
 	GLSL_Light_ShadowTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"ShadowTex");

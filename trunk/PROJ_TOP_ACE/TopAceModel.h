@@ -132,12 +132,44 @@ struct _TAM_Mat
 	_TAM_Mat_Texture * Tex_diffuse;
 	unsigned char Name_specularMap[60];
 	_TAM_Mat_Texture * Tex_specular;
-	unsigned char Name_NormalMap[60];
-	_TAM_Mat_Texture * Tex_Normal;
 	unsigned char Name_Refract[60];
 	_TAM_Mat_Texture * Tex_Refract;
+	unsigned char Name_NormalMap[60];
+	_TAM_Mat_Texture * Tex_Normal;
 	//unsigned char Name_BumpMAP[60];
 	//_TAM_Mat_Texture * Tex_BumpMAP;
+};
+struct _TAM_Mat_Tex
+{
+	unsigned char Name[60];
+	_TAM_Mat_Texture * pTex;
+};
+#define TEXDIF 0//Tex_diffuse
+#define TEXSPE 1//Tex_specular
+#define TEXREF 2//Tex_Refract
+#define TEXNOR 3//Tex_Normal
+#define TAM_MAT_MAX_MAP 4
+struct _TAM_Mat_2
+{
+	unsigned int UserID;
+	void * UserPTR;
+	unsigned int MatID;
+	unsigned char UnUse1[4];
+
+	unsigned char MatName[32];
+
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+	float self_illum[4];
+
+	float specularLv;
+	float Glossiness;
+	float opacity;
+	unsigned char UnUse2[4];
+
+	_TAM_Mat_Tex Texs[4];
+
 };
 struct _TAM_Bone_Frame//帧
 {
@@ -320,6 +352,7 @@ public:
 	bool InitTAMFile(unsigned char * TAM_FileData_IN);
 	bool InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN);
 	bool InitTAMMat(_TAM_Mat * TAM_MatData_IN);
+	bool InitTAMMat(_TAM_Mat_2 * TAM_MatData_IN);
 	bool InitTAMBone(_TAM_Bone * TAM_BoneData_IN);
 	bool InitTAMLight(_TAM_Light * TAM_LightData_IN);
 	bool InitTAMCamera(_TAM_Camera * TAM_CameraData_IN);
