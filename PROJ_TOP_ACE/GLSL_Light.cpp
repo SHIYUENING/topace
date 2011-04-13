@@ -28,24 +28,26 @@ GLint GLSL_Light_OmniLight_Color[2][3];
 GLint GLSL_Light_Material[2][3];
 GLint GLSL_Light_Global_Ambient[2][3];
 GLint GLSL_Light_TessLevel[2][3];
+bool GLSL_Light_OK[2][3]={false};
 extern float WorldMatrix[16];
 extern GLuint RefCubeTexID;
 extern GLuint ShadowTexDepth;
 extern float ShadowTexDepthSize[2];
 void Init_GLSL_light(int LightSet)
 {
+
 	if(LightSet<2) return;
 	GH_VS[SINGLBONE][GLSL120]=CompileShader(L"data/shader/GLSL/Light/VS_120_SINGLBONE.glsl",GL_VERTEX_SHADER);
 	GH_VS[MULTIBONE][GLSL120]=CompileShader(L"data/shader/GLSL/Light/VS_120_MULTIBONE.glsl",GL_VERTEX_SHADER);
 	GH_PS			[GLSL120]=CompileShader(L"data/shader/GLSL/Light/PS_120.glsl",			GL_FRAGMENT_SHADER);
-	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL120]),GH_VS[SINGLBONE][GLSL120],0,0,0,GH_PS[GLSL120]);Init_GLSL_light_Uniform(SINGLBONE,GLSL120);
+	GLSL_Light_OK[SINGLBONE][GLSL120]=CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL120]),GH_VS[SINGLBONE][GLSL120],0,0,0,GH_PS[GLSL120]);Init_GLSL_light_Uniform(SINGLBONE,GLSL120);
 	//CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL120]),GH_VS[MULTIBONE][GLSL120],0,0,0,GH_PS[GLSL120]);Init_GLSL_light_Uniform(MULTIBONE,GLSL120);
 	if(LightSet<3) return;
 	GH_VS[SINGLBONE][GLSL150]=CompileShader(L"data/shader/GLSL/Light/VS_150_SINGLBONE.glsl",GL_VERTEX_SHADER);
 	GH_VS[MULTIBONE][GLSL150]=CompileShader(L"data/shader/GLSL/Light/VS_150_MULTIBONE.glsl",GL_VERTEX_SHADER);
 	GH_GS			[GLSL150]=CompileShader(L"data/shader/GLSL/Light/GS_150.glsl",			GL_GEOMETRY_SHADER);
 	GH_PS			[GLSL150]=CompileShader(L"data/shader/GLSL/Light/PS_150.glsl",			GL_FRAGMENT_SHADER);
-	CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL150]),GH_VS[SINGLBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(SINGLBONE,GLSL150);
+	GLSL_Light_OK[SINGLBONE][GLSL150]=CGLSL_Light_Link(&(GH_PO[SINGLBONE][GLSL150]),GH_VS[SINGLBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(SINGLBONE,GLSL150);
 	//CGLSL_Light_Link(&(GH_PO[MULTIBONE][GLSL150]),GH_VS[MULTIBONE][GLSL150],0,0,GH_GS[GLSL150],GH_PS[GLSL150]);Init_GLSL_light_Uniform(MULTIBONE,GLSL150);
 	//if(LightSet<4) return;
 	//GH_VS[SINGLBONE][GLSL400]=CompileShader(L"data/shader/GLSL/Light/VS_400_SINGLBONE.glsl",GL_VERTEX_SHADER);
@@ -103,15 +105,26 @@ void Deinit_GLSL_light()
 	DelShader(GH_PS[GLSL150]);
 	DelShader(GH_PS[GLSL400]);
 }
-void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightNum,int TessLevel)
+void GLSL_Enable_Light(int boneType,int GLSLver_in, int OmniLightNum,int SpotLightNum,int TessLevel)
 {
-	
+	int GLSLver=GLSLver_in;
 	if(GLSLver>=GLSL400) glPatchParameteri(GL_PATCH_VERTICES, 3);
+	while(!(GLSL_Light_OK[boneType][GLSLver]))
+	{
+		GLSLver=GLSLver-1;
+		if(GLSLver<0)
+			return;
+	}
 	int LightNums[2]={OmniLightNum,SpotLightNum};
 	
 	CO_SetGlslPO(GH_PO[boneType][GLSLver]);
 	glUseProgramObjectARB( GH_PO[boneType][GLSLver] );
-	glUniform1i(GLSL_Light_DiffuseTex[boneType][GLSLver],0);
+	glUniform1i(GLSL_Light_DiffuseTex[boneType][GLSLver],DifTexShot);
+	glUniform1i(GLSL_Light_ShadowTex[boneType][GLSLver],ShaTexShot);
+	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],RefTexShot);
+	glUniform1i(GLSL_Light_SpecularTex[boneType][GLSLver],SpeTexShot);
+	glUniform1i(GLSL_Light_NormalTex[boneType][GLSLver],NorTexShot);
+
 	glUniform2iv(GLSL_Light_LightNums[boneType][GLSLver],1,LightNums);
 	//glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
 	glUniform1f(GLSL_Light_TessLevel[boneType][GLSLver],(float)max(1,TessLevel));
@@ -119,13 +132,11 @@ void GLSL_Enable_Light(int boneType,int GLSLver, int OmniLightNum,int SpotLightN
 	
 	glUniformMatrix4fv(GLSL_Light_WMatrix[boneType][GLSLver],1,false,WorldMatrix);
 	
-	glActiveTexture(GL_TEXTURE1);	
-	glBindTexture(GL_TEXTURE_2D,ShadowTexDepth);
-	glUniform1i(GLSL_Light_ShadowTex[boneType][GLSLver],1);
 	
-	glActiveTexture(GL_TEXTURE2);	
+	glActiveTexture(GL_TEXTURE0+ShaTexShot);	
+	glBindTexture(GL_TEXTURE_2D,ShadowTexDepth);
+	glActiveTexture(GL_TEXTURE0+RefTexShot);	
 	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT,RefCubeTexID);	
-	glUniform1i(GLSL_Light_RefCubeTex[boneType][GLSLver],2);
 	
 
 	glActiveTexture(GL_TEXTURE0);

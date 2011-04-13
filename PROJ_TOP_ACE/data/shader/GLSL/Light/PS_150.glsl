@@ -7,6 +7,8 @@ uniform vec2 ShadowTexSize;
 uniform sampler2D DiffuseTex;
 uniform sampler2DShadow ShadowTex;
 uniform samplerCube RefCubeTex;
+uniform sampler2D NormalTex;
+uniform sampler2D SpecularTex;
 
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];
@@ -22,6 +24,7 @@ in vec3 Normal;
 in vec2 TexCoord0;
 in vec4 Color;
 in vec4 ShadowDir;
+in mat3x3 TBN;
 out vec4 FragColor;
 vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
 {
@@ -89,6 +92,7 @@ void main()
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MU*2 );
 	Shadow=Shadow/13.0;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
+	vec4 NormalTexColor = texture2D(NormalTex, TexCoordDiffuse.xy);
 	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;

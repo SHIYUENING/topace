@@ -88,6 +88,7 @@ bool CGLSL_Light_Link(GLhandleARB * GLSL_PO,GLhandleARB Attach_VS,GLhandleARB At
 	glBindAttribLocation(GLSL_PO[0],AbLoc_Tex0, "TexCoord0_in" );
 	glBindAttribLocation(GLSL_PO[0],AbLoc_Normal, "Normal_in" );
 	glBindAttribLocation(GLSL_PO[0],AbLoc_Color, "Color_in" );
+	glBindAttribLocation(GLSL_PO[0],AbLoc_Tangent, "Tangent_in" );
 	GLint bLinked=0;
 	glLinkProgramARB( GLSL_PO[0] );
 	glGetObjectParameterivARB( GLSL_PO[0], GL_OBJECT_LINK_STATUS_ARB, &bLinked );
