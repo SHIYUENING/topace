@@ -129,6 +129,8 @@ void LoadCubeTexTga(wchar_t * filename,GLenum target)
 		glTexImage2D(target, 0, CubeTGA->type, CubeTGA->width, CubeTGA->height, 0, CubeTGA->type, GL_UNSIGNED_BYTE, CubeTGA->imageData);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 }
 void LoadCubeTex()
 {

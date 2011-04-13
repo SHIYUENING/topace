@@ -251,9 +251,14 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 	TAM_File_States = _TAM_File_States_ReadOK;
 	return true;
 }
+void CreateTangent(float VerticesInToTBN[3][3],float NormalsInToTBN[3][3],float TexCoordsInToTBN[3][2],float TBNout[3][3])
+{
+}
 bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 {
 	if(!((TAM_MeshData_IN->FaceNum>0)&&(TAM_MeshData_IN->vecNum>0)))
+		return false;
+	if(TAM_MeshData_IN->vecNum!=(TAM_MeshData_IN->FaceNum*3))
 		return false;
 	TAM_MeshData_IN->vertices=(__m128 *)&TAM_FileData[(int)TAM_MeshData_IN->vertices];
 	TAM_MeshData_IN->Normals=(__m128 *)&TAM_FileData[(int)TAM_MeshData_IN->Normals];
@@ -273,6 +278,13 @@ bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 	if(GameSet.Light>=3)
 	{
 		TAM_MeshData_IN->pSelfTangent=new float[3*TAM_MeshData_IN->vecNum];
+		float VerticesInToTBN[3][3];float NormalsInToTBN[3][3];float TexCoordsInToTBN[3][2];float TBNout[3][3];
+		for(unsigned int i=0;i<TAM_MeshData_IN->vecNum;i=i+1)
+		{
+			TAM_MeshData_IN->pSelfTangent[i*3+0]=1.0f;
+			TAM_MeshData_IN->pSelfTangent[i*3+1]=0.0f;
+			TAM_MeshData_IN->pSelfTangent[i*3+2]=0.0f;
+		}
 	}
 	else
 	{
@@ -893,9 +905,7 @@ void CTopAceModel::Draw(bool Translucent)
 
 void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 {
-	if(!TAM_Mat)
-		return;
-	
+	if(!TAM_Mat) return;
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,TAM_Mat->specular);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,TAM_Mat->ambient);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,TAM_Mat->diffuse);
@@ -913,16 +923,19 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 	if(TAM_Mat->Tex_diffuse)
 	{
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_diffuse->TexID);
-		if(TAM_Mat->Tex_diffuse->TexType==IS_DDS)
-		{
-			CO_SetDiffuseTexTurnYToGLSL(-1.0f);
-		}
-		else
-		{
-			CO_SetDiffuseTexTurnYToGLSL(1.0f);
-		}
+		CO_SetDiffuseTexTurnYToGLSL(TAM_Mat->Tex_diffuse->TexType==IS_DDS?-1.0f:1.0f);
 	}
-
+	if(TAM_Mat->Tex_Normal)
+	{
+		glActiveTexture(GL_TEXTURE0+NorTexShot);
+		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_Normal->TexID);
+	}
+	if(TAM_Mat->Tex_specular)
+	{
+		glActiveTexture(GL_TEXTURE0+SpeTexShot);
+		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_specular->TexID);
+	}
+	glActiveTexture(GL_TEXTURE0);
 
 }
 
