@@ -25,9 +25,9 @@ public:
 	CDDS *DDSfile;
 	TGA *TGAfile;
 	bool UseAlpha;
-	bool LoadDefTex(void);
 
 	static GLuint DefineTexID;
+	static GLuint DefNorTexID;
 	static void LoadDefineTex();
 
 };
