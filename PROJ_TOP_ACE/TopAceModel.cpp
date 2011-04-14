@@ -253,22 +253,35 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 }
 void CreateTangent(__m128 * VerticesInToTBN ,__m128 * NormalsInToTBN,float * TexCoordsInToTBN,float * TBNout)
 {
-	   /*             Vector3f v2v1 = Vertices[0] - Vertices[2];
-                Vector3f v3v1 = Vertices[1] - Vertices[2];
- 
-                //Calculate the “direction” of the triangle based on texture coordinates.
- 
-                // Calculate c2c1_T and c2c1_B
-                float c2c1_T = TexCoords[0].x() - TexCoords[2].x();
-                float c2c1_B = TexCoords[0].y() - TexCoords[2].y();
- 
-                // Calculate c3c1_T and c3c1_B
-                float c3c1_T = TexCoords[1].x() - TexCoords[2].x();
-                float c3c1_B = TexCoords[1].y() - TexCoords[2].y();
- 
-                //Look at the references for more explanation for this one.
-                float fDenominator = c2c1_T * c3c1_B - c3c1_T * c2c1_B;  
-				*/
+	__m128 T;
+	
+	float x1 = VerticesInToTBN[1].m128_f32[0] - VerticesInToTBN[0].m128_f32[0];
+	float x2 = VerticesInToTBN[2].m128_f32[0] - VerticesInToTBN[0].m128_f32[0];
+	float y1 = VerticesInToTBN[1].m128_f32[1] - VerticesInToTBN[0].m128_f32[1];
+	float y2 = VerticesInToTBN[2].m128_f32[1] - VerticesInToTBN[0].m128_f32[1];
+	float z1 = VerticesInToTBN[1].m128_f32[2] - VerticesInToTBN[0].m128_f32[2];
+	float z2 = VerticesInToTBN[2].m128_f32[2] - VerticesInToTBN[0].m128_f32[2];
+        
+	float s1 = TexCoordsInToTBN[1*2+0] - TexCoordsInToTBN[0*2+0];
+	float s2 = TexCoordsInToTBN[2*2+0] - TexCoordsInToTBN[0*2+0];
+	float t1 = TexCoordsInToTBN[1*2+1] - TexCoordsInToTBN[0*2+1];
+	float t2 = TexCoordsInToTBN[2*2+1] - TexCoordsInToTBN[0*2+1];
+
+	float r = 1.0F / (s1 * t2 - s2 * t1);
+	__m128 sdir;
+	sdir.m128_f32[0]=(t2 * x1 - t1 * x2) * r;
+	sdir.m128_f32[1]=(t2 * y1 - t1 * y2) * r;
+	sdir.m128_f32[2]=(t2 * z1 - t1 * z2) * r;
+	sdir.m128_f32[3]=0.0f;
+	__m128 tdir;
+	tdir.m128_f32[0]=(s1 * x2 - s2 * x1) * r;
+	tdir.m128_f32[1]=(s1 * y2 - s2 * y1) * r;
+	tdir.m128_f32[2]=(s1 * z2 - s2 * z1) * r;
+	tdir.m128_f32[3]=0.0f;
+	T=sdir;
+
+
+	/*
 	__m128 v2v1;Easy_vector_sub(&v2v1,VerticesInToTBN[0],VerticesInToTBN[2]);v2v1.m128_f32[3]=0.0f;
 	__m128 v3v1;Easy_vector_sub(&v3v1,VerticesInToTBN[1],VerticesInToTBN[2]);v3v1.m128_f32[3]=0.0f;
 	float c2c1_T = TexCoordsInToTBN[0*2+0] - TexCoordsInToTBN[2*2+0];
@@ -278,14 +291,10 @@ void CreateTangent(__m128 * VerticesInToTBN ,__m128 * NormalsInToTBN,float * Tex
 	float fDenominator = c2c1_T * c3c1_B - c3c1_T * c2c1_B;  
 	float fScale1 = 1.0f / fDenominator;
 	
-	/*T= Vector3f((c3c1_B * v2v1.x() - c2c1_B * v3v1.x()) * fscale1,
-                                     (c3c1_B * v2v1.y() - c2c1_B * v3v1.y()) * fScale1,
-                                     (c3c1_B * v2v1.z() - c2c1_B * v3v1.z()) * fScale1);*/
-	__m128 T;
 	T.m128_f32[0]=(c3c1_B * v2v1.m128_f32[0] - c2c1_B * v3v1.m128_f32[0]) * fScale1;
 	T.m128_f32[1]=(c3c1_B * v2v1.m128_f32[1] - c2c1_B * v3v1.m128_f32[1]) * fScale1;
 	T.m128_f32[2]=(c3c1_B * v2v1.m128_f32[2] - c2c1_B * v3v1.m128_f32[2]) * fScale1;
-	T.m128_f32[3]=0.0f;
+	T.m128_f32[3]=0.0f;*/
 	Easy_vector_normalize(&T,T);
 	__m128 ToutTMP;
 	__m128 ONormal;

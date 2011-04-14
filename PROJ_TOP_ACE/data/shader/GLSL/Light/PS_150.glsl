@@ -26,9 +26,9 @@ in vec4 Color;
 in vec4 ShadowDir;
 in mat3x3 TBN;
 out vec4 FragColor;
-vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess)
+vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess,vec3 LightNormal)
 {
-	vec3 Nor=normalize(Normal);
+	vec3 Nor=normalize(LightNormal);
 	vec3 LightDir = normalize( LightPosEyeIn.xyz - VertexEyeDir.xyz );
 	float NdotL = dot(Nor,LightDir);
 	float specular = 0.0;
@@ -94,15 +94,16 @@ void main()
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
 	vec4 NormalTexColor = texture2D(NormalTex, TexCoordDiffuse.xy);
 	NormalTexColor.xyz=normalize(NormalTexColor.xyz*2.0-1.0);
-	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
+	vec3 NormalTBN=TBN*NormalTexColor.xyz;
+	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess,NormalTBN);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
-	vec3 NormalTBN=TBN*NormalTexColor.xyz;
+	
 	for(int i=1;i<LightNums.x;i++)
 	{
 		//if(i<LightNums.x)
 		//{
-			LightVal=OmniLight (OmniLight_Pos[i],Material_shininess);
+			LightVal=OmniLight (OmniLight_Pos[i],Material_shininess,NormalTBN);
 		//}
 		//else
 		//{
@@ -121,7 +122,7 @@ void main()
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
 	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+max(0.0f,NOF)*0.25;
-	FragColor.xyz=NormalTBN.xyz;
+	//FragColor.xyz=NormalTBN.xyz;
     return;
 } 
 
