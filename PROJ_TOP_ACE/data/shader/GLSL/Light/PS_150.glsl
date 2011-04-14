@@ -97,7 +97,7 @@ void main()
 	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
-
+	vec3 NormalTBN=TBN*NormalTexColor.xyz;
 	for(int i=1;i<LightNums.x;i++)
 	{
 		//if(i<LightNums.x)
@@ -121,7 +121,7 @@ void main()
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
 	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+max(0.0f,NOF)*0.25;
-	FragColor.xyz=Color.xyz;
+	FragColor.xyz=NormalTBN.xyz;
     return;
 } 
 
