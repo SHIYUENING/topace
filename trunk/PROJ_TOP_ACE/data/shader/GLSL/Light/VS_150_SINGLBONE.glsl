@@ -23,7 +23,8 @@ void main()
 	Normal=Normal_tmp;
 	TexCoord0=TexCoord0_in .xy;
 	vec3 Tangent=( MMatrix * vec4(Tangent_in.xyz,0.0)).xyz;
+	Color.xyz =Tangent.xyz;
 	vec3 Bionormal=cross(Tangent,Normal_tmp);
-	TBN=mat3(Tangent,Bionormal,Normal_tmp);
+	TBN=mat3(normalize(Tangent),normalize(Bionormal),normalize(Normal_tmp));
     return;
 }

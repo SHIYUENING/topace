@@ -251,8 +251,108 @@ bool CTopAceModel::InitTAMFile(unsigned char * TAM_FileData_IN)
 	TAM_File_States = _TAM_File_States_ReadOK;
 	return true;
 }
-void CreateTangent(float VerticesInToTBN[3][3],float NormalsInToTBN[3][3],float TexCoordsInToTBN[3][2],float TBNout[3][3])
+void CreateTangent(__m128 * VerticesInToTBN ,__m128 * NormalsInToTBN,float * TexCoordsInToTBN,float * TBNout)
 {
+	   /*             Vector3f v2v1 = Vertices[0] - Vertices[2];
+                Vector3f v3v1 = Vertices[1] - Vertices[2];
+ 
+                //Calculate the “direction” of the triangle based on texture coordinates.
+ 
+                // Calculate c2c1_T and c2c1_B
+                float c2c1_T = TexCoords[0].x() - TexCoords[2].x();
+                float c2c1_B = TexCoords[0].y() - TexCoords[2].y();
+ 
+                // Calculate c3c1_T and c3c1_B
+                float c3c1_T = TexCoords[1].x() - TexCoords[2].x();
+                float c3c1_B = TexCoords[1].y() - TexCoords[2].y();
+ 
+                //Look at the references for more explanation for this one.
+                float fDenominator = c2c1_T * c3c1_B - c3c1_T * c2c1_B;  
+				*/
+	__m128 v2v1;Easy_vector_sub(&v2v1,VerticesInToTBN[0],VerticesInToTBN[2]);v2v1.m128_f32[3]=0.0f;
+	__m128 v3v1;Easy_vector_sub(&v3v1,VerticesInToTBN[1],VerticesInToTBN[2]);v3v1.m128_f32[3]=0.0f;
+	float c2c1_T = TexCoordsInToTBN[0*2+0] - TexCoordsInToTBN[2*2+0];
+	float c2c1_B = TexCoordsInToTBN[0*2+1] - TexCoordsInToTBN[2*2+1];
+	float c3c1_T = TexCoordsInToTBN[1*2+0] - TexCoordsInToTBN[2*2+0];
+	float c3c1_B = TexCoordsInToTBN[1*2+1] - TexCoordsInToTBN[2*2+1];
+	float fDenominator = c2c1_T * c3c1_B - c3c1_T * c2c1_B;  
+	float fScale1 = 1.0f / fDenominator;
+	
+	/*T= Vector3f((c3c1_B * v2v1.x() - c2c1_B * v3v1.x()) * fscale1,
+                                     (c3c1_B * v2v1.y() - c2c1_B * v3v1.y()) * fScale1,
+                                     (c3c1_B * v2v1.z() - c2c1_B * v3v1.z()) * fScale1);*/
+	__m128 T;
+	T.m128_f32[0]=(c3c1_B * v2v1.m128_f32[0] - c2c1_B * v3v1.m128_f32[0]) * fScale1;
+	T.m128_f32[1]=(c3c1_B * v2v1.m128_f32[1] - c2c1_B * v3v1.m128_f32[1]) * fScale1;
+	T.m128_f32[2]=(c3c1_B * v2v1.m128_f32[2] - c2c1_B * v3v1.m128_f32[2]) * fScale1;
+	T.m128_f32[3]=0.0f;
+	Easy_vector_normalize(&T,T);
+	__m128 ToutTMP;
+	__m128 ONormal;
+	for(int i=0;i<3;i++)
+	{
+		ONormal=NormalsInToTBN[i];
+		ONormal.m128_f32[3]=0.0f;
+		Easy_vector_normalize(&ONormal,ONormal);
+		//ToutTMP=;
+		Easy_vector_scalar_mul(&ToutTMP,ONormal,Easy_vector_dot(T,ONormal));
+		Easy_vector_sub(&ToutTMP,T,ToutTMP);
+		TBNout[i*3+0]=ToutTMP.m128_f32[0];
+		TBNout[i*3+1]=ToutTMP.m128_f32[1];
+		TBNout[i*3+2]=ToutTMP.m128_f32[2];
+	}
+	/*float UVF[]={
+		TexCoordsInToTBN[0]	,TexCoordsInToTBN[2],TexCoordsInToTBN[4],0.0f,
+		TexCoordsInToTBN[1]	,TexCoordsInToTBN[3],TexCoordsInToTBN[5],0.0f,
+                        0.0f,               0.0f,               0.0f,1.0f,
+                        1.0f,               1.0f,               1.0f,0.0f};
+
+	__m128 UV[4]; Easy_matrix_copy(UV,UVF);
+	Easy_matrix_inv(UV,UV);
+	__m128 AB;    Easy_vector_sub(&AB,VerticesInToTBN[1],VerticesInToTBN[0]);AB.m128_f32[3]=0.0f;Easy_vector_normalize(&AB,AB);
+	__m128 AC;    Easy_vector_sub(&AC,VerticesInToTBN[2],VerticesInToTBN[0]);AC.m128_f32[3]=0.0f;Easy_vector_normalize(&AC,AC);
+	__m128 n;     Easy_vector_cross(&n,AB,AC);n.m128_f32[3]=0.0f;Easy_vector_normalize(&n,n);
+	__m128 XYZF[4];
+	XYZF[0]=VerticesInToTBN[0];XYZF[0].m128_f32[3]=1.0f;
+	XYZF[1]=VerticesInToTBN[1];XYZF[1].m128_f32[3]=1.0f;
+	XYZF[2]=VerticesInToTBN[2];XYZF[2].m128_f32[3]=1.0f;
+	XYZF[3]=n;XYZF[3].m128_f32[3]=0.0f;
+	Easy_matrix_transpose(XYZF);
+
+	__m128 m[4];Easy_matrix_mult(m,XYZF,UV);
+	__m128 TInTex=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	__m128 T;
+	__m128 ToutTMP;
+	Easy_matrix_mult_vector4X4(&T,m,TInTex);
+	Easy_vector_normalize(&T,T);
+	for(int i=0;i<3;i++)
+	{
+		TBNout[i*3+0]=T.m128_f32[0];
+		TBNout[i*3+1]=T.m128_f32[1];
+		TBNout[i*3+2]=T.m128_f32[2];
+	}*/
+	/*
+		__m128 m[4];Easy_matrix_mult(m,XYZF,UV);
+	__m128 TInTex=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+	__m128 T;
+	__m128 ToutTMP;
+	__m128 ONormal;
+	Easy_matrix_mult_vector4X4(&T,m,TInTex);
+	Easy_vector_normalize(&T,T);
+	for(int i=0;i<3;i++)
+	{
+		ONormal=NormalsInToTBN[i];
+		ONormal.m128_f32[3]=0.0f;
+		Easy_vector_normalize(&ONormal,ONormal);
+		//ToutTMP=;
+		Easy_vector_scalar_mul(&ToutTMP,ONormal,Easy_vector_dot(T,ONormal));
+		Easy_vector_sub(&ToutTMP,T,ToutTMP);
+		TBNout[i*3+0]=ToutTMP.m128_f32[0];
+		TBNout[i*3+1]=ToutTMP.m128_f32[1];
+		TBNout[i*3+2]=ToutTMP.m128_f32[2];
+	}
+	*/
+	return;
 }
 bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 {
@@ -278,13 +378,20 @@ bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 	if(GameSet.Light>=3)
 	{
 		TAM_MeshData_IN->pSelfTangent=new float[3*TAM_MeshData_IN->vecNum];
-		float VerticesInToTBN[3][3];float NormalsInToTBN[3][3];float TexCoordsInToTBN[3][2];float TBNout[3][3];
-		for(unsigned int i=0;i<TAM_MeshData_IN->vecNum;i=i+1)
+		for(unsigned int i=0;i<TAM_MeshData_IN->FaceNum;i++)
+		{
+			CreateTangent(
+				TAM_MeshData_IN->vertices + i * 3,
+				TAM_MeshData_IN->Normals  + i * 3,
+				TAM_MeshData_IN->texcos   + i * 3 * 2,
+				TAM_MeshData_IN->pSelfTangent + i * 3 * 3);
+		}
+		/*for(unsigned int i=0;i<TAM_MeshData_IN->vecNum;i=i+1)
 		{
 			TAM_MeshData_IN->pSelfTangent[i*3+0]=1.0f;
 			TAM_MeshData_IN->pSelfTangent[i*3+1]=0.0f;
 			TAM_MeshData_IN->pSelfTangent[i*3+2]=0.0f;
-		}
+		}*/
 	}
 	else
 	{
@@ -320,11 +427,18 @@ void CTopAceModel::LoadMatTexsToVRAM(void)
 		for(int j=0;j<TAM_MAT_MAX_MAP;j++)
 		{
 			if((MatTMP->Texs[j].pTex)&&(MatTMP->Texs[j].Name[0]))
+			{
 				TexManager.GetTexSet(
 				MatTMP->Texs[j].pTex->TexManagerID,
 				&(MatTMP->Texs[j].pTex->TexID),
 				&(MatTMP->Texs[j].pTex->TexType),
 				&(MatTMP->Texs[j].pTex->UseAlpha));
+				if(j==TEXNOR)
+				if(MatTMP->Texs[j].pTex->TexID==Textures::DefineTexID)
+				{
+					MatTMP->Texs[j].pTex->TexID=Textures::DefNorTexID;
+				}
+			}
 		}
 		/*if(!pTAM_FileHead->MatsAddress[i].Tex_diffuse)
 			continue;

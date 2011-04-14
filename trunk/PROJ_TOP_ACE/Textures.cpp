@@ -1,8 +1,7 @@
 ﻿#include"Textures.h"
 
-bool DEFTEXLoaded=false;
-unsigned int DEFTEXID=0;
 GLuint Textures::DefineTexID=0;
+GLuint Textures::DefNorTexID=0;
 Textures::Textures(void)
 :TexType(0)
 ,TexID(0)
@@ -25,40 +24,38 @@ Textures::~Textures(void)
 }
 void Textures::LoadDefineTex()
 {
-	if(Textures::DefineTexID)
-		return;
-	unsigned char DefTexData[64*64*4];
-	for(int i=0;i<64*64*4;i++)
-		DefTexData[i]=255;
-
-	glGenTextures(1, &(Textures::DefineTexID));
-	glBindTexture(GL_TEXTURE_2D, (Textures::DefineTexID));
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 64, 64, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, DefTexData);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-}
-bool Textures::LoadDefTex(void)
-{
-	if(DEFTEXLoaded)
+	if(!Textures::DefineTexID)
 	{
-		TexID=DEFTEXID;
-		TexType=IS_DEF;
-		return true;
-	}
-	unsigned char DefTexData[64*64*4];
-	for(int i=0;i<64*64*4;i++)
-		DefTexData[i]=255;
+		unsigned char DefTexData[64*64*4];
+		for(int i=0;i<64*64*4;i++)
+			DefTexData[i]=255;
 
-	glGenTextures(1, &DEFTEXID);
-	glBindTexture(GL_TEXTURE_2D, DEFTEXID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 64, 64, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, DefTexData);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	DEFTEXLoaded=true;
-	TexID=DEFTEXID;
-	TexType=IS_DEF;
-	return true;
+		glGenTextures(1, &(Textures::DefineTexID));
+		glBindTexture(GL_TEXTURE_2D, (Textures::DefineTexID));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 64, 64, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, DefTexData);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	}
+
+	if(!Textures::DefNorTexID)
+	{
+		unsigned char DefTexData[64*64*4];
+		for(int i=0;i<64*64*4;i=i+4)
+		{
+			DefTexData[i+0]=0;
+			DefTexData[i+1]=0;
+			DefTexData[i+2]=255;
+			DefTexData[i+3]=255;
+		}
+
+		glGenTextures(1, &(Textures::DefNorTexID));
+		glBindTexture(GL_TEXTURE_2D, (Textures::DefNorTexID));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, DefTexData);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	}
 }
+
 bool Textures::loadfile(char * filename)
 {
 	char LoadFileName[256]={0};
@@ -214,13 +211,6 @@ void Textures::Del_VRAM()
 	{
 		if(TGAfile!=NULL)
 			TGAfile->DelTGA_VRAM();
-	}
-	if(DEFTEXLoaded)
-	{
-		DEFTEXLoaded=false;
-		if(DEFTEXID!=0)
-			glDeleteTextures(1, &DEFTEXID);
-		DEFTEXID=0;
 	}
 	if(Textures::DefineTexID)
 	{
