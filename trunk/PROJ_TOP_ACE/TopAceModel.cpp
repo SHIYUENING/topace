@@ -482,6 +482,8 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 	}
 	else
 		TAM_MatData_IN->Tex_diffuse=NULL;
+	if(GameSet.Light<3)
+		return true;
 	if(TAM_MatData_IN->Name_specularMap[0]!=0)
 	{
 		TAM_MatData_IN->Tex_specular=new _TAM_Mat_Texture;
