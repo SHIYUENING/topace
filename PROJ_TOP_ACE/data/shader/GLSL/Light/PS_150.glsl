@@ -93,9 +93,9 @@ void main()
 	Shadow=Shadow/13.0;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
 	vec4 NormalTexColor = texture2D(NormalTex, TexCoordDiffuse.xy);
-	NormalTexColor.xyz=normalize(NormalTexColor.xyz*2.0-1.0);
+	NormalTexColor.xy=NormalTexColor.xy*2.0-1.0;
 	NormalTexColor.y=-NormalTexColor.y;
-	vec3 NormalTBN=TBN*NormalTexColor.xyz;
+	vec3 NormalTBN=TBN*normalize(NormalTexColor.xyz);
 	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess,NormalTBN);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;

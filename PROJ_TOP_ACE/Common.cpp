@@ -406,5 +406,5 @@ void CO_SetDiffuseTexTurnYGLSLLoc(GLint DiffuseTexTurnY_Loc)
 
 void CO_SetDiffuseTexTurnYToGLSL(GLfloat DiffuseTexTurnY)
 {
-	glUniform1f(CO_DiffuseTexTurnY,DiffuseTexTurnY);
+	glUniform1fv(CO_DiffuseTexTurnY,1,&DiffuseTexTurnY);
 }
