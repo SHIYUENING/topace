@@ -97,6 +97,9 @@ void main()
 	TexCoordTMP=TexCoord0;
 	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYNOR;
 	vec4 NormalTexColor = texture2D(NormalTex, TexCoordTMP);
+	TexCoordTMP=TexCoord0;
+	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYSPE;
+	vec4 SpecularTexColor = texture2D(SpecularTex, TexCoordTMP);
 	NormalTexColor.xy=NormalTexColor.xy*2.0-1.0;
 	NormalTexColor.y=-NormalTexColor.y;
 	vec3 NormalTBN=TBN*normalize(NormalTexColor.xyz);
@@ -108,7 +111,7 @@ void main()
 	{
 		//if(i<LightNums.x)
 		//{
-			LightVal=OmniLight (OmniLight_Pos[i],Material_shininess,NormalTBN);
+			LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*SpecularTexColor.x,NormalTBN);
 		//}
 		//else
 		//{
@@ -125,7 +128,7 @@ void main()
 	SpecularColor=SpecularColor*Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
-	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor;
+	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission*SpecularTexColor.z)+SpecularColor*SpecularTexColor.y;
 	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+max(0.0f,NOF)*0.25;
 	//FragColor.xyz=NormalTBN.xyz;
     return;
