@@ -1,7 +1,7 @@
 #version 140
 uniform mat4x4 WMatrix;
 uniform ivec2 LightNums;
-uniform float DiffuseTexTurnY;
+uniform vec4 TexTurnY=vec4(1.0,1.0,1.0,1.0);
 uniform vec2 ShadowTexSize;
 
 uniform sampler2D DiffuseTex;
@@ -19,6 +19,10 @@ uniform vec4 Global_Ambient;
 #define Material_emission Material[2]
 #define Material_shininess Material[2].w
 #define shadow2DProj textureProj
+#define TEXTurnYDIF TexTurnY.x
+#define TEXTurnYSPE TexTurnY.y
+#define TEXTurnYREF TexTurnY.z
+#define TEXTurnYNOR TexTurnY.w
 in vec4 VertexEyeDir; 
 in vec3 Normal; 
 in vec2 TexCoord0;
@@ -70,10 +74,6 @@ vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,floa
 */
 void main()
 {
-	vec2 TexCoordDiffuse;
-	TexCoordDiffuse.x=TexCoord0.x;
-	TexCoordDiffuse.y=DiffuseTexTurnY*TexCoord0.y;
-
 	vec4 MX=vec4 (1.0/ShadowTexSize.x,0.0,0.0,0.0);
 	vec4 MU=vec4 (0.0,1.0/ShadowTexSize.y,0.0,0.0);
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
@@ -91,8 +91,12 @@ void main()
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MU*2 );
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MU*2 );
 	Shadow=Shadow/13.0;
-	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
-	vec4 NormalTexColor = texture2D(NormalTex, TexCoordDiffuse.xy);
+	vec2 TexCoordTMP=TexCoord0.xy;
+	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYDIF;
+	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordTMP);
+	TexCoordTMP=TexCoord0;
+	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYNOR;
+	vec4 NormalTexColor = texture2D(NormalTex, TexCoordTMP);
 	NormalTexColor.xy=NormalTexColor.xy*2.0-1.0;
 	NormalTexColor.y=-NormalTexColor.y;
 	vec3 NormalTBN=TBN*normalize(NormalTexColor.xyz);
