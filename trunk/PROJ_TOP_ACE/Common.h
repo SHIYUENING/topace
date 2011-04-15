@@ -63,6 +63,6 @@ void CO_MatrixPerspectiveProjectionFov(GLfloat fovyInDegrees, GLfloat aspectRati
 void CO_SetGlslPO(GLuint SetGlslPO);
 
 GLuint CO_GetGlslPO();
-void CO_SetDiffuseTexTurnYGLSLLoc(GLint DiffuseTexTurnY_Loc);
-void CO_SetDiffuseTexTurnYToGLSL(GLfloat DiffuseTexTurnY);
+void CO_SetTexTurnYGLSLLoc(GLint DiffuseTexTurnY_Loc);
+void CO_SetTexTurnYToGLSL(GLfloat * DiffuseTexTurnY);
 #endif

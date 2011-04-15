@@ -21,7 +21,7 @@ GLint GLSL_Light_SpecularTex[2][3];
 GLint GLSL_Light_NormalTex[2][3];
 GLint GLSL_Light_ShadowTex[2][3];
 GLint GLSL_Light_ShadowTexSize[2][3];
-GLint GLSL_Light_DiffuseTexTurnY[2][3];
+GLint GLSL_Light_TexTurnY[2][3];
 GLint GLSL_Light_LightNums[2][3];
 GLint GLSL_Light_OmniLight_Pos[2][3];
 GLint GLSL_Light_OmniLight_Color[2][3];
@@ -74,7 +74,7 @@ void Init_GLSL_light_Uniform(int boneType,int GLSLver)
 	GLSL_Light_ShadowTex[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"ShadowTex");
 	GLSL_Light_ShadowTexSize[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"ShadowTexSize");
 	GLSL_Light_LightNums[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"LightNums");
-	GLSL_Light_DiffuseTexTurnY[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"DiffuseTexTurnY");
+	GLSL_Light_TexTurnY[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"TexTurnY");
 	GLSL_Light_OmniLight_Pos[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"OmniLight_Pos");
 	GLSL_Light_OmniLight_Color[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"OmniLight_Color");
 	GLSL_Light_Material[boneType][GLSLver] = glGetUniformLocation(GH_PO[boneType][GLSLver],"Material");
@@ -126,7 +126,7 @@ void GLSL_Enable_Light(int boneType,int GLSLver_in, int OmniLightNum,int SpotLig
 	glUniform1i(GLSL_Light_NormalTex[boneType][GLSLver],NorTexShot);
 
 	glUniform2iv(GLSL_Light_LightNums[boneType][GLSLver],1,LightNums);
-	//glUniform1f(GLSL_Light_DiffuseTexTurnY[MULTIBONE][GLSL400],1.0f);
+	//glUniform1f(GLSL_Light_TexTurnY[MULTIBONE][GLSL400],1.0f);
 	glUniform1f(GLSL_Light_TessLevel[boneType][GLSLver],(float)max(1,TessLevel));
 	glUniform2fv(GLSL_Light_ShadowTexSize[boneType][GLSLver],1,ShadowTexDepthSize);
 	
@@ -141,8 +141,9 @@ void GLSL_Enable_Light(int boneType,int GLSLver_in, int OmniLightNum,int SpotLig
 
 	glActiveTexture(GL_TEXTURE0);
 
-	CO_SetDiffuseTexTurnYGLSLLoc(GLSL_Light_DiffuseTexTurnY[boneType][GLSLver]);
-	CO_SetDiffuseTexTurnYToGLSL(1.0f);
+	CO_SetTexTurnYGLSLLoc(GLSL_Light_TexTurnY[boneType][GLSLver]);
+	float TexTurnY[4]={1.0f,1.0f,1.0f,1.0f};
+	CO_SetTexTurnYToGLSL(TexTurnY);
 	/*CO_SetMatrixsGLSLLoc(
 		glGetUniformLocation(CO_GetGlslPO(),"MMatrix"),
 		glGetUniformLocation(CO_GetGlslPO(),"PMatrix"),
