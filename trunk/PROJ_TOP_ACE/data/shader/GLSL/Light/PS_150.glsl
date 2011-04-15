@@ -39,39 +39,10 @@ vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess,vec3 LightNormal)
 
 	vec3 HightLight =normalize( LightDir - normalize(VertexEyeDir.xyz));
 	specular = pow(max(dot(Nor, HightLight), 0.0), LightShininess);
-
+	specular = NdotL>0.0?specular:0.0;
 	NdotL = max(0.0,NdotL);
 	return vec2(NdotL,specular);
 }
-/*
-vec2 SpotLight(vec4 LightPosEyeIn,vec3 LightTGTPosEyeIn,float spotCosCutoff,float spotExponent,float LightShininess)
-{
-	vec3 Nor=normalize(Normal);
-	vec3 LightDir = normalize( LightPosEyeIn.xyz - VertexEyeDir.xyz );
-	float NdotL = dot(Nor,LightDir);
-	float specular = 0.0;
-	float spotEffect = dot(normalize(LightTGTPosEyeIn),-LightDir);
-	
-	if(spotEffect > spotCosCutoff)
-	{
-		//spotEffect = pow((spotEffect-spotCosCutoff*2.0),spotExponent);
-		//float spotCosFalloff = pow(spotCosCutoff,spotExponent);
-		//spotEffect = (spotCosFalloff- spotEffect)/(spotCosFalloff-spotCosCutoff);
-		spotEffect = pow(spotEffect,spotExponent);
-		vec3 HightLight =normalize( LightDir - normalize(VertexEyeDir.xyz));
-		specular = pow(max(dot(Nor, HightLight), 0.0), LightShininess);
-
-		NdotL = max(0.0,NdotL);
-		NdotL = NdotL*spotEffect;
-		specular = specular*spotEffect;
-	}
-	else
-	{
-		NdotL = 0.0;
-	}
-	return vec2(NdotL,specular);
-}
-*/
 void main()
 {
 	vec4 MX=vec4 (1.0/ShadowTexSize.x,0.0,0.0,0.0);
@@ -94,10 +65,10 @@ void main()
 	vec2 TexCoordTMP=TexCoord0.xy;
 	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYDIF;
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordTMP);
-	TexCoordTMP=TexCoord0;
+	TexCoordTMP=TexCoord0.xy;
 	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYNOR;
 	vec4 NormalTexColor = texture2D(NormalTex, TexCoordTMP);
-	TexCoordTMP=TexCoord0;
+	TexCoordTMP=TexCoord0.xy;
 	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYSPE;
 	vec4 SpecularTexColor = texture2D(SpecularTex, TexCoordTMP);
 	NormalTexColor.xy=NormalTexColor.xy*2.0-1.0;
@@ -109,17 +80,7 @@ void main()
 	
 	for(int i=1;i<LightNums.x;i++)
 	{
-		//if(i<LightNums.x)
-		//{
-			LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*SpecularTexColor.x,NormalTBN);
-		//}
-		//else
-		//{
-		//	if(i<(LightNums.x+LightNums.y))
-		//	{
-		//		LightVal = SpotLight(gl_LightSource[i].position,gl_LightSource[i].spotDirection,gl_LightSource[i].spotCosCutoff,gl_LightSource[i].spotExponent,Material_shininess);
-		//	}
-		//}
+		LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*SpecularTexColor.x,NormalTBN);
 		DiffuseColor += LightVal.x * OmniLight_Color[i] ;
 		SpecularColor += LightVal.y * OmniLight_Color[i] ;
 	}
