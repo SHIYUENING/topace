@@ -18,6 +18,7 @@ uniform vec4 Global_Ambient;
 #define Material_specular Material[1]
 #define Material_emission Material[2]
 #define Material_shininess Material[2].w
+#define Material_specularlevel Material[1].w
 #define shadow2DProj textureProj
 #define TEXTurnYDIF TexTurnY.x
 #define TEXTurnYSPE TexTurnY.y
@@ -91,7 +92,7 @@ void main()
 	SpecularColor=SpecularColor*Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
-	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*(SpecularTexColor.y+SpecularTexColor.x*5.0);
+	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
 	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+max(0.0f,NOF)*0.25;
 	//FragColor.xyz=NormalTBN.xyz;
     return;
