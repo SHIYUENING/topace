@@ -76,13 +76,13 @@ void main()
 //	NormalTexColor.z=NormalTexColor.z*2;
 	NormalTexColor.y=-NormalTexColor.y;
 	vec3 NormalTBN=TBN*normalize(NormalTexColor.xyz);
-	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess*SpecularTexColor.z,NormalTBN);
+	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess*(1.0-SpecularTexColor.z),NormalTBN);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
 	
 	for(int i=1;i<LightNums.x;i++)
 	{
-		LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*SpecularTexColor.z,NormalTBN);
+		LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*(1.0-SpecularTexColor.z),NormalTBN);
 		DiffuseColor += LightVal.x * OmniLight_Color[i] ;
 		SpecularColor += LightVal.y * OmniLight_Color[i] ;
 	}
