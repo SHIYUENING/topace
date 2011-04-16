@@ -1045,7 +1045,7 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 	}
 	MaterialDataTAMTMP.diffuse[3]=TAM_Mat->opacity/100.0f;
 	//MaterialDataTAMTMP.emission[3]=max(1.0f,TAM_Mat->specularLv);
-	MaterialDataTAMTMP.emission[3]=(100.0-TAM_Mat->Glossiness)*1.28f;
+	MaterialDataTAMTMP.emission[3]=TAM_Mat->Glossiness*1.28f;
 	MaterialDataTAMTMP.specular[3]=TAM_Mat->specularLv*0.01f;
 	CO_SetMaterialToGLSL(&MaterialDataTAMTMP);
 	if(TAM_Mat->Tex_diffuse)
