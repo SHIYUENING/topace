@@ -28,6 +28,7 @@ public:
 
 	static GLuint DefineTexID;
 	static GLuint DefNorTexID;
+	static GLuint DefSpeTexID;
 	static void LoadDefineTex();
 
 };

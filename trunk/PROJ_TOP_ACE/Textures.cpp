@@ -2,6 +2,7 @@
 
 GLuint Textures::DefineTexID=0;
 GLuint Textures::DefNorTexID=0;
+GLuint Textures::DefSpeTexID=0;
 Textures::Textures(void)
 :TexType(0)
 ,TexID(0)
@@ -50,6 +51,23 @@ void Textures::LoadDefineTex()
 
 		glGenTextures(1, &(Textures::DefNorTexID));
 		glBindTexture(GL_TEXTURE_2D, (Textures::DefNorTexID));
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, DefTexData);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	}
+	if(!Textures::DefSpeTexID)
+	{
+		unsigned char DefTexData[64*64*4];
+		for(int i=0;i<64*64*4;i=i+4)
+		{
+			DefTexData[i+0]=0;
+			DefTexData[i+1]=255;
+			DefTexData[i+2]=0;
+			DefTexData[i+3]=0;
+		}
+
+		glGenTextures(1, &(Textures::DefSpeTexID));
+		glBindTexture(GL_TEXTURE_2D, (Textures::DefSpeTexID));
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, DefTexData);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -216,6 +234,16 @@ void Textures::Del_VRAM()
 	{
 		glDeleteTextures(1, &(Textures::DefineTexID));
 		Textures::DefineTexID=0;
+	}
+	if(Textures::DefNorTexID)
+	{
+		glDeleteTextures(1, &(Textures::DefNorTexID));
+		Textures::DefNorTexID=0;
+	}
+	if(Textures::DefSpeTexID)
+	{
+		glDeleteTextures(1, &(Textures::DefSpeTexID));
+		Textures::DefSpeTexID=0;
 	}
 }
 
