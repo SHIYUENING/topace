@@ -1031,7 +1031,7 @@ void CTopAceModel::Draw(bool Translucent)
 void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 {
 	if(!TAM_Mat) return;
-	float TexTurnY[4]={1.0f,1.0f,1.0f,1.0f};
+	float TexTurnY[4]={-1.0f,-1.0f,-1.0f,-1.0f};
 	glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,TAM_Mat->specular);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,TAM_Mat->ambient);
 	glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,TAM_Mat->diffuse);
@@ -1053,17 +1053,33 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 		TexTurnY[TEXDIF]=TAM_Mat->Tex_diffuse->TexType==IS_DDS?-1.0f:1.0f;
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_diffuse->TexID);
 	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, Textures::DefineTexID);
+	}
+
 	if(TAM_Mat->Tex_Normal)
 	{
 		TexTurnY[TEXNOR]=TAM_Mat->Tex_Normal->TexType==IS_DDS?-1.0f:1.0f;
 		glActiveTexture(GL_TEXTURE0+NorTexShot);
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_Normal->TexID);
 	}
+	else
+	{
+		glActiveTexture(GL_TEXTURE0+NorTexShot);
+		glBindTexture(GL_TEXTURE_2D, Textures::DefNorTexID);
+	}
+
 	if(TAM_Mat->Tex_specular)
 	{
 		TexTurnY[TEXSPE]=TAM_Mat->Tex_specular->TexType==IS_DDS?-1.0f:1.0f;
 		glActiveTexture(GL_TEXTURE0+SpeTexShot);
 		glBindTexture(GL_TEXTURE_2D, TAM_Mat->Tex_specular->TexID);
+	}
+	else
+	{
+		glActiveTexture(GL_TEXTURE0+SpeTexShot);
+		glBindTexture(GL_TEXTURE_2D, Textures::DefSpeTexID);
 	}
 	glActiveTexture(GL_TEXTURE0);
 	CO_SetTexTurnYToGLSL(TexTurnY);
