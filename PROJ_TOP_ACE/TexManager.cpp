@@ -110,13 +110,22 @@ int CTexManager::AddTex(char * TexName)
 		}
 	}
 	swprintf_s(FullFilePath,wcslen(FilePathTmp)+wcslen(FileNameWTmp)+1,L"%s%s",FilePathTmp,FileNameWTmp);
-	TexArray[TexNum]->loadfile(FullFilePath);
+	if(TexArray[TexNum]->loadfile(FullFilePath))
+	{
 
-	delete[] FileNameWTmp;
-	delete[] FullFilePath;
-	delete[] FilePathTmp;
-	TexNum++;
-	return TexNum-1;
+		delete[] FileNameWTmp;
+		delete[] FullFilePath;
+		delete[] FilePathTmp;
+		TexNum++;
+		return TexNum-1;
+	}
+	else
+	{
+		delete[] FileNameWTmp;
+		delete[] FullFilePath;
+		delete[] FilePathTmp;
+		return -1;
+	}
 }
 
 void CTexManager::LoadToVRAM(void)
@@ -143,7 +152,7 @@ void CTexManager::Del_VRAM(void)
 
 void CTexManager::GetTexSet(int TexManagerID,unsigned int * TexID,int * TexType,bool * UseAlpha)
 {
-	if(TexManagerID>=TexNum)
+	if((TexManagerID>=TexNum)||(TexManagerID<0))
 	{
 		TexID[0]=Textures::DefineTexID;//
 		TexType[0]=NO_TEX;

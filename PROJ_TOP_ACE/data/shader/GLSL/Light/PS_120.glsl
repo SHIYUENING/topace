@@ -1,7 +1,7 @@
 #version 110
 uniform mat4 WMatrix;
 uniform ivec2 LightNums;
-uniform float DiffuseTexTurnY;
+uniform vec4 TexTurnY;
 
 uniform sampler2D DiffuseTex;
 uniform sampler2DShadow ShadowTex;
@@ -38,7 +38,7 @@ void main()
 {
 	vec2 TexCoordDiffuse;
 	TexCoordDiffuse.x=TexCoord0.x;
-	TexCoordDiffuse.y=DiffuseTexTurnY*TexCoord0.y;
+	TexCoordDiffuse.y=TexTurnY.x*TexCoord0.y;
 
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
@@ -57,6 +57,6 @@ void main()
 	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor+textureCube(RefCubeTex, ReflectiveWorld.xyz)*REFC;
 	gl_FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+NOF;
 	//gl_FragColor.xyz=textureCube(RefCubeTex, ReflectiveWorld.xyz).xyz;
-	//gl_FragColor.xyz=vec3(Shadow,Shadow,Shadow);
+	//gl_FragColor.xyz=DiffuseTexColor.xyz;
     return;
 } 

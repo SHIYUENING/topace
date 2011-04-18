@@ -479,6 +479,11 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 		TAM_MatData_IN->Tex_diffuse=new _TAM_Mat_Texture;
 		TAM_MatData_IN->Tex_diffuse->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_diffuseMap[0]));
 		TAM_MatData_IN->Tex_diffuse->TexID=0;
+		if(TAM_MatData_IN->Tex_diffuse->TexManagerID==-1)
+		{
+			delete TAM_MatData_IN->Tex_diffuse;
+			TAM_MatData_IN->Tex_diffuse=NULL;
+		}
 	}
 	else
 		TAM_MatData_IN->Tex_diffuse=NULL;
@@ -489,6 +494,11 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 		TAM_MatData_IN->Tex_specular=new _TAM_Mat_Texture;
 		TAM_MatData_IN->Tex_specular->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_specularMap[0]));
 		TAM_MatData_IN->Tex_specular->TexID=0;
+		if(TAM_MatData_IN->Tex_specular->TexManagerID==-1)
+		{
+			delete TAM_MatData_IN->Tex_specular;
+			TAM_MatData_IN->Tex_specular=NULL;
+		}
 	}
 	else
 		TAM_MatData_IN->Tex_specular=NULL;
@@ -497,6 +507,11 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 		TAM_MatData_IN->Tex_Normal=new _TAM_Mat_Texture;
 		TAM_MatData_IN->Tex_Normal->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Name_NormalMap[0]));
 		TAM_MatData_IN->Tex_Normal->TexID=0;
+		if(TAM_MatData_IN->Tex_Normal->TexManagerID==-1)
+		{
+			delete TAM_MatData_IN->Tex_Normal;
+			TAM_MatData_IN->Tex_Normal=NULL;
+		}
 	}
 	else
 		TAM_MatData_IN->Tex_Normal=NULL;
@@ -528,6 +543,11 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat_2 * TAM_MatData_IN)
 			TAM_MatData_IN->Texs[i].pTex=new _TAM_Mat_Texture;
 			TAM_MatData_IN->Texs[i].pTex->TexManagerID=TexManager.AddTex((char*)&(TAM_MatData_IN->Texs[i].Name[0]));
 			TAM_MatData_IN->Texs[i].pTex->TexID=0;
+			if(TAM_MatData_IN->Texs[i].pTex->TexManagerID==-1)
+			{
+				delete TAM_MatData_IN->Texs[i].pTex;
+				TAM_MatData_IN->Texs[i].pTex=NULL;
+			}
 		}
 		else
 			TAM_MatData_IN->Texs[i].pTex=NULL;
