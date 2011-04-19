@@ -15,6 +15,7 @@ uniform vec4 Global_Ambient;
 #define Material_specular Material[1]
 #define Material_emission Material[2]
 #define Material_shininess Material[2].w
+#define Material_specularlevel Material[1].w
 
 varying vec4 VertexEyeDir; 
 varying vec3 Normal; 
