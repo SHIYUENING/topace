@@ -52,14 +52,14 @@ struct _TAM_vecBoneWeightsAndBoneIDs
 };
 struct _TAM_Mesh_Fiexible
 {
-	__m128 * vertices;
+	__m128 * vertices;//sizeof(__m128)*vecNum
 	__m128 * Normals;
 	unsigned int vecNum;
 };
 struct _TAM_Mesh
 {
-	unsigned int UserID;
-	void * UserPTR;
+	unsigned int UserID;//TEMP
+	void * UserPTR;//TEMP
 	unsigned int OBJID;
 	unsigned int OBJMATID;
 
@@ -69,7 +69,7 @@ struct _TAM_Mesh
 
 	unsigned char BoneWeightNum;
 	unsigned char IsFiexible;
-	unsigned char UnUse1[10];
+	unsigned char UnUse1[10];//TEMP
 	float * pSelfTangent;
 	unsigned int OBJChunkNum;//0x40obj内数据数量
 	__m128 * vertices;
@@ -90,7 +90,7 @@ struct _TAM_Mesh
 	unsigned char Frame;
 	unsigned char OneFace;
 	unsigned char UseAlpha;
-	unsigned char UnUse2[9];
+	unsigned char UnUse2[9];//TEMP
 
 	float BoxMin[4];
 
@@ -111,10 +111,10 @@ struct _TAM_Mat_Texture
 };
 struct _TAM_Mat
 {
-	unsigned int UserID;
-	void * UserPTR;
+	unsigned int UserID;//TEMP
+	void * UserPTR;//TEMP
 	unsigned int MatID;
-	unsigned char UnUse1[4];
+	unsigned char UnUse1[4];//TEMP
 
 	unsigned char MatName[32];
 
@@ -126,7 +126,7 @@ struct _TAM_Mat
 	float specularLv;
 	float Glossiness;
 	float opacity;
-	unsigned char UnUse2[4];
+	unsigned char UnUse2[4];//TEMP
 
 	unsigned char Name_diffuseMap[60];
 	_TAM_Mat_Texture * Tex_diffuse;
@@ -151,10 +151,10 @@ struct _TAM_Mat_Tex
 #define TAM_MAT_MAX_MAP 4
 struct _TAM_Mat_2
 {
-	unsigned int UserID;
-	void * UserPTR;
+	unsigned int UserID;//TEMP
+	void * UserPTR;//TEMP
 	unsigned int MatID;
-	unsigned char UnUse1[4];
+	unsigned char UnUse1[4];//TEMP
 
 	unsigned char MatName[32];
 
@@ -166,14 +166,14 @@ struct _TAM_Mat_2
 	float specularLv;
 	float Glossiness;
 	float opacity;
-	unsigned char UnUse2[4];
+	unsigned char UnUse2[4];//TEMP
 
 	_TAM_Mat_Tex Texs[4];
 
 };
 struct _TAM_Bone_Frame//帧
 {
-	unsigned char UnUse1[8];
+	unsigned char UnUse1[8];//TEMP
 	_TAM_Bone_Frame * PreviousFrameAddress;
 	unsigned int FrameTime;
 	__m128 FrameData;
@@ -186,14 +186,14 @@ struct _TAM_Bone_Frame_Head//动画
 };
 struct _TAM_Bone
 {
-	unsigned int UserID;
-	void * UserPTR;
+	unsigned int UserID;//TEMP
+	void * UserPTR;//TEMP
 	unsigned int BoneID;
 	unsigned int NextBoneID;//0xc同级boneID ,也就是同一个父节点的下一个bone，如果与BoneID相等或为0则表示同一个父节点没有下一个bone了
 
 	unsigned int ChildBoneID;
 	unsigned int ParentBoneID;
-	unsigned char UnUse1[8];
+	unsigned char UnUse1[8];//TEMP
 
 	__m128 FirstTranslate;
 
@@ -232,10 +232,10 @@ struct _TAM_Light_Frame_Head
 };
 struct _TAM_Light
 {
-	unsigned int UserID;
-	void * UserPTR;
+	unsigned int UserID;//TEMP
+	void * UserPTR;//TEMP
 	unsigned int LightID;
-	unsigned char UnUse1[4];
+	unsigned char UnUse1[4];//TEMP
 
 	unsigned int LightType;
 	unsigned char LightColor[4];
@@ -244,15 +244,15 @@ struct _TAM_Light
 
 	unsigned int BoneID;
 	unsigned int TGTBoneID;
-	unsigned char UnUse2[4];
-	unsigned char UnUse3[4];
+	unsigned char UnUse2[4];//TEMP
+	unsigned char UnUse3[4];//TEMP
 
 	unsigned char LightName[32];
 	_TAM_Light_Frame_Head * FramesHeadAddress[3];//_TAM_Light_Frame_Type
 	//_TAM_Light_Frame_Head * LightColorFramesHeadAddress;
 	//_TAM_Light_Frame_Head * LightConstantFramesHeadAddress;
 	//_TAM_Light_Frame_Head * LightCutOffFramesHeadAddress;
-	unsigned char UnUse4[4];
+	unsigned char UnUse4[4];//TEMP
 
 	__m128 FirstTranslate;
 
@@ -265,10 +265,10 @@ struct _TAM_Light_Head
 };
 struct _TAM_Camera
 {
-	unsigned int UserID;
-	void * UserPTR;
+	unsigned int UserID;//TEMP
+	void * UserPTR;//TEMP
 	unsigned int CameraID;
-	unsigned char UnUse1[4];
+	unsigned char UnUse1[4];//TEMP
 
 	unsigned int CameraType;
 	float Fov;
@@ -286,7 +286,7 @@ struct _TAM_FileHead
 	unsigned char HeadName[4];
 	unsigned int FileSize;
 	unsigned int TAMVer;
-	unsigned char UnUse2[4];
+	unsigned char UnUse2[4];//TEMP
 
 	unsigned int ChunkNum;//0x10地址表数量
 	_TAM_Mesh ** MeshHeadAddress;
