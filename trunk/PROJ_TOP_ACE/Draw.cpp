@@ -404,7 +404,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
-	glDepthMask(GL_FALSE);
+	//glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
 	glDepthMask(GL_TRUE);
 	glMatrixMode(GL_TEXTURE);

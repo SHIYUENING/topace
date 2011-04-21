@@ -60,6 +60,8 @@ bool Gdown2=false;
 bool GdownSPACE=false;
 bool DrawFrame=false;
 extern CExchangeThread ThreadDataDraw;
+BYTE nInputs;
+bool TouchInput=false;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -451,6 +453,16 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			window->init.isFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessageW (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
+		case WM_TOUCH:
+			{
+				if(nInputs<=0) break;
+				TOUCHINPUT * ti=new TOUCHINPUT[nInputs];
+				GetTouchInputInfo((HTOUCHINPUT)lParam, nInputs,ti,sizeof(TOUCHINPUT));
+				//WM_GESTURE
+			
+				//MessageBoxW (HWND_DESKTOP, L"检测到触摸消息", L" ", MB_OK | MB_ICONEXCLAMATION);
+			}
+		break;
 	}
 
 	return DefWindowProcW (hWnd, uMsg, wParam, lParam);					// Pass Unhandled Messages To DefWindowProc
@@ -586,6 +598,24 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			}
 			isMessagePumpActive = TRUE;
 			if(!InitDraw()) TerminateApplication(&window);
+
+			BYTE digitizerStatus = (BYTE)GetSystemMetrics(SM_DIGITIZER);
+			TouchInput=true;
+			if ((digitizerStatus & (0x80 + 0x40)) == 0)
+			{
+				//MessageBoxW (HWND_DESKTOP, L"没检测到多点触控设备或设备没有就绪", L"Error", MB_OK | MB_ICONEXCLAMATION);
+				TouchInput=false;
+				//TerminateApplication(&window);
+			}
+			nInputs = (BYTE)GetSystemMetrics(SM_MAXIMUMTOUCHES);
+			if(nInputs<2)
+			{
+				//MessageBoxW (HWND_DESKTOP, L"触控设备不支持多点触摸", L"Error", MB_OK | MB_ICONEXCLAMATION);
+				TouchInput=false;
+				//TerminateApplication(&window);
+			}
+			if(TouchInput)
+			TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
 			{
