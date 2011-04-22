@@ -49,7 +49,7 @@ void main()
 {
 	vec4 MX=vec4 (1.0/ShadowTexSize.x,0.0,0.0,0.0);
 	vec4 MU=vec4 (0.0,1.0/ShadowTexSize.y,0.0,0.0);
-	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
+	vec4 shadowPos=ShadowDir;//-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=textureProj( ShadowTex, shadowPos );
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos+MX );
 	Shadow=Shadow+textureProj( ShadowTex, shadowPos-MX );
@@ -88,7 +88,7 @@ void main()
 		SpecularColor += LightVal.y * OmniLight_Color[i] ;
 	}
 
-	DiffuseColor=DiffuseColor*Material_diffuse;
+	DiffuseColor=DiffuseColor;//*Material_diffuse;
 	SpecularColor=SpecularColor*Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));

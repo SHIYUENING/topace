@@ -45,6 +45,11 @@ typedef enum _TAM_Light_Frame_Type{
 	_TAM_Light_Frame_Type_Constant = 0x01,
 	_TAM_Light_Frame_Type_CutOff = 0x02
 } _TAM_Light_Frame_Type;
+typedef enum _TAM_Mesh_EXT_Type{
+	_TAM_Mesh_EXT_Type_NoType = 0x00,
+	_TAM_Mesh_EXT_Type_Tree = 0x01,
+	_TAM_Mesh_EXT_Type_Water = 0x02
+} _TAM_Mesh_EXT_Type;
 struct _TAM_vecBoneWeightsAndBoneIDs
 {
 	float vecBoneWeights[4];
@@ -69,7 +74,8 @@ struct _TAM_Mesh
 
 	unsigned char BoneWeightNum;
 	unsigned char IsFiexible;
-	unsigned char UnUse1[10];//TEMP
+	unsigned char UnUse1[6];//TEMP
+	_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type;
 	float * pSelfTangent;
 	unsigned int OBJChunkNum;//0x40obj内数据数量
 	__m128 * vertices;
@@ -422,5 +428,7 @@ public:
 	unsigned int testMAXFrame;
 	int TotelFaceNum;
 	bool IsSuppotVAO;
+	void Enable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type);
+	void Disable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type);
 };
 #endif
