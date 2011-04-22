@@ -375,6 +375,19 @@ bool CTopAceModel::InitTAMMesh(_TAM_Mesh * TAM_MeshData_IN)
 	TAM_MeshData_IN->Faces=(unsigned int *)&TAM_FileData[(int)TAM_MeshData_IN->Faces];
 	TAM_MeshData_IN->vecBoneWeightsAndBoneIDs=(_TAM_vecBoneWeightsAndBoneIDs *)&TAM_FileData[(int)TAM_MeshData_IN->vecBoneWeightsAndBoneIDs];
 	TotelFaceNum=TotelFaceNum+TAM_MeshData_IN->FaceNum;
+	if(TAM_MeshData_IN->TAM_Mesh_EXT_Type<=0)
+	if(TAM_MeshData_IN->MeshName)
+	if(TAM_MeshData_IN->MeshName[0])
+	{
+		if(strstr((char*)TAM_MeshData_IN->MeshName,"water"))
+		{
+			TAM_MeshData_IN->TAM_Mesh_EXT_Type=_TAM_Mesh_EXT_Type_Water;
+		}
+		if(strstr((char*)TAM_MeshData_IN->MeshName,"tree"))
+		{
+			TAM_MeshData_IN->TAM_Mesh_EXT_Type=_TAM_Mesh_EXT_Type_Tree;
+		}
+	}
 	if(TAM_MeshData_IN->IsFiexible)
 	{
 		if(GameSet.Light>=3)
@@ -473,7 +486,7 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat * TAM_MatData_IN)
 	TAM_MatData_IN->diffuse[3]=1.0f;
 	TAM_MatData_IN->self_illum[3]=1.0f;
 	TAM_MatData_IN->specular[3]=1.0f;
-	TAM_MatData_IN->specularLv=max(5.0f,min(TAM_MatData_IN->specularLv,128.0f));
+	TAM_MatData_IN->specularLv=TAM_MatData_IN->specularLv;
 	if(TAM_MatData_IN->Name_diffuseMap[0]!=0)
 	{
 		TAM_MatData_IN->Tex_diffuse=new _TAM_Mat_Texture;
@@ -1012,6 +1025,7 @@ void CTopAceModel::Draw(bool Translucent)
 				glEnable(GL_CULL_FACE);
 			else
 				glDisable(GL_CULL_FACE);*/
+			Enable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
 			if(TAM_Mesh_Draw->IsFiexible)
 			{
 				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
@@ -1042,12 +1056,32 @@ void CTopAceModel::Draw(bool Translucent)
 					CommonMatrixs[CO_Matrix_World].Pop();
 				}
 			}
+			
+			Disable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
 		}
 	}
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 }
-
+void CTopAceModel::Enable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type)
+{
+	if(TAM_Mesh_EXT_Type<=0) return;
+	if(TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Tree)
+	{
+		glDisable(GL_CULL_FACE);
+		glEnable(GL_ALPHA_TEST); 
+		//glAlphaFunc(GL_GREATER, 0.5f);
+	}
+}
+void CTopAceModel::Disable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type)
+{
+	if(TAM_Mesh_EXT_Type<=0) return;
+	if(TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Tree)
+	{
+		glEnable(GL_CULL_FACE);
+		glDisable(GL_ALPHA_TEST); 
+	}
+}
 void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 {
 	if(!TAM_Mat) return;
@@ -1114,6 +1148,37 @@ bool CTopAceModel::IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh)
 	if(TAM_Mesh->OBJMATID) if(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse)
 		MeshUseAlphaTMP=pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse->UseAlpha;
 	MeshUseAlphaTMP=MeshUseAlphaTMP||(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].opacity<99.8?true:false);
+	if(TAM_Mesh->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Tree)
+	{
+		if(DrawTranslucent)
+		{
+			glEnable(GL_BLEND);
+			glAlphaFunc(GL_LEQUAL, 0.99f);
+		}
+		else
+		{
+			glDisable(GL_BLEND);
+			glAlphaFunc(GL_GREATER, 0.99f);
+		}
+		/*if(MeshUseAlphaTMP)
+		{
+			glEnable(GL_BLEND);
+			if(DrawTranslucent)
+				glAlphaFunc(GL_LEQUAL, 0.99f);
+			else
+				glAlphaFunc(GL_GREATER, 0.99f);
+		}
+		else
+		{
+			glDisable(GL_BLEND);
+			if(DrawTranslucent)
+				glAlphaFunc(GL_LEQUAL, 0.99f);
+			else
+				glAlphaFunc(GL_GREATER, 0.99f);
+			
+		}*/
+		return true;
+	}
 	if(MeshUseAlphaTMP!=DrawTranslucent) return false;
 	if(MeshUseAlphaTMP) glEnable(GL_BLEND);
 	else glDisable(GL_BLEND);
@@ -1465,5 +1530,7 @@ bool CTopAceModel::GetCamMatrix(unsigned int CamID, __m128 * CamMatrix)
 void CTopAceModel::SetLight(unsigned int LightID,unsigned int LightBase)
 {
 }
+
+
 
 

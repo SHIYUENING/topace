@@ -27,6 +27,7 @@ float extern moveY;
 float extern moveX;
 int extern ReadingThreadNum;
 CFONTS2D FONTS2D;
+CFONTS2D FONTS2DSimple;
 CTAMFT3D TAMFT3D;
 bool Inited=false;
 bool IsFirstInit=true;
@@ -234,8 +235,10 @@ bool InitDraw()
 	GetWindowsDirectoryA(szPath,sizeof(szPath));
 	sprintf(FontPath,"%s/Fonts/simhei.ttf",szPath);
 	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
+	FONTS2DSimple.LoadFullWidthFont(FontPath,256,256);
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
+	
 
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
@@ -376,6 +379,8 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glEnable( GL_TEXTURE_2D );
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
 	FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
+	glColor4f(1.0f,1.0f,0.0f,0.3f);
+	FONTS2DSimple.DrawTexts(L"样品",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	RenderFaces=0;
 }
@@ -404,7 +409,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
-	//glDepthMask(GL_FALSE);
+	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
 	glDepthMask(GL_TRUE);
 	glMatrixMode(GL_TEXTURE);
@@ -427,7 +432,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	SetCameraMatrix();
 	SetLights();
 	Test_matrix();
-	TopAceModelTest.FrameTAMBoneMatrixs(max(0.0f,Test3dsFrame-0.3f*TopAceModelTest.testMAXFrame));
+	//TopAceModelTest.FrameTAMBoneMatrixs(max(0.0f,Test3dsFrame-0.3f*TopAceModelTest.testMAXFrame));
+	if(Test3dsFrame>TopAceModelTest.testMAXFrame) Test3dsFrame=Test3dsFrame-TopAceModelTest.testMAXFrame;
+	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
 	RenderFaces=RenderFaces+TAMFT3D.RenderFaceNum+TopAceModelTest.TotelFaceNum;
 	QueryPerformanceCounter(&CPUTestEnd);
 }

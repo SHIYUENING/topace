@@ -81,7 +81,8 @@ void DataUpdata()
 {
 	UpdataKeys();
 	TotalFrame=TotalFrame+1;
-	if(Test3dsFrameSwitch)
+	Test3dsFrame=Test3dsFrame+0.25f;
+	/*if(Test3dsFrameSwitch)
 	{
 		Test3dsFrame=Test3dsFrame+0.5f;
 		if(Test3dsFrame>=maxFreme)
@@ -98,7 +99,7 @@ void DataUpdata()
 			//Test3dsFrame=0.0f;
 			Test3dsFrameSwitch=true;
 		}
-	}
+	}*/
 	angleR=angleR+0.2f;
 
 	TestView.Reset();
