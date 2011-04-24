@@ -41,6 +41,7 @@ int OmniLightNumBase=0;
 int SpotLightNumBase=0;
 CTopAceModel TopAceModelTest;
 Textures LoadingTex;
+Textures WaterNormalTex;
 extern HDC SwapHdc; 
 float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
@@ -197,12 +198,16 @@ bool InitDraw()
 	}
 	//if (!glewIsSupported("GL_ARB_texture_float"))
 	//	GameSet.Bloom=0;
-
 	Textures::LoadDefineTex();ADD_LOG_Q("LoadDefineTex OK");
 	LoadingTex.loadfile(L"data/loading");ADD_LOG_Q("LoadingTex OK");
 	LoadingTex.LoadToVRAM(GL_LINEAR);ADD_LOG_Q("LoadingTex.LoadToVRAM(GL_LINEAR) OK");
 	DrawLoadingTex(&LoadingTex);ADD_LOG_Q("DrawLoadingTex OK");
 	LoadCubeTex();ADD_LOG_Q("LoadCubeTex OK");
+	
+	
+	WaterNormalTex.loadfile(L"data/sea/sea");
+	WaterNormalTex.LoadToVRAM(GL_LINEAR);
+	WaterNormalTexID=WaterNormalTex.TexID;
 	if(GameSet.Light>1)
 	{
 		InitFBO(GameSet.winW,GameSet.winH)==true?ADD_LOG_Q("InitFBO OK"):ADD_LOG_Q("InitFBO false");
@@ -377,7 +382,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		swprintf_s(
 			ShowFPS,
 			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
-			L"%s\nFPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d",
+			L"%s\nFPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d  Z值%f",
 			GPUName,
 			FPSNumShow,
 			oneframetimepointCPUDraw,
@@ -389,7 +394,8 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 			TouchInputposs[0].m128_i32[0],
 			TouchInputposs[0].m128_i32[1],
 			TouchInputposs[1].m128_i32[0],
-			TouchInputposs[1].m128_i32[1]
+			TouchInputposs[1].m128_i32[1],
+			moveZ
 			);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
@@ -427,6 +433,9 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
+	float WaterSets[4]={Test3dsFrame*0.0025,Test3dsFrame*0.0025,Test3dsFrame*0.0005,Test3dsFrame*0.0005};
+	GLSL_Enable_Water(WaterSets);
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
 	glDepthMask(GL_FALSE);

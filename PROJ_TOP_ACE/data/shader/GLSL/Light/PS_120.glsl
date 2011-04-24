@@ -1,7 +1,7 @@
 #version 110
 uniform mat4 WMatrix;
 uniform ivec2 LightNums;
-uniform vec4 TexTurnY;
+uniform vec4 TexTurnY=vec4(1.0,1.0,1.0,1.0);
 
 uniform sampler2D DiffuseTex;
 uniform sampler2DShadow ShadowTex;
@@ -16,7 +16,10 @@ uniform vec4 Global_Ambient;
 #define Material_emission Material[2]
 #define Material_shininess Material[2].w
 #define Material_specularlevel Material[1].w
-
+#define TEXTurnYDIF TexTurnY.x
+#define TEXTurnYSPE TexTurnY.y
+#define TEXTurnYREF TexTurnY.z
+#define TEXTurnYNOR TexTurnY.w
 varying vec4 VertexEyeDir; 
 varying vec3 Normal; 
 varying vec2 TexCoord0;
@@ -44,9 +47,9 @@ void main()
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
 
-	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy);
+	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy)*abs(TEXTurnYDIF)+(1.0-abs(TEXTurnYDIF))*Material_diffuse;
 	vec2 LightVal = OmniLight (OmniLight_Pos[0],Material_shininess)*Shadow;
-	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0] * Material_diffuse;
+	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0];
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,- normalize(VertexEyeDir.xyz)));

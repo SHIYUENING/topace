@@ -8,11 +8,13 @@ attribute vec2 TexCoord0_in;
 varying vec4 VertexEyeDir;
 varying vec4 ShadowDir;
 varying vec2 WaterTexCoords[4]; 
+varying vec2 TexCoord0OUT;
 void main()
 {
 	VertexEyeDir = MMatrix * vec4(Position_in,1.0);
 	gl_Position = MVPMatrix * vec4(Position_in,1.0);
 	ShadowDir = ShadowMatrix * vec4(Position_in,1.0);
+	TexCoord0OUT=TexCoord0_in;
 	vec2 TexCoord0=TexCoord0_in;
 	WaterTexCoords[0]=TexCoord0+WaterSet.xy;
 	WaterTexCoords[1]=TexCoord0*2+WaterSet.zw*2;

@@ -505,7 +505,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				else
 				{
 					if(Touchings[0])
-					if(!(TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0))
+					if(!((TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0)))
 					{
 						touchX=float(TouchInputposs[0].m128_i32[0]-TouchInputposs[0].m128_i32[2]);
 					}

@@ -98,7 +98,9 @@
     <ClCompile Include="DrawTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GLSL_Water.cpp" />
+    <ClCompile Include="GLSL_Water.cpp">
+      <Filter>GLSL_EFF</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -210,7 +212,9 @@
     <ClInclude Include="DrawTests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GLSL_Water.h" />
+    <ClInclude Include="GLSL_Water.h">
+      <Filter>GLSL_EFF</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">
