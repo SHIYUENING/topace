@@ -420,7 +420,7 @@ public:
 	bool DrawTranslucent;
 	bool GetCamMatrix(unsigned int CamID, __m128 * CamMatrix);
 	void SetLight(unsigned int LightID,unsigned int LightBase=0);
-	void Draw(bool Translucent);
+	void Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType=_TAM_Mesh_EXT_Type_NoType);
 	void CreatVAO(tMeshVBOID * MeshVBOID);
 	bool MeshUseAlphaTMP;
 	bool IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh);

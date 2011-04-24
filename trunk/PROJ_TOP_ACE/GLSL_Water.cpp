@@ -45,7 +45,7 @@ void Init_GLSL_Water()
 	Water_OmniLight_Color = glGetUniformLocation(Water_PO,"OmniLight_Color");
 	Water_Material = glGetUniformLocation(Water_PO,"Material");
 	Water_Global_Ambient = glGetUniformLocation(Water_PO,"Global_Ambient");
-	Water_WaterSet = glGetUniformLocation(Water_PO,"Water_WaterSet");
+	Water_WaterSet = glGetUniformLocation(Water_PO,"WaterSet");
 }
 void Deinit_GLSL_Water()
 {

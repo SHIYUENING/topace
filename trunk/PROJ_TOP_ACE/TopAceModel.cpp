@@ -1009,7 +1009,7 @@ void CTopAceModel::DeleteMeshVRAM(_TAM_Mesh * TAM_Mesh)
 	if(glIsVertexArray(MeshVBOID->VAOID))
 		glDeleteVertexArrays(1,&MeshVBOID->VAOID);
 }
-void CTopAceModel::Draw(bool Translucent)
+void CTopAceModel::Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType)
 {
 	if(!pTAM_FileHead) return ;
 	if(unsigned int(pTAM_FileHead->MeshHeadAddress)==0xFFFFFFFF) return ;
@@ -1018,46 +1018,55 @@ void CTopAceModel::Draw(bool Translucent)
 	for(unsigned int i=0;i<pTAM_FileHead->MeshNum;i++)
 	{
 		TAM_Mesh_Draw=pTAM_FileHead->MeshHeadAddress[i];
-		if(TAM_Mesh_Draw)
-		{
+		if(!TAM_Mesh_Draw) continue;
+		
 			/*if(TAM_Mesh_Draw->OneFace)
 				glEnable(GL_CULL_FACE);
 			else
 				glDisable(GL_CULL_FACE);*/
-			Enable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
-			if(TAM_Mesh_Draw->IsFiexible)
-			{
-				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
-				DrawRAMMeshFiexible(TAM_Mesh_Draw);
-			}
-			else
-			{
-				if(TAM_Mesh_Draw->BoneWeightNum>0)
-				{
-					CommonMatrixs[CO_Matrix_World].Push();
-					if(TAM_Mesh_Draw->FaceNum>0)
-					{
-						CommonMatrixs[CO_Matrix_World].MultF((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
-					}
-				}
-				CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
-				CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
-				SuppotVBO==true?DrawMeshRigid(TAM_Mesh_Draw):DrawRAMMeshRigid(TAM_Mesh_Draw);
-				if(TAM_Mesh_Draw->BoneWeightNum>0)
-				{
-					CommonMatrixs[CO_Matrix_World].Pop();
-				}
-			}
-			
-			Disable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
+		if(DrawType>0)
+		{
+			if(TAM_Mesh_Draw->TAM_Mesh_EXT_Type!=DrawType)
+				continue;
 		}
+		else
+		{
+			if(TAM_Mesh_Draw->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Water)
+				continue;
+		}
+		Enable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
+		if(TAM_Mesh_Draw->IsFiexible)
+		{
+			CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
+			DrawRAMMeshFiexible(TAM_Mesh_Draw);
+		}
+		else
+		{
+			if(TAM_Mesh_Draw->BoneWeightNum>0)
+			{
+				CommonMatrixs[CO_Matrix_World].Push();
+				if(TAM_Mesh_Draw->FaceNum>0)
+				{
+					CommonMatrixs[CO_Matrix_World].MultF((float *)&BoneMatrixs[(TAM_Mesh_Draw->vecBoneWeightsAndBoneIDs[0].vecBoneIDs[0])*4]);
+				}
+			}
+			CommonMatrixs[CO_Matrix_ModelViewProj].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_Proj].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_ModelView].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_World].SetMatrixToGlsl();
+			CommonMatrixs[CO_Matrix_ShadowViewProj].SetMatrixToGlsl();
+			SuppotVBO==true?DrawMeshRigid(TAM_Mesh_Draw):DrawRAMMeshRigid(TAM_Mesh_Draw);
+			if(TAM_Mesh_Draw->BoneWeightNum>0)
+			{
+				CommonMatrixs[CO_Matrix_World].Pop();
+			}
+		}
+		
+		Disable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
 	}
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
@@ -1070,6 +1079,12 @@ void CTopAceModel::Enable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type)
 		glDisable(GL_CULL_FACE);
 		glEnable(GL_ALPHA_TEST); 
 		//glAlphaFunc(GL_GREATER, 0.5f);
+	}
+	if(TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Water)
+	{
+		glActiveTexture(GL_TEXTURE0+NorTexShot);
+		glBindTexture(GL_TEXTURE_2D, WaterNormalTexID);
+		glActiveTexture(GL_TEXTURE0);
 	}
 }
 void CTopAceModel::Disable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type)
@@ -1196,6 +1211,12 @@ bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
 		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
+	if(TAM_Mesh->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Water)
+	{
+		glActiveTexture(GL_TEXTURE0+NorTexShot);
+		glBindTexture(GL_TEXTURE_2D, WaterNormalTexID);
+		glActiveTexture(GL_TEXTURE0);
+	}
 	if(IsSuppotVAO)
 	{
 		glBindVertexArray(MeshVBOID->VAOID);

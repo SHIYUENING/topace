@@ -49,10 +49,14 @@ void UpdataKeys()
 		moveX=moveX+2.0f;
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_LEFT] == TRUE)
 		moveX=moveX-2.0f;
-	moveX=moveX+touchX;
-	moveZ=moveZ+zoomsize;
-	zoomsize=0.0f;
-	touchX=touchX;
+	moveX=moveX-touchX*0.025f;
+	moveZ=moveZ-zoomsize*0.0025f;
+	if(moveZ>0.0f) moveZ=0.0f;
+	if(moveZ<-350.0f) moveZ=-350.0f;
+	zoomsize=zoomsize*0.75f;
+	if(abs(zoomsize)<0.0001f) zoomsize=0.0f;
+	touchX=touchX*0.75f;
+	if(abs(touchX)<0.0001f) touchX=0.0f;
 }
 void InitDataThread()
 {
