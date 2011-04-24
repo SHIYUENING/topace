@@ -60,8 +60,8 @@ void Textures::LoadDefineTex()
 		unsigned char DefTexData[64*64*4];
 		for(int i=0;i<64*64*4;i=i+4)
 		{
-			DefTexData[i+0]=0;
-			DefTexData[i+1]=255;
+			DefTexData[i+0]=255;
+			DefTexData[i+1]=0;
 			DefTexData[i+2]=0;
 			DefTexData[i+3]=0;
 		}

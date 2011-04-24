@@ -548,7 +548,6 @@ bool CTopAceModel::InitTAMMat(_TAM_Mat_2 * TAM_MatData_IN)
 	TAM_MatData_IN->diffuse[3]=1.0f;
 	TAM_MatData_IN->self_illum[3]=1.0f;
 	TAM_MatData_IN->specular[3]=1.0f;
-	TAM_MatData_IN->specularLv=max(5.0f,min(TAM_MatData_IN->specularLv,128.0f));
 	for(int i=0;i<TAM_MAT_MAX_MAP;i++)
 	{
 		if(TAM_MatData_IN->Texs[i].Name[0])
@@ -1109,6 +1108,7 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 	}
 	else
 	{
+		TexTurnY[TEXDIF]=0.0f;
 		glBindTexture(GL_TEXTURE_2D, Textures::DefineTexID);
 	}
 

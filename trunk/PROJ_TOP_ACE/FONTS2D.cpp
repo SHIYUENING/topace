@@ -181,7 +181,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	FontSets[CharIn].TexSizeY=face==Face_FullWidth?FontSizeFY:FontSizeHY;FontSets[CharIn].TexSizeY=next_p2(FontSets[CharIn].TexSizeY);
 	unsigned char* FontDataTMP=face==Face_FullWidth?FontDataTMP_FullWidth:FontDataTMP_HalfWidth;
 	if(FT_Load_Glyph( face, FT_Get_Char_Index( face, CharIn ), FT_LOAD_DEFAULT )) return;
-	Old_FT_Outline_Embolden( &(face->glyph->outline), 30 );
+	Old_FT_Outline_Embolden( &(face->glyph->outline), 20 );
     if(FT_Get_Glyph( face->glyph, &glyph )) return;
 	FT_Glyph_To_Bitmap( &glyph, ft_render_mode_normal, 0, 1 );
     bitmap_glyph = (FT_BitmapGlyph)glyph;

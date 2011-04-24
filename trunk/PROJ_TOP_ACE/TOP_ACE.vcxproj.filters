@@ -98,6 +98,7 @@
     <ClCompile Include="DrawTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GLSL_Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -209,6 +210,7 @@
     <ClInclude Include="DrawTests.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GLSL_Water.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">

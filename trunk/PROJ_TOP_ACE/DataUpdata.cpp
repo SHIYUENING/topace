@@ -24,6 +24,8 @@ CExchangeThread ThreadDataUpdata;
 CSceneUnit SceneUnitTest;
 CUnitsList UnitsList;
 CSoundSys * SoundSysTest;
+extern float zoomsize;
+extern float touchX;
 void UpdataKeys()
 {
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_PRIOR] == TRUE)
@@ -47,6 +49,10 @@ void UpdataKeys()
 		moveX=moveX+2.0f;
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_LEFT] == TRUE)
 		moveX=moveX-2.0f;
+	moveX=moveX+touchX;
+	moveZ=moveZ+zoomsize;
+	zoomsize=0.0f;
+	touchX=touchX;
 }
 void InitDataThread()
 {
@@ -101,7 +107,6 @@ void DataUpdata()
 		}
 	}*/
 	angleR=angleR+0.2f;
-
 	TestView.Reset();
 	TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
 	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);

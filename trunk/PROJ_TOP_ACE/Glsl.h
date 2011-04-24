@@ -12,11 +12,12 @@
 void InitGLSL();
 void DeinitGLSL();
 void GLSL_Disable();
+/*
 void GLSL_Enable_StarPass0();
 void GLSL_Enable_StarPass1();
 void GLSL_Enable_SSAOPass0();
 void GLSL_Enable_SSAOPass1(float SSAOset[4]);
-
+*/
 void GLSL_SetMMatrixToGlsl(GLfloat * MMatrix=0);
 void GLSL_SetPMatrixToGlsl(GLfloat * PMatrix=0);
 void GLSL_SetMVPMatrixToGlsl(GLfloat * MVPMatrix=0);

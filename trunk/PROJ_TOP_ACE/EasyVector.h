@@ -6,6 +6,20 @@
 #include <math.h>
 #include <windows.h>
 #include <xmmintrin.h>
+inline float Easy_vector_Getlenth_2f(float x1,float x2,float y1,float y2)
+{
+	return(x1-x2)*
+		  (x1-x2)+
+		  (y1-y2)*
+		  (y1-y2);
+}
+inline int Easy_vector_Getlenth_2i(int x1,int x2,int y1,int y2)
+{
+	return(x1-x2)*
+		  (x1-x2)+
+		  (y1-y2)*
+		  (y1-y2);
+}
 inline float Easy_vector_Getlenth_2(__m128 a,__m128 b)
 {
 	return	(a.m128_f32[0]-b.m128_f32[0])*(a.m128_f32[0]-b.m128_f32[0])+
