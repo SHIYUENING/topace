@@ -66,7 +66,7 @@ void main()
 	Shadow=Shadow/13.0;
 	vec2 TexCoordTMP=TexCoord0.xy;
 	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYDIF;
-	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordTMP);
+	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordTMP)*abs(TEXTurnYDIF)+(1.0-abs(TEXTurnYDIF))*Material_diffuse;
 	TexCoordTMP=TexCoord0.xy;
 	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYNOR;
 	vec4 NormalTexColor = texture2D(NormalTex, TexCoordTMP);
@@ -88,7 +88,7 @@ void main()
 		SpecularColor += LightVal.y * OmniLight_Color[i] ;
 	}
 
-	DiffuseColor=DiffuseColor;//*Material_diffuse;
+	//DiffuseColor=DiffuseColor*Material_diffuse;
 	SpecularColor=SpecularColor*Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
