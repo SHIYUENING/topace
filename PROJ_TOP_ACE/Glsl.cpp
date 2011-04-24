@@ -25,6 +25,7 @@ void InitGLSL()
 	Init_GLSL_light(GameSet.Light);
 	if(GameSet.Bloom>0) Init_GLSL_Bloom();
 	if(GameSet.Shadow>0) Init_GLSL_Shadow();
+	Init_GLSL_Water();
 	//GLSL_Sea.LoadShader(L"data/shader/GLSL_Sea.vs",L"data/shader/GLSL_Sea.ps");
 	
 	
@@ -50,6 +51,7 @@ void DeinitGLSL()
 	Deinit_GLSL_light();
 	Deinit_GLSL_Bloom();
 	Deinit_GLSL_Shadow();
+	Deinit_GLSL_Water();
 }
 void GLSL_Disable()
 {
@@ -57,6 +59,7 @@ void GLSL_Disable()
 	CO_SetGlslPO(0);
 	glUseProgramObjectARB( NULL );
 }
+/*
 void GLSL_Enable_StarPass1()
 {
 	if(GlslVer<100) return;
@@ -88,7 +91,7 @@ void GLSL_Enable_SSAOPass1(float SSAOset[4])
 	glUniform4fv(glGetUniformLocation(GLSL_SSAOPass1.g_PO,"SSAOset"),1,SSAOset);
 	
 }
-
+*/
 void GLSL_SetMMatrixToGlsl(GLfloat * MMatrix)
 {
 	if(MMatrix)

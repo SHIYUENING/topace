@@ -34,7 +34,7 @@ bool IsFirstInit=true;
 LARGE_INTEGER TimeStart,TimeEnd,Timefeq,RunTimeStart,RunTimeEnd,CPUTestStart,CPUTestEnd;
 int FPSNum=0;
 int FPSNumShow=0; 
-wchar_t ShowFPS[512]={0};
+wchar_t ShowFPS[768]={0};
 //CLoad3DS  * Test3dsModelHanger=NULL;
 
 int OmniLightNumBase=0;
@@ -59,6 +59,10 @@ __m128 ShadowMatrix[4];
 float WorldMatrix[16];
 GLuint RefCubeTexID=0;
 wchar_t GPUName[512];
+extern BYTE nInputs;
+extern unsigned int nInputsNow;
+extern __m128 TouchInputposs[4];
+
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -212,7 +216,7 @@ bool InitDraw()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glShadeModel(GL_SMOOTH);
-	glClearColor(0.0f, 0.5f, 0.5f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
 	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
@@ -370,7 +374,23 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		FPSNumShow=FPSNum;
 		FPSNum=0;
 		runtime=float((RunTimeEnd.QuadPart-RunTimeStart.QuadPart)/Timefeq.QuadPart);
-		swprintf_s(ShowFPS,sizeof(ShowFPS)/sizeof(ShowFPS[0]),L"%s\nFPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d",GPUName,FPSNumShow,oneframetimepointCPUDraw,oneframetimepointCPUSYS,oneframetimepointGPU,RenderFaces);
+		swprintf_s(
+			ShowFPS,
+			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
+			L"%s\nFPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d",
+			GPUName,
+			FPSNumShow,
+			oneframetimepointCPUDraw,
+			oneframetimepointCPUSYS,
+			oneframetimepointGPU,
+			RenderFaces,
+			nInputsNow,
+			nInputs,
+			TouchInputposs[0].m128_i32[0],
+			TouchInputposs[0].m128_i32[1],
+			TouchInputposs[1].m128_i32[0],
+			TouchInputposs[1].m128_i32[1]
+			);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
 	}

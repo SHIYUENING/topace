@@ -60,8 +60,13 @@ bool Gdown2=false;
 bool GdownSPACE=false;
 bool DrawFrame=false;
 extern CExchangeThread ThreadDataDraw;
-BYTE nInputs;
+BYTE nInputs=0;
+unsigned int nInputsNow=0;
 bool TouchInput=false;
+__m128 TouchInputposs[4];
+float zoomsize=0.0f;
+float touchX=0.0f;
+bool Touchings[4]={false,false,false,false};
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -456,15 +461,69 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_TOUCH:
 			{
 				if(nInputs<=0) break;
+				nInputsNow=(unsigned int)wParam;
 				TOUCHINPUT * ti=new TOUCHINPUT[nInputs];
 				GetTouchInputInfo((HTOUCHINPUT)lParam, nInputs,ti,sizeof(TOUCHINPUT));
+					
+				for (unsigned int i=0;i<nInputsNow;i++)
+				{
+							TouchInputposs[i].m128_i32[2]=TouchInputposs[i].m128_i32[0];
+							TouchInputposs[i].m128_i32[3]=TouchInputposs[i].m128_i32[1];
+					if ((ti[i].dwFlags & TOUCHEVENTF_DOWN)||(ti[i].dwFlags & TOUCHEVENTF_MOVE))
+					{
+						if(i<=1)
+						{
+							TouchInputposs[i].m128_i32[0]=(int)ti[i].x;
+							TouchInputposs[i].m128_i32[1]=(int)ti[i].y;
+							Touchings[i]=true;
+						}
+					}
+					else
+					{
+						Touchings[i]=false;
+					}
+
+					
+				}
+				if(nInputsNow>1)
+				{
+					zoomsize=float(Easy_vector_Getlenth_2i(
+						TouchInputposs[0].m128_i32[2],
+						TouchInputposs[1].m128_i32[2],
+						TouchInputposs[0].m128_i32[3],
+						TouchInputposs[1].m128_i32[3]
+						)-
+					Easy_vector_Getlenth_2i(
+						TouchInputposs[0].m128_i32[0],
+						TouchInputposs[1].m128_i32[0],
+						TouchInputposs[0].m128_i32[1],
+						TouchInputposs[1].m128_i32[1]
+						));
+						
+					//TouchInputposs[0].m128_i32[0]-TouchInputposs[1].m128_i32[0]
+				}
+				else
+				{
+					if(Touchings[0])
+					if(!(TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0))
+					{
+						touchX=float(TouchInputposs[0].m128_i32[0]-TouchInputposs[0].m128_i32[2]);
+					}
+				}
+				for (unsigned int i=nInputsNow;i<4;i++)
+				{
+					TouchInputposs[i].m128_i32[0]=0;
+					TouchInputposs[i].m128_i32[1]=0;
+				}
 				//WM_GESTURE
 			
 				//MessageBoxW (HWND_DESKTOP, L"检测到触摸消息", L" ", MB_OK | MB_ICONEXCLAMATION);
+				
+				CloseTouchInputHandle((HTOUCHINPUT)lParam);
+				delete [] ti;
 			}
 		break;
 	}
-
 	return DefWindowProcW (hWnd, uMsg, wParam, lParam);					// Pass Unhandled Messages To DefWindowProc
 }
 
@@ -614,6 +673,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 				TouchInput=false;
 				//TerminateApplication(&window);
 			}
+			nInputs=TouchInput?nInputs:0;
 			if(TouchInput)
 			TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
 			LockFPSRender.Init(GameSet.FPS);
