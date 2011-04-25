@@ -19,8 +19,8 @@ void main()
 	TexCoord0OUT=TexCoord0_in;
 	vec2 TexCoord0=TexCoord0_in;
 	WaterTexCoords[0]=TexCoord0+WaterSet.xy;
-	WaterTexCoords[1]=TexCoord0*2+WaterSet.zw*2;
-	WaterTexCoords[2]=TexCoord0*3+WaterSet.xy*3;
-	WaterTexCoords[3]=TexCoord0*4+WaterSet.zw*4;
+	WaterTexCoords[1]=TexCoord0*2.0+WaterSet.zw*2.0;
+	WaterTexCoords[2]=TexCoord0*3.0+WaterSet.xy*3.0;
+	WaterTexCoords[3]=TexCoord0*4.0+WaterSet.zw*4.0;
     return;
 }
