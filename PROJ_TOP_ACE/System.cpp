@@ -4,7 +4,7 @@
 #include <gl/glew.h>
 #include <gl/wglew.h>
 #include "LockFPS.h"
-
+#include "resource.h"
 #include "System.h"														// Header File For The NeHeGL Basecode
 #include "IniFile.h"
 #include "DataUpdata.h"
@@ -177,7 +177,13 @@ BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change 
 
 BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL Window
 {
-	DWORD windowStyle = WS_OVERLAPPEDWINDOW;							// Define Our Window Style
+	//DWORD windowStyle = WS_OVERLAPPEDWINDOW;							// Define Our Window Style
+	DWORD windowStyle =		 WS_OVERLAPPED     | \
+                             WS_CAPTION        | \
+                             WS_SYSMENU        | \
+                             WS_THICKFRAME     | \
+                             WS_MINIMIZEBOX;
+                             //WS_MAXIMIZEBOX;
 	DWORD windowExtendedStyle = WS_EX_APPWINDOW;						// Define The Window's Extended Style
 
 	PIXELFORMATDESCRIPTOR pfd =											// pfd Tells Windows How We Want Things To Be
@@ -539,6 +545,7 @@ BOOL RegisterWindowClass (Application* application)						// Register A Window Cl
 	windowClass.hbrBackground	= (HBRUSH)(COLOR_APPWORKSPACE);			// Class Background Brush Color
 	windowClass.hCursor			= LoadCursorW(NULL, MAKEINTRESOURCEW(32512));			// Load The Arrow Pointer IDC_ARROW
 	windowClass.lpszClassName	= application->className;				// Sets The Applications Classname
+	windowClass.hIcon			= (HICON)LoadImageW(GetModuleHandle(NULL), L"data\\TOP_ACE.ico",IMAGE_ICON,16,16,LR_LOADFROMFILE);
 	if (RegisterClassExW (&windowClass) == 0)							// Did Registering The Class Fail?
 	{
 		// NOTE: Failure, Should Never Happen

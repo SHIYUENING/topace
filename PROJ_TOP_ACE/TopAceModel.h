@@ -412,7 +412,7 @@ public:
 		MatTmp[3]=Input[3];
 		return &MatTmp[0];
 	}
-	void SetDrawMeshMat(_TAM_Mat * TAM_Mat);
+	void SetDrawMeshMat(_TAM_Mat * TAM_Mat,_TAM_Mesh_EXT_Type DrawType);
 	void DeinitTAMMatAll();
 	void DeinitTAMMat(_TAM_Mat * TAM_MatData_IN);
 	void LoadMatTexsToVRAM(void);

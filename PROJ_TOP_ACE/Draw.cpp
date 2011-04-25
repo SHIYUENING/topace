@@ -63,7 +63,7 @@ wchar_t GPUName[512];
 extern BYTE nInputs;
 extern unsigned int nInputsNow;
 extern __m128 TouchInputposs[4];
-
+float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -382,20 +382,19 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		swprintf_s(
 			ShowFPS,
 			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
-			L"%s\nFPS:%d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nRenderFaces %d\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d  Z值%f",
-			GPUName,
+			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nFace Num: %d",
 			FPSNumShow,
-			oneframetimepointCPUDraw,
-			oneframetimepointCPUSYS,
-			oneframetimepointGPU,
-			RenderFaces,
+			GPUName,
 			nInputsNow,
 			nInputs,
 			TouchInputposs[0].m128_i32[0],
 			TouchInputposs[0].m128_i32[1],
 			TouchInputposs[1].m128_i32[0],
 			TouchInputposs[1].m128_i32[1],
-			moveZ
+			oneframetimepointCPUDraw,
+			oneframetimepointCPUSYS,
+			oneframetimepointGPU,
+			RenderFaces
 			);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
@@ -421,7 +420,10 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//DrawTestLines();
 	
 	//TAMFT3D.Draw3DText(L"测试",20,20,600);
-	
+	WaterTimeSet[0]=WaterTimeSet[0]+0.0001f;
+	WaterTimeSet[1]=WaterTimeSet[1]+0.0002f;
+	WaterTimeSet[2]=WaterTimeSet[2]+0.0004f;
+	WaterTimeSet[3]=WaterTimeSet[3]+0.0006f;
 	if(GameSet.Shadow>0) 
 	{
 		if(TopAceModelTest.pTAM_FileHead)
@@ -434,7 +436,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	float WaterSets[4]={Test3dsFrame*0.0025,Test3dsFrame*0.0025,Test3dsFrame*0.0005,Test3dsFrame*0.0005};
-	GLSL_Enable_Water(WaterSets);
+	GLSL_Enable_Water(WaterTimeSet);
 	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);

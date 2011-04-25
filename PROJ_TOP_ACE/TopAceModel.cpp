@@ -1096,7 +1096,7 @@ void CTopAceModel::Disable_EXT_Type_Set(_TAM_Mesh_EXT_Type TAM_Mesh_EXT_Type)
 		glDisable(GL_ALPHA_TEST); 
 	}
 }
-void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
+void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat,_TAM_Mesh_EXT_Type DrawType)
 {
 	if(!TAM_Mat) return;
 	float TexTurnY[4]={-1.0f,-1.0f,-1.0f,-1.0f};
@@ -1138,7 +1138,12 @@ void CTopAceModel::SetDrawMeshMat(_TAM_Mat * TAM_Mat)
 		glActiveTexture(GL_TEXTURE0+NorTexShot);
 		glBindTexture(GL_TEXTURE_2D, Textures::DefNorTexID);
 	}
-
+	if(DrawType==_TAM_Mesh_EXT_Type_Water)
+	{
+		glActiveTexture(GL_TEXTURE0+NorTexShot);
+		glBindTexture(GL_TEXTURE_2D, WaterNormalTexID);
+		glActiveTexture(GL_TEXTURE0);
+	}
 	if(TAM_Mat->Tex_specular)
 	{
 		TexTurnY[TEXSPE]=TAM_Mat->Tex_specular->TexType==IS_DDS?-1.0f:1.0f;
@@ -1210,13 +1215,13 @@ bool CTopAceModel::DrawMeshRigid(_TAM_Mesh * TAM_Mesh)
 
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
-		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
-	if(TAM_Mesh->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Water)
+		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1,TAM_Mesh->TAM_Mesh_EXT_Type);
+	/*if(TAM_Mesh->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Water)
 	{
 		glActiveTexture(GL_TEXTURE0+NorTexShot);
 		glBindTexture(GL_TEXTURE_2D, WaterNormalTexID);
 		glActiveTexture(GL_TEXTURE0);
-	}
+	}*/
 	if(IsSuppotVAO)
 	{
 		glBindVertexArray(MeshVBOID->VAOID);
@@ -1273,7 +1278,7 @@ bool CTopAceModel::DrawRAMMeshRigid(_TAM_Mesh * TAM_Mesh)
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
-		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
+		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1,TAM_Mesh->TAM_Mesh_EXT_Type);
 	/*
 	glEnableClientState( GL_VERTEX_ARRAY );
 	if((TAM_Mesh->Normals)&&(unsigned int(TAM_Mesh->Normals)!=0xFFFFFFFF))
@@ -1394,7 +1399,7 @@ bool CTopAceModel::DrawRAMMeshFiexible(_TAM_Mesh * TAM_Mesh)
 	glColor3f(1.0f,1.0f,1.0f);
 	glBindTexture(GL_TEXTURE_2D, 1);
 	if(TAM_Mesh->OBJMATID)
-		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1);
+		SetDrawMeshMat(pTAM_FileHead->MatsAddress+TAM_Mesh->OBJMATID-1,TAM_Mesh->TAM_Mesh_EXT_Type);
 	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 	glBindBufferARB( GL_ELEMENT_ARRAY_BUFFER_ARB, 0 );
 

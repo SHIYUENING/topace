@@ -9,8 +9,10 @@ varying vec4 VertexEyeDir;
 varying vec4 ShadowDir;
 varying vec2 WaterTexCoords[4]; 
 varying vec2 TexCoord0OUT;
+varying mat4 MMatrixPS;
 void main()
 {
+	MMatrixPS=MMatrix;
 	VertexEyeDir = MMatrix * vec4(Position_in,1.0);
 	gl_Position = MVPMatrix * vec4(Position_in,1.0);
 	ShadowDir = ShadowMatrix * vec4(Position_in,1.0);
