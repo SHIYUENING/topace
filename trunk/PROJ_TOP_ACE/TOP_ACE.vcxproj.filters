@@ -228,11 +228,11 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{205d04a3-584f-42da-ace0-ceecf922ee14}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{43324375-2d7e-4216-9c5b-93d7a83a2f2e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GLSL_EFF">
       <UniqueIdentifier>{55c24156-412a-4ed4-bf94-cf9ff8a8963b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{43324375-2d7e-4216-9c5b-93d7a83a2f2e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
