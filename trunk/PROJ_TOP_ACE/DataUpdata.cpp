@@ -3,6 +3,7 @@
 #include "ExchangeThread.h"
 #include "UnitsList.h"
 #include "SoundSys.h"
+#include"IniFile.h"
 float angleR=0.0f;
 float Test3dsFrame=0.0f;
 float maxFreme=100.0f;
@@ -26,6 +27,10 @@ CUnitsList UnitsList;
 CSoundSys * SoundSysTest;
 extern float zoomsize;
 extern float touchX;
+float NoTouchMoveTimes=0.0f;
+
+float TouchMoveOverride=0.0f;
+float TouchZoomOverride=0.0f;
 void UpdataKeys()
 {
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_PRIOR] == TRUE)
@@ -49,14 +54,16 @@ void UpdataKeys()
 		moveX=moveX+2.0f;
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_LEFT] == TRUE)
 		moveX=moveX-2.0f;
-	moveX=moveX-touchX*0.0015f;
-	moveZ=moveZ-zoomsize*0.000000025f;
-	//if(moveZ>0.0f) moveZ=0.0f;
-	//if(moveZ<-750.0f) moveZ=-750.0f;
-	//zoomsize=zoomsize*0.75f;
+	if(NoTouchMoveTimes<=0.01f)
+		moveX=moveX-touchX*TouchMoveOverride;
+	moveZ=moveZ-zoomsize*TouchZoomOverride;
+	if(moveZ>0.0f) moveZ=0.0f;
+	if(moveZ<-350.0f) moveZ=-350.0f;
+	zoomsize=zoomsize*0.75f;
 	if(abs(zoomsize)<0.0001f) zoomsize=0.0f;
-	//touchX=touchX*0.75f;
+	touchX=touchX*0.75f;
 	if(abs(touchX)<0.0001f) touchX=0.0f;
+	NoTouchMoveTimes=max(0.0f,NoTouchMoveTimes-1.0f);
 }
 void InitDataThread()
 {

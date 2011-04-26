@@ -38,6 +38,8 @@ void loadIniFile()
 		WritePrivateProfileStringW(L"SoundSet",L"BGM",L"100",IniFileName);
 		WritePrivateProfileStringW(L"SoundSet",L"Effect",L"100",IniFileName);
 		WritePrivateProfileStringW(L"SoundSet",L"Voice",L"100",IniFileName);
+		WritePrivateProfileStringW(L"other",L"TouchMoveOverride",L"1",IniFileName);
+		WritePrivateProfileStringW(L"other",L"TouchZoomOverride",L"1",IniFileName);
 
 		WritePrivateProfileStringW(L"JoyStictSet",L"JOY_KEY_UP",L"32",IniFileName);
 		WritePrivateProfileStringW(L"JoyStictSet",L"JOY_KEY_DOWN",L"22",IniFileName);
@@ -109,6 +111,9 @@ void loadIniFile()
 		GameSet.Shadow=GetPrivateProfileIntW(L"GameSet",L"Shadow",0,IniFileName);
 		GameSet.MoveBlur=GetPrivateProfileIntW(L"GameSet",L"MoveBlur",0,IniFileName);
 		GameSet.Cloud=GetPrivateProfileIntW(L"GameSet",L"Cloud",0,IniFileName);
+
+		GameSet.TouchMoveOverride=(float)GetPrivateProfileIntW(L"other",L"TouchMoveOverride",1,IniFileName);
+		GameSet.TouchZoomOverride=(float)GetPrivateProfileIntW(L"other",L"TouchZoomOverride",1,IniFileName);
 
 		SoundSet.BGM=GetPrivateProfileIntW(L"SoundSet",L"BGM",100,IniFileName);
 		SoundSet.Effect=GetPrivateProfileIntW(L"SoundSet",L"Effect",100,IniFileName);
