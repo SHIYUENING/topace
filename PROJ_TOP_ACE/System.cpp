@@ -67,6 +67,10 @@ __m128 TouchInputposs[4];
 float zoomsize=0.0f;
 float touchX=0.0f;
 bool Touchings[4]={false,false,false,false};
+extern float NoTouchMoveTimes;
+
+extern float TouchMoveOverride;
+extern float TouchZoomOverride;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -505,7 +509,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						TouchInputposs[0].m128_i32[1],
 						TouchInputposs[1].m128_i32[1]
 						));
-						
+						zoomsize=max(-0.1f,min(0.1f,zoomsize));
+						NoTouchMoveTimes=20.0f;
 					//TouchInputposs[0].m128_i32[0]-TouchInputposs[1].m128_i32[0]
 				}
 				else
@@ -514,6 +519,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					if(!((TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0)))
 					{
 						touchX=float(TouchInputposs[0].m128_i32[0]-TouchInputposs[0].m128_i32[2]);
+						touchX=max(-0.1f,min(0.1f,touchX));
 					}
 				}
 				for (unsigned int i=nInputsNow;i<4;i++)
@@ -611,6 +617,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 	
 	ADD_LOG_Q("loadIniFile Start");
 	loadIniFile();
+	
+	TouchMoveOverride=::GameSet.TouchMoveOverride;
+	TouchZoomOverride=::GameSet.TouchZoomOverride;
 	ADD_LOG_Q("loadIniFile End");
 	application.className = L"TOP_ACE";
 	application.hInstance = hInst;

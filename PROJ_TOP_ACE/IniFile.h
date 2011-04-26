@@ -42,6 +42,8 @@ struct tGameSet
 	int Shadow;
 	int MoveBlur;
 	int Cloud;
+	float TouchMoveOverride;
+	float TouchZoomOverride;
 };
 struct tSoundSet
 {
