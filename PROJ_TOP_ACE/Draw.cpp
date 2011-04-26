@@ -206,7 +206,7 @@ bool InitDraw()
 	
 	
 	WaterNormalTex.loadfile(L"data/sea/sea");
-	WaterNormalTex.LoadToVRAM(GL_LINEAR);
+	WaterNormalTex.LoadToVRAM();
 	WaterNormalTexID=WaterNormalTex.TexID;
 	if(GameSet.Light>1)
 	{
@@ -436,12 +436,12 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	float WaterSets[4]={Test3dsFrame*0.0025,Test3dsFrame*0.0025,Test3dsFrame*0.0005,Test3dsFrame*0.0005};
-	GLSL_Enable_Water(WaterTimeSet);
-	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
 	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
+	GLSL_Enable_Water(WaterTimeSet);
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	glDepthMask(GL_TRUE);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();

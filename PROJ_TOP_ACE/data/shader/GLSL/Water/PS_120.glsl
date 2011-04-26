@@ -30,7 +30,9 @@ vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess,vec3 texNormals)
 	vec3 HightLight =normalize( LightDir - normalize(VertexEyeDir.xyz));
 	specular = pow(max(dot(texNormals, HightLight), 0.0), LightShininess);
 
+	
 	NdotL = max(0.0,NdotL);
+	specular=NdotL>0.0?max(0.0,specular):0.0;
 	return vec2(NdotL,specular);
 }
 void main()
@@ -43,7 +45,8 @@ void main()
 	
 	texNormals=normalize(texNormals);
 	texNormals=texNormals*2.0-1.0;
-	texNormals.xy=texNormals.xy*1.5;
+	texNormals.z=max(0.0,texNormals.z);
+	//texNormals=vec3(0.0,0.0,1.0);
 	texNormals=(MMatrixPS*vec4(texNormals,0.0)).xyz;
 	texNormals=normalize(texNormals);
 	vec4 shadowPos=ShadowDir;
@@ -60,10 +63,10 @@ void main()
     vec4 ReflectiveWorld = WMatrix*vec4(Reflective,0.0);
 	//float REFC=Material_shininess*0.015;
 
-	gl_FragColor=vec4(0.1,1.0,0.9,1.0)*(Global_Ambient+DiffuseColor+Material_emission)*(1.0-NOF)+SpecularColor+textureCube(RefCubeTex, ReflectiveWorld.xyz)*NOF;
-	gl_FragColor.w=Material_diffuse.w+SpecularColor.w+NOF;
-	//gl_FragColor.xyz=texNormals.xyz;
+	gl_FragColor=(Global_Ambient+DiffuseColor+Material_emission)*(1.0-NOF)+SpecularColor*1.0+textureCube(RefCubeTex, ReflectiveWorld.xyz)*NOF;
+	gl_FragColor.w=SpecularColor.w*0.5+NOF;
+	//gl_FragColor.xyz=LightVal.xxx;
 	//gl_FragColor=textureCube(RefCubeTex, ReflectiveWorld.xyz);
-	gl_FragColor.w=1.0;
+	//gl_FragColor.w=0.0;
     return;
 } 
