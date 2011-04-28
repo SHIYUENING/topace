@@ -101,6 +101,7 @@
     <ClCompile Include="GLSL_Water.cpp">
       <Filter>GLSL_EFF</Filter>
     </ClCompile>
+    <ClCompile Include="TAMTEX.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -215,6 +216,7 @@
     <ClInclude Include="GLSL_Water.h">
       <Filter>GLSL_EFF</Filter>
     </ClInclude>
+    <ClInclude Include="TAMTEX.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">
