@@ -435,7 +435,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
-	float WaterSets[4]={Test3dsFrame*0.0025,Test3dsFrame*0.0025,Test3dsFrame*0.0005,Test3dsFrame*0.0005};
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
 	glDepthMask(GL_FALSE);
