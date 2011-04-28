@@ -405,7 +405,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
 	FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
 	glColor4f(1.0f,1.0f,0.0f,0.3f);
-	FONTS2DSimple.DrawTexts(L"样品",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
+	//FONTS2DSimple.DrawTexts(L"样品",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	RenderFaces=0;
 }
