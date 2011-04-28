@@ -1,7 +1,7 @@
 #version 140
 uniform mat4x4 WMatrix;
 uniform ivec2 LightNums;
-uniform vec4 TexTurnY=vec4(1.0,1.0,1.0,1.0);
+uniform vec4 TexTurnY;
 uniform vec2 ShadowTexSize;
 
 uniform sampler2D DiffuseTex;
