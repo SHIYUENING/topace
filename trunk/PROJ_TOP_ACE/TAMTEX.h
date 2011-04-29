@@ -87,6 +87,11 @@ public:
 	static void Init(void);
 	static void Deinit(void);
 	static _TAM_TEX *pTAM_TEXs;
+	static GLfloat AFSet;
+	static GLuint DefineTexID;
+	static GLuint DefNorTexID;
+	static GLuint DefSpeTexID;
+	static void LoadDefineTex();
 };
 
 #endif
