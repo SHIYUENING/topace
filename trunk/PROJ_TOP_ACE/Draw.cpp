@@ -437,8 +437,10 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
+	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Tree);
 	GLSL_Enable_Water(WaterTimeSet);
 	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	glDepthMask(GL_TRUE);
@@ -518,7 +520,7 @@ void DrawShadowMap()
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_FRONT);
 	glEnable(GL_CULL_FACE);
-	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_FALSE);
+	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_TRUE);
 
 
 	GLSL_Enable_Shadow();
@@ -527,7 +529,8 @@ void DrawShadowMap()
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
 	TopAceModelTest.Draw(false);
-
+	
+	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 
 	GLSL_Disable();
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);

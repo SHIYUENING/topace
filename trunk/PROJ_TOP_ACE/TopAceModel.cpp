@@ -1033,6 +1033,8 @@ void CTopAceModel::Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType)
 		{
 			if(TAM_Mesh_Draw->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Water)
 				continue;
+			if(TAM_Mesh_Draw->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Tree)
+				continue;
 		}
 		Enable_EXT_Type_Set(TAM_Mesh_Draw->TAM_Mesh_EXT_Type);
 		if(TAM_Mesh_Draw->IsFiexible)

@@ -63,8 +63,9 @@ void main()
 	float REFC=Material_shininess*0.002;
 
 	//gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor+textureCube(RefCubeTex, ReflectiveWorld.xyz)*REFC;
-	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
-	gl_FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+NOF;
+	float SpecularMat=(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
+	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*SpecularMat;
+	gl_FragColor.w=DiffuseTexColor.w*Material_diffuse.w+(SpecularColor.w+NOF)*SpecularMat;
 	//gl_FragColor.xyz=textureCube(RefCubeTex, ReflectiveWorld.xyz).xyz;
 	//gl_FragColor.xyz=DiffuseTexColor.xyz;
     return;
