@@ -15,6 +15,7 @@ void Init_GLSL_Shadow()
 	
 	CGLSL_Light_Attach(&Shadow_PO,Shadow_VS,0,0,0,Shadow_PS);
 	glBindAttribLocation(Shadow_PO,AbLoc_Pos, "Position_in" );
+	glBindAttribLocation(Shadow_PO,AbLoc_Tex0, "TexCoord0_in" );
 	CGLSL_Light_Link_ProgramObject(Shadow_PO);
 	Shadow_MVPMatrix_Loc=glGetUniformLocation(Shadow_PO,"MVPMatrix");
 }

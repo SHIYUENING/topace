@@ -92,8 +92,9 @@ void main()
 	SpecularColor=SpecularColor*Material_specular;
 
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
-	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
-	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+max(0.0f,NOF)*0.25;
+	float SpecularMat=(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
+	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*SpecularMat;
+	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+(SpecularColor.w+max(0.0f,NOF)*0.25)*SpecularMat;
 	//FragColor.xyz=NormalTBN.xyz;
     return;
 } 
