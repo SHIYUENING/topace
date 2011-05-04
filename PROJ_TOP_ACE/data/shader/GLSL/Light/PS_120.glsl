@@ -6,6 +6,7 @@ uniform vec4 TexTurnY;
 uniform sampler2D DiffuseTex;
 uniform sampler2DShadow ShadowTex;
 uniform samplerCube RefCubeTex;
+uniform sampler2D SpecularTex;
 
 uniform vec4 OmniLight_Pos[8];
 uniform vec4 OmniLight_Color[8];
@@ -43,6 +44,9 @@ void main()
 	vec2 TexCoordDiffuse;
 	TexCoordDiffuse.x=TexCoord0.x;
 	TexCoordDiffuse.y=TexTurnY.x*TexCoord0.y;
+	vec2 TexCoordTMP=TexCoord0.xy;
+	TexCoordTMP.y=TexCoordTMP.y*TEXTurnYSPE;
+	vec4 SpecularTexColor = texture2D(SpecularTex, TexCoordTMP);
 
 	vec4 shadowPos=ShadowDir-vec4(0.0,0.0,0.0025,0.0);
 	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
@@ -58,7 +62,8 @@ void main()
     vec4 ReflectiveWorld = WMatrix*vec4(Reflective,0.0);
 	float REFC=Material_shininess*0.002;
 
-	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor+textureCube(RefCubeTex, ReflectiveWorld.xyz)*REFC;
+	//gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission)+SpecularColor+textureCube(RefCubeTex, ReflectiveWorld.xyz)*REFC;
+	gl_FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
 	gl_FragColor.w=DiffuseTexColor.w*Material_diffuse.w+SpecularColor.w+NOF;
 	//gl_FragColor.xyz=textureCube(RefCubeTex, ReflectiveWorld.xyz).xyz;
 	//gl_FragColor.xyz=DiffuseTexColor.xyz;
