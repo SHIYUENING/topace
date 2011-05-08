@@ -205,6 +205,8 @@ public:
 	static GLfloat AFNum;
 	static void SetAFNum(GLfloat AFSet=1.0f);
 	unsigned char *DDSFileData;
+	int TexW;
+	int TexH;
 };
 
 
