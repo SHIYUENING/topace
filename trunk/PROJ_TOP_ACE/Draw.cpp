@@ -42,6 +42,7 @@ int SpotLightNumBase=0;
 CTopAceModel TopAceModelTest;
 Textures LoadingTex;
 Textures WaterNormalTex;
+//Textures TestTEX;
 extern HDC SwapHdc; 
 float PosOrgY=0.0f;
 float PosOrgZ=0.0f;
@@ -208,6 +209,8 @@ bool InitDraw()
 	WaterNormalTex.loadfile(L"data/sea/sea");
 	WaterNormalTex.LoadToVRAM();
 	WaterNormalTexID=WaterNormalTex.TexID;
+	//TestTEX.loadfile(L"data/test");
+	//TestTEX.LoadToVRAM();
 	if(GameSet.Light>1)
 	{
 		InitFBO(GameSet.winW,GameSet.winH)==true?ADD_LOG_Q("InitFBO OK"):ADD_LOG_Q("InitFBO false");
@@ -452,7 +455,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	GLSL_Disable();
 	
 	RenderPass2Units();
-	
+	//glDisable(GL_BLEND);
+	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	glDisable(GL_MULTISAMPLE_ARB);

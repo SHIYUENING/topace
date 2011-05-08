@@ -8,6 +8,8 @@ CDDS::CDDS(void)
 ,isVRAM(false)
 ,UseAlpha(false)
 , DDSFileData(NULL)
+, TexW(0)
+, TexH(0)
 {
 }
 
@@ -145,6 +147,8 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
     pDDSImageData->width      = ddsd->dwWidth;
     pDDSImageData->height     = ddsd->dwHeight;
     pDDSImageData->numMipMaps = ddsd->dwMipMapCount; 
+	TexW=ddsd->dwWidth;
+	TexH=ddsd->dwHeight;
 
     if( ddsd->ddpfPixelFormat.dwFourCC == FOURCC_DXT1 )
         pDDSImageData->components = 3;
@@ -273,6 +277,8 @@ void CDDS::LoadFile( const char *filename )
     pDDSImageData->width      = ddsd.dwWidth;
     pDDSImageData->height     = ddsd.dwHeight;
     pDDSImageData->numMipMaps = ddsd.dwMipMapCount; 
+	TexW=ddsd.dwWidth;
+	TexH=ddsd.dwHeight;
 
     if( ddsd.ddpfPixelFormat.dwFourCC == FOURCC_DXT1 )
         pDDSImageData->components = 3;
@@ -401,6 +407,9 @@ void CDDS::LoadFile( const wchar_t *filename )
     pDDSImageData->width      = ddsd.dwWidth;
     pDDSImageData->height     = ddsd.dwHeight;
     pDDSImageData->numMipMaps = ddsd.dwMipMapCount; 
+	TexW=ddsd.dwWidth;
+	TexH=ddsd.dwHeight;
+
 
     if( ddsd.ddpfPixelFormat.dwFourCC == FOURCC_DXT1 )
         pDDSImageData->components = 3;
@@ -461,7 +470,7 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
         int nOffset = 0; 
 
         // Load the mip-map levels 
-
+		nNumMipMaps=max(1,nNumMipMaps);
         for( int i = 0; i < nNumMipMaps; ++i )
         {
             if( nWidth  == 0 ) nWidth  = 1;
@@ -484,21 +493,7 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
             nWidth  = (nWidth  / 2);
             nHeight = (nHeight / 2);
         }
-		if(nNumMipMaps==0)
-		{
-            if( nWidth  == 0 ) nWidth  = 1;
-            if( nHeight == 0 ) nHeight = 1; 
-
-            nSize = ((nWidth+3)/4) * ((nHeight+3)/4) * nBlockSize; 
-			glCompressedTexImage2DARB( GL_TEXTURE_2D,
-                                       0,
-                                       pDDSImageData->format,
-                                       nWidth,
-                                       nHeight,
-                                       0,
-                                       nSize,
-                                       pDDSImageData->pixels + nOffset );
-		}
+		
 		isVRAM=true;
     } 
 

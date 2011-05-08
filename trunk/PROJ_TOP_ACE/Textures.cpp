@@ -9,6 +9,8 @@ Textures::Textures(void)
 ,DDSfile(NULL)
 ,TGAfile(NULL)
 ,UseAlpha(false)
+, TexW(0)
+, TexH(0)
 {
 }
 Textures::~Textures(void)
@@ -97,15 +99,20 @@ bool Textures::loadfile(char * filename)
 		}
 		else
 		{
+			TexW=TGAfile->width;
+			TexH=TGAfile->height;
 			UseAlpha=TGAfile->UseAlpha;
 			TexType=IS_TGA;
 		}
 	}
 	else
 	{
+		TexW=DDSfile->TexW;
+		TexH=DDSfile->TexH;
 		TexType=IS_DDS;
 		UseAlpha=DDSfile->UseAlpha;
 	}
+	
 	return true;
 }
 bool Textures::loadfile(wchar_t * filename)
@@ -139,6 +146,8 @@ bool Textures::loadfile(wchar_t * filename)
 		}
 		else
 		{
+			TexW=TGAfile->width;
+			TexH=TGAfile->height;
 			ADD_LOG_Q("Read TGA OK.");
 			UseAlpha=TGAfile->UseAlpha;
 			TexType=IS_TGA;
@@ -146,6 +155,8 @@ bool Textures::loadfile(wchar_t * filename)
 	}
 	else
 	{
+		TexW=DDSfile->TexW;
+		TexH=DDSfile->TexH;
 		ADD_LOG_Q("Read DDS OK.");
 		TexType=IS_DDS;
 		UseAlpha=DDSfile->UseAlpha;

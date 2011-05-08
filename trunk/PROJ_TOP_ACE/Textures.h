@@ -31,5 +31,7 @@ public:
 	static GLuint DefSpeTexID;
 	static void LoadDefineTex();
 
+	int TexW;
+	int TexH;
 };
 #endif
