@@ -484,6 +484,21 @@ unsigned int CDDS::loadCompressedTexture( GLint TexParameter)
             nWidth  = (nWidth  / 2);
             nHeight = (nHeight / 2);
         }
+		if(nNumMipMaps==0)
+		{
+            if( nWidth  == 0 ) nWidth  = 1;
+            if( nHeight == 0 ) nHeight = 1; 
+
+            nSize = ((nWidth+3)/4) * ((nHeight+3)/4) * nBlockSize; 
+			glCompressedTexImage2DARB( GL_TEXTURE_2D,
+                                       0,
+                                       pDDSImageData->format,
+                                       nWidth,
+                                       nHeight,
+                                       0,
+                                       nSize,
+                                       pDDSImageData->pixels + nOffset );
+		}
 		isVRAM=true;
     } 
 
