@@ -432,7 +432,7 @@ void CTopAceModel::DeinitTAMMesh()
 		if(pTAM_Mesh_TMP->UserPTR)
 			_aligned_free(pTAM_Mesh_TMP->UserPTR);
 		pTAM_Mesh_TMP->UserPTR=NULL;
-		if(pTAM_Mesh_TMP->pSelfTangent)
+		if((int)pTAM_Mesh_TMP->pSelfTangent>0)
 			delete[] pTAM_Mesh_TMP->pSelfTangent;
 	}
 }
@@ -1167,9 +1167,11 @@ bool CTopAceModel::IsDrawWithAlpha(_TAM_Mesh * TAM_Mesh)
 
 	if(!TAM_Mesh) return false;
 	//MeshUseAlphaTMP=TAM_Mesh->UseAlpha>0?true:false;
+	MeshUseAlphaTMP=false;
 	if(TAM_Mesh->OBJMATID) if(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse)
 		MeshUseAlphaTMP=pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].Tex_diffuse->UseAlpha;
-	MeshUseAlphaTMP=MeshUseAlphaTMP||(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].opacity<99.8?true:false);
+	if(TAM_Mesh->OBJMATID)
+		MeshUseAlphaTMP=MeshUseAlphaTMP||(pTAM_FileHead->MatsAddress[TAM_Mesh->OBJMATID-1].opacity<99.8?true:false);
 	if(TAM_Mesh->TAM_Mesh_EXT_Type==_TAM_Mesh_EXT_Type_Tree)
 	{
 		if(DrawTranslucent)
