@@ -440,12 +440,12 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
-	//TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
+	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 	glDepthMask(GL_FALSE);
-	//TopAceModelTest.Draw(true);
-	//TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Tree);
+	TopAceModelTest.Draw(true);
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Tree);
 	GLSL_Enable_Water(WaterTimeSet);
-	//TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	glDepthMask(GL_TRUE);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
