@@ -57,8 +57,8 @@ void UpdataKeys()
 	if(NoTouchMoveTimes<=0.01f)
 		moveX=moveX-touchX*TouchMoveOverride;
 	moveZ=moveZ-zoomsize*TouchZoomOverride;
-	if(moveZ>0.0f) moveZ=0.0f;
-	if(moveZ<-350.0f) moveZ=-350.0f;
+	//if(moveZ>0.0f) moveZ=0.0f;
+	//if(moveZ<-350.0f) moveZ=-350.0f;
 	zoomsize=zoomsize*0.75f;
 	if(abs(zoomsize)<0.0001f) zoomsize=0.0f;
 	touchX=touchX*0.75f;
