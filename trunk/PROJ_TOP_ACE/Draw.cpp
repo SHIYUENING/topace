@@ -19,6 +19,7 @@
 #include "Common.h"
 #include "TAMFT3D.h"
 #include "DrawTests.h"
+#include "TamScene.h"
 float extern angleR;
 float extern Test3dsFrame;
 float extern maxFreme;
@@ -65,6 +66,7 @@ extern BYTE nInputs;
 extern unsigned int nInputsNow;
 extern __m128 TouchInputposs[4];
 float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
+CTamScene TamScene;
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -251,6 +253,7 @@ bool InitDraw()
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	
+	TamScene.LoadFile();
 
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
