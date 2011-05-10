@@ -266,7 +266,16 @@ void CreateTangent(__m128 * VerticesInToTBN ,__m128 * NormalsInToTBN,float * Tex
 	float s2 = TexCoordsInToTBN[2*2+0] - TexCoordsInToTBN[0*2+0];
 	float t1 = TexCoordsInToTBN[1*2+1] - TexCoordsInToTBN[0*2+1];
 	float t2 = TexCoordsInToTBN[2*2+1] - TexCoordsInToTBN[0*2+1];
-
+	if(abs(s1 * t2 - s2 * t1)<0.0000001f)
+	{
+		for(int i=0;i<3;i++)
+		{
+			TBNout[i*3+0]=1.0f;
+			TBNout[i*3+1]=0.0f;
+			TBNout[i*3+2]=0.0f;
+		}
+		return;
+	}
 	float r = 1.0F / (s1 * t2 - s2 * t1);
 	__m128 sdir;
 	sdir.m128_f32[0]=(t2 * x1 - t1 * x2) * r;
