@@ -253,8 +253,8 @@ bool InitDraw()
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	
-	TamScene.LoadFile();
-
+	TamScene.LoadFile(L"data\\model\\");
+	TamScene.ToVRAM();
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
@@ -282,6 +282,7 @@ void DeinitDraw()
 	DeinitGLSL();
 	TopAceModelTest.DeleteVRAM();
 	Inited=false;
+	TamScene.ClearScene();
 }
 void UnitMatrix()
 {
@@ -443,6 +444,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
+	//TamScene.Draw(false);
 	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
@@ -535,9 +537,9 @@ void DrawShadowMap()
 	CommonMatrixs[CO_Matrix_ShadowViewProj].MultF(ShadowMF);
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	TopAceModelTest.TAMDrawMode=GL_TRIANGLES;
-	TopAceModelTest.Draw(false);
+	//TopAceModelTest.Draw(false);
 	
-	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
+	//TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 
 	GLSL_Disable();
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
