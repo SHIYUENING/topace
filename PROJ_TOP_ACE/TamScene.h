@@ -6,7 +6,7 @@
 #include<xstring>
 #include<vector>
 using namespace std;
-#define MODEL_PATH L##"data\\model\\"
+//#define MODEL_PATH L##"data\\model\\"
 struct _TamUnit
 {
 	wchar_t  Name[64];
@@ -25,12 +25,13 @@ class CTamScene
 public:
 	CTamScene(void);
 	~CTamScene(void);
-	void LoadFile(void);
+	void LoadFile(wchar_t * ModelFolder);
 	int ModelNum;
 	void ClearScene(void);
 	bool AddUnit(wstring  ModelPath,_TamUnit * TamUnit);
 	vector<_TamUnit> TamList;
 	void ToVRAM(void);
+	void Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType=_TAM_Mesh_EXT_Type_NoType);
 };
 
 #endif
