@@ -3,14 +3,18 @@
 #define _TAMSENE_H
 #include "TopAceModel.h"
 #include"IniFile.h"
+#include<xstring>
+#include<vector>
+using namespace std;
+#define MODEL_PATH L##"data\\model\\"
 struct _TamUnit
 {
-	CTopAceModel Model;
+	wchar_t  Name[64];
 	float Pos[3];
 	float scale[3];
-	wchar_t * Name;
 	float Limitfar;
 	float Limitnear;
+	CTopAceModel * Model;
 	bool DrawModel;
 	bool DrawText;
 	bool DrawName;
@@ -21,9 +25,12 @@ class CTamScene
 public:
 	CTamScene(void);
 	~CTamScene(void);
-	_TamUnit * Tams;
 	void LoadFile(void);
 	int ModelNum;
+	void ClearScene(void);
+	bool AddUnit(wstring  ModelPath,_TamUnit * TamUnit);
+	vector<_TamUnit> TamList;
+	void ToVRAM(void);
 };
 
 #endif
