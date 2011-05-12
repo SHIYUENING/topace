@@ -559,7 +559,17 @@ void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,f
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 	CommonMatrixs[CO_Matrix_Proj].Pop();
-}/*
+}
+void WordToScreenPos(__m128 * ScreenPos,__m128 WordPos)
+{
+	if(!ScreenPos) return;
+	__m128 MatTMP1[4],MatTMP2[4];
+	Easy_matrix_copy(MatTMP1,(float *)CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+	Easy_matrix_copy(MatTMP2,(float *)CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
+	Easy_matrix_mult(MatTMP1,MatTMP1,MatTMP2);
+	Easy_matrix_mult_vector4X4(ScreenPos,MatTMP1,WordPos);
+}
+/*
 void DrawShadowMap()
 {
 	if(GameSet.Shadow<=0) return;
