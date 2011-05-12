@@ -77,9 +77,9 @@ void DrawLoadingTex(Textures * pLoadingTex)
 void InitTestLight()
 {
 	_OmniLightData SetOmniLightData;
-	SetOmniLightData.Color[0]=0.8f;
-	SetOmniLightData.Color[1]=0.8f;
-	SetOmniLightData.Color[2]=0.8f;
+	SetOmniLightData.Color[0]=0.7f;
+	SetOmniLightData.Color[1]=0.7f;
+	SetOmniLightData.Color[2]=0.7f;
 	SetOmniLightData.Color[3]=1.0f;
 	SetOmniLightData.Pos[0]=0.0f;
 	SetOmniLightData.Pos[1]=0.0f;
@@ -102,7 +102,7 @@ void InitTestLight()
 	MaterialData.specular[3]=1.0f;
 	CO_SetMaterial(&MaterialData);
 
-	GLfloat GlobalAmbient_Set[]={0.4f,0.4f,0.4f,1.0f};
+	GLfloat GlobalAmbient_Set[]={0.5f,0.5f,0.5f,1.0f};
 	CO_SetGlobalAmbient(GlobalAmbient_Set);
 	OmniLightNumBase=1;
 
@@ -253,8 +253,8 @@ bool InitDraw()
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	
-	//TamScene.LoadFile(L"data\\model\\");
-	//TamScene.ToVRAM();
+	TamScene.LoadFile(L"data\\model\\");
+	TamScene.ToVRAM();
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
@@ -444,7 +444,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
-	TamScene.Draw(false);
+	//TamScene.Draw(false);
 	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
@@ -478,6 +478,34 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	TopAceModelTest.FrameTAMBoneMatrixs(Test3dsFrame);
 	RenderFaces=RenderFaces+TAMFT3D.RenderFaceNum+TopAceModelTest.TotelFaceNum;
 	QueryPerformanceCounter(&CPUTestEnd);
+}
+void DrawShadowMap(CTopAceModel * Model,GLuint ShadowTexDepth,_UnitData * UnitData,_UnitData * LightData)
+{
+	if(GameSet.Shadow<=0) return;
+	if(!Model) return;
+	if(!ShadowTexDepth) return;
+	if(!UnitData) return;
+	if(!LightData) return;
+	
+	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	float Shadowdepth=1.05f*max(Model->pTAM_FileHead->BoxMax[3],-Model->pTAM_FileHead->BoxMin[3]);
+	CUnitMath ShadowUnitMath;
+	ShadowUnitMath.UnitPos.m128_f32[0]=UnitData->Matrix[12];
+	ShadowUnitMath.UnitPos.m128_f32[1]=UnitData->Matrix[13];
+	ShadowUnitMath.UnitPos.m128_f32[2]=UnitData->Matrix[14];
+	ShadowUnitMath.UnitPos.m128_f32[3]=1.0f;
+	__m128 ShadowUnitMathTGT;
+	Easy_vector_copy(&ShadowUnitMathTGT,LightData->Matrix+12);
+	ShadowUnitMath.PosTo(ShadowUnitMathTGT);
+	ShadowUnitMath.RotInternal(180.0f,0.0f,1.0f,0.0f);
+	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,Shadowdepth+50.0f,0.0f,0.0f));
+	__m128 ShadowMM[4];ShadowUnitMath.GetMatrix(ShadowMM);
+	Easy_matrix_inv(ShadowMM,ShadowMM);
+	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
+
 }
 void DrawShadowMap()
 {
