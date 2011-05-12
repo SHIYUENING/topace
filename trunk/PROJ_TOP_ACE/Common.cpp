@@ -22,6 +22,7 @@ static const GLdouble IdentityMatrixD[16]={1.0,0.0,0.0,0.0,
 										   0.0,0.0,1.0,0.0,
 										   0.0,0.0,0.0,1.0};
 int RenderFaces=0;
+int ModelFace=0;
 char FullWidthFontPath[MAX_PATH];
 char HalfWidthFontPath[MAX_PATH];
 GLuint WaterNormalTexID=0;

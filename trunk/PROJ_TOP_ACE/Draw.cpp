@@ -67,6 +67,8 @@ extern unsigned int nInputsNow;
 extern __m128 TouchInputposs[4];
 float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
 CTamScene TamScene;
+
+void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -229,8 +231,8 @@ bool InitDraw()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
-	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
-	TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
+	//TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
+	//TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
 	if(TopAceModelTest.TAM_FileData)
 	{
 		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
@@ -434,7 +436,14 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	if(GameSet.Shadow>0) 
 	{
 		if(TopAceModelTest.pTAM_FileHead)
-		DrawShadowMap();
+			DrawShadowMap(&TopAceModelTest,ThreadDataDraw.DataList[4].Matrix,ThreadDataDraw.DataList[5].Matrix);
+		else if(TamScene.TamList.size()>0)
+		{
+			float ShadowUnitMatrixTMP[16];
+			Easy_matrix_mult(ShadowUnitMatrixTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[0].Matrix);
+			DrawShadowMap(TamScene.TamList[0].Model,ShadowUnitMatrixTMP,ThreadDataDraw.DataList[5].Matrix,TamScene.TamList[0].scale[0]);
+		}
+		//DrawShadowMap();
 	}
 
 	int GLSLver=min(max(GameSet.Light-2,0),2);
@@ -444,13 +453,17 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_BLEND);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	TopAceModelTest.Draw(false);
-	//TamScene.Draw(false);
+	TamScene.Draw(false);
 	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
+	TamScene.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
 	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Tree);
+	TamScene.Draw(true);
+	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Tree);
 	GLSL_Enable_Water(WaterTimeSet);
 	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
+	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	glDepthMask(GL_TRUE);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
@@ -479,34 +492,74 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	RenderFaces=RenderFaces+TAMFT3D.RenderFaceNum+TopAceModelTest.TotelFaceNum;
 	QueryPerformanceCounter(&CPUTestEnd);
 }
-void DrawShadowMap(CTopAceModel * Model,GLuint ShadowTexDepth,_UnitData * UnitData,_UnitData * LightData)
+void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale)
 {
 	if(GameSet.Shadow<=0) return;
 	if(!Model) return;
 	if(!ShadowTexDepth) return;
-	if(!UnitData) return;
-	if(!LightData) return;
+	if(!UnitMatrix) return;
+	if(!LightMatrix) return;
+	if(Model->pTAM_FileHead==NULL) return;
 	
 	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	float Shadowdepth=1.05f*max(Model->pTAM_FileHead->BoxMax[3],-Model->pTAM_FileHead->BoxMin[3]);
+	//DrawQUADEX(ShadowTexDepth,GameSet.winW/2-GameSet.winH/2,GameSet.winW/2+GameSet.winH/2,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	float Shadowdepth=1.05f*max(Model->pTAM_FileHead->BoxMax[3],-Model->pTAM_FileHead->BoxMin[3])*ShadowScale;
 	CUnitMath ShadowUnitMath;
-	ShadowUnitMath.UnitPos.m128_f32[0]=UnitData->Matrix[12];
-	ShadowUnitMath.UnitPos.m128_f32[1]=UnitData->Matrix[13];
-	ShadowUnitMath.UnitPos.m128_f32[2]=UnitData->Matrix[14];
+	ShadowUnitMath.UnitPos.m128_f32[0]=UnitMatrix[12];
+	ShadowUnitMath.UnitPos.m128_f32[1]=UnitMatrix[13];
+	ShadowUnitMath.UnitPos.m128_f32[2]=UnitMatrix[14];
 	ShadowUnitMath.UnitPos.m128_f32[3]=1.0f;
 	__m128 ShadowUnitMathTGT;
-	Easy_vector_copy(&ShadowUnitMathTGT,LightData->Matrix+12);
+	Easy_vector_copy(&ShadowUnitMathTGT,LightMatrix+12);
 	ShadowUnitMath.PosTo(ShadowUnitMathTGT);
 	ShadowUnitMath.RotInternal(180.0f,0.0f,1.0f,0.0f);
 	ShadowUnitMath.MovInternal(_mm_set_ps(1.0f,Shadowdepth+50.0f,0.0f,0.0f));
 	__m128 ShadowMM[4];ShadowUnitMath.GetMatrix(ShadowMM);
 	Easy_matrix_inv(ShadowMM,ShadowMM);
 	float ShadowMF[16];Easy_matrix_copy(ShadowMF,ShadowMM);
+	CommonMatrixs[CO_Matrix_Proj].Push();
+	CommonMatrixs[CO_Matrix_Proj].OrthogonalProjection(-Shadowdepth,Shadowdepth,-Shadowdepth,Shadowdepth,50.0f,50.0f+Shadowdepth*2.0f);
+	GLdouble Biasmatrix[16]={
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0};
+	CommonMatrixs[CO_Matrix_ShadowViewProj].LoadD(Biasmatrix);
+	CommonMatrixs[CO_Matrix_ShadowViewProj].MultD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+		
+	glClear (GL_DEPTH_BUFFER_BIT);
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glViewport(0,0,ShadowTexSize, ShadowTexSize);
+	glDisable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glColorMask(GL_FALSE,GL_FALSE,GL_FALSE,GL_TRUE);
 
-}
+	GLSL_Enable_Shadow();
+	CommonMatrixs[CO_Matrix_ModelView].LoadF(ShadowMF);
+	CommonMatrixs[CO_Matrix_ShadowViewProj].MultF(ShadowMF);
+	CommonMatrixs[CO_Matrix_World].LoadF(UnitMatrix);
+	Model->TAMDrawMode=GL_TRIANGLES;
+	Model->Draw(false);
+	Model->Draw(false,_TAM_Mesh_EXT_Type_Tree);
+
+	GLSL_Disable();
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+	glColorMask(GL_TRUE,GL_TRUE,GL_TRUE,GL_TRUE);
+	glCullFace(GL_BACK);
+	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
+	CommonMatrixs[CO_Matrix_Proj].Pop();
+}/*
 void DrawShadowMap()
 {
 	if(GameSet.Shadow<=0) return;
@@ -579,3 +632,4 @@ void DrawShadowMap()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 	CommonMatrixs[CO_Matrix_Proj].Pop();
 }
+*/

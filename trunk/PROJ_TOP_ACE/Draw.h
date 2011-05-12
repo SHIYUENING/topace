@@ -7,4 +7,5 @@ void ClearVRAM();
 void Draw(float oneframetimepointCPUSYS=0.0f,float oneframetimepointGPU=0.0f);
 
 void DrawShadowMap();
+
 #endif
