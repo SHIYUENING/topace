@@ -182,7 +182,7 @@ bool CTopAceModel::ReadTAMFile(wchar_t * FileName)
 		ADD_LOG_Q("Load TAMFile Fail,file Init fail","#FF0000");
 		return false;
 	}
-
+	
 	ADD_LOG_Q("Load OK");
 	CloseHandle(hFile);
 	return true;

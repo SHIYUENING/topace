@@ -17,6 +17,7 @@ struct _MaterialData{
 };
 extern GLuint WaterNormalTexID;
 extern int RenderFaces;
+extern int ModelFace;
 void CO_SetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_GetGlobalAmbient(GLfloat * GlobalAmbient);
 void CO_SetGlobalAmbientToGLSL(GLfloat * GlobalAmbient);

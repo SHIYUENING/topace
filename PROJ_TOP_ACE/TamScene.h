@@ -18,6 +18,7 @@ struct _TamUnit
 	bool DrawModel;
 	bool DrawText;
 	bool DrawName;
+	float Matrix[16];
 };
 
 class CTamScene
