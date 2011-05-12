@@ -52,7 +52,7 @@ void main()
 	float Shadow=shadow2DProj( ShadowTex, shadowPos ).x;
 
 	vec4 DiffuseTexColor = texture2D(DiffuseTex, TexCoordDiffuse.xy)*abs(TEXTurnYDIF)+(1.0-abs(TEXTurnYDIF))*Material_diffuse;
-	vec2 LightVal = OmniLight (OmniLight_Pos[0],Material_shininess)*Shadow;
+	vec2 LightVal = OmniLight (OmniLight_Pos[0],Material_shininess*SpecularTexColor.z)*Shadow;
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0];
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0] * Material_specular;
 
