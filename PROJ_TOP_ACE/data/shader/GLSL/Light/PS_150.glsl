@@ -77,25 +77,28 @@ void main()
 //	NormalTexColor.z=NormalTexColor.z*2;
 	NormalTexColor.y=-NormalTexColor.y;
 	vec3 NormalTBN=TBN*normalize(NormalTexColor.xyz);
-	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess*(1.0-SpecularTexColor.z),NormalTBN);
+	vec2 LightVal=OmniLight (OmniLight_Pos[0],Material_shininess*SpecularTexColor.z,NormalTBN);
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
 	
 	for(int i=1;i<LightNums.x;i++)
 	{
-		LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*(1.0-SpecularTexColor.z),NormalTBN);
+		LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*SpecularTexColor.z,NormalTBN);
 		DiffuseColor += LightVal.x * OmniLight_Color[i] ;
 		SpecularColor += LightVal.y * OmniLight_Color[i] ;
 	}
+	vec3 Reflective=reflect( - normalize(VertexEyeDir.xyz),NormalTBN);
+    vec4 ReflectiveWorld = WMatrix*vec4(Reflective,0.0);
 
 	//DiffuseColor=DiffuseColor*Material_diffuse;
 	SpecularColor=SpecularColor*Material_specular;
-
+	float ReflectiveSet=min(0.5,max(0.0,(Material_shininess*SpecularTexColor.z-110.0)/18.0));
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
 	float SpecularMat=(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission+SpecularTexColor.a)+SpecularColor*SpecularMat;
+	FragColor=FragColor*(1.0-ReflectiveSet)+ReflectiveSet*textureCube(RefCubeTex, ReflectiveWorld.xyz);
 	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+(SpecularColor.w+max(0.0f,NOF)*0.25)*SpecularMat;
-	//FragColor.xyz=NormalTBN.xyz;
+	//FragColor=vec4(SpecularMat);
     return;
 } 
 

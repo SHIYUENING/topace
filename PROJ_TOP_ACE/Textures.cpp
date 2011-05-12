@@ -64,7 +64,7 @@ void Textures::LoadDefineTex()
 		{
 			DefTexData[i+0]=255;
 			DefTexData[i+1]=0;
-			DefTexData[i+2]=0;
+			DefTexData[i+2]=255;
 			DefTexData[i+3]=0;
 		}
 

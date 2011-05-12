@@ -154,6 +154,7 @@ void CDDS::LoadFile( unsigned char *FileData ,unsigned int DataSize)
         pDDSImageData->components = 3;
     else
         pDDSImageData->components = 4; 
+	if(ddsd->dwMipMapCount>1) ADD_LOG_Q("Use Mipmap.");
 	ADD_LOG_Q("Read OK.");
 	isRAM=true;
     //return pDDSImageData;
