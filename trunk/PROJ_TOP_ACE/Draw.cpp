@@ -69,6 +69,8 @@ float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
 CTamScene TamScene;
 
 void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
+
+void WordToScreenPos(float ScreenPos[3],float WordPos[3]);
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -471,7 +473,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glEnable(GL_CULL_FACE);
 
 	GLSL_Disable();
-	
+	float PosTMP[4];
+	WordToScreenPos(PosTMP,ThreadDataDraw.DataList[4].Matrix+12);
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
 	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
@@ -564,10 +567,27 @@ void WordToScreenPos(__m128 * ScreenPos,__m128 WordPos)
 {
 	if(!ScreenPos) return;
 	__m128 MatTMP1[4],MatTMP2[4];
-	Easy_matrix_copy(MatTMP1,(float *)CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
-	Easy_matrix_copy(MatTMP2,(float *)CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
-	Easy_matrix_mult(MatTMP1,MatTMP1,MatTMP2);
+	//Easy_matrix_copy(MatTMP1,(float *)CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+	//Easy_matrix_copy(MatTMP2,(float *)CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
+	CCommonMatrix CommonMatrixTMP;
+	CommonMatrixTMP.Clear();
+	CommonMatrixTMP.Identity();
+	CommonMatrixTMP.LoadD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
+	CommonMatrixTMP.MultD(CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
+	//Easy_matrix_mult(MatTMP1,MatTMP1,MatTMP2);
+	float MatTMPf[16];
+	CommonMatrixTMP.GetF(MatTMPf);
+	Easy_matrix_copy(MatTMP1,MatTMPf);
 	Easy_matrix_mult_vector4X4(ScreenPos,MatTMP1,WordPos);
+}
+void WordToScreenPos(float ScreenPos[3],float WordPos[3])
+{
+	__m128 PosTMP1,PosTMP2;
+	PosTMP2=_mm_set_ps(1.0,WordPos[2],WordPos[1],WordPos[0]);
+	WordToScreenPos(&PosTMP1,PosTMP2);
+	ScreenPos[0]=PosTMP1.m128_f32[0];
+	ScreenPos[1]=PosTMP1.m128_f32[1];
+	ScreenPos[2]=PosTMP1.m128_f32[2];
 }
 /*
 void DrawShadowMap()
