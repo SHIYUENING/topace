@@ -43,6 +43,7 @@ vec2 OmniLight(vec4 LightPosEyeIn,float LightShininess,vec3 LightNormal)
 	//specular = NdotL>0.0?specular:0.0;
 	if(NdotL<=0.0) specular=0.0;
 	NdotL = max(0.0,NdotL);
+	NdotL = min (1.0,NdotL*1.25);
 	return vec2(NdotL,specular);
 }
 void main()

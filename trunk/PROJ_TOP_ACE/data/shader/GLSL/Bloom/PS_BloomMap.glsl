@@ -30,7 +30,7 @@ void main()
 	float luml = (p.x+p.y+p.z)/3.0;
 	if (luml > 0.75)
 	{
-		cout = p;
+		cout = p*(luml-0.66);
 	}
 	gl_FragColor = cout;	
 	return;
