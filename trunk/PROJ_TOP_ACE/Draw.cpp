@@ -233,8 +233,8 @@ bool InitDraw()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
-	//TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
-	//TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
+	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
+	TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
 	if(TopAceModelTest.TAM_FileData)
 	{
 		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
@@ -257,8 +257,8 @@ bool InitDraw()
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	
-	TamScene.LoadFile(L"data\\model\\");
-	TamScene.ToVRAM();
+	//TamScene.LoadFile(L"data\\model\\");
+	//TamScene.ToVRAM();
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
