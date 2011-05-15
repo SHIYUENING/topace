@@ -26,6 +26,7 @@ float extern maxFreme;
 float extern moveZ;
 float extern moveY;
 float extern moveX;
+extern float Touchang;
 int extern ReadingThreadNum;
 CFONTS2D FONTS2D;
 CFONTS2D FONTS2DSimple;
@@ -67,10 +68,11 @@ extern unsigned int nInputsNow;
 extern __m128 TouchInputposs[4];
 float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
 CTamScene TamScene;
-
+extern float zoomsize;
 void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
 
 void WordToScreenPos(float ScreenPos[3],float WordPos[3]);
+UINT uMsgDraw=0;
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -393,7 +395,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		swprintf_s(
 			ShowFPS,
 			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
-			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nFace Num: %d",
+			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nFace Num: %d,支点旋转顺时针模型向左移动,逆时针向右移动",
 			FPSNumShow,
 			GPUName,
 			nInputsNow,

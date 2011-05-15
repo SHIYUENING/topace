@@ -27,6 +27,7 @@ CUnitsList UnitsList;
 CSoundSys * SoundSysTest;
 extern float zoomsize;
 extern float touchX;
+extern float Touchang;
 float NoTouchMoveTimes=0.0f;
 
 float TouchMoveOverride=0.0f;
@@ -56,10 +57,21 @@ void UpdataKeys()
 		moveX=moveX-2.0f;
 	if(NoTouchMoveTimes<=0.01f)
 		moveX=moveX-touchX*TouchMoveOverride;
+	if(Touchang!=Touchang) 
+		Touchang=0.0f;
+	if(zoomsize!=zoomsize) 
+		zoomsize=0.0f;
 	moveZ=moveZ-zoomsize*TouchZoomOverride;
-	//if(moveZ>0.0f) moveZ=0.0f;
-	//if(moveZ<-350.0f) moveZ=-350.0f;
-	zoomsize=zoomsize*0.75f;
+	if(Touchang>1000.0f) 
+		Touchang=1000.0f;
+	if(Touchang<-1000.0f) 
+		Touchang=-1000.0f;
+	GoX=GoX+Touchang*0.01f;
+	if(moveZ>0.0f) moveZ=0.0f;
+	if(moveZ<-350.0f) moveZ=-350.0f;
+	Touchang=Touchang*0.90f;
+	if(abs(Touchang)<0.0001f) Touchang=0.0f;
+	zoomsize=zoomsize*0.90f;
 	if(abs(zoomsize)<0.0001f) zoomsize=0.0f;
 	touchX=touchX*0.75f;
 	if(abs(touchX)<0.0001f) touchX=0.0f;
