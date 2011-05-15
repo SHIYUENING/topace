@@ -66,11 +66,14 @@ bool TouchInput=false;
 __m128 TouchInputposs[4];
 float zoomsize=0.0f;
 float touchX=0.0f;
+float Touchang=0.0f;
 bool Touchings[4]={false,false,false,false};
 extern float NoTouchMoveTimes;
 
 extern float TouchMoveOverride;
 extern float TouchZoomOverride;
+int DoubleTouchTime=0;
+__m128 TouchPointOrg;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -393,7 +396,83 @@ BOOL DestroyWindowGL (GL_Window* window)								// Destroy The OpenGL Window & R
 	}	
 	return TRUE;														// Return True
 }
+void DoDoubleTouch()
+{
+	zoomsize=sqrt(float(Easy_vector_Getlenth_2i(
+					TouchPointOrg.m128_i32[0],
+					TouchPointOrg.m128_i32[2],
+					TouchPointOrg.m128_i32[1],
+					TouchPointOrg.m128_i32[3]
+					)))-
+			sqrt(float(Easy_vector_Getlenth_2i(
+					TouchInputposs[0].m128_i32[0],
+					TouchInputposs[1].m128_i32[0],
+					TouchInputposs[0].m128_i32[1],
+					TouchInputposs[1].m128_i32[1])));
+	zoomsize=zoomsize/3000.0f;
+	if(zoomsize>3.0f)
+		return;
+	float movePosTMP[2]={
+	sqrt((float)Easy_vector_Getlenth_2i(
+	TouchPointOrg.m128_i32[0],
+	TouchInputposs[0].m128_i32[0],
+	TouchPointOrg.m128_i32[1],
+	TouchInputposs[0].m128_i32[1])),
 
+	sqrt((float)Easy_vector_Getlenth_2i(
+	TouchPointOrg.m128_i32[2],
+	TouchInputposs[1].m128_i32[0],
+	TouchPointOrg.m128_i32[3],
+	TouchInputposs[1].m128_i32[1]))
+	};
+	if((movePosTMP[0]<3000)&&(movePosTMP[1]>7000))
+	{
+		Touchang=TouchPointOrg.m128_i32[2]-TouchInputposs[1].m128_i32[0];
+		zoomsize=0.0f;
+	}
+	if((movePosTMP[1]<3000)&&(movePosTMP[0]>7000))
+	{
+		Touchang=TouchPointOrg.m128_i32[0]-TouchInputposs[0].m128_i32[0];
+		zoomsize=0.0f;
+	}
+/*
+	int movePosTMP[2]={
+			Easy_vector_Getlenth_2i(
+					TouchInputposs[0].m128_i32[0],
+					TouchInputposs[0].m128_i32[2],
+					TouchInputposs[0].m128_i32[1],
+					TouchInputposs[0].m128_i32[3]),
+			Easy_vector_Getlenth_2i(
+					TouchInputposs[1].m128_i32[0],
+					TouchInputposs[1].m128_i32[2],
+					TouchInputposs[1].m128_i32[1],
+					TouchInputposs[1].m128_i32[3])};
+	if((movePosTMP[0]-movePosTMP[1]-250*250)>0)
+		if(movePosTMP[1]<300*300)
+	{
+		zoomsize=0.0f;
+		return;
+	}
+	if((movePosTMP[1]-movePosTMP[0]-300*300)>0)
+		if(movePosTMP[0]<300*300)
+	{
+		zoomsize=0.0f;
+		return;
+	}
+	if((movePosTMP[0]>200*200)&&(movePosTMP[1]>200*200))
+	{
+		//zoomsize=max(-0.1f,min(0.1f,zoomsize));
+		NoTouchMoveTimes=20.0f;
+		return;
+	}
+	else
+	{
+		zoomsize=0.0f;
+	}*/
+	
+					//TouchInputposs[0].m128_i32[0]-TouchInputposs[1].m128_i32[0]
+	
+}
 // Process Window Message Callbacks
 LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -477,8 +556,10 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					
 				for (unsigned int i=0;i<nInputsNow;i++)
 				{
-							TouchInputposs[i].m128_i32[2]=TouchInputposs[i].m128_i32[0];
-							TouchInputposs[i].m128_i32[3]=TouchInputposs[i].m128_i32[1];
+					TouchInputposs[i].m128_i32[2]=TouchInputposs[i].m128_i32[0];
+					TouchInputposs[i].m128_i32[3]=TouchInputposs[i].m128_i32[1];
+					TouchInputposs[i].m128_i32[0]=0;
+					TouchInputposs[i].m128_i32[1]=0;
 					if ((ti[i].dwFlags & TOUCHEVENTF_DOWN)||(ti[i].dwFlags & TOUCHEVENTF_MOVE))
 					{
 						if(i<=1)
@@ -492,12 +573,16 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					{
 						Touchings[i]=false;
 					}
+					if (ti[i].dwFlags & TOUCHEVENTF_UP)
+					{
+						Touchings[i]=false;
+					}
 
 					
 				}
 				if(nInputsNow>1)
 				{
-					zoomsize=float(Easy_vector_Getlenth_2i(
+					/*zoomsize=float(Easy_vector_Getlenth_2i(
 						TouchInputposs[0].m128_i32[2],
 						TouchInputposs[1].m128_i32[2],
 						TouchInputposs[0].m128_i32[3],
@@ -510,11 +595,25 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						TouchInputposs[1].m128_i32[1]
 						));
 						zoomsize=max(-0.1f,min(0.1f,zoomsize));
-						NoTouchMoveTimes=20.0f;
+						NoTouchMoveTimes=20.0f;*/
+					if(DoubleTouchTime==0)
+					{
+						TouchPointOrg.m128_i32[0]=TouchInputposs[0].m128_i32[0];
+						TouchPointOrg.m128_i32[1]=TouchInputposs[0].m128_i32[1];
+						TouchPointOrg.m128_i32[2]=TouchInputposs[1].m128_i32[0];
+						TouchPointOrg.m128_i32[3]=TouchInputposs[1].m128_i32[1];
+					}
+					DoubleTouchTime=DoubleTouchTime+1;
+					if(DoubleTouchTime>10)
+					{
+						DoDoubleTouch();
+						DoubleTouchTime=0;
+					}
 					//TouchInputposs[0].m128_i32[0]-TouchInputposs[1].m128_i32[0]
 				}
 				else
 				{
+					DoubleTouchTime=0;
 					if(Touchings[0])
 					if(!((TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0)))
 					{
@@ -522,11 +621,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						touchX=max(-0.1f,min(0.1f,touchX));
 					}
 				}
-				for (unsigned int i=nInputsNow;i<4;i++)
-				{
-					TouchInputposs[i].m128_i32[0]=0;
-					TouchInputposs[i].m128_i32[1]=0;
-				}
+				
 				//WM_GESTURE
 			
 				//MessageBoxW (HWND_DESKTOP, L"检测到触摸消息", L" ", MB_OK | MB_ICONEXCLAMATION);
