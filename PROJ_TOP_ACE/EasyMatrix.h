@@ -1276,7 +1276,7 @@ inline void Test_matrix()
 
 
 }
-inline   int glhProjectf(double objx, double objy, double objz, double *modelview, double *projection, int *viewport, double *windowCoordinate)
+inline   void PointProjectD(double objx, double objy, double objz, double *modelview, double *projection, int *viewport, double *windowCoordinate)
   {
       //Transformation vectors
       double fTempo[8];
@@ -1304,6 +1304,6 @@ inline   int glhProjectf(double objx, double objy, double objz, double *modelvie
       windowCoordinate[1]=(fTempo[5]*0.5+0.5)*viewport[3]+viewport[1];
       //This is only correct when glDepthRange(0.0, 1.0)
       windowCoordinate[2]=(1.0+fTempo[6])*0.5;	//Between 0 and 1
-      return 1;
+      //return 1;
   }
 #endif

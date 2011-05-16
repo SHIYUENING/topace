@@ -477,6 +477,13 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	GLSL_Disable();
 	float PosTMP[4];
 	WordToScreenPos(PosTMP,ThreadDataDraw.DataList[4].Matrix+12);
+	int viewports[]={0,0,800,600};
+	double windowCoordinate[3];
+	PointProjectD(ThreadDataDraw.DataList[4].Matrix[12],ThreadDataDraw.DataList[4].Matrix[13],ThreadDataDraw.DataList[4].Matrix[14],
+		CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix,
+		CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix,
+		viewports,
+		windowCoordinate);
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
 	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
