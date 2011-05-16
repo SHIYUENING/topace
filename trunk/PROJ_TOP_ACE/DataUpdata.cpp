@@ -67,8 +67,8 @@ void UpdataKeys()
 	if(Touchang<-1000.0f) 
 		Touchang=-1000.0f;
 	GoX=GoX+Touchang*0.01f;
-	if(moveZ>0.0f) moveZ=0.0f;
-	if(moveZ<-350.0f) moveZ=-350.0f;
+	//if(moveZ>0.0f) moveZ=0.0f;
+	//if(moveZ<-350.0f) moveZ=-350.0f;
 	Touchang=Touchang*0.90f;
 	if(abs(Touchang)<0.0001f) Touchang=0.0f;
 	zoomsize=zoomsize*0.90f;

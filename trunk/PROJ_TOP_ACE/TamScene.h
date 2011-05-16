@@ -33,6 +33,9 @@ public:
 	vector<_TamUnit> TamList;
 	void ToVRAM(void);
 	void Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType=_TAM_Mesh_EXT_Type_NoType);
+	void GetUnitWinPos(float * UnitWinPos,int UnitID);
+	void DrawUnitLine(int UnitID,int winW,int winH);
+	void DrawUnitLineAll(int winW,int winH);
 };
 
 #endif
