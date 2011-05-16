@@ -71,8 +71,20 @@ CTamScene TamScene;
 extern float zoomsize;
 void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
 
-void WordToScreenPos(float ScreenPos[3],float WordPos[3]);
 UINT uMsgDraw=0;
+inline void GetUnitWindowPos(float * UnitPos,float * UnitWinPos)
+{
+	int viewports[]={0,0,GameSet.winW,GameSet.winH};
+	double windowCoordinate[3];
+	PointProjectD(UnitPos[0],UnitPos[1],UnitPos[2],
+		CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix,
+		CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix,
+		viewports,
+		windowCoordinate);
+	UnitWinPos[0]=windowCoordinate[0];
+	UnitWinPos[1]=windowCoordinate[1];
+	UnitWinPos[2]=windowCoordinate[2];
+}
 void DrawLoadingTex(Textures * pLoadingTex)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -235,7 +247,7 @@ bool InitDraw()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
-	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
+//	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
 	TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
 	if(TopAceModelTest.TAM_FileData)
 	{
@@ -259,8 +271,8 @@ bool InitDraw()
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	
-	//TamScene.LoadFile(L"data\\model\\");
-	//TamScene.ToVRAM();
+	TamScene.LoadFile(L"data\\model\\");
+	TamScene.ToVRAM();
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
@@ -473,17 +485,10 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_CULL_FACE);
-
 	GLSL_Disable();
-	float PosTMP[4];
-	WordToScreenPos(PosTMP,ThreadDataDraw.DataList[4].Matrix+12);
-	int viewports[]={0,0,800,600};
-	double windowCoordinate[3];
-	PointProjectD(ThreadDataDraw.DataList[4].Matrix[12],ThreadDataDraw.DataList[4].Matrix[13],ThreadDataDraw.DataList[4].Matrix[14],
-		CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix,
-		CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix,
-		viewports,
-		windowCoordinate);
+	float UnitWindowPos[3];
+	GetUnitWindowPos(ThreadDataDraw.DataList[4].Matrix+12,UnitWindowPos);
+
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
 	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
@@ -491,7 +496,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	glDisable(GL_MULTISAMPLE_ARB);
 
-
+	
+	TamScene.DrawUnitLineAll(GameSet.winW,GameSet.winH);
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
 	UnitMatrix();
@@ -572,32 +578,7 @@ void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,f
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 	CommonMatrixs[CO_Matrix_Proj].Pop();
 }
-void WordToScreenPos(__m128 * ScreenPos,__m128 WordPos)
-{
-	if(!ScreenPos) return;
-	__m128 MatTMP1[4],MatTMP2[4];
-	//Easy_matrix_copy(MatTMP1,(float *)CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
-	//Easy_matrix_copy(MatTMP2,(float *)CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
-	CCommonMatrix CommonMatrixTMP;
-	CommonMatrixTMP.Clear();
-	CommonMatrixTMP.Identity();
-	CommonMatrixTMP.LoadD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
-	CommonMatrixTMP.MultD(CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix);
-	//Easy_matrix_mult(MatTMP1,MatTMP1,MatTMP2);
-	float MatTMPf[16];
-	CommonMatrixTMP.GetF(MatTMPf);
-	Easy_matrix_copy(MatTMP1,MatTMPf);
-	Easy_matrix_mult_vector4X4(ScreenPos,MatTMP1,WordPos);
-}
-void WordToScreenPos(float ScreenPos[3],float WordPos[3])
-{
-	__m128 PosTMP1,PosTMP2;
-	PosTMP2=_mm_set_ps(1.0,WordPos[2],WordPos[1],WordPos[0]);
-	WordToScreenPos(&PosTMP1,PosTMP2);
-	ScreenPos[0]=PosTMP1.m128_f32[0];
-	ScreenPos[1]=PosTMP1.m128_f32[1];
-	ScreenPos[2]=PosTMP1.m128_f32[2];
-}
+
 /*
 void DrawShadowMap()
 {

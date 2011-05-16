@@ -159,3 +159,68 @@ void CTamScene::Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType)
 		}
 	}
 }
+
+
+void CTamScene::GetUnitWinPos(float * UnitWinPos,int UnitID)
+{
+	int viewports[]={0,0,GameSet.winW,GameSet.winH};
+	double windowCoordinate[3];
+	CommonMatrixs[CO_Matrix_ModelView].Push();
+	CommonMatrixs[CO_Matrix_ModelView].MultD(CommonMatrixs[CO_Matrix_World].LinkList->Matrix);
+	PointProjectD(
+		TamList[UnitID].Pos[0],
+		TamList[UnitID].Pos[1],
+		TamList[UnitID].Pos[2],
+		CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix,
+		CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix,
+		viewports,
+		windowCoordinate);
+	CommonMatrixs[CO_Matrix_ModelView].Pop();
+	UnitWinPos[0]=(float)windowCoordinate[0];
+	UnitWinPos[1]=(float)windowCoordinate[1];
+	UnitWinPos[2]=(float)windowCoordinate[2];
+}
+
+
+void CTamScene::DrawUnitLine(int UnitID,int winW,int winH)
+{
+	float LinePoss[6]={0.0f,0.0f,0.5f,float(winW/2),float(winH/2),0.5f};
+	GetUnitWinPos(LinePoss,UnitID);
+	LinePoss[2]=0.0f;
+	glDisable( GL_CULL_FACE );
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,winW,0,winH,-1,1);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glVertexPointer( 3, GL_FLOAT, 0, LinePoss );
+	glDrawArrays(GL_LINES,0,2);
+	glDisableClientState( GL_VERTEX_ARRAY );
+	/*glLoadIdentity();
+	glBegin(GL_LINES);
+	glColor3f(1.0,1.0,1.0);
+	glVertex3f(0.0,0.0,0.5f);
+	glVertex3f(float(winW/2),float(winH/2),0.5f);
+	glEnd();*/
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_TEXTURE_2D);
+}
+
+
+void CTamScene::DrawUnitLineAll(int winW,int winH)
+{
+	for(unsigned int i=0;i<TamList.size();i++)
+	{
+		DrawUnitLine(i,winW,winH);
+	}
+}
