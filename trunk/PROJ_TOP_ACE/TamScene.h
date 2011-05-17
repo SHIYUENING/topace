@@ -36,6 +36,7 @@ public:
 	void GetUnitWinPos(float * UnitWinPos,int UnitID);
 	void DrawUnitLine(int UnitID,int winW,int winH);
 	void DrawUnitLineAll(int winW,int winH);
+	void DrawUnitName(void);
 };
 
 #endif

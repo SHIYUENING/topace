@@ -82,13 +82,19 @@ void CTamScene::ClearScene(void)
 	}
 	TamList.clear();
 }
-
+inline float GetIniFloat(wchar_t * lpAppName,wchar_t * lpKeyName,const wchar_t * lpFileName)
+{
+	wchar_t ReadIniTMP[512];
+	float IniFloat=0.0f;
+	GetPrivateProfileStringW(lpAppName,lpKeyName,L"0",ReadIniTMP,512,lpFileName);
+	swscanf_s(ReadIniTMP,L"%f",&IniFloat);
+	return IniFloat;
+}
 
 bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 {
 	if(!TamUnit) return false;
 	if(ModelPath.empty()) return false;
-	//TamUnit->Name=
 	HANDLE   filehandle;
 	wstring ModelPathTMP(ModelPath);
 	ModelPathTMP+=L"\\*.tam";
@@ -107,22 +113,15 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	ModelPathTMP=ModelPath;
 	ModelPathTMP+=L"\\set.ini";
 	GetPrivateProfileStringW(L"set",L"name",L"No Name",TamUnit->Name,64,ModelPathTMP.c_str());
-	TamUnit->Pos[0]=(float)GetPrivateProfileIntW(L"pos",L"x",0,ModelPathTMP.c_str());
-	TamUnit->Pos[1]=(float)GetPrivateProfileIntW(L"pos",L"y",0,ModelPathTMP.c_str());
-	TamUnit->Pos[2]=(float)GetPrivateProfileIntW(L"pos",L"z",0,ModelPathTMP.c_str());
-	TamUnit->scale[0]=float(GetPrivateProfileIntW(L"scale",L"x",10000,ModelPathTMP.c_str()))*0.0001f;
-	TamUnit->scale[1]=float(GetPrivateProfileIntW(L"scale",L"y",10000,ModelPathTMP.c_str()))*0.0001f;
-	TamUnit->scale[2]=float(GetPrivateProfileIntW(L"scale",L"z",10000,ModelPathTMP.c_str()))*0.0001f;
-	int inisign=1;
-	TamUnit->Limitfar=(float)GetPrivateProfileIntW(L"Limit",L"far",0,ModelPathTMP.c_str());
-	inisign=GetPrivateProfileIntW(L"Limit",L"farsign",1,ModelPathTMP.c_str());
-	if(inisign==0)
-		TamUnit->Limitfar=-TamUnit->Limitfar;
-	TamUnit->Limitnear=(float)GetPrivateProfileIntW(L"Limit",L"near",0,ModelPathTMP.c_str());
-	inisign=GetPrivateProfileIntW(L"Limit",L"nearsign",1,ModelPathTMP.c_str());
-	if(inisign==0)
-		TamUnit->Limitnear=-TamUnit->Limitnear;
 
+	TamUnit->Pos[0]=GetIniFloat(L"pos",L"x",ModelPathTMP.c_str());
+	TamUnit->Pos[1]=GetIniFloat(L"pos",L"y",ModelPathTMP.c_str());
+	TamUnit->Pos[2]=GetIniFloat(L"pos",L"z",ModelPathTMP.c_str());
+	TamUnit->scale[0]=GetIniFloat(L"scale",L"x",ModelPathTMP.c_str())*0.0001f;
+	TamUnit->scale[1]=GetIniFloat(L"scale",L"y",ModelPathTMP.c_str())*0.0001f;
+	TamUnit->scale[2]=GetIniFloat(L"scale",L"z",ModelPathTMP.c_str())*0.0001f;
+	TamUnit->Limitfar=GetIniFloat(L"Limit",L"far",ModelPathTMP.c_str());
+	TamUnit->Limitnear=GetIniFloat(L"Limit",L"near",ModelPathTMP.c_str());
 	__m128 DrawMatrix[4];
 	Easy_matrix_identity(DrawMatrix);
 	Easy_matrix_scale(DrawMatrix,_mm_set_ps(1.0,TamUnit->scale[2],TamUnit->scale[1],TamUnit->scale[0]));
@@ -144,14 +143,10 @@ void CTamScene::ToVRAM(void)
 
 void CTamScene::Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType)
 {
-//	__m128 DrawMatrix[4];
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		if(TamList[i].Model)
-		{/*
-			Easy_matrix_identity(DrawMatrix);
-			Easy_matrix_scale(DrawMatrix,_mm_set_ps(1.0,TamList[i].scale[2],TamList[i].scale[1],TamList[i].scale[0]));
-			Easy_matrix_translate_External(DrawMatrix,_mm_set_ps(1.0,TamList[i].Pos[2],TamList[i].Pos[1],TamList[i].Pos[0]));*/
+		{
 			CommonMatrixs[CO_Matrix_World].Push();
 			CommonMatrixs[CO_Matrix_World].MultF(TamList[i].Matrix);
 			TamList[i].Model->Draw(Translucent,DrawType);
@@ -201,12 +196,7 @@ void CTamScene::DrawUnitLine(int UnitID,int winW,int winH)
 	glVertexPointer( 3, GL_FLOAT, 0, LinePoss );
 	glDrawArrays(GL_LINES,0,2);
 	glDisableClientState( GL_VERTEX_ARRAY );
-	/*glLoadIdentity();
-	glBegin(GL_LINES);
-	glColor3f(1.0,1.0,1.0);
-	glVertex3f(0.0,0.0,0.5f);
-	glVertex3f(float(winW/2),float(winH/2),0.5f);
-	glEnd();*/
+
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
@@ -222,5 +212,13 @@ void CTamScene::DrawUnitLineAll(int winW,int winH)
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		DrawUnitLine(i,winW,winH);
+	}
+}
+
+
+void CTamScene::DrawUnitName(void)
+{
+	for(unsigned int i=0;i<TamList.size();i++)
+	{
 	}
 }
