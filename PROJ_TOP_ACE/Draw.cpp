@@ -273,6 +273,7 @@ bool InitDraw()
 	
 	TamScene.LoadFile(L"data\\model\\");
 	TamScene.ToVRAM();
+	TamScene.SetUnitNamePos(GameSet.winW,GameSet.winH);
 	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
