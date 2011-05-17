@@ -19,6 +19,7 @@ struct _TamUnit
 	bool DrawText;
 	bool DrawName;
 	float Matrix[16];
+	float UnitNamePos[4];
 };
 
 class CTamScene
@@ -36,7 +37,8 @@ public:
 	void GetUnitWinPos(float * UnitWinPos,int UnitID);
 	void DrawUnitLine(int UnitID,int winW,int winH);
 	void DrawUnitLineAll(int winW,int winH);
-	void DrawUnitName(void);
+	void SetUnitNamePos(int winW,int winH,int Wnum=4);
+	void DrawUnitName(int winW,int winH);
 };
 
 #endif

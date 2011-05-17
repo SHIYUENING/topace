@@ -68,7 +68,7 @@ void CTamScene::LoadFile(wchar_t * ModelFolder)
 		}
 	}
 	FindClose(filehandle);
-	if(TamList.empty()) return;
+	//if(TamList.empty()) return;
 	ModelNum=TamList.size();
 }
 
@@ -174,6 +174,8 @@ void CTamScene::GetUnitWinPos(float * UnitWinPos,int UnitID)
 	UnitWinPos[0]=(float)windowCoordinate[0];
 	UnitWinPos[1]=(float)windowCoordinate[1];
 	UnitWinPos[2]=(float)windowCoordinate[2];
+	UnitWinPos[3]=(float)TamList[UnitID].UnitNamePos[2];
+	UnitWinPos[4]=(float)TamList[UnitID].UnitNamePos[3];
 }
 
 
@@ -216,9 +218,18 @@ void CTamScene::DrawUnitLineAll(int winW,int winH)
 }
 
 
-void CTamScene::DrawUnitName(void)
+void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 {
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
+		TamList[i].UnitNamePos[0]=(i%Wnum)*(winW/Wnum);
+		TamList[i].UnitNamePos[1]=(i/Wnum)*64;
+		TamList[i].UnitNamePos[2]=TamList[i].UnitNamePos[0]+(winW/Wnum)/2;
+		TamList[i].UnitNamePos[3]=TamList[i].UnitNamePos[1]+32;
 	}
+}
+
+
+void CTamScene::DrawUnitName(int winW,int winH)
+{
 }
