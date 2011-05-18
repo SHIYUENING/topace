@@ -792,8 +792,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 				//TerminateApplication(&window);
 			}
 			nInputs=TouchInput?nInputs:0;
-			if(TouchInput)
+			//if(TouchInput)
 			//TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
+
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
 			{

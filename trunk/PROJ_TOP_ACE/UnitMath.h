@@ -48,5 +48,6 @@ public:
 	bool NoTurnX;
 	bool NoTurnY;
 	bool NoTurnZ;
+	void PosTo(CUnitMath * UnitMath);
 };
 #endif

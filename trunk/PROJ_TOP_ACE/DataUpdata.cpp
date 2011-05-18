@@ -33,29 +33,69 @@ float NoTouchMoveTimes=0.0f;
 float TouchMoveOverride=0.0f;
 float TouchZoomOverride=0.0f;
 __m128 ViewMat[4];
+CUnitMath ViewTGTUnit,ViewUnit;
+__m128 ViewTGTPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+__m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
+float PosMove[3]={0.0f};
+float PosTurn[2]={0.0f};
+float ViewLen=100.0f;
 void UpdataKeys()
 {
+	PosMove[0]=0.0f;
+	PosMove[1]=0.0f;
+	PosMove[2]=0.0f;
+	PosTurn[0]=0.0f;
+	PosTurn[1]=0.0f;
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_PRIOR] == TRUE)
+	{
+		PosMove[2]=moveZSpeed;
 		moveZ=moveZ+moveZSpeed;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_NEXT] == TRUE)
+	{
+		PosMove[2]=-moveZSpeed;
 		moveZ=moveZ-moveZSpeed;
-
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['W'] == TRUE)
+	{
+		PosMove[1]=moveZSpeed;
 		GoZ=GoZ+moveZSpeed;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['S'] == TRUE)
+	{
+		PosMove[1]=-moveZSpeed;
 		GoZ=GoZ-moveZSpeed;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['A'] == TRUE)
+	{
+		PosMove[0]=moveZSpeed;
 		GoX=GoX+moveZSpeed;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['D'] == TRUE)
+	{
+		PosMove[0]=-moveZSpeed;
 		GoX=GoX-moveZSpeed;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_UP] == TRUE)
+	{
+		PosTurn[1]=2.0f;
 		moveY=moveY+2.0f;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_DOWN] == TRUE)
+	{
+		PosTurn[1]=-2.0f;
 		moveY=moveY-2.0f;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_RIGHT] == TRUE)
+	{
+		PosTurn[0]=2.0f;
 		moveX=moveX+2.0f;
+	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_LEFT] == TRUE)
+	{
+		PosTurn[0]=-2.0f;
 		moveX=moveX-2.0f;
+	}
 	if(NoTouchMoveTimes<=0.01f)
 		moveX=moveX-touchX*TouchMoveOverride;
 	if(Touchang!=Touchang) 
@@ -77,13 +117,23 @@ void UpdataKeys()
 	touchX=touchX*0.75f;
 	if(abs(touchX)<0.0001f) touchX=0.0f;
 	NoTouchMoveTimes=max(0.0f,NoTouchMoveTimes-1.0f);
+	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_HOME] == TRUE)
+	{
+		PosMove[0]=0.0f;
+		PosMove[1]=0.0f;
+		PosTurn[0]=0.0f;
+		PosTurn[1]=0.0f;
+		ViewTGTUnit.UnitPos=ViewTGTPos;
+		ViewUnit.UnitPos=ViewPos;
+	}
 }
 void InitDataThread()
 {
+	ViewUnit.UnitPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
 	Easy_matrix_identity(ViewMat);
-	moveZ=-130.0f;
-	moveX=45.0f;
-	moveY=-45.0f;
+	moveZ=0.0f;
+	moveX=0.0f;
+	moveY=0.0f;
 	SoundSysTest=new CSoundSys;
 	int ListNum=0;
 	ListNum=UnitsList.AddOneUnit();	
@@ -113,51 +163,49 @@ void DataUpdata()
 	UpdataKeys();
 	TotalFrame=TotalFrame+1;
 	Test3dsFrame=Test3dsFrame+0.25f;
-	/*if(Test3dsFrameSwitch)
-	{
-		Test3dsFrame=Test3dsFrame+0.5f;
-		if(Test3dsFrame>=maxFreme)
-		{
-			//Test3dsFrame=0.0f;
-			Test3dsFrameSwitch=false;
-		}
-	}
-	else
-	{
-		Test3dsFrame=Test3dsFrame-0.5f;
-		if(Test3dsFrame<=0.0f)
-		{
-			//Test3dsFrame=0.0f;
-			Test3dsFrameSwitch=true;
-		}
-	}*/
+	
 	angleR=angleR+0.2f;
-	TestView.Reset();
-	TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
-	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
-	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ+30,PosOrgY,0));
-	TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
-	TestView.PosTo(IdentityMatrix3,180.0f);
-	__m128 ViewMatTMP[4];
-	TestView.GetMatrix(ViewMatTMP);
+	//TestView.Reset();
+	//TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
+	//TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
+	//TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ+30,PosOrgY,0));
+	//TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
+	//TestView.PosTo(IdentityMatrix3,180.0f);
 	if(ThreadDataUpdata.DrawToData.ChangePos)
 	{
-		//ThreadDataUpdata.DrawToData.ViewPos[0];
-		__m128 SetPosTMP=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewPos[2],ThreadDataUpdata.DrawToData.ViewPos[1],ThreadDataUpdata.DrawToData.ViewPos[0]);
-		CUnitMath ViewTMP;
-		ViewTMP.SetPos(SetPosTMP);
-		SetPosTMP=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewTGTPos[2],ThreadDataUpdata.DrawToData.ViewTGTPos[1],ThreadDataUpdata.DrawToData.ViewTGTPos[0]);
-		ViewTMP.PosTo(SetPosTMP);
-		//ViewTMP.RotInternal(180.0f,0.0f,1.0f,0.0f);
+		ViewPos=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewPos[2],ThreadDataUpdata.DrawToData.ViewPos[1],ThreadDataUpdata.DrawToData.ViewPos[0]);
+		ViewTGTPos=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewTGTPos[2],ThreadDataUpdata.DrawToData.ViewTGTPos[1],ThreadDataUpdata.DrawToData.ViewTGTPos[0]);
+		ViewLen=sqrt(Easy_vector_Getlenth_2(ViewPos,ViewTGTPos));
+		ViewTGTUnit.UnitPos=ViewTGTPos;
+		ViewUnit.UnitPos=ViewPos;
 		ThreadDataUpdata.Global_Data.ChangePosOK=1;
-		ViewTMP.GetMatrix(ViewMat);
 	}
 	else
 	{
 		ThreadDataUpdata.Global_Data.ChangePosOK=0;
 	}
-	Easy_matrix_mult(ViewMatTMP,ViewMat,ViewMatTMP);
-	//GoZ=GoX=0.0f;
+	ViewUnit.PosTo(&ViewTGTUnit);
+	ViewUnit.UnitPos=ViewTGTUnit.UnitPos;
+	ViewUnit.RotExternal(PosTurn[0],0.0f,1.0f,0.0f);
+	ViewUnit.RotInternal(PosTurn[1],1.0f,0.0f,0.0f);
+	ViewUnit.MovInternal(_mm_set_ps(1.0f,ViewLen+moveZ,0.0f,0.0f));
+	CUnitMath ViewUnitTMP;
+	ViewUnitTMP.UnitPos=ViewUnit.UnitPos;
+	ViewUnitTMP.UnitPos.m128_f32[1]=0.0f;
+	__m128 ViewTGTPosTMP=ViewTGTUnit.UnitPos;
+	ViewTGTPosTMP.m128_f32[1]=0.0f;
+	ViewUnitTMP.PosTo(ViewTGTPosTMP);
+	ViewUnitTMP.MovInternal(_mm_set_ps(1.0f,-PosMove[1],0.0f,-PosMove[0]));
+	ViewUnit.UnitPos.m128_f32[0]=ViewUnitTMP.UnitPos.m128_f32[0];
+	ViewUnit.UnitPos.m128_f32[2]=ViewUnitTMP.UnitPos.m128_f32[2];
+	ViewUnitTMP.UnitPos=ViewTGTPosTMP;
+	ViewUnitTMP.MovInternal(_mm_set_ps(1.0f,-PosMove[1],0.0f,-PosMove[0]));
+	ViewTGTUnit.UnitPos.m128_f32[0]=ViewUnitTMP.UnitPos.m128_f32[0];
+	ViewTGTUnit.UnitPos.m128_f32[2]=ViewUnitTMP.UnitPos.m128_f32[2];
+	
+	ViewUnit.GetMatrix(ViewMat);
+
+	GoZ=GoX=0.0f;
 	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
 	//SceneUnitTest.SetPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
 	SceneUnitTest.SetTGTPos(TestView.UnitPos);

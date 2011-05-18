@@ -122,6 +122,11 @@ void CUnitMath::Reset(void)
 	Easy_matrix_identity(UnitMatrix);
 	NewMatrix=true;
 }
+void CUnitMath::PosTo(CUnitMath * UnitMath)
+{
+	if(UnitMath)
+		PosTo(UnitMath->UnitPos);
+}
 
 void CUnitMath::PosTo(__m128 TGTPos)
 {
@@ -263,3 +268,5 @@ void CUnitMath::PosToDir(__m128 TGTPos)
 	}
 
 }
+
+
