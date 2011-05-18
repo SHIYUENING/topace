@@ -137,6 +137,7 @@ void DataUpdata()
 	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
 	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ+30,PosOrgY,0));
 	TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
+	TestView.PosTo(IdentityMatrix3,180.0f);
 	__m128 ViewMatTMP[4];
 	TestView.GetMatrix(ViewMatTMP);
 	if(ThreadDataUpdata.DrawToData.ChangePos)
@@ -146,7 +147,8 @@ void DataUpdata()
 		CUnitMath ViewTMP;
 		ViewTMP.SetPos(SetPosTMP);
 		SetPosTMP=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewTGTPos[2],ThreadDataUpdata.DrawToData.ViewTGTPos[1],ThreadDataUpdata.DrawToData.ViewTGTPos[0]);
-		ViewTMP.PosTo(SetPosTMP,180.0f);
+		ViewTMP.PosTo(SetPosTMP);
+		//ViewTMP.RotInternal(180.0f,0.0f,1.0f,0.0f);
 		ThreadDataUpdata.Global_Data.ChangePosOK=1;
 		ViewTMP.GetMatrix(ViewMat);
 	}
@@ -184,7 +186,7 @@ void DataUpdata()
 	ThreadDataUpdata.DataList[4].UnitData_States=_UnitData_States_Use;
 	ThreadDataUpdata.DataList[5].UnitData_States=_UnitData_States_Use;
 	//TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
-	Easy_matrix_copy(ThreadDataUpdata.DataList[1].Matrix,ViewMatTMP);
+	Easy_matrix_copy(ThreadDataUpdata.DataList[1].Matrix,ViewMat);
 	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
 	SceneUnitTest.GetMatrix(ThreadDataUpdata.DataList[3].Matrix);
 	UnitMathDraw2.GetMatrix(ThreadDataUpdata.DataList[4].Matrix);

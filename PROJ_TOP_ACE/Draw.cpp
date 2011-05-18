@@ -82,12 +82,14 @@ inline void SetTamSceneCheck()
 		ChechID=TamScene.GetCheck(InputPos[0],InputPos[1]);
 		if(ChechID>=0)
 		{
-			ThreadDataDraw.DrawToData.ViewTGTPos[0]=TamScene.TamList[ChechID].Matrix[12];
-			ThreadDataDraw.DrawToData.ViewTGTPos[1]=TamScene.TamList[ChechID].Matrix[13];
-			ThreadDataDraw.DrawToData.ViewTGTPos[2]=TamScene.TamList[ChechID].Matrix[14];
-			ThreadDataDraw.DrawToData.ViewPos[0]=TamScene.TamList[ChechID].Matrix[12]+50.0f;
-			ThreadDataDraw.DrawToData.ViewPos[1]=TamScene.TamList[ChechID].Matrix[13]+50.0f;
-			ThreadDataDraw.DrawToData.ViewPos[2]=TamScene.TamList[ChechID].Matrix[14]+50.0f;
+			float ScenePosTMP[3];
+			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[ChechID].Pos);
+			ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
+			ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
+			ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
+			ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]+50.0f;
+			ThreadDataDraw.DrawToData.ViewPos[1]=ScenePosTMP[1]+50.0f;
+			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]+50.0f;
 			ThreadDataDraw.DrawToData.ChangePos=1;
 		}
 		else
@@ -96,19 +98,6 @@ inline void SetTamSceneCheck()
 	}
 	InputPos[2]=0;
 	
-}
-inline void GetUnitWindowPos(float * UnitPos,float * UnitWinPos)
-{
-	int viewports[]={0,0,GameSet.winW,GameSet.winH};
-	double windowCoordinate[3];
-	PointProjectD(UnitPos[0],UnitPos[1],UnitPos[2],
-		CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix,
-		CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix,
-		viewports,
-		windowCoordinate);
-	UnitWinPos[0]=windowCoordinate[0];
-	UnitWinPos[1]=windowCoordinate[1];
-	UnitWinPos[2]=windowCoordinate[2];
 }
 void DrawLoadingTex(Textures * pLoadingTex)
 {
@@ -512,8 +501,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_CULL_FACE);
 	GLSL_Disable();
-	float UnitWindowPos[3];
-	GetUnitWindowPos(ThreadDataDraw.DataList[4].Matrix+12,UnitWindowPos);
 
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
