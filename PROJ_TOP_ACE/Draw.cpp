@@ -90,11 +90,18 @@ inline void SetTamSceneCheck()
 			ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]+50.0f;
 			ThreadDataDraw.DrawToData.ViewPos[1]=ScenePosTMP[1]+50.0f;
 			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]+50.0f;
-			ThreadDataDraw.DrawToData.ChangePos=1;
+			
 		}
 		else
 		{
+			ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
+			ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
+			ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
+			ThreadDataDraw.DrawToData.ViewPos[0]=250.0f;
+			ThreadDataDraw.DrawToData.ViewPos[1]=250.0f;
+			ThreadDataDraw.DrawToData.ViewPos[2]=250.0f;
 		}
+		ThreadDataDraw.DrawToData.ChangePos=1;
 	}
 	InputPos[2]=0;
 	
@@ -261,7 +268,7 @@ bool InitDraw()
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	InitTestLight();ADD_LOG_Q("InitTestLight OK");
 
-//	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
+	TopAceModelTest.ReadTAMFile(TestModelPath)?ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) OK"):ADD_LOG_Q("TopAceModelTest.ReadTAMFile(TestModelPath) fail","#FF0000");
 	TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
 	if(TopAceModelTest.TAM_FileData)
 	{
@@ -271,7 +278,7 @@ bool InitDraw()
 		//PosOrgZ=PosOrgZ*0.285f;
 		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
 		//PosOrgY=500.0f;
-		moveZSpeed=PosOrgZ/60.0f;
+		moveZSpeed=PosOrgZ/360.0f;
 		maxFreme=1.4f*(float)TopAceModelTest.testMAXFrame;
 	}
 
@@ -464,7 +471,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	WaterTimeSet[1]=WaterTimeSet[1]+0.0002f;
 	WaterTimeSet[2]=WaterTimeSet[2]+0.0004f;
 	WaterTimeSet[3]=WaterTimeSet[3]+0.0006f;
-	if(GameSet.Shadow>0) 
+	/*if(GameSet.Shadow>0) 
 	{
 		if(TopAceModelTest.pTAM_FileHead)
 			DrawShadowMap(&TopAceModelTest,ThreadDataDraw.DataList[4].Matrix,ThreadDataDraw.DataList[5].Matrix);
@@ -475,7 +482,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 			DrawShadowMap(TamScene.TamList[0].Model,ShadowUnitMatrixTMP,ThreadDataDraw.DataList[5].Matrix,TamScene.TamList[0].scale[0]);
 		}
 		//DrawShadowMap();
-	}
+	}*/
 
 	int GLSLver=min(max(GameSet.Light-2,0),2);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
