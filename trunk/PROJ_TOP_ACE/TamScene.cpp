@@ -1,6 +1,8 @@
 #include "TamScene.h"
 #include "Common.h"
+#include "FONTS2D.h"
 WIN32_FIND_DATAW   filedata; 
+extern CFONTS2D FONTS2D;
 wchar_t * FindFileWithExtName(wchar_t * ExtName)
 {
 	if(!ExtName) return 0;
@@ -231,5 +233,14 @@ void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 
 
 void CTamScene::DrawUnitName(int winW,int winH)
-{
+{//FONTS2D.DrawTexts(
+	for(unsigned int i=0;i<TamList.size();i++)
+	{
+		DrawUnitLine(i,winW,winH);
+		FONTS2D.DrawTexts(
+			TamList[i].Name,
+			TamList[i].UnitNamePos[0],
+			TamList[i].UnitNamePos[1]+16,
+			winW,winH,winW,32);
+	}
 }

@@ -408,7 +408,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		swprintf_s(
 			ShowFPS,
 			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
-			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU Draw :%3.2f%%\nCPU SYS  :%3.2f%%\nGPU       :%3.2f%%\nFace Num: %d,支点旋转顺时针模型向左移动,逆时针向右移动",
+			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU:%3.2f%%/%3.2f%% GPU:%3.2f%% Face Num: %d,支点旋转顺时针模型向左移动,逆时针向右移动",
 			FPSNumShow,
 			GPUName,
 			nInputsNow,
@@ -498,7 +498,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glDisable(GL_MULTISAMPLE_ARB);
 
 	
-	TamScene.DrawUnitLineAll(GameSet.winW,GameSet.winH);
+	TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
 	UnitMatrix();
