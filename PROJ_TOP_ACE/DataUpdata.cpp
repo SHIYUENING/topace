@@ -32,6 +32,7 @@ float NoTouchMoveTimes=0.0f;
 
 float TouchMoveOverride=0.0f;
 float TouchZoomOverride=0.0f;
+__m128 ViewMat[4];
 void UpdataKeys()
 {
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_PRIOR] == TRUE)
@@ -79,6 +80,7 @@ void UpdataKeys()
 }
 void InitDataThread()
 {
+	Easy_matrix_identity(ViewMat);
 	moveZ=-130.0f;
 	moveX=45.0f;
 	moveY=-45.0f;
@@ -135,6 +137,24 @@ void DataUpdata()
 	TestView.RotInternal(moveY,1.0f,0.0f,0.0f);
 	TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ+30,PosOrgY,0));
 	TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
+	__m128 ViewMatTMP[4];
+	TestView.GetMatrix(ViewMatTMP);
+	if(ThreadDataUpdata.DrawToData.ChangePos)
+	{
+		//ThreadDataUpdata.DrawToData.ViewPos[0];
+		__m128 SetPosTMP=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewPos[2],ThreadDataUpdata.DrawToData.ViewPos[1],ThreadDataUpdata.DrawToData.ViewPos[0]);
+		CUnitMath ViewTMP;
+		ViewTMP.SetPos(SetPosTMP);
+		SetPosTMP=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewTGTPos[2],ThreadDataUpdata.DrawToData.ViewTGTPos[1],ThreadDataUpdata.DrawToData.ViewTGTPos[0]);
+		ViewTMP.PosTo(SetPosTMP,180.0f);
+		ThreadDataUpdata.Global_Data.ChangePosOK=1;
+		ViewTMP.GetMatrix(ViewMat);
+	}
+	else
+	{
+		ThreadDataUpdata.Global_Data.ChangePosOK=0;
+	}
+	Easy_matrix_mult(ViewMatTMP,ViewMat,ViewMatTMP);
 	//GoZ=GoX=0.0f;
 	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
 	//SceneUnitTest.SetPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));
@@ -153,7 +173,7 @@ void DataUpdata()
 	//UnitMathDraw2.RotExternal(moveY,1.0f,0.0f,0.0f);
 	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 	TestLight.RotInternal(float((TotalFrame/3)%360),0.0f,1.0f,0.0f);
-	TestLight.MovInternal(_mm_set_ps(1.0f,0.01f,12500.0f,10000.0f));
+	TestLight.MovInternal(_mm_set_ps(1.0f,0.01f,150000.0f,100000.0f));
 	
 	//TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,10000.0f,0.01f);
 
@@ -163,7 +183,8 @@ void DataUpdata()
 	ThreadDataUpdata.DataList[3].UnitData_States=_UnitData_States_Use;
 	ThreadDataUpdata.DataList[4].UnitData_States=_UnitData_States_Use;
 	ThreadDataUpdata.DataList[5].UnitData_States=_UnitData_States_Use;
-	TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
+	//TestView.GetMatrix(ThreadDataUpdata.DataList[1].Matrix);
+	Easy_matrix_copy(ThreadDataUpdata.DataList[1].Matrix,ViewMatTMP);
 	UnitMathDraw.GetMatrix(ThreadDataUpdata.DataList[2].Matrix);
 	SceneUnitTest.GetMatrix(ThreadDataUpdata.DataList[3].Matrix);
 	UnitMathDraw2.GetMatrix(ThreadDataUpdata.DataList[4].Matrix);

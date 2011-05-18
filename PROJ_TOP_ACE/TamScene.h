@@ -39,6 +39,7 @@ public:
 	void DrawUnitLineAll(int winW,int winH);
 	void SetUnitNamePos(int winW,int winH,int Wnum=4);
 	void DrawUnitName(int winW,int winH);
+	int GetCheck(int Posx,int Posy);
 };
 
 #endif

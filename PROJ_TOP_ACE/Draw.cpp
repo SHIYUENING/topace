@@ -70,8 +70,33 @@ float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
 CTamScene TamScene;
 extern float zoomsize;
 void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
-
+extern int InputPos[3];
 UINT uMsgDraw=0;
+inline void SetTamSceneCheck()
+{
+	int ChechID=-1;
+	if(ThreadDataDraw.Global_Data.ChangePosOK)
+		ThreadDataDraw.DrawToData.ChangePos=0;
+	if(InputPos[2])
+	{
+		ChechID=TamScene.GetCheck(InputPos[0],InputPos[1]);
+		if(ChechID>=0)
+		{
+			ThreadDataDraw.DrawToData.ViewTGTPos[0]=TamScene.TamList[ChechID].Matrix[12];
+			ThreadDataDraw.DrawToData.ViewTGTPos[1]=TamScene.TamList[ChechID].Matrix[13];
+			ThreadDataDraw.DrawToData.ViewTGTPos[2]=TamScene.TamList[ChechID].Matrix[14];
+			ThreadDataDraw.DrawToData.ViewPos[0]=TamScene.TamList[ChechID].Matrix[12]+50.0f;
+			ThreadDataDraw.DrawToData.ViewPos[1]=TamScene.TamList[ChechID].Matrix[13]+50.0f;
+			ThreadDataDraw.DrawToData.ViewPos[2]=TamScene.TamList[ChechID].Matrix[14]+50.0f;
+			ThreadDataDraw.DrawToData.ChangePos=1;
+		}
+		else
+		{
+		}
+	}
+	InputPos[2]=0;
+	
+}
 inline void GetUnitWindowPos(float * UnitPos,float * UnitWinPos)
 {
 	int viewports[]={0,0,GameSet.winW,GameSet.winH};
@@ -222,7 +247,7 @@ bool InitDraw()
 	Textures::LoadDefineTex();ADD_LOG_Q("LoadDefineTex OK");
 	LoadingTex.loadfile(L"data/loading");ADD_LOG_Q("LoadingTex OK");
 	LoadingTex.LoadToVRAM(GL_LINEAR);ADD_LOG_Q("LoadingTex.LoadToVRAM(GL_LINEAR) OK");
-	DrawLoadingTex(&LoadingTex);ADD_LOG_Q("DrawLoadingTex OK");
+	//DrawLoadingTex(&LoadingTex);ADD_LOG_Q("DrawLoadingTex OK");
 	LoadCubeTex();ADD_LOG_Q("LoadCubeTex OK");
 	
 	
@@ -499,6 +524,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 
 	
 	TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
+	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
 	UnitMatrix();

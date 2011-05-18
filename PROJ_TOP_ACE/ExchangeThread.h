@@ -39,10 +39,14 @@ struct _Global_Data
 {
 	_Global_Data_Scene Scene;
 	_Global_Data_Sys Sys;
+	int ChangePosOK;
 };
 struct _DrawToData
 {
 	_Global_Data_Key Global_Data_Key;
+	float ViewTGTPos[3];
+	float ViewPos[3];
+	int ChangePos;
 };
 class CExchangeThread
 {

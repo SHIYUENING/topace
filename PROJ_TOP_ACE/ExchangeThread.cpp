@@ -84,6 +84,8 @@ CExchangeThread::CExchangeThread(void)
 {
 	Global_Data.Scene.CamID=0;
 	Global_Data.Scene.PlayerID=0;
+	Global_Data.ChangePosOK=1;
+	DrawToData.ChangePos=0;
 	DataList = (_UnitData *)_aligned_malloc(sizeof(_UnitData)*ListCount,16);
 	DataList[0].UnitData_States=_UnitData_States_Use;
 	for(int i=0;i<256;i++)

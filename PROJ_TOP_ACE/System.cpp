@@ -74,6 +74,7 @@ extern float TouchMoveOverride;
 extern float TouchZoomOverride;
 int DoubleTouchTime=0;
 __m128 TouchPointOrg;
+int InputPos[3]={0};
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -547,12 +548,18 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			window->init.isFullScreen = (g_createFullScreen == TRUE) ? FALSE : TRUE;
 			PostMessageW (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
+		case WM_LBUTTONUP:
+			InputPos[0]=LOWORD(lParam);
+			InputPos[1]=HIWORD(lParam);
+			InputPos[1]=GameSet.winH-InputPos[1];
+			InputPos[2]=1;
+			break;
 		case WM_TOUCH:
 			{
 				if(nInputs<=0) break;
 				nInputsNow=(unsigned int)wParam;
 				TOUCHINPUT * ti=new TOUCHINPUT[nInputs];
-				GetTouchInputInfo((HTOUCHINPUT)lParam, nInputs,ti,sizeof(TOUCHINPUT));
+				//GetTouchInputInfo((HTOUCHINPUT)lParam, nInputs,ti,sizeof(TOUCHINPUT));
 					
 				for (unsigned int i=0;i<nInputsNow;i++)
 				{
@@ -626,7 +633,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 				//MessageBoxW (HWND_DESKTOP, L"检测到触摸消息", L" ", MB_OK | MB_ICONEXCLAMATION);
 				
-				CloseTouchInputHandle((HTOUCHINPUT)lParam);
+				//CloseTouchInputHandle((HTOUCHINPUT)lParam);
 				delete [] ti;
 			}
 		break;
@@ -786,7 +793,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			}
 			nInputs=TouchInput?nInputs:0;
 			if(TouchInput)
-			TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
+			//TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
 			{
