@@ -85,24 +85,29 @@ inline void SetTamSceneCheck()
 		SceneSelect=TamScene.GetCheck(InputPos[0],InputPos[1]);
 		if(SceneSelect>=0)
 		{
+			moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
 			float ScenePosTMP[3];
 			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Pos);
 			ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
 			ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
 			ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
-			ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]+50.0f;
+			ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]-20.0f;
 			ThreadDataDraw.DrawToData.ViewPos[1]=ScenePosTMP[1]+50.0f;
-			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]+50.0f;
-			
+			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
+			ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneSelect].Limitfar;
+			ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneSelect].Limitnear;
 		}
 		else
 		{
+			moveZSpeed=25.0f;
 			ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
 			ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
 			ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-			ThreadDataDraw.DrawToData.ViewPos[0]=250.0f;
-			ThreadDataDraw.DrawToData.ViewPos[1]=250.0f;
-			ThreadDataDraw.DrawToData.ViewPos[2]=250.0f;
+			ThreadDataDraw.DrawToData.ViewPos[0]=1200.0f;
+			ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
+			ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
+			ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
+			ThreadDataDraw.DrawToData.LimitZ[1]=100.0f;
 		}
 		ThreadDataDraw.DrawToData.ChangePos=1;
 	}
@@ -275,13 +280,13 @@ bool InitDraw()
 	TopAceModelTest.LoadToVRAM()?ADD_LOG_Q("TopAceModelTest.LoadToVRAM() OK"):ADD_LOG_Q("TopAceModelTest.LoadToVRAM() fail","#FF0000");
 	if(TopAceModelTest.TAM_FileData)
 	{
-		PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
+		/*PosOrgZ=-max(max(max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[0]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[0])),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[1]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[1]))),
 			max(abs(TopAceModelTest.pTAM_FileHead->BoxMax[2]),abs(TopAceModelTest.pTAM_FileHead->BoxMin[2])));
 		//PosOrgZ=PosOrgZ*0.285f;
 		//PosOrgY=(TopAceModelTest.pTAM_FileHead->BoxMax[2]-(TopAceModelTest.pTAM_FileHead->BoxMax[2]-TopAceModelTest.pTAM_FileHead->BoxMin[2])/2.0f);
 		//PosOrgY=500.0f;
-		moveZSpeed=PosOrgZ/360.0f;
+		moveZSpeed=PosOrgZ/360.0f;*/
 		maxFreme=1.4f*(float)TopAceModelTest.testMAXFrame;
 	}
 

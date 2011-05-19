@@ -48,7 +48,7 @@ int WindowHeight=600;
 float moveZ=-250.0f;
 float moveY=0.0f;
 float moveX=0.0f;
-float moveZSpeed=2.0f;
+float moveZSpeed=25.0f;
 float GoX=0.0f;
 float GoZ=0.0f;
 HGLRC	 m_hrc;
@@ -152,7 +152,7 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 {
 	GameSet.winW=WindowWidth=width;
 	GameSet.winH=WindowHeight=height;
-	CommonMatrixs[CO_Matrix_Proj].PerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0);
+	CommonMatrixs[CO_Matrix_Proj].PerspectiveProjectionFov(45.0, (double)width/(double)height, 0.5,  10000.0);
 	//CO_MatrixPerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0); 
 	//CO_SetPMatrixD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
 	//GLdouble PMatrix[16];
@@ -428,12 +428,12 @@ void DoDoubleTouch()
 	};
 	if((movePosTMP[0]<3000)&&(movePosTMP[1]>7000))
 	{
-		Touchang=TouchPointOrg.m128_i32[2]-TouchInputposs[1].m128_i32[0];
+		Touchang=float(TouchPointOrg.m128_i32[2]-TouchInputposs[1].m128_i32[0]);
 		zoomsize=0.0f;
 	}
 	if((movePosTMP[1]<3000)&&(movePosTMP[0]>7000))
 	{
-		Touchang=TouchPointOrg.m128_i32[0]-TouchInputposs[0].m128_i32[0];
+		Touchang=float(TouchPointOrg.m128_i32[0]-TouchInputposs[0].m128_i32[0]);
 		zoomsize=0.0f;
 	}
 /*

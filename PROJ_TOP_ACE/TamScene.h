@@ -20,6 +20,7 @@ struct _TamUnit
 	bool DrawName;
 	float Matrix[16];
 	float UnitNamePos[4];
+	float MoveSpeed;
 };
 
 class CTamScene
