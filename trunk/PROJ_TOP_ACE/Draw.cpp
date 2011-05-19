@@ -70,13 +70,14 @@ float WaterTimeSet[4]={0.0f,0.0f,0.0f,0.0f};
 CTamScene TamScene;
 extern float zoomsize;
 void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
+void DrawShadowMapNULL();
 extern int InputPos[3];
 UINT uMsgDraw=0;
 float TestNum=0.0f;
 int SceneSelect=-1;
 inline void SetTamSceneCheck()
 {
-	int ChechID=-1;
+	//int ChechID=-1;
 	if(ThreadDataDraw.Global_Data.ChangePosOK)
 		ThreadDataDraw.DrawToData.ChangePos=0;
 	if(InputPos[2])
@@ -85,7 +86,7 @@ inline void SetTamSceneCheck()
 		if(SceneSelect>=0)
 		{
 			float ScenePosTMP[3];
-			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[ChechID].Pos);
+			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Pos);
 			ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
 			ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
 			ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
@@ -473,18 +474,20 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	WaterTimeSet[1]=WaterTimeSet[1]+0.0002f;
 	WaterTimeSet[2]=WaterTimeSet[2]+0.0004f;
 	WaterTimeSet[3]=WaterTimeSet[3]+0.0006f;
-	/*if(GameSet.Shadow>0) 
+	if(GameSet.Shadow>0) 
 	{
-		if(TopAceModelTest.pTAM_FileHead)
-			DrawShadowMap(&TopAceModelTest,ThreadDataDraw.DataList[4].Matrix,ThreadDataDraw.DataList[5].Matrix);
-		else if(TamScene.TamList.size()>0)
+		if(SceneSelect<0)
+		{
+			DrawShadowMapNULL();
+			//DrawShadowMap(&TopAceModelTest,ThreadDataDraw.DataList[4].Matrix,ThreadDataDraw.DataList[5].Matrix);
+		}
+		else if(TamScene.TamList.size()>SceneSelect)
 		{
 			float ShadowUnitMatrixTMP[16];
-			Easy_matrix_mult(ShadowUnitMatrixTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[0].Matrix);
-			DrawShadowMap(TamScene.TamList[0].Model,ShadowUnitMatrixTMP,ThreadDataDraw.DataList[5].Matrix,TamScene.TamList[0].scale[0]);
+			Easy_matrix_mult(ShadowUnitMatrixTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Matrix);
+			DrawShadowMap(TamScene.TamList[SceneSelect].Model,ShadowUnitMatrixTMP,ThreadDataDraw.DataList[5].Matrix,TamScene.TamList[SceneSelect].scale[0]);
 		}
-		//DrawShadowMap();
-	}*/
+	}
 
 	int GLSLver=min(max(GameSet.Light-2,0),2);
 	CommonMatrixs[CO_Matrix_ModelView].LoadF(CameraMatrix[0].m128_f32);
@@ -601,7 +604,22 @@ void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,f
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
 	CommonMatrixs[CO_Matrix_Proj].Pop();
 }
+void DrawShadowMapNULL()
+{
+	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, ShadowFBOID);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glClear (GL_DEPTH_BUFFER_BIT);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glBindTexture(GL_TEXTURE_2D, ShadowTexDepth);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
+
+}
 /*
 void DrawShadowMap()
 {
