@@ -39,6 +39,7 @@ __m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
 float PosMove[3]={0.0f};
 float PosTurn[2]={0.0f};
 float ViewLen=100.0f;
+extern float TestNum;
 void UpdataKeys()
 {
 	PosMove[0]=0.0f;
@@ -158,6 +159,21 @@ void InitDataThread()
 
 	}
 }
+inline void LimitTurnUP()
+{
+	float TurnUP=Easy_vector_dot(_mm_set_ps(1.0f,0.0f,1.0f,0.0f),ViewMat[2]);
+	if(TurnUP<0.15f)
+	{
+		ViewUnit.RotInternal(min(0.0f,PosTurn[1]),1.0f,0.0f,0.0f);
+		return;
+	}
+	if(TurnUP>0.75f)
+	{
+		ViewUnit.RotInternal(max(0.0f,PosTurn[1]),1.0f,0.0f,0.0f);
+		return;
+	}
+	ViewUnit.RotInternal(PosTurn[1],1.0f,0.0f,0.0f);
+}
 void DataUpdata()
 {
 	UpdataKeys();
@@ -187,7 +203,9 @@ void DataUpdata()
 	ViewUnit.PosTo(&ViewTGTUnit);
 	ViewUnit.UnitPos=ViewTGTUnit.UnitPos;
 	ViewUnit.RotExternal(PosTurn[0],0.0f,1.0f,0.0f);
-	ViewUnit.RotInternal(PosTurn[1],1.0f,0.0f,0.0f);
+
+	LimitTurnUP();
+
 	ViewUnit.MovInternal(_mm_set_ps(1.0f,ViewLen+moveZ,0.0f,0.0f));
 	CUnitMath ViewUnitTMP;
 	ViewUnitTMP.UnitPos=ViewUnit.UnitPos;

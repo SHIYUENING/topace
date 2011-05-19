@@ -72,6 +72,8 @@ extern float zoomsize;
 void DrawShadowMap(CTopAceModel * Model,float * UnitMatrix,float * LightMatrix,float ShadowScale=1.0f);
 extern int InputPos[3];
 UINT uMsgDraw=0;
+float TestNum=0.0f;
+int SceneSelect=-1;
 inline void SetTamSceneCheck()
 {
 	int ChechID=-1;
@@ -79,8 +81,8 @@ inline void SetTamSceneCheck()
 		ThreadDataDraw.DrawToData.ChangePos=0;
 	if(InputPos[2])
 	{
-		ChechID=TamScene.GetCheck(InputPos[0],InputPos[1]);
-		if(ChechID>=0)
+		SceneSelect=TamScene.GetCheck(InputPos[0],InputPos[1]);
+		if(SceneSelect>=0)
 		{
 			float ScenePosTMP[3];
 			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[ChechID].Pos);
@@ -429,7 +431,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		swprintf_s(
 			ShowFPS,
 			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
-			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU:%3.2f%%/%3.2f%% GPU:%3.2f%% Face Num: %d,支点旋转顺时针模型向左移动,逆时针向右移动",
+			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU:%3.2f%%/%3.2f%% GPU:%3.2f%%\n %f",
 			FPSNumShow,
 			GPUName,
 			nInputsNow,
@@ -441,7 +443,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 			oneframetimepointCPUDraw,
 			oneframetimepointCPUSYS,
 			oneframetimepointGPU,
-			RenderFaces
+			TestNum
 			);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
