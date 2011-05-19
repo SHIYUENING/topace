@@ -47,6 +47,7 @@ struct _DrawToData
 	float ViewTGTPos[3];
 	float ViewPos[3];
 	int ChangePos;
+	float LimitZ[2];
 };
 class CExchangeThread
 {

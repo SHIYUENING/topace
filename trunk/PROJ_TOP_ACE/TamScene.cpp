@@ -86,11 +86,11 @@ void CTamScene::ClearScene(void)
 	}
 	TamList.clear();
 }
-inline float GetIniFloat(wchar_t * lpAppName,wchar_t * lpKeyName,const wchar_t * lpFileName)
+inline float GetIniFloat(wchar_t * lpAppName,wchar_t * lpKeyName,const wchar_t * lpFileName,const wchar_t * DefChar)
 {
 	wchar_t ReadIniTMP[512];
 	float IniFloat=0.0f;
-	GetPrivateProfileStringW(lpAppName,lpKeyName,L"0",ReadIniTMP,512,lpFileName);
+	GetPrivateProfileStringW(lpAppName,lpKeyName,DefChar,ReadIniTMP,512,lpFileName);
 	swscanf_s(ReadIniTMP,L"%f",&IniFloat);
 	return IniFloat;
 }
@@ -118,14 +118,15 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	ModelPathTMP+=L"\\set.ini";
 	GetPrivateProfileStringW(L"set",L"name",L"No Name",TamUnit->Name,64,ModelPathTMP.c_str());
 
-	TamUnit->Pos[0]=GetIniFloat(L"pos",L"x",ModelPathTMP.c_str());
-	TamUnit->Pos[1]=GetIniFloat(L"pos",L"y",ModelPathTMP.c_str());
-	TamUnit->Pos[2]=GetIniFloat(L"pos",L"z",ModelPathTMP.c_str());
-	TamUnit->scale[0]=GetIniFloat(L"scale",L"x",ModelPathTMP.c_str())*0.0001f;
-	TamUnit->scale[1]=GetIniFloat(L"scale",L"y",ModelPathTMP.c_str())*0.0001f;
-	TamUnit->scale[2]=GetIniFloat(L"scale",L"z",ModelPathTMP.c_str())*0.0001f;
-	TamUnit->Limitfar=GetIniFloat(L"Limit",L"far",ModelPathTMP.c_str());
-	TamUnit->Limitnear=GetIniFloat(L"Limit",L"near",ModelPathTMP.c_str());
+	TamUnit->Pos[0]=GetIniFloat(L"pos",L"x",ModelPathTMP.c_str(),L"0.0");
+	TamUnit->Pos[1]=GetIniFloat(L"pos",L"y",ModelPathTMP.c_str(),L"0.0");
+	TamUnit->Pos[2]=GetIniFloat(L"pos",L"z",ModelPathTMP.c_str(),L"0.0");
+	TamUnit->scale[0]=GetIniFloat(L"scale",L"x",ModelPathTMP.c_str(),L"10000.0")*0.0001f;
+	TamUnit->scale[1]=GetIniFloat(L"scale",L"y",ModelPathTMP.c_str(),L"10000.0")*0.0001f;
+	TamUnit->scale[2]=GetIniFloat(L"scale",L"z",ModelPathTMP.c_str(),L"10000.0")*0.0001f;
+	TamUnit->Limitfar=GetIniFloat(L"Limit",L"far",ModelPathTMP.c_str(),L"500.0");
+	TamUnit->Limitnear=GetIniFloat(L"Limit",L"near",ModelPathTMP.c_str(),L"0.0");
+	TamUnit->MoveSpeed=GetIniFloat(L"Move",L"Speed",ModelPathTMP.c_str(),L"1.0");
 	__m128 DrawMatrix[4];
 	Easy_matrix_identity(DrawMatrix);
 	Easy_matrix_scale(DrawMatrix,_mm_set_ps(1.0,TamUnit->scale[2],TamUnit->scale[1],TamUnit->scale[0]));
@@ -226,10 +227,10 @@ void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 {
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
-		TamList[i].UnitNamePos[0]=(i%Wnum)*(winW/Wnum);
-		TamList[i].UnitNamePos[1]=(i/Wnum)*64;
-		TamList[i].UnitNamePos[2]=TamList[i].UnitNamePos[0]+(winW/Wnum)/2;
-		TamList[i].UnitNamePos[3]=TamList[i].UnitNamePos[1]+32;
+		TamList[i].UnitNamePos[0]=float((i%Wnum)*(winW/Wnum));
+		TamList[i].UnitNamePos[1]=float((i/Wnum)*64);
+		TamList[i].UnitNamePos[2]=float(TamList[i].UnitNamePos[0]+(winW/Wnum)/2);
+		TamList[i].UnitNamePos[3]=float(TamList[i].UnitNamePos[1]+32);
 	}
 }
 
@@ -241,8 +242,8 @@ void CTamScene::DrawUnitName(int winW,int winH)
 		DrawUnitLine(i,winW,winH);
 		FONTS2D.DrawTexts(
 			TamList[i].Name,
-			TamList[i].UnitNamePos[0],
-			TamList[i].UnitNamePos[1]+16,
+			int(TamList[i].UnitNamePos[0]),
+			int(TamList[i].UnitNamePos[1])+16,
 			winW,winH,winW,32);
 	}
 }

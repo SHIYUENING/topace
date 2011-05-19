@@ -38,6 +38,7 @@ __m128 ViewTGTPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 __m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
 float PosMove[3]={0.0f};
 float PosTurn[2]={0.0f};
+float LimitZ[2]={3500.0f,100.0f};
 float ViewLen=100.0f;
 extern float TestNum;
 void UpdataKeys()
@@ -109,8 +110,12 @@ void UpdataKeys()
 	if(Touchang<-1000.0f) 
 		Touchang=-1000.0f;
 	GoX=GoX+Touchang*0.01f;
-	//if(moveZ>0.0f) moveZ=0.0f;
+	//LimitZ
+	//if(moveZ<0.0f) moveZ=0.0f;
 	//if(moveZ<-350.0f) moveZ=-350.0f;
+	moveZ=max(moveZ,LimitZ[1]);
+	moveZ=min(moveZ,LimitZ[0]);
+	TestNum=moveZ;
 	Touchang=Touchang*0.90f;
 	if(abs(Touchang)<0.0001f) Touchang=0.0f;
 	zoomsize=zoomsize*0.90f;
@@ -126,13 +131,14 @@ void UpdataKeys()
 		PosTurn[1]=0.0f;
 		ViewTGTUnit.UnitPos=ViewTGTPos;
 		ViewUnit.UnitPos=ViewPos;
+		moveZ=0.0f;
 	}
 }
 void InitDataThread()
 {
 	ViewUnit.UnitPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
 	Easy_matrix_identity(ViewMat);
-	moveZ=0.0f;
+	moveZ=2000.0f;
 	moveX=0.0f;
 	moveY=0.0f;
 	SoundSysTest=new CSoundSys;
@@ -162,7 +168,7 @@ void InitDataThread()
 inline void LimitTurnUP()
 {
 	float TurnUP=Easy_vector_dot(_mm_set_ps(1.0f,0.0f,1.0f,0.0f),ViewMat[2]);
-	if(TurnUP<0.15f)
+	if(TurnUP<0.25f)
 	{
 		ViewUnit.RotInternal(min(0.0f,PosTurn[1]),1.0f,0.0f,0.0f);
 		return;
@@ -195,6 +201,9 @@ void DataUpdata()
 		ViewTGTUnit.UnitPos=ViewTGTPos;
 		ViewUnit.UnitPos=ViewPos;
 		ThreadDataUpdata.Global_Data.ChangePosOK=1;
+		moveZ=0;
+		LimitZ[0]=ThreadDataUpdata.DrawToData.LimitZ[0];
+		LimitZ[1]=ThreadDataUpdata.DrawToData.LimitZ[1];
 	}
 	else
 	{
@@ -239,9 +248,10 @@ void DataUpdata()
 	UnitMathDraw2.RotInternal(-90,1.0f,0.0f,0.0f);
 	//UnitMathDraw2.RotExternal(moveX,0.0f,1.0f,0.0f);
 	//UnitMathDraw2.RotExternal(moveY,1.0f,0.0f,0.0f);
+	TestLight.Reset();
 	TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
-	TestLight.RotInternal(float((TotalFrame/3)%360),0.0f,1.0f,0.0f);
-	TestLight.MovInternal(_mm_set_ps(1.0f,0.01f,150000.0f,100000.0f));
+	//TestLight.RotInternal(float((TotalFrame/3)%360),0.0f,1.0f,0.0f);
+	TestLight.MovInternal(_mm_set_ps(1.0f,-100000.0f,150000.0f,100000.0f));
 	
 	//TestLight.UnitPos=_mm_set_ps(1.0f,0.0f,10000.0f,0.01f);
 
