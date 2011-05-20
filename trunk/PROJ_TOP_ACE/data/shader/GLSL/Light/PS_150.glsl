@@ -82,7 +82,7 @@ void main()
 	vec4 DiffuseColor=LightVal.x * OmniLight_Color[0]*Shadow;
 	vec4 SpecularColor=LightVal.y * OmniLight_Color[0]*Shadow;
 	LightVal=OmniLight (vec4(0.0,0.0,0.0,1.0),Material_shininess*SpecularTexColor.z,NormalTBN);
-	DiffuseColor+=LightVal.x*0.5;
+	DiffuseColor+=LightVal.x*0.25;
 	for(int i=1;i<LightNums.x;i++)
 	{
 		LightVal=OmniLight (OmniLight_Pos[i],Material_shininess*SpecularTexColor.z,NormalTBN);

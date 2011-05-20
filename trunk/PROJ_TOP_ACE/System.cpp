@@ -66,7 +66,9 @@ bool TouchInput=false;
 __m128 TouchInputposs[4];
 float zoomsize=0.0f;
 float touchX=0.0f;
+float touchY=0.0f;
 float Touchang=0.0f;
+float TouchangY=0.0f;
 bool Touchings[4]={false,false,false,false};
 extern float NoTouchMoveTimes;
 
@@ -399,6 +401,21 @@ BOOL DestroyWindowGL (GL_Window* window)								// Destroy The OpenGL Window & R
 }
 void DoDoubleTouch()
 {
+	float movePosTMP[2]={
+	sqrt((float)Easy_vector_Getlenth_2i(
+	TouchPointOrg.m128_i32[0],
+	TouchInputposs[0].m128_i32[0],
+	TouchPointOrg.m128_i32[1],
+	TouchInputposs[0].m128_i32[1])),
+
+	sqrt((float)Easy_vector_Getlenth_2i(
+	TouchPointOrg.m128_i32[2],
+	TouchInputposs[1].m128_i32[0],
+	TouchPointOrg.m128_i32[3],
+	TouchInputposs[1].m128_i32[1]))
+	};
+	if((movePosTMP[0]>4000)&&(movePosTMP[1]>4000))
+	{
 	zoomsize=sqrt(float(Easy_vector_Getlenth_2i(
 					TouchPointOrg.m128_i32[0],
 					TouchPointOrg.m128_i32[2],
@@ -413,27 +430,17 @@ void DoDoubleTouch()
 	zoomsize=zoomsize/3000.0f;
 	if(zoomsize>3.0f)
 		return;
-	float movePosTMP[2]={
-	sqrt((float)Easy_vector_Getlenth_2i(
-	TouchPointOrg.m128_i32[0],
-	TouchInputposs[0].m128_i32[0],
-	TouchPointOrg.m128_i32[1],
-	TouchInputposs[0].m128_i32[1])),
-
-	sqrt((float)Easy_vector_Getlenth_2i(
-	TouchPointOrg.m128_i32[2],
-	TouchInputposs[1].m128_i32[0],
-	TouchPointOrg.m128_i32[3],
-	TouchInputposs[1].m128_i32[1]))
-	};
+	}
 	if((movePosTMP[0]<3000)&&(movePosTMP[1]>7000))
 	{
 		Touchang=float(TouchPointOrg.m128_i32[2]-TouchInputposs[1].m128_i32[0]);
+		TouchangY=float(TouchPointOrg.m128_i32[3]-TouchInputposs[1].m128_i32[1]);
 		zoomsize=0.0f;
 	}
 	if((movePosTMP[1]<3000)&&(movePosTMP[0]>7000))
 	{
 		Touchang=float(TouchPointOrg.m128_i32[0]-TouchInputposs[0].m128_i32[0]);
+		TouchangY=float(TouchPointOrg.m128_i32[1]-TouchInputposs[0].m128_i32[1]);
 		zoomsize=0.0f;
 	}
 /*
@@ -559,7 +566,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				if(nInputs<=0) break;
 				nInputsNow=(unsigned int)wParam;
 				TOUCHINPUT * ti=new TOUCHINPUT[nInputs];
-				//GetTouchInputInfo((HTOUCHINPUT)lParam, nInputs,ti,sizeof(TOUCHINPUT));
+				GetTouchInputInfo((HTOUCHINPUT)lParam, nInputs,ti,sizeof(TOUCHINPUT));
 					
 				for (unsigned int i=0;i<nInputsNow;i++)
 				{
@@ -626,6 +633,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					{
 						touchX=float(TouchInputposs[0].m128_i32[0]-TouchInputposs[0].m128_i32[2]);
 						touchX=max(-0.1f,min(0.1f,touchX));
+						touchY=float(TouchInputposs[0].m128_i32[1]-TouchInputposs[0].m128_i32[3]);
+						touchY=max(-0.1f,min(0.1f,touchY));
 					}
 				}
 				
@@ -633,7 +642,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			
 				//MessageBoxW (HWND_DESKTOP, L"检测到触摸消息", L" ", MB_OK | MB_ICONEXCLAMATION);
 				
-				//CloseTouchInputHandle((HTOUCHINPUT)lParam);
+				CloseTouchInputHandle((HTOUCHINPUT)lParam);
 				delete [] ti;
 			}
 		break;
@@ -792,8 +801,8 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 				//TerminateApplication(&window);
 			}
 			nInputs=TouchInput?nInputs:0;
-			//if(TouchInput)
-			//TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
+			if(TouchInput)
+			TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
 
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
