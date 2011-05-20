@@ -27,6 +27,7 @@ float extern moveZ;
 float extern moveY;
 float extern moveX;
 extern float Touchang;
+extern float TouchangY;
 int extern ReadingThreadNum;
 CFONTS2D FONTS2D;
 CFONTS2D FONTS2DSimple;
@@ -82,8 +83,26 @@ inline void SetTamSceneCheck()
 		ThreadDataDraw.DrawToData.ChangePos=0;
 	if(InputPos[2])
 	{
-		SceneSelect=TamScene.GetCheck(InputPos[0],InputPos[1]);
-		if(SceneSelect>=0)
+		if(InputPos[0]>GameSet.winW-64)
+		if(InputPos[1]>GameSet.winH-64)
+		{
+			moveZSpeed=25.0f;
+			ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
+			ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
+			ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
+			ThreadDataDraw.DrawToData.ViewPos[0]=1200.0f;
+			ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
+			ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
+			ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
+			ThreadDataDraw.DrawToData.LimitZ[1]=100.0f;
+			ThreadDataDraw.DrawToData.ChangePos=1;
+			SceneSelect=-1;
+			InputPos[2]=0;
+			return;
+		}
+		int Checked=TamScene.GetCheck(InputPos[0],InputPos[1]);
+		SceneSelect=Checked>-1?Checked:SceneSelect;
+		if(Checked>=0)
 		{
 			moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
 			float ScenePosTMP[3];
@@ -96,20 +115,9 @@ inline void SetTamSceneCheck()
 			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
 			ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneSelect].Limitfar;
 			ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneSelect].Limitnear;
+			ThreadDataDraw.DrawToData.ChangePos=1;
 		}
-		else
-		{
-			moveZSpeed=25.0f;
-			ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
-			ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
-			ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-			ThreadDataDraw.DrawToData.ViewPos[0]=1200.0f;
-			ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
-			ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
-			ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
-			ThreadDataDraw.DrawToData.LimitZ[1]=100.0f;
-		}
-		ThreadDataDraw.DrawToData.ChangePos=1;
+		
 	}
 	InputPos[2]=0;
 	

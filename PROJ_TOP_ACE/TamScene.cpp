@@ -84,6 +84,8 @@ void CTamScene::ClearScene(void)
 	{
 		if(TamList[i].Model)
 			delete TamList[i].Model;
+		if(TamList[i].NameTex)
+			delete TamList[i].NameTex;
 	}
 	TamList.clear();
 }
@@ -133,6 +135,15 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	Easy_matrix_scale(DrawMatrix,_mm_set_ps(1.0,TamUnit->scale[2],TamUnit->scale[1],TamUnit->scale[0]));
 	Easy_matrix_translate_External(DrawMatrix,_mm_set_ps(1.0,TamUnit->Pos[2],TamUnit->Pos[1],TamUnit->Pos[0]));
 	Easy_matrix_copy(TamUnit->Matrix,DrawMatrix);
+	wstring ModelNameTMP(ModelPath);
+	ModelNameTMP+=L"\\name";
+	TamUnit->NameTex=new Textures;
+	TamUnit->NameTex->loadfile((wchar_t *)ModelNameTMP.c_str());
+ 	if(!TamUnit->NameTex->isRAM())
+	{
+		delete TamUnit->NameTex;
+		TamUnit->NameTex=NULL;
+	}
 	return true;
 }
 
@@ -143,6 +154,8 @@ void CTamScene::ToVRAM(void)
 	{
 		if(TamList[i].Model)
 			TamList[i].Model->LoadToVRAM();
+		if(TamList[i].NameTex)
+			TamList[i].NameTex->LoadToVRAM();
 	}
 }
 
@@ -231,12 +244,43 @@ void CTamScene::DrawUnitLineAll(int winW,int winH)
 
 void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 {
+	int PosX=0;
+	int PosY=16;
+	int MaxNameH=0;
+	int PosTMPX=0;
+	int PosTMPY=0;
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
+		PosTMPX=0;
+		PosTMPY=0;
+		if(TamList[i].NameTex)
+		{
+			PosTMPX=TamList[i].NameTex->TexW;
+			PosTMPY=TamList[i].NameTex->TexH;
+		}
+		else
+		{
+			PosTMPX=winW/Wnum;
+			PosTMPY=40;
+		}
+		MaxNameH=max(MaxNameH,PosTMPY);
+
+		if(PosX+PosTMPX>winW)
+		{
+			PosX=0;
+			PosY=PosY+MaxNameH;
+			MaxNameH=0;
+		}
+		TamList[i].UnitNamePos[0]=PosX;
+		TamList[i].UnitNamePos[1]=PosY;
+		TamList[i].UnitNamePos[2]=PosX+PosTMPX;
+		TamList[i].UnitNamePos[3]=PosY+PosTMPY;
+		PosX=PosX+PosTMPX;
+		/*
 		TamList[i].UnitNamePos[0]=float((i%Wnum)*(winW/Wnum));
 		TamList[i].UnitNamePos[1]=float((i/Wnum)*64);
 		TamList[i].UnitNamePos[2]=float(TamList[i].UnitNamePos[0]+(winW/Wnum)/2);
-		TamList[i].UnitNamePos[3]=float(TamList[i].UnitNamePos[1]+32);
+		TamList[i].UnitNamePos[3]=float(TamList[i].UnitNamePos[1]+32);*/
 	}
 }
 
@@ -246,10 +290,20 @@ void CTamScene::DrawUnitName(int winW,int winH)
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		DrawUnitLine(i,winW,winH);
+		if(TamList[i].NameTex)
+		{
+		DrawQUADEX(TamList[i].NameTex->TexID,
+			int(TamList[i].UnitNamePos[0]),
+			int(TamList[i].UnitNamePos[0])+TamList[i].NameTex->TexW,
+			int(TamList[i].UnitNamePos[1]),
+			int(TamList[i].UnitNamePos[1])+TamList[i].NameTex->TexH,
+			winW,winH);
+		}
+		else
 		FONTS2D.DrawTexts(
 			TamList[i].Name,
 			int(TamList[i].UnitNamePos[0]),
-			int(TamList[i].UnitNamePos[1])+16,
+			int(TamList[i].UnitNamePos[1]),
 			winW,winH,winW,32);
 	}
 }
@@ -258,9 +312,14 @@ int CTamScene::GetCheck(int Posx,int Posy)
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		if(Posx<TamList[i].UnitNamePos[0]) continue;
+		if(Posx>TamList[i].UnitNamePos[2]) continue;
+		if(Posy<TamList[i].UnitNamePos[1]) continue;
+		if(Posy>TamList[i].UnitNamePos[3]) continue;
+		/*
+		if(Posx<TamList[i].UnitNamePos[0]) continue;
 		if(Posy<TamList[i].UnitNamePos[1]) continue;
 		if(Posx>(TamList[i].UnitNamePos[0]+2*(TamList[i].UnitNamePos[2]-TamList[i].UnitNamePos[0])))continue;
-		if(Posy>(TamList[i].UnitNamePos[1]+2*(TamList[i].UnitNamePos[3]-TamList[i].UnitNamePos[1])))continue;
+		if(Posy>(TamList[i].UnitNamePos[1]+2*(TamList[i].UnitNamePos[3]-TamList[i].UnitNamePos[1])))continue;*/
 		return i;
 	}
 	return-1;

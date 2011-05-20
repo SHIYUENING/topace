@@ -30,6 +30,7 @@ public:
 	static GLuint DefNorTexID;
 	static GLuint DefSpeTexID;
 	static void LoadDefineTex();
+	static void DelDefineTex();
 
 	int TexW;
 	int TexH;

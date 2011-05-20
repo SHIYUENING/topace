@@ -75,7 +75,24 @@ void Textures::LoadDefineTex()
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	}
 }
-
+void Textures::DelDefineTex()
+{
+	if(Textures::DefineTexID)
+	{
+		glDeleteTextures(1, &(Textures::DefineTexID));
+		Textures::DefineTexID=0;
+	}
+	if(Textures::DefNorTexID)
+	{
+		glDeleteTextures(1, &(Textures::DefNorTexID));
+		Textures::DefNorTexID=0;
+	}
+	if(Textures::DefSpeTexID)
+	{
+		glDeleteTextures(1, &(Textures::DefSpeTexID));
+		Textures::DefSpeTexID=0;
+	}
+}
 bool Textures::loadfile(char * filename)
 {
 	char LoadFileName[256]={0};
@@ -241,20 +258,6 @@ void Textures::Del_VRAM()
 		if(TGAfile!=NULL)
 			TGAfile->DelTGA_VRAM();
 	}
-	if(Textures::DefineTexID)
-	{
-		glDeleteTextures(1, &(Textures::DefineTexID));
-		Textures::DefineTexID=0;
-	}
-	if(Textures::DefNorTexID)
-	{
-		glDeleteTextures(1, &(Textures::DefNorTexID));
-		Textures::DefNorTexID=0;
-	}
-	if(Textures::DefSpeTexID)
-	{
-		glDeleteTextures(1, &(Textures::DefSpeTexID));
-		Textures::DefSpeTexID=0;
-	}
+
 }
 

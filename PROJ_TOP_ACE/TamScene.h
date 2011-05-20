@@ -21,6 +21,7 @@ struct _TamUnit
 	float Matrix[16];
 	float UnitNamePos[4];
 	float MoveSpeed;
+	Textures * NameTex;
 };
 
 class CTamScene

@@ -27,7 +27,9 @@ CUnitsList UnitsList;
 CSoundSys * SoundSysTest;
 extern float zoomsize;
 extern float touchX;
+extern float touchY;
 extern float Touchang;
+extern float TouchangY;
 float NoTouchMoveTimes=0.0f;
 
 float TouchMoveOverride=0.0f;
@@ -99,9 +101,15 @@ void UpdataKeys()
 		moveX=moveX-2.0f;
 	}
 	if(NoTouchMoveTimes<=0.01f)
+	{
 		moveX=moveX-touchX*TouchMoveOverride;
+		PosMove[0]=touchX*TouchMoveOverride*moveZSpeed;
+		PosMove[1]=-touchY*TouchMoveOverride*moveZSpeed;
+	}
 	if(Touchang!=Touchang) 
 		Touchang=0.0f;
+	if(TouchangY!=TouchangY)
+		TouchangY=0.0f;
 	if(zoomsize!=zoomsize) 
 		zoomsize=0.0f;
 	moveZ=moveZ-zoomsize*TouchZoomOverride;
@@ -109,6 +117,12 @@ void UpdataKeys()
 		Touchang=1000.0f;
 	if(Touchang<-1000.0f) 
 		Touchang=-1000.0f;
+	if(TouchangY>1000.0f) 
+		TouchangY=1000.0f;
+	if(TouchangY<-1000.0f) 
+		TouchangY=-1000.0f;
+	PosTurn[0]=Touchang/500.0f;
+	PosTurn[1]=TouchangY/500.0f;
 	GoX=GoX+Touchang*0.01f;
 	//LimitZ
 	//if(moveZ<0.0f) moveZ=0.0f;
@@ -118,10 +132,14 @@ void UpdataKeys()
 	TestNum=moveZ;
 	Touchang=Touchang*0.90f;
 	if(abs(Touchang)<0.0001f) Touchang=0.0f;
+	TouchangY=TouchangY*0.90f;
+	if(abs(TouchangY)<0.0001f) TouchangY=0.0f;
 	zoomsize=zoomsize*0.90f;
 	if(abs(zoomsize)<0.0001f) zoomsize=0.0f;
 	touchX=touchX*0.75f;
+	touchY=touchY*0.75f;
 	if(abs(touchX)<0.0001f) touchX=0.0f;
+	if(abs(touchY)<0.0001f) touchY=0.0f;
 	NoTouchMoveTimes=max(0.0f,NoTouchMoveTimes-1.0f);
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_HOME] == TRUE)
 	{
