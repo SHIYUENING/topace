@@ -5,6 +5,7 @@
 #include "DrawQUAD.h"
 WIN32_FIND_DATAW   filedata; 
 extern CFONTS2D FONTS2D;
+extern int SceneSelect;
 wchar_t * FindFileWithExtName(wchar_t * ExtName)
 {
 	if(!ExtName) return 0;
@@ -150,6 +151,11 @@ void CTamScene::Draw(bool Translucent,_TAM_Mesh_EXT_Type DrawType)
 {
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
+		if(SceneSelect!=i)
+		{
+			if(SceneSelect>=0)
+				continue;
+		}
 		if(TamList[i].Model)
 		{
 			CommonMatrixs[CO_Matrix_World].Push();
