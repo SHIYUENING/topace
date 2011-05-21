@@ -40,9 +40,10 @@ __m128 ViewTGTPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 __m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
 float PosMove[3]={0.0f};
 float PosTurn[2]={0.0f};
-float LimitZ[2]={3500.0f,100.0f};
+float LimitZ[2]={3500.0f,1900.0f};
 float ViewLen=100.0f;
 extern float TestNum;
+float MoveLimit=0.0f;
 void UpdataKeys()
 {
 	PosMove[0]=0.0f;
@@ -103,8 +104,8 @@ void UpdataKeys()
 	if(NoTouchMoveTimes<=0.01f)
 	{
 		moveX=moveX-touchX*TouchMoveOverride;
-		PosMove[0]=touchX*TouchMoveOverride*moveZSpeed;
-		PosMove[1]=-touchY*TouchMoveOverride*moveZSpeed;
+		PosMove[0]+=touchX*TouchMoveOverride*moveZSpeed;
+		PosMove[1]+=-touchY*TouchMoveOverride*moveZSpeed;
 	}
 	if(Touchang!=Touchang) 
 		Touchang=0.0f;
@@ -112,7 +113,7 @@ void UpdataKeys()
 		TouchangY=0.0f;
 	if(zoomsize!=zoomsize) 
 		zoomsize=0.0f;
-	moveZ=moveZ-zoomsize*TouchZoomOverride;
+	moveZ=moveZ-zoomsize*TouchZoomOverride*moveZSpeed*0.1f;
 	if(Touchang>1000.0f) 
 		Touchang=1000.0f;
 	if(Touchang<-1000.0f) 
@@ -121,8 +122,8 @@ void UpdataKeys()
 		TouchangY=1000.0f;
 	if(TouchangY<-1000.0f) 
 		TouchangY=-1000.0f;
-	PosTurn[0]=Touchang/500.0f;
-	PosTurn[1]=TouchangY/500.0f;
+	PosTurn[0]+=Touchang/500.0f;
+	PosTurn[1]+=TouchangY/500.0f;
 	GoX=GoX+Touchang*0.01f;
 	//LimitZ
 	//if(moveZ<0.0f) moveZ=0.0f;

@@ -154,7 +154,7 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 {
 	GameSet.winW=WindowWidth=width;
 	GameSet.winH=WindowHeight=height;
-	CommonMatrixs[CO_Matrix_Proj].PerspectiveProjectionFov(45.0, (double)width/(double)height, 0.5,  10000.0);
+	CommonMatrixs[CO_Matrix_Proj].PerspectiveProjectionFov(45.0, (double)width/(double)height, 1.0,  12000.0);
 	//CO_MatrixPerspectiveProjectionFov(45.0, (double)width/(double)height, 5.0,  100000.0); 
 	//CO_SetPMatrixD(CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix);
 	//GLdouble PMatrix[16];
@@ -232,7 +232,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 		}
 		else															// Otherwise (If Fullscreen Mode Was Successful)
 		{
-			ShowCursor (FALSE);											// Turn Off The Cursor
+			//ShowCursor (FALSE);											// Turn Off The Cursor
 			windowStyle = WS_POPUP;										// Set The WindowStyle To WS_POPUP (Popup Window)
 			windowExtendedStyle |= WS_EX_TOPMOST;						// Set The Extended Window Style To WS_EX_TOPMOST
 		}																// (Top Window Covering Everything Else)
