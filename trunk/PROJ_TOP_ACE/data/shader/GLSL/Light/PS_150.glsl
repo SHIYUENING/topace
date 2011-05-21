@@ -98,7 +98,7 @@ void main()
 	float NOF=1.0-abs(dot(Normal,vec3(0.0,0.0,1.0)));
 	float SpecularMat=(SpecularTexColor.y+SpecularTexColor.x*Material_specularlevel);
 	FragColor=DiffuseTexColor *(Global_Ambient+DiffuseColor+Material_emission*SpecularTexColor.a)+SpecularColor*SpecularMat;
-	FragColor=FragColor*(1.0-ReflectiveSet)+ReflectiveSet*textureCube(RefCubeTex, ReflectiveWorld.xyz);
+	FragColor=FragColor*(1.0-ReflectiveSet)+ReflectiveSet*texture(RefCubeTex, ReflectiveWorld.xyz);
 	FragColor.w=DiffuseTexColor.w*Material_diffuse.w+(SpecularColor.w+max(0.0f,NOF)*0.25)*SpecularMat;
 	//FragColor=vec4(SpecularMat);
     return;

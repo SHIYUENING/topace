@@ -94,7 +94,7 @@ inline void SetTamSceneCheck()
 			ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
 			ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
 			ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
-			ThreadDataDraw.DrawToData.LimitZ[1]=100.0f;
+			ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
 			ThreadDataDraw.DrawToData.ChangePos=1;
 			SceneSelect=-1;
 			InputPos[2]=0;
@@ -494,7 +494,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 			DrawShadowMapNULL();
 			//DrawShadowMap(&TopAceModelTest,ThreadDataDraw.DataList[4].Matrix,ThreadDataDraw.DataList[5].Matrix);
 		}
-		else if(TamScene.TamList.size()>SceneSelect)
+		else if(int(TamScene.TamList.size())>SceneSelect)
 		{
 			float ShadowUnitMatrixTMP[16];
 			Easy_matrix_mult(ShadowUnitMatrixTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Matrix);

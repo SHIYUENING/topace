@@ -18,6 +18,7 @@ struct _TamUnit
 	bool DrawModel;
 	bool DrawText;
 	bool DrawName;
+	int DrawScene;
 	float Matrix[16];
 	float UnitNamePos[4];
 	float MoveSpeed;
