@@ -216,7 +216,25 @@ void CTamScene::GetUnitWinPos(float * UnitWinPos,int UnitID)
 	UnitWinPos[4]=(float)TamList[UnitID].UnitNamePos[3];
 }
 
-
+inline void DrawUnitLine(float * UnitWinPos,float * WorldPos)
+{
+	int viewports[]={0,0,GameSet.winW,GameSet.winH};
+	double windowCoordinate[3];
+	CommonMatrixs[CO_Matrix_ModelView].Push();
+	CommonMatrixs[CO_Matrix_ModelView].MultD(CommonMatrixs[CO_Matrix_World].LinkList->Matrix);
+	PointProjectD(
+		WorldPos[0],
+		WorldPos[1],
+		WorldPos[2],
+		CommonMatrixs[CO_Matrix_ModelView].LinkList->Matrix,
+		CommonMatrixs[CO_Matrix_Proj].LinkList->Matrix,
+		viewports,
+		windowCoordinate);
+	CommonMatrixs[CO_Matrix_ModelView].Pop();
+	UnitWinPos[0]=(float)windowCoordinate[0];
+	UnitWinPos[1]=(float)windowCoordinate[1];
+	UnitWinPos[2]=(float)windowCoordinate[2];
+}
 void CTamScene::DrawUnitLine(int UnitID,int winW,int winH)
 {
 	float LinePoss[6]={0.0f,0.0f,0.5f,float(winW/2),float(winH/2),0.5f};
