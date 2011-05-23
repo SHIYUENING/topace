@@ -24,6 +24,10 @@ wchar_t * FindFileWithExtName(wchar_t * ExtName)
 CTamScene::CTamScene(void)
 	:ModelNum(0)
 {
+	NameScale[0]=0.5f;
+	NameScale[1]=0.5f;
+	NameMove[0]=0.0f;
+	NameMove[1]=60.0f;
 }
 
 
@@ -134,6 +138,8 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	TamUnit->DrawModel=true;
 	TamUnit->DrawName=true;
 	TamUnit->DrawText=true;
+	TamUnit->WinPosDraw[0]=0.0f;
+	TamUnit->WinPosDraw[1]=0.0f;
 	__m128 DrawMatrix[4];
 	Easy_matrix_identity(DrawMatrix);
 	Easy_matrix_scale(DrawMatrix,_mm_set_ps(1.0,TamUnit->scale[2],TamUnit->scale[1],TamUnit->scale[0]));
@@ -216,7 +222,7 @@ void CTamScene::GetUnitWinPos(float * UnitWinPos,int UnitID)
 	UnitWinPos[4]=(float)TamList[UnitID].UnitNamePos[3];
 }
 
-inline void DrawUnitLine(float * UnitWinPos,float * WorldPos)
+inline void Get_Unit_Win_Pos(float * UnitWinPos,float * WorldPos)
 {
 	int viewports[]={0,0,GameSet.winW,GameSet.winH};
 	double windowCoordinate[3];
@@ -234,6 +240,32 @@ inline void DrawUnitLine(float * UnitWinPos,float * WorldPos)
 	UnitWinPos[0]=(float)windowCoordinate[0];
 	UnitWinPos[1]=(float)windowCoordinate[1];
 	UnitWinPos[2]=(float)windowCoordinate[2];
+}
+inline void DrawTestLine(float * Pos1,float *Pos2)
+{
+	float LinePoss[6]={Pos1[0],Pos1[1],0.5f,Pos2[0],Pos2[1],0.5f};
+	glDisable( GL_CULL_FACE );
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,GameSet.winW,0,GameSet.winH,-1,1);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glVertexPointer( 3, GL_FLOAT, 0, LinePoss );
+	glDrawArrays(GL_LINES,0,2);
+	glDisableClientState( GL_VERTEX_ARRAY );
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_TEXTURE_2D);
 }
 void CTamScene::DrawUnitLine(int UnitID,int winW,int winH)
 {
@@ -287,8 +319,8 @@ void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 		PosTMPY=0;
 		if(TamList[i].NameTex)
 		{
-			PosTMPX=TamList[i].NameTex->TexW/2;
-			PosTMPY=TamList[i].NameTex->TexH/2;
+			PosTMPX=int(float(TamList[i].NameTex->TexW)*NameScale[0]);
+			PosTMPY=int(float(TamList[i].NameTex->TexH)*NameScale[1]);
 		}
 		else
 		{
@@ -303,10 +335,14 @@ void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 			PosY=PosY+MaxNameH;
 			MaxNameH=0;
 		}
-		TamList[i].UnitNamePos[0]=float(PosX);
-		TamList[i].UnitNamePos[1]=float(PosY);
-		TamList[i].UnitNamePos[2]=float(PosX+PosTMPX);
-		TamList[i].UnitNamePos[3]=float(PosY+PosTMPY);
+		TamList[i].WinPosOut[0]=float(PosX+PosTMPX/2);
+		TamList[i].WinPosOut[1]=float(PosY+PosTMPY/2);
+		TamList[i].DrawSizehalf[0]=float(PosTMPX/2);
+		TamList[i].DrawSizehalf[1]=float(PosTMPY/2);
+		TamList[i].NamePosDraw[0]=TamList[i].UnitNamePos[0]=float(PosX);
+		TamList[i].NamePosDraw[1]=TamList[i].UnitNamePos[1]=float(PosY);
+		TamList[i].NamePosDraw[2]=TamList[i].UnitNamePos[2]=float(PosX+PosTMPX);
+		TamList[i].NamePosDraw[3]=TamList[i].UnitNamePos[3]=float(PosY+PosTMPY);
 		PosX=PosX+PosTMPX;
 		/*
 		TamList[i].UnitNamePos[0]=float((i%Wnum)*(winW/Wnum));
@@ -316,6 +352,14 @@ void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 	}
 }
 
+inline bool PosInScreem(float * Pos)
+{
+	if(Pos[0]>GameSet.winW) return false;
+	if(Pos[1]>GameSet.winH) return false;
+	if(Pos[0]<0) return false;
+	if(Pos[1]<0) return false;
+	return true;
+}
 
 void CTamScene::DrawUnitName(int winW,int winH)
 {
@@ -323,6 +367,12 @@ void CTamScene::DrawUnitName(int winW,int winH)
 	{
 		if(!TamList[i].DrawName)continue;
 		DrawUnitLine(i,winW,winH);
+		float UnitWinPos[3];
+		Get_Unit_Win_Pos(UnitWinPos,TamList[i].Pos);
+		if(PosInScreem(UnitWinPos))
+		{
+		}
+
 		if(TamList[i].NameTex)
 		{
 		DrawQUADEX(TamList[i].NameTex->TexID,
@@ -345,11 +395,15 @@ int CTamScene::GetCheck(int Posx,int Posy)
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		if(TamList[i].DrawScene==0) continue;
-		if(Posx<TamList[i].UnitNamePos[0]) continue;
+		if(Posx<(TamList[i].WinPosDraw[0]-TamList[i].DrawSizehalf[0]))continue;
+		if(Posx>(TamList[i].WinPosDraw[0]+TamList[i].DrawSizehalf[0]))continue;
+		if(Posy<(TamList[i].WinPosDraw[1]-TamList[i].DrawSizehalf[1]))continue;
+		if(Posy>(TamList[i].WinPosDraw[1]+TamList[i].DrawSizehalf[1]))continue;
+		/*if(Posx<TamList[i].UnitNamePos[0]) continue;
 		if(Posx>TamList[i].UnitNamePos[2]) continue;
 		if(Posy<TamList[i].UnitNamePos[1]) continue;
 		if(Posy>TamList[i].UnitNamePos[3]) continue;
-		/*
+		
 		if(Posx<TamList[i].UnitNamePos[0]) continue;
 		if(Posy<TamList[i].UnitNamePos[1]) continue;
 		if(Posx>(TamList[i].UnitNamePos[0]+2*(TamList[i].UnitNamePos[2]-TamList[i].UnitNamePos[0])))continue;
@@ -357,4 +411,88 @@ int CTamScene::GetCheck(int Posx,int Posy)
 		return i;
 	}
 	return-1;
+}
+inline void MovePointInLine(float PosTGT[2],float PosMove[2],float PosOut[2])
+{
+	PosOut[0]=PosTGT[0]*0.2f+PosMove[0]*0.8f;
+	PosOut[1]=PosTGT[1]*0.2f+PosMove[1]*0.8f;
+	/*
+	PosOut[0]=PosTGT[0]-PosMove[0];
+	PosOut[1]=PosTGT[1]-PosMove[1];
+	PosOut[0]=PosOut[0]*0.1+PosMove[0];
+	PosOut[1]=PosOut[1]*0.1+PosMove[1];
+	*/
+}
+
+void CTamScene::UpdataPos(void)
+{
+	float WinPosTMP[3];
+	int TMPSize=0;
+	for(unsigned int i=0;i<TamList.size();i++)
+	{
+		Get_Unit_Win_Pos(WinPosTMP,TamList[i].Pos);
+		TamList[i].PosInScreem=PosInScreem(WinPosTMP);
+		if(TamList[i].PosInScreem)
+		{
+			TamList[i].WinPosIn[0]=WinPosTMP[0];
+			TamList[i].WinPosIn[1]=WinPosTMP[1];
+			WinPosTMP[0]+=NameMove[0];
+			WinPosTMP[1]+=NameMove[1];
+			MovePointInLine(WinPosTMP,TamList[i].WinPosDraw,TamList[i].WinPosDraw);
+		}
+		else 
+			MovePointInLine(TamList[i].WinPosOut,TamList[i].WinPosDraw,TamList[i].WinPosDraw);
+		//TamList[i].WinPosDraw[0]=TamList[i].WinPosOut[0];
+		//TamList[i].WinPosDraw[1]=TamList[i].WinPosOut[1];
+		/*
+		Get_Unit_Win_Pos(TamList[i].UnitWinPosF,TamList[i].Pos);
+		if((!TamList[i].NameTex)||(!PosInScreem(TamList[i].UnitWinPosF)))
+		{
+			TamList[i].UnitNamePos2[0]=TamList[i].UnitNamePos[0];
+			TamList[i].UnitNamePos2[1]=TamList[i].UnitNamePos[1];
+			TamList[i].UnitNamePos2[2]=TamList[i].UnitNamePos[2];
+			TamList[i].UnitNamePos2[3]=TamList[i].UnitNamePos[3];
+			continue;
+		}
+		TMPSize=TamList[i].NameTex->TexW/2;
+		TamList[i].UnitNamePos2[0]=TamList[i].UnitWinPosF[0]-TMPSize;
+		TamList[i].UnitNamePos2[2]=TamList[i].UnitWinPosF[0]+TMPSize;
+		TMPSize=TamList[i].NameTex->TexH/2;
+		TamList[i].UnitNamePos2[1]=TamList[i].UnitWinPosF[1]-TMPSize;
+		TamList[i].UnitNamePos2[3]=TamList[i].UnitWinPosF[1]+TMPSize;*/
+	}
+}
+inline void DrawNameMark()
+{
+}
+
+void CTamScene::DrawUnitName(void)
+{
+	for(unsigned int i=0;i<TamList.size();i++)
+	{
+		if(TamList[i].NameTex)
+		{
+			//DrawTestLine(TamList[i].WinPosIn,TamList[i].WinPosOut);
+			if(TamList[i].NameTex->TexType==IS_DDS)
+			DrawQUADEX(TamList[i].NameTex->TexID,
+				TamList[i].WinPosDraw[0]-TamList[i].DrawSizehalf[0],
+				TamList[i].WinPosDraw[0]+TamList[i].DrawSizehalf[0],
+				TamList[i].WinPosDraw[1]-TamList[i].DrawSizehalf[1],
+				TamList[i].WinPosDraw[1]+TamList[i].DrawSizehalf[1],
+				GameSet.winW,GameSet.winH);
+			if(TamList[i].NameTex->TexType==IS_TGA)
+				DrawQUADEX(TamList[i].NameTex->TexID,
+				TamList[i].WinPosDraw[0]-TamList[i].DrawSizehalf[0],
+				TamList[i].WinPosDraw[0]+TamList[i].DrawSizehalf[0],
+				TamList[i].WinPosDraw[1]+TamList[i].DrawSizehalf[1],
+				TamList[i].WinPosDraw[1]-TamList[i].DrawSizehalf[1],
+				GameSet.winW,GameSet.winH);
+		}
+		else
+		FONTS2D.DrawTexts(
+			TamList[i].Name,
+			int(TamList[i].WinPosDraw[0]-TamList[i].DrawSizehalf[0]),
+			int(TamList[i].WinPosDraw[1]-TamList[i].DrawSizehalf[1]),
+			GameSet.winW,GameSet.winH,GameSet.winW,32);
+	}
 }

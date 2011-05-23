@@ -21,7 +21,15 @@ struct _TamUnit
 	int DrawScene;
 	float Matrix[16];
 	float UnitNamePos[4];
+	float UnitNamePos2[4];
 	float MoveSpeed;
+	float UnitWinPosF[3];
+	float WinPosDraw[3];
+	float WinPosOut[3];//out Screem
+	float WinPosIn[3];//in Screem
+	bool PosInScreem;
+	float NamePosDraw[4];
+	float DrawSizehalf[2];
 	Textures * NameTex;
 };
 
@@ -43,6 +51,10 @@ public:
 	void SetUnitNamePos(int winW,int winH,int Wnum=4);
 	void DrawUnitName(int winW,int winH);
 	int GetCheck(int Posx,int Posy);
+	void UpdataPos(void);
+	void DrawUnitName(void);
+	float NameScale[2];
+	float NameMove[2];
 };
 
 #endif

@@ -481,7 +481,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	//DrawTestLines();
-	
+	TamScene.UpdataPos();
 	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	WaterTimeSet[0]=WaterTimeSet[0]+0.0001f;
 	WaterTimeSet[1]=WaterTimeSet[1]+0.0002f;
@@ -538,8 +538,8 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	glDisable(GL_MULTISAMPLE_ARB);
 
-	
-	TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
+	TamScene.DrawUnitName();
+	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
