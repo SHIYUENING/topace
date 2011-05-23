@@ -100,6 +100,7 @@ inline void SetTamSceneCheck()
 			InputPos[2]=0;
 			return;
 		}
+		if(SceneSelect>0) return;
 		int Checked=TamScene.GetCheck(InputPos[0],InputPos[1]);
 		SceneSelect=Checked>-1?Checked:SceneSelect;
 		if(Checked>=0)

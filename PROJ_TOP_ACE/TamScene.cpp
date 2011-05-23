@@ -414,6 +414,11 @@ int CTamScene::GetCheck(int Posx,int Posy)
 }
 inline void MovePointInLine(float PosTGT[2],float PosMove[2],float PosOut[2])
 {
+	if(((PosTGT[0]-PosMove[0])*(PosTGT[0]-PosMove[0])+(PosTGT[1]-PosMove[1])*(PosTGT[1]-PosMove[1]))<400.0f)
+	{
+		PosOut[0]=PosTGT[0];
+		PosOut[1]=PosTGT[1];
+	}
 	PosOut[0]=PosTGT[0]*0.2f+PosMove[0]*0.8f;
 	PosOut[1]=PosTGT[1]*0.2f+PosMove[1]*0.8f;
 	/*
@@ -431,7 +436,23 @@ void CTamScene::UpdataPos(void)
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		Get_Unit_Win_Pos(WinPosTMP,TamList[i].Pos);
+		
+		if(SceneSelect>=0)
+		{
+			if(SceneSelect==i)
+			{
+				TamList[i].WinPosDraw[0]=float(GameSet.winW/2);
+				TamList[i].WinPosDraw[1]=float(GameSet.winH-50);
+			}
+			else
+			{
+				TamList[i].WinPosDraw[0]=TamList[i].WinPosOut[0];
+				TamList[i].WinPosDraw[1]=TamList[i].WinPosOut[1];
+			}
+			continue;
+		}
 		TamList[i].PosInScreem=PosInScreem(WinPosTMP);
+
 		if(TamList[i].PosInScreem)
 		{
 			TamList[i].WinPosIn[0]=WinPosTMP[0];
@@ -462,19 +483,59 @@ void CTamScene::UpdataPos(void)
 		TamList[i].UnitNamePos2[3]=TamList[i].UnitWinPosF[1]+TMPSize;*/
 	}
 }
-inline void DrawNameMark()
+inline void DrawNameMark(float * NamePos, float * PosTGT)
 {
+	float MaskTMP[9]={
+				NamePos[0]-2.0f,NamePos[1]-16.0f,0.5f,
+				NamePos[0]+2.0f,NamePos[1]-16.0f,0.5f,
+				PosTGT[0],PosTGT[1],0.5f};
+	glColor3f(0.5f,0.5f,1.0f);
+	glDisable( GL_CULL_FACE );
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPushMatrix();										// Store The Projection Matrix
+	glLoadIdentity();									// Reset The Projection Matrix
+	glOrtho(0,GameSet.winW,0,GameSet.winH,-1,1);							// Set Up An Ortho Screen
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPushMatrix();										// Store The Modelview Matrix
+	glLoadIdentity();									// Reset The Modelview Matrix
+	glEnableClientState( GL_VERTEX_ARRAY );
+	glVertexPointer( 3, GL_FLOAT, 0, MaskTMP );
+	glDrawArrays(GL_TRIANGLES,0,3);
+	glDisableClientState( GL_VERTEX_ARRAY );
+
+	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+	glPopMatrix();										// Restore The Old Projection Matrix
+	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_TEXTURE_2D);
+	glColor3f(1.0f,1.0f,1.0f);
 }
 
 void CTamScene::DrawUnitName(void)
 {
+	float WinPosTMP[3];
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
+		if(SceneSelect>=0)
+		{
+			if(SceneSelect!=i)
+				continue;
+		}
+		if(SceneSelect<0)
+		if(TamList[i].PosInScreem)
+		{
+			Get_Unit_Win_Pos(WinPosTMP,TamList[i].Pos);
+			DrawNameMark(TamList[i].WinPosDraw,WinPosTMP);
+		}
 		if(TamList[i].NameTex)
 		{
 			//DrawTestLine(TamList[i].WinPosIn,TamList[i].WinPosOut);
 			if(TamList[i].NameTex->TexType==IS_DDS)
-			DrawQUADEX(TamList[i].NameTex->TexID,
+				DrawQUADEX(TamList[i].NameTex->TexID,
 				TamList[i].WinPosDraw[0]-TamList[i].DrawSizehalf[0],
 				TamList[i].WinPosDraw[0]+TamList[i].DrawSizehalf[0],
 				TamList[i].WinPosDraw[1]-TamList[i].DrawSizehalf[1],
