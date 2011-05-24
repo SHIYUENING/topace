@@ -103,6 +103,7 @@
     </ClCompile>
     <ClCompile Include="TAMTEX.cpp" />
     <ClCompile Include="TamScene.cpp" />
+    <ClCompile Include="TABTN.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -219,6 +220,7 @@
     </ClInclude>
     <ClInclude Include="TAMTEX.h" />
     <ClInclude Include="TamScene.h" />
+    <ClInclude Include="TABTN.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">

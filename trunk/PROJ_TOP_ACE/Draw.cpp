@@ -20,6 +20,7 @@
 #include "TAMFT3D.h"
 #include "DrawTests.h"
 #include "TamScene.h"
+#include "TABTN.h"
 float extern angleR;
 float extern Test3dsFrame;
 float extern maxFreme;
@@ -76,6 +77,9 @@ extern int InputPos[3];
 UINT uMsgDraw=0;
 float TestNum=0.0f;
 int SceneSelect=-1;
+CTABTN BTNNavi,BTNExit;
+bool DrawNavi=false;
+
 inline void SetTamSceneCheck()
 {
 	//int ChechID=-1;
@@ -83,24 +87,27 @@ inline void SetTamSceneCheck()
 		ThreadDataDraw.DrawToData.ChangePos=0;
 	if(InputPos[2])
 	{
-		if(InputPos[0]>GameSet.winW-64)
-		if(InputPos[1]>GameSet.winH-64)
+		if(SceneSelect>=0)
 		{
-			moveZSpeed=25.0f;
-			ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
-			ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
-			ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-			ThreadDataDraw.DrawToData.ViewPos[0]=1200.0f;
-			ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
-			ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
-			ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
-			ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
-			ThreadDataDraw.DrawToData.ChangePos=1;
-			SceneSelect=-1;
-			InputPos[2]=0;
-			return;
+			if(BTNExit.GetCheck(InputPos[0],InputPos[1]))
+			{
+				moveZSpeed=25.0f;
+				ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
+				ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
+				ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
+				ThreadDataDraw.DrawToData.ViewPos[0]=1200.0f;
+				ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
+				ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
+				ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
+				ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
+				ThreadDataDraw.DrawToData.ChangePos=1;
+				SceneSelect=-1;
+				InputPos[2]=0;
+				return;
+			}
 		}
-		if(SceneSelect>0) return;
+
+		if(SceneSelect>=0) return;
 		int Checked=TamScene.GetCheck(InputPos[0],InputPos[1]);
 		SceneSelect=Checked>-1?Checked:SceneSelect;
 		if(Checked>=0)
@@ -263,7 +270,6 @@ bool InitDraw()
 	//DrawLoadingTex(&LoadingTex);ADD_LOG_Q("DrawLoadingTex OK");
 	LoadCubeTex();ADD_LOG_Q("LoadCubeTex OK");
 	
-	
 	WaterNormalTex.loadfile(L"data/sea/sea");
 	WaterNormalTex.LoadToVRAM();
 	WaterNormalTexID=WaterNormalTex.TexID;
@@ -272,7 +278,6 @@ bool InitDraw()
 	if(GameSet.Light>1)
 	{
 		InitFBO(GameSet.winW,GameSet.winH)==true?ADD_LOG_Q("InitFBO OK"):ADD_LOG_Q("InitFBO false");
-		
 	}
 	InitGLSL();ADD_LOG_Q("InitGLSL OK");
 	CDDS::SetAFNum(GameSet.AF);ADD_LOG_Q("SetAFNum OK");
@@ -298,7 +303,13 @@ bool InitDraw()
 		moveZSpeed=PosOrgZ/360.0f;*/
 		maxFreme=1.4f*(float)TopAceModelTest.testMAXFrame;
 	}
-
+	
+	BTNNavi.loadfile(L"data/Navi");
+	BTNNavi.ScaleSize(0.5f,0.5f);
+	BTNNavi.SetPos(GameSet.winW-BTNNavi.size[0],GameSet.winH-BTNNavi.size[1]);
+	BTNExit.loadfile(L"data/Exit");
+	BTNExit.ScaleSize(0.5f,0.5f);
+	BTNExit.SetPos(GameSet.winW-BTNExit.size[0],GameSet.winH-BTNExit.size[1]);
 	
 	char szPath[MAX_PATH];
 	char FontPath[MAX_PATH];
@@ -473,7 +484,21 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	RenderFaces=0;
 }
-
+void DrawUIs()
+{
+	if(SceneSelect>=0) 
+		BTNExit.Draw();
+	else
+	{
+		if(DrawNavi)
+		{
+		}
+		else
+		{
+			BTNNavi.Draw();
+		}
+	}
+}
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
 	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
@@ -541,6 +566,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 
 	TamScene.DrawUnitName();
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
+	DrawUIs();
 	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
