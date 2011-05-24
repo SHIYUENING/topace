@@ -189,6 +189,7 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ClCompile Include="TABTN.cpp" />
     <ClCompile Include="TALogSys.cpp" />
     <ClCompile Include="TAMFT3D.cpp" />
     <ClCompile Include="TamScene.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="SceneUnit.h" />
     <ClInclude Include="SoundSys.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="TABTN.h" />
     <ClInclude Include="TALogSys.h" />
     <ClInclude Include="TAMFT3D.h" />
     <ClInclude Include="TamScene.h" />
