@@ -3,9 +3,12 @@
 #include "FONTS2D.h"
 #include "IniFile.h"
 #include "DrawQUAD.h"
+#include "MGroup.h"
 WIN32_FIND_DATAW   filedata; 
 extern CFONTS2D FONTS2D;
 extern int SceneSelect;
+
+extern CMGroup MGroup;
 wchar_t * FindFileWithExtName(wchar_t * ExtName)
 {
 	if(!ExtName) return 0;
@@ -394,6 +397,7 @@ int CTamScene::GetCheck(int Posx,int Posy)
 {
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
+		if(!TamList[i].DrawName)continue;
 		if(TamList[i].DrawScene==0) continue;
 		if(Posx<(TamList[i].WinPosDraw[0]-TamList[i].DrawSizehalf[0]))continue;
 		if(Posx>(TamList[i].WinPosDraw[0]+TamList[i].DrawSizehalf[0]))continue;
@@ -435,6 +439,7 @@ void CTamScene::UpdataPos(void)
 	int TMPSize=0;
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
+		TamList[i].DrawName=MGroup.CheakName(TamList[i].Name);
 		Get_Unit_Win_Pos(WinPosTMP,TamList[i].Pos);
 		
 		if(SceneSelect>=0)
@@ -525,6 +530,7 @@ void CTamScene::DrawUnitName(void)
 			if(SceneSelect!=i)
 				continue;
 		}
+		if(!TamList[i].DrawName) continue;
 		if(SceneSelect<0)
 		if(TamList[i].PosInScreem)
 		{

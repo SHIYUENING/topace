@@ -183,6 +183,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="LockFPS.cpp" />
+    <ClCompile Include="MGroup.cpp" />
     <ClCompile Include="SceneUnit.cpp" />
     <ClCompile Include="SoundSys.cpp" />
     <ClCompile Include="System.cpp">
@@ -234,6 +235,7 @@
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="Load3DS.h" />
     <ClInclude Include="LockFPS.h" />
+    <ClInclude Include="MGroup.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneUnit.h" />
     <ClInclude Include="SoundSys.h" />

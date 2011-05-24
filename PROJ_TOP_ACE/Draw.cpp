@@ -21,6 +21,7 @@
 #include "DrawTests.h"
 #include "TamScene.h"
 #include "TABTN.h"
+#include "MGroup.h"
 float extern angleR;
 float extern Test3dsFrame;
 float extern maxFreme;
@@ -79,7 +80,7 @@ float TestNum=0.0f;
 int SceneSelect=-1;
 CTABTN BTNNavi,BTNExit;
 bool DrawNavi=false;
-
+CMGroup MGroup;
 inline void SetTamSceneCheck()
 {
 	//int ChechID=-1;
@@ -106,7 +107,21 @@ inline void SetTamSceneCheck()
 				return;
 			}
 		}
-
+		if(SceneSelect==-1)
+		{
+			if(DrawNavi)
+			{
+				if(BTNExit.GetCheck(InputPos[0],InputPos[1]))
+					DrawNavi=false;
+				if(-1<MGroup.CheckBTN(InputPos[0],InputPos[1]))
+					DrawNavi=false;
+			}
+			else
+			{
+				if(BTNNavi.GetCheck(InputPos[0],InputPos[1]))
+					DrawNavi=true;
+			}
+		}
 		if(SceneSelect>=0) return;
 		int Checked=TamScene.GetCheck(InputPos[0],InputPos[1]);
 		SceneSelect=Checked>-1?Checked:SceneSelect;
@@ -310,7 +325,7 @@ bool InitDraw()
 	BTNExit.loadfile(L"data/Exit");
 	BTNExit.ScaleSize(0.5f,0.5f);
 	BTNExit.SetPos(GameSet.winW-BTNExit.size[0],GameSet.winH-BTNExit.size[1]);
-	
+	MGroup.LoadGroup();
 	char szPath[MAX_PATH];
 	char FontPath[MAX_PATH];
 	GetWindowsDirectoryA(szPath,sizeof(szPath));
@@ -492,6 +507,8 @@ void DrawUIs()
 	{
 		if(DrawNavi)
 		{
+			BTNExit.Draw();
+			MGroup.DrawBTN();
 		}
 		else
 		{
