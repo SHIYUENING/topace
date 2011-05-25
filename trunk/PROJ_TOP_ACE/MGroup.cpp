@@ -1,4 +1,4 @@
-#include "MGroup.h"
+ï»¿#include "MGroup.h"
 
 #include "Common.h"
 #include "IniFile.h"
@@ -15,37 +15,37 @@ CMGroup::~CMGroup(void)
 
 void CMGroup::LoadGroup(void)
 {
-	MGroup[0].BTN.loadfile(L"data\\Groups\\À¬»ø´¦Àí³§");
-	MGroup[1].BTN.loadfile(L"data\\Groups\\ÎÛË®´¦Àí³§");
-	MGroup[2].BTN.loadfile(L"data\\Groups\\Õş¸®»ú¹¹");
-	MGroup[3].BTN.loadfile(L"data\\Groups\\ÖØµã¼à¿ØÆóÒµÃûµ¥");
+	MGroup[0].BTN.loadfile(L"data\\Groups\\åƒåœ¾å¤„ç†å‚");
+	MGroup[1].BTN.loadfile(L"data\\Groups\\æ±¡æ°´å¤„ç†å‚");
+	MGroup[2].BTN.loadfile(L"data\\Groups\\æ”¿åºœæœºæ„");
+	MGroup[3].BTN.loadfile(L"data\\Groups\\é‡ç‚¹ç›‘æ§ä¼ä¸šåå•");
 	wstring SceneNameTMP;
 
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"¶«²¿À¬»ø´¦Àí³§";
+	SceneNameTMP+=L"ä¸œéƒ¨åƒåœ¾å¤„ç†å‚";
 	MGroup[0].ModelNames.push_back(SceneNameTMP);
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"»´ÄÏÊĞÒ½ÁÆ·ÏÎï´¦ÖÃÖĞĞÄ";
+	SceneNameTMP+=L"æ·®å—å¸‚åŒ»ç–—åºŸç‰©å¤„ç½®ä¸­å¿ƒ";
 	MGroup[0].ModelNames.push_back(SceneNameTMP);
 	
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"»´ÄÏÊĞµÚÒ»ÎÛË®´¦Àí³§";
+	SceneNameTMP+=L"æ·®å—å¸‚ç¬¬ä¸€æ±¡æ°´å¤„ç†å‚";
 	MGroup[1].ModelNames.push_back(SceneNameTMP);
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"»´ÄÏÊĞÎ÷²¿ÎÛË®´¦Àí³§";
+	SceneNameTMP+=L"æ·®å—å¸‚è¥¿éƒ¨æ±¡æ°´å¤„ç†å‚";
 	MGroup[1].ModelNames.push_back(SceneNameTMP);
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"É½ÄÏĞÂÇøÎÛË®´¦Àí³§";
+	SceneNameTMP+=L"å±±å—æ–°åŒºæ±¡æ°´å¤„ç†å‚";
 	MGroup[1].ModelNames.push_back(SceneNameTMP);
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"·ïÌ¨ÏØÎÛË®´¦Àí³§";
+	SceneNameTMP+=L"å‡¤å°å¿æ±¡æ°´å¤„ç†å‚";
 	MGroup[1].ModelNames.push_back(SceneNameTMP);
 	
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"»´ÄÏÊĞÕş¸®";
+	SceneNameTMP+=L"æ·®å—å¸‚æ”¿åºœ";
 	MGroup[2].ModelNames.push_back(SceneNameTMP);
 	SceneNameTMP.clear();
-	SceneNameTMP+=L"»´ÄÏÊĞ»·±£¾Ö";
+	SceneNameTMP+=L"æ·®å—å¸‚ç¯ä¿å±€";
 	MGroup[2].ModelNames.push_back(SceneNameTMP);
 
 	for(int i=0;i<4;i++)

@@ -9,6 +9,7 @@ using namespace std;
 //#define MODEL_PATH L##"data\\model\\"
 struct _TamUnit
 {
+	wchar_t text[2048];
 	wchar_t  Name[64];
 	float Pos[3];
 	float scale[3];
