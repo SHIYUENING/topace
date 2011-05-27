@@ -159,7 +159,7 @@ void CTAMFT3D::Draw3DText(wchar_t * DrawChar,float FontW,float FontH,float LineW
 		glScalef(FontW,FontH,1.0f);
 		if(DrawChar[CharIndex]>=0x20)
 		LinePosX=LinePosX+IntervalW+(DrawChar[CharIndex]>=0x100?1.0f:0.75f)*FontW;
-		if(LinePosX>LineW)
+		if((LinePosX+FontW)>LineW)
 		{
 			LinePosX=0;
 			LinePosY=LinePosY-max(FontH,lineH);
