@@ -105,6 +105,7 @@
     <ClCompile Include="TamScene.cpp" />
     <ClCompile Include="TABTN.cpp" />
     <ClCompile Include="MGroup.cpp" />
+    <ClCompile Include="GFXUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARB_Multisample.h">
@@ -223,6 +224,7 @@
     <ClInclude Include="TamScene.h" />
     <ClInclude Include="TABTN.h" />
     <ClInclude Include="MGroup.h" />
+    <ClInclude Include="GFXUI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TOP_ACE.ico">

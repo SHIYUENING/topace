@@ -15,6 +15,7 @@
 #include "ARB_MULTISAMPLE.h"
 #include "TALogSys.h"
 #include "Common.h"
+#include "GFXUI.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For glew32s.lib While Linking
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 //#pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
@@ -77,6 +78,7 @@ extern float TouchZoomOverride;
 int DoubleTouchTime=0;
 __m128 TouchPointOrg;
 int InputPos[3]={0};
+CGFXUI * pGfxUI=NULL;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -486,7 +488,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Get The Window Context
 	GL_Window* window = (GL_Window*)(GetWindowLong (hWnd, GWL_USERDATA));
-
+	pGfxUI->SetInput(uMsg,wParam,lParam);
 	switch (uMsg)														// Evaluate Window Message
 	{
 		case WM_SYSCOMMAND:												// Intercept System Commands
@@ -770,6 +772,11 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		window.init.isFullScreen = g_createFullScreen;
 		if (CreateWindowGL (&window) == TRUE)
 		{
+			CGFXUI::Init();
+			if(pGfxUI) delete pGfxUI;
+			pGfxUI =new CGFXUI;
+			pGfxUI->InitGFX();
+
 			ADD_LOG_Q("CreateWindow OK",NULL,NULL,NULL,NULL,true);
 			SwapHdc=window.hDC;
 			if(glewIsSupported("WGL_EXT_swap_control"))
@@ -784,7 +791,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			}
 			isMessagePumpActive = TRUE;
 			if(!InitDraw()) TerminateApplication(&window);
-
+			
 			BYTE digitizerStatus = (BYTE)GetSystemMetrics(SM_DIGITIZER);
 			TouchInput=true;
 			if ((digitizerStatus & (0x80 + 0x40)) == 0)
@@ -832,12 +839,16 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					else
 					{
 						Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);
+						glPushAttrib(GL_ALL_ATTRIB_BITS);
+						pGfxUI->Draw();
+						glPopAttrib();
 						glFlush();
 						hglSwapBuffers (SwapHdc);
 						if(GameSet.FPS>0) LockFPSRender.LockFPS();
 					}
 				}
 			}
+			if(pGfxUI) delete pGfxUI; pGfxUI=NULL;
 			ClearVRAM();
 			DestroyWindowGL (&window);
 		}
