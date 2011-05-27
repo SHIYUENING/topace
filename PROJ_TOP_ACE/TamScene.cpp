@@ -7,7 +7,7 @@
 WIN32_FIND_DATAW   filedata; 
 extern CFONTS2D FONTS2D;
 extern int SceneSelect;
-
+extern int SceneSelectReady;
 extern CMGroup MGroup;
 wchar_t * FindFileWithExtName(wchar_t * ExtName)
 {
@@ -127,6 +127,7 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	ModelPathTMP=ModelPath;
 	ModelPathTMP+=L"\\set.ini";
 	GetPrivateProfileStringW(L"set",L"name",L"No Name",TamUnit->Name,64,ModelPathTMP.c_str());
+	GetPrivateProfileStringW(L"set",L"text",L"No Text",TamUnit->text,2048,ModelPathTMP.c_str());
 
 	TamUnit->Pos[0]=GetIniFloat(L"pos",L"x",ModelPathTMP.c_str(),L"0.0");
 	TamUnit->Pos[1]=GetIniFloat(L"pos",L"y",ModelPathTMP.c_str(),L"0.0");
@@ -311,6 +312,8 @@ void CTamScene::DrawUnitLineAll(int winW,int winH)
 
 void CTamScene::SetUnitNamePos(int winW,int winH,int Wnum)
 {
+	NameScale[0]=float(GameSet.winW)/1920.0f;
+	NameScale[1]=float(GameSet.winW)/1920.0f;
 	int PosX=0;
 	int PosY=16;
 	int MaxNameH=0;
@@ -437,6 +440,8 @@ void CTamScene::UpdataPos(void)
 {
 	float WinPosTMP[3];
 	int TMPSize=0;
+	NameScale[0]=float(GameSet.winW)/1920.0f;
+	NameScale[1]=float(GameSet.winW)/1920.0f;
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		TamList[i].DrawName=MGroup.CheakName(TamList[i].Name);
@@ -445,6 +450,20 @@ void CTamScene::UpdataPos(void)
 		if(SceneSelect>=0)
 		{
 			if(SceneSelect==i)
+			{
+				TamList[i].WinPosDraw[0]=float(GameSet.winW/2);
+				TamList[i].WinPosDraw[1]=float(GameSet.winH-50);
+			}
+			else
+			{
+				TamList[i].WinPosDraw[0]=TamList[i].WinPosOut[0];
+				TamList[i].WinPosDraw[1]=TamList[i].WinPosOut[1];
+			}
+			continue;
+		}
+		if(SceneSelectReady>=0)
+		{
+			if(SceneSelectReady==i)
 			{
 				TamList[i].WinPosDraw[0]=float(GameSet.winW/2);
 				TamList[i].WinPosDraw[1]=float(GameSet.winH-50);

@@ -228,7 +228,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 }
 
 
-void CFONTS2D::DrawTexts(const wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH,float IntervalW)
+void CFONTS2D::DrawTexts(wchar_t * CharIn,int PosX,int PosY,int WinW,int WinH,int LineW,int lineH,float IntervalW)
 {
 	glEnable(GL_TEXTURE_2D);
 	//glDisable(GL_TEXTURE_2D); glEnable(GL_TEXTURE_RECTANGLE);

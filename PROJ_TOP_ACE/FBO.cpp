@@ -2,6 +2,7 @@
 #include "DrawQUAD.h"
 #include "TALogSys.h"
 #include "Common.h"
+#include "TAMFT3D.h"
 GLuint FBOID=0;	
 GLuint ScreemTex=0;
 GLuint ScreemTexDepth=0;
@@ -19,7 +20,7 @@ GLuint SSAOTex2=0;
 GLuint ShadowFBOID=0;
 GLuint ShadowTex=0;
 GLuint ShadowTexDepth=0;
-
+GLuint TextTex=0;
 bool SuppotFBO=false;
 int ScreemTexW=0;
 int ScreemTexH=0;
@@ -33,6 +34,7 @@ CTALogSys FBOLOG;
 GLint MAX_COLOR_ATTACHMENTS=0;
 
 GLfloat FBOMatrixTMP[16];
+extern CTAMFT3D TAMFT3D;
 int next_p2 ( int a )
 {
 	int rval=1;
@@ -122,7 +124,7 @@ bool InitFBO(int winW,int winH)
 	glGenFramebuffersEXT(1, &FBOID);
 	ScreemTex=InitTex2D(FBOWinW, FBOWinH,GL_LINEAR,GL_RGBA8,GL_RGBA,GL_UNSIGNED_BYTE,GL_TEXTURE_RECTANGLE);
 	//ScreemTexDepth=InitTex2D(ScreemTexW, ScreemTexH,GL_LINEAR,GL_DEPTH_COMPONENT,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE);
-	
+	TextTex=InitTex2D(2048,1024,GL_LINEAR,GL_RGBA,GL_RGBA,GL_UNSIGNED_BYTE);
 	if((GameSet.Shadow>0)||(GameSet.Light>1))
 	{ 
 		ADD_LOG_Q("Create Shadow FBO Start");
@@ -542,3 +544,34 @@ void FBOS_SSAO()
 	glEnable(GL_DEPTH_TEST);
 }
 */
+void DrawUnitText(wchar_t * UnitText)
+{
+	glEnable(GL_TEXTURE_2D);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, TextTex, 0);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glClear (GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glViewport(0,0,2048, 1024);
+	
+	glMatrixMode(GL_PROJECTION);glPushMatrix();GLfloat DrawTextMatrix[16]; CO_MatrixOrthogonalProjection(0.0f,2048,0.0f,1024,-1.0f,1.0f,DrawTextMatrix); glLoadMatrixf(DrawTextMatrix);
+	glMatrixMode(GL_MODELVIEW); glPushMatrix();glLoadIdentity(); //glTranslatef((float)PosX,(float)PosY,0.0f);
+	
+	//SceneFont.DrawTexts(UnitText,0,512-32,1024,512,1024,32);
+	glEnable(GL_BLEND);
+		glTranslatef(0.0f,1024.0f-64.0f,0.0f);
+	TAMFT3D.Draw3DText(UnitText,64,64,2048);
+	glEnable(GL_BLEND);
+
+	
+	glMatrixMode(GL_MODELVIEW);glPopMatrix();
+	glMatrixMode(GL_PROJECTION);glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopAttrib();
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_DEPTH_TEST);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+}

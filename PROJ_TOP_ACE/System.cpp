@@ -414,7 +414,7 @@ void DoDoubleTouch()
 	TouchPointOrg.m128_i32[3],
 	TouchInputposs[1].m128_i32[1]))
 	};
-	if((movePosTMP[0]>4000)&&(movePosTMP[1]>4000))
+	if((movePosTMP[0]>3000)&&(movePosTMP[1]>3000))
 	{
 	zoomsize=sqrt(float(Easy_vector_Getlenth_2i(
 					TouchPointOrg.m128_i32[0],
@@ -431,13 +431,13 @@ void DoDoubleTouch()
 	if(zoomsize>3.0f)
 		return;
 	}
-	if((movePosTMP[0]<3000)&&(movePosTMP[1]>7000))
+	if((movePosTMP[0]<3000)&&(movePosTMP[1]>5000))
 	{
 		Touchang=float(TouchPointOrg.m128_i32[2]-TouchInputposs[1].m128_i32[0]);
 		TouchangY=float(TouchPointOrg.m128_i32[3]-TouchInputposs[1].m128_i32[1]);
 		zoomsize=0.0f;
 	}
-	if((movePosTMP[1]<3000)&&(movePosTMP[0]>7000))
+	if((movePosTMP[1]<3000)&&(movePosTMP[0]>5000))
 	{
 		Touchang=float(TouchPointOrg.m128_i32[0]-TouchInputposs[0].m128_i32[0]);
 		TouchangY=float(TouchPointOrg.m128_i32[1]-TouchInputposs[0].m128_i32[1]);

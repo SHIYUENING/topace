@@ -32,7 +32,7 @@ extern float Touchang;
 extern float TouchangY;
 int extern ReadingThreadNum;
 CFONTS2D FONTS2D;
-CFONTS2D FONTS2DSimple;
+//CFONTS2D FONTS2DSimple;
 CTAMFT3D TAMFT3D;
 bool Inited=false;
 bool IsFirstInit=true;
@@ -78,9 +78,13 @@ extern int InputPos[3];
 UINT uMsgDraw=0;
 float TestNum=0.0f;
 int SceneSelect=-1;
+int SceneSelectReady=-1;
 CTABTN BTNNavi,BTNExit;
+CTABTN BTMWindow[2];
 bool DrawNavi=false;
 CMGroup MGroup;
+bool ShowText=false;
+extern GLuint TextTex;
 inline void SetTamSceneCheck()
 {
 	//int ChechID=-1;
@@ -102,9 +106,9 @@ inline void SetTamSceneCheck()
 				ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
 				ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
 				ThreadDataDraw.DrawToData.ChangePos=1;
-				SceneSelect=-1;
+				SceneSelectReady=SceneSelect=-1;
 				InputPos[2]=0;
-				return;
+				goto endcheck;
 			}
 		}
 		if(SceneSelect==-1)
@@ -119,15 +123,49 @@ inline void SetTamSceneCheck()
 			else
 			{
 				if(BTNNavi.GetCheck(InputPos[0],InputPos[1]))
+				{
 					DrawNavi=true;
+					ShowText=false;
+					SceneSelectReady=SceneSelect=-1;
+				}
 			}
 		}
-		if(SceneSelect>=0) return;
+		if(ShowText)
+		{
+			if(BTMWindow[0].GetCheck(InputPos[0],InputPos[1]))
+			{
+				SceneSelect=SceneSelectReady;
+				ShowText=false;
+				moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
+				float ScenePosTMP[3];
+				Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Pos);
+				ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
+				ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
+				ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
+				ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]-20.0f;
+				ThreadDataDraw.DrawToData.ViewPos[1]=ScenePosTMP[1]+50.0f;
+				ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
+				ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneSelect].Limitfar;
+				ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneSelect].Limitnear;
+				ThreadDataDraw.DrawToData.ChangePos=1;
+			}
+			if(BTMWindow[1].GetCheck(InputPos[0],InputPos[1]))
+			{
+				ShowText=false;
+				SceneSelectReady=SceneSelect=-1;
+			}
+			return;
+		}
+		if(DrawNavi) goto endcheck;
+		if(SceneSelect>=0) goto endcheck;
 		int Checked=TamScene.GetCheck(InputPos[0],InputPos[1]);
-		SceneSelect=Checked>-1?Checked:SceneSelect;
+		SceneSelectReady=Checked>-1?Checked:SceneSelectReady;
+
+		
 		if(Checked>=0)
 		{
-			moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
+			ShowText=true;
+			/*moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
 			float ScenePosTMP[3];
 			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Pos);
 			ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
@@ -138,12 +176,38 @@ inline void SetTamSceneCheck()
 			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
 			ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneSelect].Limitfar;
 			ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneSelect].Limitnear;
-			ThreadDataDraw.DrawToData.ChangePos=1;
+			ThreadDataDraw.DrawToData.ChangePos=1;*/
 		}
 		
 	}
+	endcheck:
 	InputPos[2]=0;
 	
+}
+void ShowTextAndBTN(wchar_t * Text)
+{
+	BTMWindow[0].Draw();
+	BTMWindow[1].Draw();
+	glColor4f(0.5f,0.5f,0.5f,0.75f);
+		DrawQUADEX(
+		0,
+		960-512,
+		960+512,
+		1080-768,
+		1080-256,
+		1920,
+		1080);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	DrawUnitText(Text);
+	DrawQUADEX(
+		TextTex,
+		960-512,
+		960+512,
+		1080-256,
+		1080-768,
+		1920,
+		1080);
+
 }
 void DrawLoadingTex(Textures * pLoadingTex)
 {
@@ -320,25 +384,32 @@ bool InitDraw()
 	}
 	
 	BTNNavi.loadfile(L"data/Navi");
-	BTNNavi.ScaleSize(0.5f,0.5f);
+	BTNNavi.ScaleSize(float(GameSet.winW)/1920.0f,float(GameSet.winW)/1920.0f);
 	BTNNavi.SetPos(GameSet.winW-BTNNavi.size[0],GameSet.winH-BTNNavi.size[1]);
 	BTNExit.loadfile(L"data/Exit");
-	BTNExit.ScaleSize(0.5f,0.5f);
+	BTNExit.ScaleSize(float(GameSet.winW)/1920.0f,float(GameSet.winW)/1920.0f);
 	BTNExit.SetPos(GameSet.winW-BTNExit.size[0],GameSet.winH-BTNExit.size[1]);
+	BTMWindow[0].loadfile(L"data/enter");
+	BTMWindow[1].loadfile(L"data/close");
+	BTMWindow[0].ScaleSize(float(GameSet.winW)/1920.0f,float(GameSet.winW)/1920.0f);
+	BTMWindow[1].ScaleSize(float(GameSet.winW)/1920.0f,float(GameSet.winW)/1920.0f);
+	float SetBTNPosTMPX=float(GameSet.winW)/1920.0f;
+	float SetBTNPosTMPY=float(GameSet.winH)/1080.0f;
+	BTMWindow[0].SetPos(GameSet.winW/2-BTMWindow[0].size[0]-int(512.0f*SetBTNPosTMPX),GameSet.winH-int(256.0f*SetBTNPosTMPY));
+	BTMWindow[1].SetPos(GameSet.winW/2+int(512.0f*SetBTNPosTMPX),GameSet.winH-int(256.0f*SetBTNPosTMPY));
 	MGroup.LoadGroup();
 	char szPath[MAX_PATH];
 	char FontPath[MAX_PATH];
 	GetWindowsDirectoryA(szPath,sizeof(szPath));
 	sprintf(FontPath,"%s/Fonts/simhei.ttf",szPath);
 	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
-	FONTS2DSimple.LoadFullWidthFont(FontPath,256,256);
+	//FONTS2DSimple.LoadFullWidthFont(FontPath,256,256);
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
-	
 	TamScene.LoadFile(L"data\\model\\");
 	TamScene.ToVRAM();
 	TamScene.SetUnitNamePos(GameSet.winW,GameSet.winH);
-	//TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
+	TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
 	ADD_LOG_Q("InitDraw() OK");
@@ -501,6 +572,15 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void DrawUIs()
 {
+	if(!DrawNavi)
+		TamScene.DrawUnitName();
+	if(ShowText)
+	{
+		if(SceneSelectReady>=0) 
+		{
+			ShowTextAndBTN(TamScene.TamList[SceneSelectReady].text);
+		}
+	}
 	if(SceneSelect>=0) 
 		BTNExit.Draw();
 	else
@@ -525,7 +605,6 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glPolygonMode(GL_FRONT_AND_BACK,DrawFrame?GL_LINE:GL_FILL);
 	//DrawTestLines();
 	TamScene.UpdataPos();
-	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	WaterTimeSet[0]=WaterTimeSet[0]+0.0001f;
 	WaterTimeSet[1]=WaterTimeSet[1]+0.0002f;
 	WaterTimeSet[2]=WaterTimeSet[2]+0.0004f;
@@ -580,10 +659,11 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	glDisable(GL_MULTISAMPLE_ARB);
-
-	TamScene.DrawUnitName();
+	
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	DrawUIs();
+	
+	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);
 	ThreadExchangeToDraw(&ThreadDataDraw);
