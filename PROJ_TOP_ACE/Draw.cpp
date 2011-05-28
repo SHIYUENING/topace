@@ -85,11 +85,75 @@ bool DrawNavi=false;
 CMGroup MGroup;
 bool ShowText=false;
 extern GLuint TextTex;
+extern char * Commandchar;
+extern char * pargchar;
+string strCommandchar[2];
+string strpargchar[2];
+inline void ToScene(int SceneID)
+{
+	if(SceneID>0)
+	if(SceneID<TamScene.TamList.size())
+	{
+		moveZSpeed=TamScene.TamList[SceneID].MoveSpeed;
+		float ScenePosTMP[3];
+		Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneID].Pos);
+		ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
+		ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
+		ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
+		ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]-20.0f;
+		ThreadDataDraw.DrawToData.ViewPos[1]=ScenePosTMP[1]+50.0f;
+		ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
+		ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneID].Limitfar;
+		ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneID].Limitnear;
+	}
+	if(SceneID<0)
+	{
+		moveZSpeed=25.0f;
+		ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
+		ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
+		ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
+		ThreadDataDraw.DrawToData.ViewPos[0]=1700.0f;
+		ThreadDataDraw.DrawToData.ViewPos[1]=1700.0f;
+		ThreadDataDraw.DrawToData.ViewPos[2]=1700.0f;
+		ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
+		ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
+	}
+}
 inline void SetTamSceneCheck()
 {
-	//int ChechID=-1;
+	
 	if(ThreadDataDraw.Global_Data.ChangePosOK)
 		ThreadDataDraw.DrawToData.ChangePos=0;
+	if(Commandchar)
+	{
+		strCommandchar[1]=strCommandchar[0];
+		strCommandchar[0].clear();
+		strCommandchar[0]+=Commandchar;
+	}
+	if(pargchar)
+	{
+		strpargchar[1]=strpargchar[0];
+		strpargchar[0].clear();
+		strpargchar[0]+=pargchar;
+	}
+	if(strcmp(strpargchar[0].c_str(),strpargchar[1].c_str())!=0)
+	{
+		ThreadDataDraw.DrawToData.ChangePos=1;
+		if(strcmp(strpargchar[0].c_str(),"淮南总揽")==0)
+		{
+			SceneSelectReady=SceneSelect=-1;
+			ToScene(-1);
+		}
+		int checknameTMP=TamScene.CheckName((char *)strpargchar[0].c_str());
+		if(checknameTMP>-1)
+		{
+			SceneSelectReady=SceneSelect=checknameTMP;
+			ToScene(checknameTMP);
+		}
+		ThreadDataDraw.DrawToData.ChangePos=1;
+	}
+	//if()
+	//int ChechID=-1;
 	if(InputPos[2])
 	{
 		if(SceneSelect>=0)

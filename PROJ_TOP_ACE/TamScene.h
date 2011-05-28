@@ -56,6 +56,7 @@ public:
 	void DrawUnitName(void);
 	float NameScale[2];
 	float NameMove[2];
+	int CheckName(char *SceneName);
 };
 
 #endif
