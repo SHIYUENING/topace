@@ -29,6 +29,8 @@ public:
 		if(strcmp(Commandchar,"blur")==0)
 		{
 			sscanf_s(pargchar,"%f,%f,%f",&(blurSet[0]),&(blurSet[1]),&(blurSet[2]));
+			blurSet[0]=blurSet[0]*0.5f;
+			blurSet[1]=blurSet[1]*0.5f;
 			blurSet[3]=blurSet[2];
 		}
 		//MessageBox(NULL,Commandchar,parg,MB_OK);
@@ -75,7 +77,7 @@ bool CGFXUI::InitGFX(void)
 		return false;
 	gfxLoader.SetRenderConfig(pRenderConfig);
 	pRenderConfig->SetRenderFlags(GFxRenderConfig::RF_EdgeAA);
-	pUIMovieDef = *(gfxLoader.CreateMovie("GFX/window.swf",
+	pUIMovieDef = *(gfxLoader.CreateMovie("window.swf",
 		                                  GFxLoader::LoadKeepBindData |
 										  GFxLoader::LoadWaitFrame1));
 	if(!pUIMovieDef)
