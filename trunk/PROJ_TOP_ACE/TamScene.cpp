@@ -582,3 +582,22 @@ void CTamScene::DrawUnitName(void)
 			GameSet.winW,GameSet.winH,GameSet.winW,32);
 	}
 }
+
+
+int CTamScene::CheckName(char *SceneName)
+{
+	int dwNum=MultiByteToWideChar(CP_ACP,0,SceneName,-1,NULL,0);
+	wchar_t * FileNameWTmp=new wchar_t[dwNum];
+	MultiByteToWideChar(CP_ACP,0,SceneName,-1,FileNameWTmp,dwNum);
+	
+	for(unsigned int i=0;i<TamList.size();i++)
+	{
+		if(0==wcscmp(FileNameWTmp,TamList[i].Name))
+		{
+			delete[] FileNameWTmp;
+			return i;
+		}
+	}
+	delete[] FileNameWTmp;
+	return -1;
+}
