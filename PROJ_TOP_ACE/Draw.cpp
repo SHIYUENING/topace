@@ -136,6 +136,7 @@ inline void SetTamSceneCheck()
 		strpargchar[0].clear();
 		strpargchar[0]+=pargchar;
 	}
+	if(strcmp(strCommandchar[0].c_str(),"SceneChange")==0)
 	if(strcmp(strpargchar[0].c_str(),strpargchar[1].c_str())!=0)
 	{
 		ThreadDataDraw.DrawToData.ChangePos=1;
@@ -662,7 +663,7 @@ void DrawUIs()
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
-	glClear ( GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);//
+	glClear ( GL_DEPTH_BUFFER_BIT);//
 
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -722,9 +723,10 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
 	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
+	BlurPass();
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
-	glDisable(GL_MULTISAMPLE_ARB);
+	//glDisable(GL_MULTISAMPLE_ARB);
 	
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	DrawUIs();
