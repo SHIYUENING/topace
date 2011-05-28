@@ -13,6 +13,8 @@ bool InitFBO(int winW,int winH);
 void DeinitFBO();
 void FBOS_BLOOM();
 void DrawUnitText(wchar_t * UnitText);
+void BlurPass(float blur);
+void BlurPass();
 //void FBOS_Star_Begin();
 //void FBOS_Star_End();
 //void TestTexFBO();

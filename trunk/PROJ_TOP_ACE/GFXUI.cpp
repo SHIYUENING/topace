@@ -13,6 +13,7 @@
 #pragma comment( lib, "winmm.lib" )	
 char * Commandchar=NULL;
 char * pargchar=NULL;
+float blurSet[4]={-1.0f};
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -21,10 +22,15 @@ public:
     {
 		if(Commandchar ) delete[] Commandchar;
 		if(pargchar ) delete[] pargchar;
-		Commandchar=new char[strlen(pcommand)+1];
-		pargchar=new char[strlen(parg)+1];
-		strcpy_s(Commandchar,strlen(pcommand)+1,pcommand);
-		strcpy_s(pargchar,strlen(parg)+1,parg);
+		Commandchar=new char[strlen(pcommand)+1];Commandchar[strlen(pcommand)]=0;
+		pargchar=new char[strlen(parg)+1];pargchar[strlen(parg)]=0;
+		strcpy(Commandchar,pcommand);
+		strcpy(pargchar,parg);
+		if(strcmp(Commandchar,"blur")==0)
+		{
+			sscanf_s(pargchar,"%f,%f,%f",&(blurSet[0]),&(blurSet[1]),&(blurSet[2]));
+			blurSet[3]=blurSet[2];
+		}
 		//MessageBox(NULL,Commandchar,parg,MB_OK);
     }
 };
@@ -78,6 +84,7 @@ bool CGFXUI::InitGFX(void)
 	if(!pUIMovie)
 		return false;
 	ChangeWin(0,0,GameSet.winW,GameSet.winH);
+	//ChangeWin(0,0,GameSet.winW/2,GameSet.winH/2);
 		// Advance the movie to the first frame
 	pUIMovie->Advance(0.0f, 0);
 
@@ -103,7 +110,7 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 		return;
 	pRenderer->SetDependentVideoMode();
 	pUIMovie->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
-	pUIMovie->SetViewScaleMode(GFxMovieView::SM_ShowAll);
+	pUIMovie->SetViewScaleMode(GFxMovieView::SM_ExactFit);
 	pUIMovie->SetViewAlignment(GFxMovieView::Align_CenterRight);
 	#endif
 }
