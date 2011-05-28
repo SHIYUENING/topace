@@ -663,7 +663,7 @@ void DrawUIs()
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
-	glClear ( GL_DEPTH_BUFFER_BIT);//
+	glClear ( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);//
 
 	
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -723,14 +723,14 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
 	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
-	BlurPass();
+	
 	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 	DrawFPS(oneframetimepointCPUSYS, oneframetimepointGPU);
 	//glDisable(GL_MULTISAMPLE_ARB);
 	
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	DrawUIs();
-	
+	BlurPass();
 	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);

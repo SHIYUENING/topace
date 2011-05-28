@@ -840,6 +840,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					{
 						Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);
 						glPushAttrib(GL_ALL_ATTRIB_BITS);
+						glColor4f(1.0f,1.0f,1.0f,1.0f);
 						pGfxUI->Draw();
 						glPopAttrib();
 						glFlush();

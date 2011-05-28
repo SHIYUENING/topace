@@ -588,7 +588,7 @@ void BlurPass(float blur)
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BlurTexID[0], 0);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
-	glClear (GL_COLOR_BUFFER_BIT);
+	//glClear (GL_COLOR_BUFFER_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
@@ -622,6 +622,7 @@ void BlurPass(float blur)
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	glPopAttrib();
 	DrawQUADEX_RECT(BlurTexID[1],0,GameSet.winW,GameSet.winH,0,GameSet.winW,GameSet.winH);
+	//DrawQUADEX_RECT(ScreemTex,0,GameSet.winW,GameSet.winH,0,GameSet.winW,GameSet.winH);
 	//DrawQUADEX(BlurTexID[1],0,GameSet.winW,0,GameSet.winH,GameSet.winW,GameSet.winH);
 	glDisable(GL_TEXTURE_RECTANGLE);
 	glEnable( GL_CULL_FACE );
@@ -631,6 +632,7 @@ float blurtime=-1.0f;
 extern float blurSet[4];
 void BlurPass()
 {
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
 	float blurnumtmp1=blurSet[0]-blurSet[1];
 	blurnumtmp1=blurnumtmp1*(blurSet[3]/blurSet[2]);
 //	if(blurSet[3]>0.0f)
@@ -638,4 +640,5 @@ void BlurPass()
 	if(blurnumtmp1>0.0f)
 	BlurPass(blurnumtmp1);
 	blurSet[3]=max(0.0f,blurSet[3]-1.0f);
+	glPopAttrib();
 }
