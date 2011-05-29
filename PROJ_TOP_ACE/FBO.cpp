@@ -585,6 +585,9 @@ void BlurPass(float blur)
 	glEnable(GL_TEXTURE_RECTANGLE);
 	glDisable(GL_TEXTURE_2D);
 	
+	glBindTexture(GL_TEXTURE_RECTANGLE, ScreemTex);
+	glCopyTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGBA, 0, 0,FBOWinW, FBOWinH, 0);
+
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BlurTexID[0], 0);
 	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
@@ -641,4 +644,49 @@ void BlurPass()
 	BlurPass(blurnumtmp1);
 	blurSet[3]=max(0.0f,blurSet[3]-1.0f);
 	glPopAttrib();
+}
+
+void BlurPass_2(float blur)
+{
+	float BlurPassMatrixTMP[16];
+	glPushAttrib(GL_VIEWPORT_BIT);
+	glViewport(0,0,GameSet.winW, GameSet.winH);
+	glEnable(GL_TEXTURE_RECTANGLE);
+	glDisable(GL_TEXTURE_2D);
+	
+	glBindTexture(GL_TEXTURE_RECTANGLE, ScreemTex);
+	glCopyTexImage2D(GL_TEXTURE_RECTANGLE, 0, GL_RGBA, 0, 0,FBOWinW, FBOWinH, 0);
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FBOID);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BlurTexID[0], 0);
+	glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	//glClear (GL_COLOR_BUFFER_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+	glEnableVertexAttribArray(AbLoc_Tex0);
+	glEnableVertexAttribArray(AbLoc_Pos);
+
+	CO_MatrixOrthogonalProjection(0.0,float(GameSet.winW),0.0,float(GameSet.winH),-1.0,1.0,BlurPassMatrixTMP);
+	glBindTexture(GL_TEXTURE_RECTANGLE, ScreemTex);
+	GLSL_Enable_Bloom_BlurTex(blur,true);
+	GLSL_SetMVPMatrixToGlsl(BlurPassMatrixTMP);
+	DrawQUAD_Att(0,GameSet.winW,GameSet.winH,0,AbLoc_Tex0,AbLoc_Pos,GameSet.winW,GameSet.winH);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_RECTANGLE, BlurTexID[1], 0);
+	glBindTexture(GL_TEXTURE_RECTANGLE, BlurTexID[0]);
+	GLSL_Enable_Bloom_BlurTex(blur,false);
+	GLSL_SetMVPMatrixToGlsl(BlurPassMatrixTMP);
+	DrawQUAD_Att(0,GameSet.winW,GameSet.winH,0,AbLoc_Tex0,AbLoc_Pos,GameSet.winW,GameSet.winH);
+
+	GLSL_Disable();
+	glDisableVertexAttribArray(AbLoc_Tex0);
+	glDisableVertexAttribArray(AbLoc_Pos);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+	DrawQUADEX_RECT(BlurTexID[1],0,GameSet.winW,GameSet.winH,0,GameSet.winW,GameSet.winH);
+	//DrawQUADEX_RECT(ScreemTex,0,GameSet.winW,GameSet.winH,0,GameSet.winW,GameSet.winH);
+	//DrawQUADEX(BlurTexID[1],0,GameSet.winW,0,GameSet.winH,GameSet.winW,GameSet.winH);
+	glDisable(GL_TEXTURE_RECTANGLE);
+	glEnable( GL_CULL_FACE );
+	glEnable(GL_DEPTH_TEST);
 }

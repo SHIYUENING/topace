@@ -170,7 +170,7 @@ void InitDataThread()
 	UnitsList.UnitsList[ListNum]->Operator=Player;
 	UnitsList.UnitsList[ListNum]->Life=100.0f;
 	ThreadDataUpdata.Global_Data.Scene.PlayerID=ListNum;
-
+	
 	for(int i=0;i<30;i++)
 	{
 		int tmp=UnitsList.AddOneUnit();

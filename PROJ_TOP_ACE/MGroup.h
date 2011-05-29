@@ -22,6 +22,7 @@ public:
 	_tMGroup MGroup[4];
 	void DrawBTN(void);
 	bool CheakName(wchar_t * SceneName);
+	bool CheakNameAll(wchar_t * SceneName);
 	int GroupSetID;
 	int CheckBTN(int x,int y);
 };

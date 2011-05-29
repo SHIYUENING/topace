@@ -151,6 +151,7 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	Easy_matrix_copy(TamUnit->Matrix,DrawMatrix);
 	wstring ModelNameTMP(ModelPath);
 	ModelNameTMP+=L"\\name";
+	TamUnit->DrawScene=MGroup.CheakNameAll(TamUnit->Name);
 	TamUnit->NameTex=new Textures;
 	TamUnit->NameTex->loadfile((wchar_t *)ModelNameTMP.c_str());
  	if(!TamUnit->NameTex->isRAM())
@@ -586,9 +587,9 @@ void CTamScene::DrawUnitName(void)
 
 int CTamScene::CheckName(char *SceneName)
 {
-	int dwNum=MultiByteToWideChar(CP_ACP,0,SceneName,-1,NULL,0);
+	int dwNum=MultiByteToWideChar(CP_UTF8,0,SceneName,-1,NULL,0);
 	wchar_t * FileNameWTmp=new wchar_t[dwNum];
-	MultiByteToWideChar(CP_ACP,0,SceneName,-1,FileNameWTmp,dwNum);
+	MultiByteToWideChar(CP_UTF8,0,SceneName,-1,FileNameWTmp,dwNum);
 	
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
