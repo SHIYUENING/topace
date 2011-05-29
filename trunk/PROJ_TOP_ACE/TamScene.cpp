@@ -446,6 +446,9 @@ void CTamScene::UpdataPos(void)
 	for(unsigned int i=0;i<TamList.size();i++)
 	{
 		TamList[i].DrawName=MGroup.CheakName(TamList[i].Name);
+		/*if(MGroup.GroupSetID==3)
+			if(!TamList[i].DrawName)
+				::MessageBoxW(0,TamList[i].Name,L"",MB_OK|MB_ICONEXCLAMATION);*/
 		Get_Unit_Win_Pos(WinPosTMP,TamList[i].Pos);
 		
 		if(SceneSelect>=0)
