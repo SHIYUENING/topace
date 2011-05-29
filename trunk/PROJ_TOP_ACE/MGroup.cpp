@@ -183,3 +183,14 @@ int CMGroup::CheckBTN(int x,int y)
 		}
 	return -1;
 }
+
+
+int CMGroup::GetGroup(wchar_t * SceneName)
+{
+	for(int j=0;j<4;j++)
+	for(int i= 0;i<MGroup[j].ModelNames.size();i++)
+	{
+		if(0==wcscmp(MGroup[j].ModelNames[i].c_str(),SceneName)) return j;
+	}
+	return -1;
+}

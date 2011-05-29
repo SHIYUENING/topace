@@ -31,7 +31,7 @@ float extern moveX;
 extern float Touchang;
 extern float TouchangY;
 int extern ReadingThreadNum;
-CFONTS2D FONTS2D;
+CFONTS2D FONTS2D,FontText;
 //CFONTS2D FONTS2DSimple;
 CTAMFT3D TAMFT3D;
 bool Inited=false;
@@ -92,7 +92,9 @@ string strpargchar[2];
 bool fistDraw=true;
 inline void ToScene(int SceneID)
 {
-	if(SceneID>0)
+	if(SceneID>=0)
+	if(MGroup.GetGroup(TamScene.TamList[SceneID].Name)==3) return;
+	if(SceneID>=0)
 	if(SceneID<TamScene.TamList.size())
 	{
 		moveZSpeed=TamScene.TamList[SceneID].MoveSpeed;
@@ -265,6 +267,36 @@ void ShowTextAndBTN(wchar_t * Text)
 		1080-768,
 		1920,
 		1080);
+
+}
+void ShowText3D(wchar_t * Text)
+{
+	glColor4f(0.5f,0.5f,0.5f,0.75f);
+		DrawQUADEX(
+		0,
+		960-800,
+		960+800,
+		12+320,
+		12,
+		1920,
+		1080);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	/*DrawUnitText(Text);
+	DrawQUADEX(
+		TextTex,
+		960-512,
+		960+512,
+		24+512,
+		24,
+		1920,
+		1080);*/
+	FontText.DrawTexts(Text,
+		960-512,
+		512,
+		1920,
+		1080,
+		960+512,
+		32,4.0f);
 
 }
 void DrawLoadingTex(Textures * pLoadingTex)
@@ -460,9 +492,11 @@ bool InitDraw()
 	char FontPath[MAX_PATH];
 	GetWindowsDirectoryA(szPath,sizeof(szPath));
 	sprintf(FontPath,"%s/Fonts/simhei.ttf",szPath);
+	FontText.LoadFullWidthFont(FontPath,32,32);
 	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
 	//FONTS2DSimple.LoadFullWidthFont(FontPath,256,256);
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
+	FontText.LoadHalfWidthFont(FontPath,32,32);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
 	TamScene.LoadFile(L"data\\model\\");
 	TamScene.ToVRAM();
@@ -635,12 +669,16 @@ void DrawUIs()
 {
 	if(!DrawNavi)
 		TamScene.DrawUnitName();
-	if(ShowText)
+	/*if(ShowText)
 	{
 		if(SceneSelectReady>=0) 
 		{
 			ShowTextAndBTN(TamScene.TamList[SceneSelectReady].text);
 		}
+	}*/
+	if(SceneSelect>=0) 
+	{
+		ShowText3D(TamScene.TamList[SceneSelectReady].text);
 	}
 	if(SceneSelect>=0) 
 		BTNExit.Draw();

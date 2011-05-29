@@ -130,7 +130,7 @@ void UpdataKeys()
 	//if(moveZ<-350.0f) moveZ=-350.0f;
 	moveZ=max(moveZ,LimitZ[1]);
 	moveZ=min(moveZ,LimitZ[0]);
-	TestNum=moveZ;
+	//TestNum=moveZ;
 	Touchang=Touchang*0.90f;
 	if(abs(Touchang)<0.0001f) Touchang=0.0f;
 	TouchangY=TouchangY*0.90f;
@@ -242,13 +242,21 @@ void DataUpdata()
 	ViewTGTPosTMP.m128_f32[1]=0.0f;
 	ViewUnitTMP.PosTo(ViewTGTPosTMP);
 	ViewUnitTMP.MovInternal(_mm_set_ps(1.0f,-PosMove[1],0.0f,-PosMove[0]));
+	//TestNum=sqrt(Easy_vector_Getlenth_2(ViewUnitTMP.UnitPos,ViewTGTPos));
+	if((LimitZ[0]+ViewLen)>sqrt(Easy_vector_Getlenth_2(ViewUnitTMP.UnitPos,ViewTGTPos)))
+	{
 	ViewUnit.UnitPos.m128_f32[0]=ViewUnitTMP.UnitPos.m128_f32[0];
 	ViewUnit.UnitPos.m128_f32[2]=ViewUnitTMP.UnitPos.m128_f32[2];
 	ViewUnitTMP.UnitPos=ViewTGTPosTMP;
 	ViewUnitTMP.MovInternal(_mm_set_ps(1.0f,-PosMove[1],0.0f,-PosMove[0]));
 	ViewTGTUnit.UnitPos.m128_f32[0]=ViewUnitTMP.UnitPos.m128_f32[0];
 	ViewTGTUnit.UnitPos.m128_f32[2]=ViewUnitTMP.UnitPos.m128_f32[2];
-	
+	}
+	else
+	{
+		ViewTGTUnit.PosTo(ViewTGTPos);
+		ViewTGTUnit.MovInternal(_mm_set_ps(1.0f,-ViewLen*0.001f,0.0f,0.0f));
+	}
 	ViewUnit.GetMatrix(ViewMat);
 
 	GoZ=GoX=0.0f;
