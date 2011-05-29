@@ -100,6 +100,15 @@ bool CMGroup::CheakName(wchar_t * SceneName)
 	}
 	return false;
 }
+bool CMGroup::CheakNameAll(wchar_t * SceneName)
+{
+	for(int j=0;j<3;j++)
+	for(int i= 0;i<MGroup[j].ModelNames.size();i++)
+	{
+		if(0==wcscmp(MGroup[j].ModelNames[i].c_str(),SceneName)) return true;
+	}
+	return false;
+}
 
 
 int CMGroup::CheckBTN(int x,int y)

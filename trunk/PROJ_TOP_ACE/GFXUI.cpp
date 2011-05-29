@@ -20,20 +20,22 @@ public:
     virtual void Callback(GFxMovieView* pmovie,
         const char* pcommand, const char* parg)
     {
+		if(strcmp(pcommand,"blur")==0)
+		{
+			sscanf_s(parg,"%f,%f,%f",&(blurSet[0]),&(blurSet[1]),&(blurSet[2]));
+			blurSet[0]=blurSet[0]*0.5f;
+			blurSet[1]=blurSet[1]*0.5f;
+			blurSet[3]=blurSet[2];
+			return;
+		}
+
 		if(Commandchar ) delete[] Commandchar;
 		if(pargchar ) delete[] pargchar;
 		Commandchar=new char[strlen(pcommand)+1];Commandchar[strlen(pcommand)]=0;
 		pargchar=new char[strlen(parg)+1];pargchar[strlen(parg)]=0;
 		strcpy(Commandchar,pcommand);
 		strcpy(pargchar,parg);
-		if(strcmp(Commandchar,"blur")==0)
-		{
-			sscanf_s(pargchar,"%f,%f,%f",&(blurSet[0]),&(blurSet[1]),&(blurSet[2]));
-			blurSet[0]=blurSet[0]*0.5f;
-			blurSet[1]=blurSet[1]*0.5f;
-			blurSet[3]=blurSet[2];
-		}
-		//MessageBox(NULL,Commandchar,parg,MB_OK);
+		
     }
 };
 #endif

@@ -15,6 +15,7 @@ void FBOS_BLOOM();
 void DrawUnitText(wchar_t * UnitText);
 void BlurPass(float blur);
 void BlurPass();
+void BlurPass_2(float blur);
 //void FBOS_Star_Begin();
 //void FBOS_Star_End();
 //void TestTexFBO();

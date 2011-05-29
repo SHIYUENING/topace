@@ -89,6 +89,7 @@ extern char * Commandchar;
 extern char * pargchar;
 string strCommandchar[2];
 string strpargchar[2];
+bool fistDraw=true;
 inline void ToScene(int SceneID)
 {
 	if(SceneID>0)
@@ -112,11 +113,11 @@ inline void ToScene(int SceneID)
 		ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
 		ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
 		ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-		ThreadDataDraw.DrawToData.ViewPos[0]=1700.0f;
-		ThreadDataDraw.DrawToData.ViewPos[1]=1700.0f;
-		ThreadDataDraw.DrawToData.ViewPos[2]=1700.0f;
+		ThreadDataDraw.DrawToData.ViewPos[0]=800.0f;
+		ThreadDataDraw.DrawToData.ViewPos[1]=800.0f;
+		ThreadDataDraw.DrawToData.ViewPos[2]=800.0f;
 		ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
-		ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
+		ThreadDataDraw.DrawToData.LimitZ[1]=800.0f;
 	}
 }
 inline void SetTamSceneCheck()
@@ -139,19 +140,11 @@ inline void SetTamSceneCheck()
 	if(strcmp(strCommandchar[0].c_str(),"SceneChange")==0)
 	if(strcmp(strpargchar[0].c_str(),strpargchar[1].c_str())!=0)
 	{
-		ThreadDataDraw.DrawToData.ChangePos=1;
-		if(strcmp(strpargchar[0].c_str(),"淮南总揽")==0)
-		{
-			SceneSelectReady=SceneSelect=-1;
-			ToScene(-1);
-		}
 		int checknameTMP=TamScene.CheckName((char *)strpargchar[0].c_str());
-		if(checknameTMP>-1)
-		{
 			SceneSelectReady=SceneSelect=checknameTMP;
 			ToScene(checknameTMP);
-		}
 		ThreadDataDraw.DrawToData.ChangePos=1;
+		return;
 	}
 	//if()
 	//int ChechID=-1;
@@ -165,11 +158,11 @@ inline void SetTamSceneCheck()
 				ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
 				ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
 				ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-				ThreadDataDraw.DrawToData.ViewPos[0]=1200.0f;
-				ThreadDataDraw.DrawToData.ViewPos[1]=1200.0f;
-				ThreadDataDraw.DrawToData.ViewPos[2]=1200.0f;
+				ThreadDataDraw.DrawToData.ViewPos[0]=800.0f;
+				ThreadDataDraw.DrawToData.ViewPos[1]=800.0f;
+				ThreadDataDraw.DrawToData.ViewPos[2]=800.0f;
 				ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
-				ThreadDataDraw.DrawToData.LimitZ[1]=1900.0f;
+				ThreadDataDraw.DrawToData.LimitZ[1]=800.0f;
 				ThreadDataDraw.DrawToData.ChangePos=1;
 				SceneSelectReady=SceneSelect=-1;
 				InputPos[2]=0;
@@ -478,6 +471,9 @@ bool InitDraw()
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
 	ADD_LOG_Q("InitDraw() OK");
+	ToScene(-1);
+	ThreadDataDraw.DrawToData.ChangePos=1;
+	SceneSelectReady=SceneSelect=-1;
 	QueryPerformanceCounter(&TimeStart);
 	if(IsFirstInit)
 	{
@@ -663,6 +659,13 @@ void DrawUIs()
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {
+	if(fistDraw)
+	{
+		fistDraw=false;
+			SceneSelectReady=SceneSelect=-1;
+			ToScene(-1);
+		ThreadDataDraw.DrawToData.ChangePos=1;
+	}
 	glClear ( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);//
 
 	
@@ -696,30 +699,85 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	CommonMatrixs[CO_Matrix_World].LoadF(ThreadDataDraw.DataList[4].Matrix);
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
+	
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
+	
 	TopAceModelTest.Draw(false);
-	TamScene.Draw(false);
 	if(SceneSelect==-1)
 	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
-	if(SceneSelect>-1)
-	TamScene.Draw(false,_TAM_Mesh_EXT_Type_Tree);
 	glDepthMask(GL_FALSE);
 	TopAceModelTest.Draw(true);
 	if(SceneSelect==-1)
 	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Tree);
-	TamScene.Draw(true);
-	if(SceneSelect>-1)
-	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Tree);
 	GLSL_Enable_Water(WaterTimeSet);
+
 	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
-	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Water);
 	glDepthMask(GL_TRUE);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_CULL_FACE);
 	GLSL_Disable();
+	if(SceneSelect>-1)
+	{
+		BlurPass_2(2.0f);
+	}
+	
+	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
+	
+	TamScene.Draw(false);
+	if(SceneSelect>-1)
+	TamScene.Draw(false,_TAM_Mesh_EXT_Type_Tree);
+	glDepthMask(GL_FALSE);
+	TamScene.Draw(true);
+	if(SceneSelect>-1)
+	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Tree);
+	GLSL_Enable_Water(WaterTimeSet);
+	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Water);
 
+	glDepthMask(GL_TRUE);
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glEnable(GL_CULL_FACE);
+	GLSL_Disable();
+	
+
+	/*
+	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
+
+	TopAceModelTest.Draw(false);
+	TamScene.Draw(false);
+
+	if(SceneSelect==-1)
+	TopAceModelTest.Draw(false,_TAM_Mesh_EXT_Type_Tree);
+	if(SceneSelect>-1)
+	TamScene.Draw(false,_TAM_Mesh_EXT_Type_Tree);
+
+	glDepthMask(GL_FALSE);
+
+	TopAceModelTest.Draw(true);
+
+	if(SceneSelect==-1)
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Tree);
+
+	TamScene.Draw(true);
+	if(SceneSelect>-1)
+	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Tree);
+
+	GLSL_Enable_Water(WaterTimeSet);
+
+	TopAceModelTest.Draw(true,_TAM_Mesh_EXT_Type_Water);
+
+	TamScene.Draw(true,_TAM_Mesh_EXT_Type_Water);
+
+	glDepthMask(GL_TRUE);
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glEnable(GL_CULL_FACE);
+	GLSL_Disable();
+	*/
 	RenderPass2Units();
 	//glDisable(GL_BLEND);
 	//DrawQUADEX(TestTEX.TexID,0,TestTEX.TexW,0,TestTEX.TexH,GameSet.winW,GameSet.winH);
