@@ -130,7 +130,7 @@ void CGFXUI::Draw(void)
 	DWORD mtime = timeGetTime();
     float deltaTime = ((float)(mtime - MovieLastTime)) / 1000.0f;
 	MovieLastTime = mtime;
-	deltaTime=min(pUIMovie->GetFrameRate(),deltaTime);
+	//deltaTime=min(pUIMovie->GetFrameRate(),deltaTime);
 	pUIMovie->Advance(deltaTime);
 	pUIMovie->Display();
 	#endif

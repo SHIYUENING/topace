@@ -79,6 +79,7 @@ int DoubleTouchTime=0;
 __m128 TouchPointOrg;
 int InputPos[3]={0};
 CGFXUI * pGfxUI=NULL;
+float framegfxtmp=0.0f;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -772,10 +773,6 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		window.init.isFullScreen = g_createFullScreen;
 		if (CreateWindowGL (&window) == TRUE)
 		{
-			CGFXUI::Init();
-			if(pGfxUI) delete pGfxUI;
-			pGfxUI =new CGFXUI;
-			pGfxUI->InitGFX();
 
 			ADD_LOG_Q("CreateWindow OK",NULL,NULL,NULL,NULL,true);
 			SwapHdc=window.hDC;
@@ -810,7 +807,11 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 			nInputs=TouchInput?nInputs:0;
 			if(TouchInput)
 			TouchInput=RegisterTouchWindow(window.hWnd,0)==0?false:true;
-
+			
+			CGFXUI::Init();
+			if(pGfxUI) delete pGfxUI;
+			pGfxUI =new CGFXUI;
+			pGfxUI->InitGFX();
 			LockFPSRender.Init(GameSet.FPS);
 			while (isMessagePumpActive == TRUE)	
 			{
@@ -838,9 +839,11 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					if (window.isVisible == FALSE) WaitMessage ();
 					else
 					{
+						framegfxtmp=framegfxtmp+1.0f;
 						Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);
 						glPushAttrib(GL_ALL_ATTRIB_BITS);
 						glColor4f(1.0f,1.0f,1.0f,1.0f);
+						if(framegfxtmp>30.0f)
 						pGfxUI->Draw();
 						glPopAttrib();
 						glFlush();

@@ -25,6 +25,7 @@ public:
 	bool CheakNameAll(wchar_t * SceneName);
 	int GroupSetID;
 	int CheckBTN(int x,int y);
+	int GetGroup(wchar_t * SceneName);
 };
 
 #endif

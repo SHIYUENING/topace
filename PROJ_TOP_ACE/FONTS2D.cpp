@@ -192,7 +192,9 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 		FontSets[CharIn].SizeW=(face==Face_FullWidth?FontSizeFX:FontSizeHX)/2;
 	if(CharIn==L'　') 
 		FontSets[CharIn].SizeW=(face==Face_FullWidth?FontSizeFX:FontSizeHX);
+	
 	int Ymove=0;
+
 	//if(CharIn<0xFF)
 	//	Ymove=FontSets[CharIn].TexSizeY/20;
 	//if(CharIn==L'-')
@@ -202,6 +204,7 @@ void CFONTS2D::SetCharTex(const wchar_t CharIn)
 	if(CharIn<0xFF) FontSets[CharIn].MoveY=bitmap.rows/6;
 	if(CharIn==L'-') FontSets[CharIn].MoveY=FontSets[CharIn].TexSizeY/2-bitmap.rows*2;
 	if(CharIn==L'.') FontSets[CharIn].MoveY=bitmap.rows/2;
+	if(CharIn==L'一') FontSets[CharIn].MoveY=FontSets[CharIn].TexSizeY/2-bitmap.rows*2;
 	for(int j=Ymove; j <FontSets[CharIn].TexSizeY;j++) {
 		for(int i=0; i < FontSets[CharIn].TexSizeX; i++){
 			FontDataTMP[i+(j-Ymove)*FontSets[CharIn].TexSizeX] = (i>=bitmap.width || j<(FontSets[CharIn].TexSizeY-bitmap.rows)) ? 0 : bitmap.buffer[i + bitmap.width*(j-FontSets[CharIn].TexSizeY+bitmap.rows)];
