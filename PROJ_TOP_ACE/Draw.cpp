@@ -722,7 +722,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	{
 		BlurPass_2(2.0f);
 	}
-	
+	glClear ( GL_DEPTH_BUFFER_BIT);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
 	
 	TamScene.Draw(false);
