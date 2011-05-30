@@ -32,7 +32,7 @@ extern float Touchang;
 extern float TouchangY;
 int extern ReadingThreadNum;
 CFONTS2D FONTS2D,FontText;
-//CFONTS2D FONTS2DSimple;
+CFONTS2D FONTS2DSimple;
 CTAMFT3D TAMFT3D;
 bool Inited=false;
 bool IsFirstInit=true;
@@ -293,11 +293,11 @@ void ShowText3D(wchar_t * Text)
 		1920,
 		1080);*/
 	FontText.DrawTexts(Text,
-		960-512,
-		512,
+		960-800,
+		320-20,
 		1920,
 		1080,
-		960+512,
+		960+800,
 		32,4.0f);
 
 }
@@ -496,7 +496,7 @@ bool InitDraw()
 	sprintf(FontPath,"%s/Fonts/simhei.ttf",szPath);
 	FontText.LoadFullWidthFont(FontPath,32,32);
 	FONTS2D.LoadFullWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadFullWidthFont(FontPath,16,16) fail","#FF0000");
-	//FONTS2DSimple.LoadFullWidthFont(FontPath,256,256);
+	FONTS2DSimple.LoadFullWidthFont(FontPath,64,64);
 	sprintf(FontPath,"%s/Fonts/ARIAL.TTF",szPath);
 	FontText.LoadHalfWidthFont(FontPath,32,32);
 	FONTS2D.LoadHalfWidthFont(FontPath,16,16)?ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) OK"):ADD_LOG_Q("FONTS2D.LoadHalfWidthFont(FontPath,16,16) fail","#FF0000");
@@ -662,8 +662,8 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glEnable( GL_TEXTURE_2D );
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
 	FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
-	glColor4f(1.0f,1.0f,0.0f,0.3f);
-	//FONTS2DSimple.DrawTexts(L"样品",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
+	glColor4f(1.0f,1.0f,0.0f,0.4f);
+//	FONTS2DSimple.DrawTexts(L"样品送审",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	RenderFaces=0;
 }

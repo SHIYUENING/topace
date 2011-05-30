@@ -38,12 +38,14 @@ __m128 ViewMat[4];
 CUnitMath ViewTGTUnit,ViewUnit;
 __m128 ViewTGTPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 __m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
+float GFXPosMove[2]={0.0f};
 float PosMove[3]={0.0f};
 float PosTurn[2]={0.0f};
 float LimitZ[2]={3500.0f,1900.0f};
 float ViewLen=100.0f;
 extern float TestNum;
 float MoveLimit=0.0f;
+extern int SceneSelect;
 void UpdataKeys()
 {
 	PosMove[0]=0.0f;
@@ -51,6 +53,18 @@ void UpdataKeys()
 	PosMove[2]=0.0f;
 	PosTurn[0]=0.0f;
 	PosTurn[1]=0.0f;
+	
+	if(GFXPosMove[0]<-1.0f)
+		PosMove[0]=moveZSpeed;
+
+	if(GFXPosMove[0]>1.0f)
+		PosMove[0]=-moveZSpeed;
+
+	if(GFXPosMove[1]<-1.0f)
+		PosMove[1]=-moveZSpeed;
+	if(GFXPosMove[1]>1.0f)
+		PosMove[1]=moveZSpeed;
+
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_PRIOR] == TRUE)
 	{
 		PosMove[2]=moveZSpeed;
@@ -104,8 +118,8 @@ void UpdataKeys()
 	if(NoTouchMoveTimes<=0.01f)
 	{
 		moveX=moveX-touchX*TouchMoveOverride;
-		PosTurn[0]+=-touchX*moveZSpeed/3.0f;
-		PosTurn[1]+=-touchY*moveZSpeed/20.0f;
+		PosTurn[0]+=-touchX*10.0f;
+		PosTurn[1]+=-touchY*3.0f;
 	}
 	if(Touchang!=Touchang) 
 		Touchang=0.0f;
@@ -113,7 +127,10 @@ void UpdataKeys()
 		TouchangY=0.0f;
 	if(zoomsize!=zoomsize) 
 		zoomsize=0.0f;
-	moveZ=moveZ-zoomsize*TouchZoomOverride*moveZSpeed*0.1f;
+	if(SceneSelect==-1)
+		moveZ=moveZ-zoomsize*TouchZoomOverride*moveZSpeed*0.1f;
+	else
+		moveZ=moveZ-zoomsize*TouchZoomOverride*moveZSpeed*0.05f;
 	if(Touchang>1000.0f) 
 		Touchang=1000.0f;
 	if(Touchang<-1000.0f) 
@@ -122,8 +139,8 @@ void UpdataKeys()
 		TouchangY=1000.0f;
 	if(TouchangY<-1000.0f) 
 		TouchangY=-1000.0f;
-	PosMove[0]+=TouchMoveOverride*Touchang/500.0f;
-	PosMove[1]+=TouchMoveOverride*TouchangY/500.0f;
+	PosMove[0]+=TouchMoveOverride*Touchang/500.0f*moveZSpeed/25.0f;
+	PosMove[1]+=TouchMoveOverride*TouchangY/500.0f*moveZSpeed/25.0f;
 	GoX=GoX+Touchang*0.01f;
 	//LimitZ
 	//if(moveZ<0.0f) moveZ=0.0f;
@@ -204,7 +221,10 @@ void DataUpdata()
 	UpdataKeys();
 	TotalFrame=TotalFrame+1;
 	Test3dsFrame=Test3dsFrame+0.25f;
-	
+	if(abs(GFXPosMove[0])<9.5f)
+	GFXPosMove[0]=GFXPosMove[0]*0.8f;
+	if(abs(GFXPosMove[1])<9.5f)
+	GFXPosMove[1]=GFXPosMove[1]*0.8f;
 	angleR=angleR+0.2f;
 	//TestView.Reset();
 	//TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
