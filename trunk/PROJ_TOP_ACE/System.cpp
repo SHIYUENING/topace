@@ -80,6 +80,7 @@ __m128 TouchPointOrg;
 int InputPos[3]={0};
 CGFXUI * pGfxUI=NULL;
 float framegfxtmp=0.0f;
+extern bool DrawStandby;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -840,12 +841,14 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					else
 					{
 						framegfxtmp=framegfxtmp+1.0f;
+						if(!DrawStandby)
 						Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);
 						glPushAttrib(GL_ALL_ATTRIB_BITS);
 						glColor4f(1.0f,1.0f,1.0f,1.0f);
 						if(framegfxtmp>30.0f)
 						pGfxUI->Draw();
 						glPopAttrib();
+						
 						glFlush();
 						hglSwapBuffers (SwapHdc);
 						if(GameSet.FPS>0) LockFPSRender.LockFPS();

@@ -14,6 +14,8 @@
 char * Commandchar=NULL;
 char * pargchar=NULL;
 float blurSet[4]={-1.0f};
+float notouchtime=0.0f;
+bool DrawStandby=true;
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -27,7 +29,9 @@ public:
 			blurSet[1]=blurSet[1]*0.5f;
 			blurSet[3]=blurSet[2];
 			return;
-		}
+		}//
+		if(strcmp("DrawStandby",parg))
+			DrawStandby=false;
 
 		if(Commandchar ) delete[] Commandchar;
 		if(pargchar ) delete[] pargchar;
@@ -82,21 +86,30 @@ bool CGFXUI::InitGFX(void)
 	pUIMovieDef = *(gfxLoader.CreateMovie("window.swf",
 		                                  GFxLoader::LoadKeepBindData |
 										  GFxLoader::LoadWaitFrame1));
+	pUIMovieDefStandBy = *(gfxLoader.CreateMovie("bg2.swf",
+		                                  GFxLoader::LoadKeepBindData |
+										  GFxLoader::LoadWaitFrame1));
 	if(!pUIMovieDef)
 		return false;
+	if(!pUIMovieDefStandBy) return false;
 	pUIMovie = *pUIMovieDef->CreateInstance(GFxMovieDef::MemoryParams(), true);
+	pUIMovieStandBy = *pUIMovieDefStandBy->CreateInstance(GFxMovieDef::MemoryParams(), true);
 	if(!pUIMovie)
+		return false;
+	if(!pUIMovieStandBy)
 		return false;
 	ChangeWin(0,0,GameSet.winW,GameSet.winH);
 	//ChangeWin(0,0,GameSet.winW/2,GameSet.winH/2);
 		// Advance the movie to the first frame
 	pUIMovie->Advance(0.0f, 0);
+	pUIMovieStandBy->Advance(0.0f, 0);
 
 	// Note the time to determine the amount of time elapsed between this frame and the next
 	MovieLastTime = timeGetTime();
 
 	// Set the background stage color to alpha blend with the underlying 3D environment
 	pUIMovie->SetBackgroundAlpha(0.0f);
+	pUIMovieStandBy->SetBackgroundAlpha(0.0f);
 	return true;
 	#else
 	return false;
@@ -116,6 +129,9 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 	pUIMovie->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
 	pUIMovie->SetViewScaleMode(GFxMovieView::SM_ExactFit);
 	pUIMovie->SetViewAlignment(GFxMovieView::Align_CenterRight);
+	pUIMovieStandBy->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
+	pUIMovieStandBy->SetViewScaleMode(GFxMovieView::SM_ExactFit);
+	pUIMovieStandBy->SetViewAlignment(GFxMovieView::Align_CenterRight);
 	#endif
 }
 
@@ -130,9 +146,18 @@ void CGFXUI::Draw(void)
 	DWORD mtime = timeGetTime();
     float deltaTime = ((float)(mtime - MovieLastTime)) / 1000.0f;
 	MovieLastTime = mtime;
+	notouchtime=notouchtime+deltaTime;
 	//deltaTime=min(pUIMovie->GetFrameRate(),deltaTime);
+	if(!DrawStandby)
+	{
 	pUIMovie->Advance(deltaTime);
 	pUIMovie->Display();
+	}
+	else
+	{
+		pUIMovieStandBy->Advance(deltaTime);
+		pUIMovieStandBy->Display();
+	}
 	#endif
 }
 
@@ -147,7 +172,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
 			GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) mx,(float) my); 
-		//	pUIMovie->HandleEvent(mevent);
+			pUIMovie->HandleEvent(mevent);
 			return ;
 		}
 		case WM_LBUTTONUP:
@@ -155,6 +180,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
 			GFxMouseEvent mevent(GFxEvent::MouseUp, 0, (float)mx, (float)my); 
 			pUIMovie->HandleEvent(mevent);
+			pUIMovieStandBy->HandleEvent(mevent);
 			return ;
 		}
 		case WM_LBUTTONDOWN:
@@ -162,6 +188,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
 			GFxMouseEvent mevent(GFxEvent::MouseDown, 0, (float)mx, (float)my); 
 			pUIMovie->HandleEvent(mevent);
+			pUIMovieStandBy->HandleEvent(mevent);
 			return ;
 		}
 	

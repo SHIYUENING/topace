@@ -24,8 +24,10 @@ public:
 	#ifdef USEGFX
 	GFxLoader gfxLoader;
 	GPtr<GFxMovieDef>   pUIMovieDef;
+	GPtr<GFxMovieDef>   pUIMovieDefStandBy;
 	GPtr<GRendererOGL>   pRenderer;
 	GPtr<GFxMovieView>  pUIMovie;
+	GPtr<GFxMovieView>  pUIMovieStandBy;
 	#endif
 	DWORD  MovieLastTime;
 	bool InitGFX(void);
