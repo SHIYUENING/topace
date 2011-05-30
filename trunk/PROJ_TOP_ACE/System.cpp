@@ -16,6 +16,7 @@
 #include "TALogSys.h"
 #include "Common.h"
 #include "GFXUI.h"
+#include "FONTS2D.h"
 #pragma comment( lib, "glew32s.lib" )							// Search For glew32s.lib While Linking
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 //#pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
@@ -81,6 +82,9 @@ int InputPos[3]={0};
 CGFXUI * pGfxUI=NULL;
 float framegfxtmp=0.0f;
 extern bool DrawStandby;
+extern float TestNum;
+extern float notouchtime;
+extern CFONTS2D FONTS2DSimple;
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -418,7 +422,7 @@ void DoDoubleTouch()
 	TouchPointOrg.m128_i32[3],
 	TouchInputposs[1].m128_i32[1]))
 	};
-	if((movePosTMP[0]>3000)&&(movePosTMP[1]>3000))
+	if((movePosTMP[0]>2000)&&(movePosTMP[1]>2000))
 	{
 	zoomsize=sqrt(float(Easy_vector_Getlenth_2i(
 					TouchPointOrg.m128_i32[0],
@@ -539,6 +543,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:												// Update Keyboard Buffers For Keys Pressed
 			if ((wParam >= 0) && (wParam <= 255))						// Is Key (wParam) In A Valid Range?
 			{
+				notouchtime=0.0f;
 				window->keys->keyDown [wParam] = TRUE;					// Set The Selected Key (wParam) To True
 				return 0;												// Return
 			}
@@ -548,6 +553,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_KEYUP:													// Update Keyboard Buffers For Keys Released
 			if ((wParam >= 0) && (wParam <= 255))						// Is Key (wParam) In A Valid Range?
 			{
+				notouchtime=0.0f;
 				window->keys->keyDown [wParam] = FALSE;					// Set The Selected Key (wParam) To False
 				return 0;												// Return
 			}
@@ -560,6 +566,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PostMessageW (hWnd, WM_QUIT, 0, 0);
 		break;															// Break
 		case WM_LBUTTONUP:
+				notouchtime=0.0f;
 			InputPos[0]=LOWORD(lParam);
 			InputPos[1]=HIWORD(lParam);
 			InputPos[1]=GameSet.winH-InputPos[1];
@@ -567,6 +574,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case WM_TOUCH:
 			{
+				notouchtime=0.0f;
 				if(nInputs<=0) break;
 				nInputsNow=(unsigned int)wParam;
 				TOUCHINPUT * ti=new TOUCHINPUT[nInputs];
@@ -840,6 +848,7 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 					if (window.isVisible == FALSE) WaitMessage ();
 					else
 					{
+						//TestNum=notouchtime;
 						framegfxtmp=framegfxtmp+1.0f;
 						if(!DrawStandby)
 						Draw (LockFPSSYS.oneframetimepoint,LockFPSRender.oneframetimepoint);
@@ -848,7 +857,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 						if(framegfxtmp>30.0f)
 						pGfxUI->Draw();
 						glPopAttrib();
-						
+						glColor4f(1.0f,1.0f,0.0f,0.4f);
+	FONTS2DSimple.DrawTexts(L"样品送审",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 						glFlush();
 						hglSwapBuffers (SwapHdc);
 						if(GameSet.FPS>0) LockFPSRender.LockFPS();

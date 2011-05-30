@@ -16,6 +16,7 @@ char * pargchar=NULL;
 float blurSet[4]={-1.0f};
 float notouchtime=0.0f;
 bool DrawStandby=true;
+extern float GFXPosMove[2];
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -30,8 +31,36 @@ public:
 			blurSet[3]=blurSet[2];
 			return;
 		}//
-		if(strcmp("DrawStandby",parg))
+		
+		if(strcmp("Move",pcommand)==0)
+		{
+			if(strcmp("up",parg)==0)
+			{
+				GFXPosMove[1]=10.0f;
+			}
+			if(strcmp("down",parg)==0)
+			{
+				GFXPosMove[1]=-10.0f;
+			}
+			if(strcmp("left",parg)==0)
+			{
+				GFXPosMove[0]=-10.0f;
+			}
+			if(strcmp("right",parg)==0)
+			{
+				GFXPosMove[0]=10.0f;
+			}
+		}
+		if(strcmp("MoveEnd",pcommand)==0)
+		{
+			GFXPosMove[0]=GFXPosMove[0]*0.925f;
+			GFXPosMove[1]=GFXPosMove[1]*0.925f;
+		}
+		if(strcmp("StandBy",parg)==0)
+		{
 			DrawStandby=false;
+			return;
+		}
 
 		if(Commandchar ) delete[] Commandchar;
 		if(pargchar ) delete[] pargchar;
@@ -147,6 +176,11 @@ void CGFXUI::Draw(void)
     float deltaTime = ((float)(mtime - MovieLastTime)) / 1000.0f;
 	MovieLastTime = mtime;
 	notouchtime=notouchtime+deltaTime;
+	if(notouchtime>(15.0f*60.0f))
+	{
+		DrawStandby=true;
+		pUIMovieStandBy->Restart();
+	}
 	//deltaTime=min(pUIMovie->GetFrameRate(),deltaTime);
 	if(!DrawStandby)
 	{
