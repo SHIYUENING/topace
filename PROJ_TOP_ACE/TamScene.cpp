@@ -153,7 +153,7 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	ModelNameTMP+=L"\\name";
 	TamUnit->DrawScene=MGroup.CheakNameAll(TamUnit->Name);
 	TamUnit->NameTex=new Textures;
-	TamUnit->NameTex->loadfile((wchar_t *)ModelNameTMP.c_str());
+	/*TamUnit->NameTex->loadfile((wchar_t *)ModelNameTMP.c_str());
  	if(!TamUnit->NameTex->isRAM())
 	{
 		delete TamUnit->NameTex;
@@ -168,7 +168,7 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 			delete TamUnit->NameTex;
 			TamUnit->NameTex=NULL;
 		}
-	}
+	}*/
 	return true;
 }
 

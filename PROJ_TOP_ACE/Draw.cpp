@@ -78,6 +78,7 @@ extern int InputPos[3];
 UINT uMsgDraw=0;
 float TestNum=0.0f;
 int SceneSelect=-1;
+int DrawSceneText=-1;
 int SceneSelectReady=-1;
 CTABTN BTNNavi,BTNExit;
 CTABTN BTMWindow[2];
@@ -148,6 +149,7 @@ inline void SetTamSceneCheck()
 		ThreadDataDraw.DrawToData.ChangePos=1;
 		return;
 	}
+	/*
 	//if()
 	//int ChechID=-1;
 	if(InputPos[2])
@@ -225,7 +227,7 @@ inline void SetTamSceneCheck()
 		if(Checked>=0)
 		{
 			ShowText=true;
-			/*moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
+			moveZSpeed=TamScene.TamList[SceneSelect].MoveSpeed;
 			float ScenePosTMP[3];
 			Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneSelect].Pos);
 			ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
@@ -236,11 +238,11 @@ inline void SetTamSceneCheck()
 			ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
 			ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneSelect].Limitfar;
 			ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneSelect].Limitnear;
-			ThreadDataDraw.DrawToData.ChangePos=1;*/
+			ThreadDataDraw.DrawToData.ChangePos=1;
 		}
 		
-	}
-	endcheck:
+	}*/
+	//endcheck:
 	InputPos[2]=0;
 	
 }
@@ -667,8 +669,8 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 }
 void DrawUIs()
 {
-	if(!DrawNavi)
-		TamScene.DrawUnitName();
+	/*if(!DrawNavi)
+		TamScene.DrawUnitName();*/
 	/*if(ShowText)
 	{
 		if(SceneSelectReady>=0) 
@@ -680,7 +682,7 @@ void DrawUIs()
 	{
 		ShowText3D(TamScene.TamList[SceneSelectReady].text);
 	}
-	if(SceneSelect>=0) 
+	/*if(SceneSelect>=0) 
 		BTNExit.Draw();
 	else
 	{
@@ -693,7 +695,7 @@ void DrawUIs()
 		{
 			BTNNavi.Draw();
 		}
-	}
+	}*/
 }
 void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 {

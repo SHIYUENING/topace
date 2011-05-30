@@ -104,8 +104,8 @@ void UpdataKeys()
 	if(NoTouchMoveTimes<=0.01f)
 	{
 		moveX=moveX-touchX*TouchMoveOverride;
-		PosMove[0]+=touchX*TouchMoveOverride*moveZSpeed;
-		PosMove[1]+=-touchY*TouchMoveOverride*moveZSpeed;
+		PosTurn[0]+=-touchX*moveZSpeed/3.0f;
+		PosTurn[1]+=-touchY*moveZSpeed/20.0f;
 	}
 	if(Touchang!=Touchang) 
 		Touchang=0.0f;
@@ -122,8 +122,8 @@ void UpdataKeys()
 		TouchangY=1000.0f;
 	if(TouchangY<-1000.0f) 
 		TouchangY=-1000.0f;
-	PosTurn[0]+=Touchang/500.0f;
-	PosTurn[1]+=TouchangY/500.0f;
+	PosMove[0]+=TouchMoveOverride*Touchang/500.0f;
+	PosMove[1]+=TouchMoveOverride*TouchangY/500.0f;
 	GoX=GoX+Touchang*0.01f;
 	//LimitZ
 	//if(moveZ<0.0f) moveZ=0.0f;
