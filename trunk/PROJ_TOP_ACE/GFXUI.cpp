@@ -17,6 +17,7 @@ float blurSet[4]={-1.0f};
 float notouchtime=0.0f;
 bool DrawStandby=true;
 extern float GFXPosMove[2];
+extern float TestNum;
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -205,7 +206,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_MOUSEMOVE:
 			{
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
-			 GFxMouseEvent mevent(GFxEvent::MouseUp, 0,(float) mx,(float) my); 
+			 GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) mx,(float) my); 
 			if(pUIMovie)
 			pUIMovie->HandleEvent(mevent);
 			return ;
@@ -224,8 +225,8 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_LBUTTONDOWN:
 		{
-			GFXPosMove[0]=GFXPosMove[0]*0.925f;
-			GFXPosMove[1]=GFXPosMove[1]*0.925f;
+			//GFXPosMove[0]=GFXPosMove[0]*0.925f;
+			//GFXPosMove[1]=GFXPosMove[1]*0.925f;
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
 			GFxMouseEvent mevent(GFxEvent::MouseDown, 0, (float)mx, (float)my); 
 			if(pUIMovie)
@@ -238,8 +239,52 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	#endif
 }
+bool isTouchDown=false;
+void CGFXUI::TouchInput(DWORD dwFlags,int TouchX,int TouchY)
+{
+	if(dwFlags & TOUCHEVENTF_MOVE)
+	{
+		if(isTouchDown)
+		{
+			GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) TouchX,(float) TouchY);
+			if(pUIMovie)
+				pUIMovie->HandleEvent(mevent);
+		}
+		else
+		{
+			GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) 0,(float) 0);
+			if(pUIMovie)
+				pUIMovie->HandleEvent(mevent);
+		}
+	}
+	if(dwFlags & TOUCHEVENTF_UP)
+	{
+		isTouchDown=false;
+		GFXPosMove[0]=GFXPosMove[0]*0.925f;
+		GFXPosMove[1]=GFXPosMove[1]*0.925f;
+		GFxMouseEvent mevent(GFxEvent::MouseUp, 0,(float) TouchX,(float) TouchY);
+		if(pUIMovie)
+			pUIMovie->HandleEvent(mevent);
+		if(pUIMovieStandBy)
+			pUIMovieStandBy->HandleEvent(mevent);
+		GFxMouseEvent mevent2(GFxEvent::MouseUp, 0,(float) 0,(float) 0);
+		if(pUIMovie)
+			pUIMovie->HandleEvent(mevent2);
+	}
+	if(dwFlags & TOUCHEVENTF_DOWN)
+	{
+		isTouchDown=true;
+		GFxMouseEvent mevent(GFxEvent::MouseDown, 0,(float) TouchX,(float) TouchY);
+		if(pUIMovie)
+			pUIMovie->HandleEvent(mevent);
+		if(pUIMovieStandBy)
+			pUIMovieStandBy->HandleEvent(mevent);
+	}
+}
 
 
 void CGFXUI::GetCommend(void)
 {
 }
+
+

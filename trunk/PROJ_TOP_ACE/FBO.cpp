@@ -633,10 +633,11 @@ void BlurPass(float blur)
 }
 float blurtime=-1.0f;
 extern float blurSet[4];
+float blurnumtmp1=0.0f;
 void BlurPass()
 {
 	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	float blurnumtmp1=blurSet[0]-blurSet[1];
+	blurnumtmp1=blurSet[0]-blurSet[1];
 	blurnumtmp1=blurnumtmp1*(blurSet[3]/blurSet[2]);
 //	if(blurSet[3]>0.0f)
 	blurnumtmp1=blurSet[1]+blurnumtmp1;

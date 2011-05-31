@@ -46,6 +46,8 @@ float ViewLen=100.0f;
 extern float TestNum;
 float MoveLimit=0.0f;
 extern int SceneSelect;
+
+extern float blurnumtmp1;
 void UpdataKeys()
 {
 	PosMove[0]=0.0f;
@@ -53,7 +55,6 @@ void UpdataKeys()
 	PosMove[2]=0.0f;
 	PosTurn[0]=0.0f;
 	PosTurn[1]=0.0f;
-	
 	if(GFXPosMove[0]<-1.0f)
 		PosMove[0]=moveZSpeed;
 
@@ -169,6 +170,14 @@ void UpdataKeys()
 		ViewUnit.UnitPos=ViewPos;
 		moveZ=0.0f;
 	}
+	
+	if(blurnumtmp1>1.0f)
+	{
+		PosMove[0]=0.0f;
+		PosMove[1]=0.0f;
+		PosTurn[0]=0.0f;
+		PosTurn[1]=0.0f;
+	}
 }
 void InitDataThread()
 {
@@ -260,10 +269,13 @@ void DataUpdata()
 	ViewUnitTMP.UnitPos.m128_f32[1]=0.0f;
 	__m128 ViewTGTPosTMP=ViewTGTUnit.UnitPos;
 	ViewTGTPosTMP.m128_f32[1]=0.0f;
+
 	ViewUnitTMP.PosTo(ViewTGTPosTMP);
 	ViewUnitTMP.MovInternal(_mm_set_ps(1.0f,-PosMove[1],0.0f,-PosMove[0]));
-	//TestNum=sqrt(Easy_vector_Getlenth_2(ViewUnitTMP.UnitPos,ViewTGTPos));
-	if((LimitZ[0]+ViewLen)>sqrt(Easy_vector_Getlenth_2(ViewUnitTMP.UnitPos,ViewTGTPos)))
+	__m128 TestPos1=ViewTGTUnit.UnitPos;//TestPos1.m128_f32[1]=0.0f;
+	__m128 TestPos2=ViewTGTPos;//TestPos2.m128_f32[1]=0.0f;
+	//if((LimitZ[0]+ViewLen)>sqrt(Easy_vector_Getlenth_2(ViewUnitTMP.UnitPos,ViewTGTPos)))
+	if((LimitZ[0]+ViewLen)/2>sqrt(Easy_vector_Getlenth_2(TestPos1,TestPos2)))
 	{
 	ViewUnit.UnitPos.m128_f32[0]=ViewUnitTMP.UnitPos.m128_f32[0];
 	ViewUnit.UnitPos.m128_f32[2]=ViewUnitTMP.UnitPos.m128_f32[2];
@@ -278,7 +290,7 @@ void DataUpdata()
 		ViewTGTUnit.MovInternal(_mm_set_ps(1.0f,-ViewLen*0.001f,0.0f,0.0f));
 	}
 	ViewUnit.GetMatrix(ViewMat);
-
+	TestNum=sqrt(Easy_vector_Getlenth_2(TestPos1,TestPos2));
 	GoZ=GoX=0.0f;
 	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));
 	//SceneUnitTest.SetPos(_mm_set_ps(1.0f,0.0f,0.0f,0.0f));

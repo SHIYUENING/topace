@@ -498,7 +498,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Get The Window Context
 	GL_Window* window = (GL_Window*)(GetWindowLong (hWnd, GWL_USERDATA));
-	pGfxUI->SetInput(uMsg,wParam,lParam);
+	//pGfxUI->SetInput(uMsg,wParam,lParam);
 	switch (uMsg)														// Evaluate Window Message
 	{
 		case WM_SYSCOMMAND:												// Intercept System Commands
@@ -643,6 +643,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 				else
 				{
+					pGfxUI->TouchInput(ti[0].dwFlags,ti[0].x/100,ti[0].y/100);
 					DoubleTouchTime=0;
 					if(Touchings[0])
 					if(!((TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0)))
