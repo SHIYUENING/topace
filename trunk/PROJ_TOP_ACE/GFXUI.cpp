@@ -205,23 +205,32 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case WM_MOUSEMOVE:
 			{
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
-			GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) mx,(float) my); 
+			 GFxMouseEvent mevent(GFxEvent::MouseUp, 0,(float) mx,(float) my); 
+			if(pUIMovie)
 			pUIMovie->HandleEvent(mevent);
 			return ;
 		}
 		case WM_LBUTTONUP:
 			{
+				GFXPosMove[0]=GFXPosMove[0]*0.925f;
+			GFXPosMove[1]=GFXPosMove[1]*0.925f;
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
 			GFxMouseEvent mevent(GFxEvent::MouseUp, 0, (float)mx, (float)my); 
+			if(pUIMovie)
 			pUIMovie->HandleEvent(mevent);
+			if(pUIMovieStandBy)
 			pUIMovieStandBy->HandleEvent(mevent);
 			return ;
 		}
 		case WM_LBUTTONDOWN:
 		{
+			GFXPosMove[0]=GFXPosMove[0]*0.925f;
+			GFXPosMove[1]=GFXPosMove[1]*0.925f;
 			 mx = LOWORD(lParam), my = HIWORD(lParam);
 			GFxMouseEvent mevent(GFxEvent::MouseDown, 0, (float)mx, (float)my); 
+			if(pUIMovie)
 			pUIMovie->HandleEvent(mevent);
+			if(pUIMovieStandBy)
 			pUIMovieStandBy->HandleEvent(mevent);
 			return ;
 		}

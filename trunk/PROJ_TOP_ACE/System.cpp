@@ -179,14 +179,14 @@ void ReshapeGL (int width, int height)									// Reshape The Window When It's M
 
 BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change The Screen Resolution
 {
-	DEVMODEW dmScreenSettings;											// Device Mode
-	ZeroMemory (&dmScreenSettings, sizeof (DEVMODEW));					// Make Sure Memory Is Cleared
-	dmScreenSettings.dmSize				= sizeof (DEVMODEW);				// Size Of The Devmode Structure
+	DEVMODE dmScreenSettings;											// Device Mode
+	ZeroMemory (&dmScreenSettings, sizeof (DEVMODE));					// Make Sure Memory Is Cleared
+	dmScreenSettings.dmSize				= sizeof (DEVMODE);				// Size Of The Devmode Structure
 	dmScreenSettings.dmPelsWidth		= width;						// Select Screen Width
 	dmScreenSettings.dmPelsHeight		= height;						// Select Screen Height
 	dmScreenSettings.dmBitsPerPel		= bitsPerPixel;					// Select Bits Per Pixel
 	dmScreenSettings.dmFields			= DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-	if (ChangeDisplaySettingsW (&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+	if (ChangeDisplaySettings (&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 	{
 		return FALSE;													// Display Change Failed, Return False
 	}
@@ -196,12 +196,16 @@ BOOL ChangeScreenResolution (int width, int height, int bitsPerPixel)	// Change 
 BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL Window
 {
 	//DWORD windowStyle = WS_OVERLAPPEDWINDOW;							// Define Our Window Style
-	DWORD windowStyle =		 WS_OVERLAPPED     | \
+	/*DWORD windowStyle =		 WS_OVERLAPPED     | \
                              WS_CAPTION        | \
                              WS_SYSMENU        | \
                              WS_THICKFRAME     | \
                              WS_MINIMIZEBOX;
                              //WS_MAXIMIZEBOX;
+	DWORD windowExtendedStyle = WS_EX_APPWINDOW;						// Define The Window's Extended Style
+		//DWORD windowStyle = WS_OVERLAPPEDWINDOW;							// Define Our Window Style
+	//DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ;*/
+	DWORD windowStyle =WS_POPUP;
 	DWORD windowExtendedStyle = WS_EX_APPWINDOW;						// Define The Window's Extended Style
 
 	PIXELFORMATDESCRIPTOR pfd =											// pfd Tells Windows How We Want Things To Be
@@ -263,7 +267,7 @@ BOOL CreateWindowGL (GL_Window* window)									// This Code Creates Our OpenGL 
 								   window->init.application->className,	// Class Name
 								   window->init.title,					// Window Title
 								   windowStyle,							// Window Style
-								   CWX,CWY,								// Window X,Y Position
+								   0,0,								// Window X,Y Position
 								   windowRect.right - windowRect.left,	// Window Width
 								   windowRect.bottom - windowRect.top,	// Window Height
 								   HWND_DESKTOP,						// Desktop Is Window's Parent
