@@ -35,6 +35,7 @@ public:
 	void Draw(void);
 	void SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void GetCommend(void);
+	void TouchInput(DWORD dwFlags,int TouchX,int TouchY);
 };
 
 #endif
