@@ -5,6 +5,14 @@ tGameSet GameSet;
 tSoundSet SoundSet;
 tJoyStictSet JoyStictSet;
 tKeyBoardSet KeyBoardSet;
+float GetIniFloat2(wchar_t * lpAppName,wchar_t * lpKeyName,const wchar_t * lpFileName,const wchar_t * DefChar)
+{
+	wchar_t ReadIniTMP[512];
+	float IniFloat=0.0f;
+	GetPrivateProfileStringW(lpAppName,lpKeyName,DefChar,ReadIniTMP,512,lpFileName);
+	swscanf_s(ReadIniTMP,L"%f",&IniFloat);
+	return IniFloat;
+}
 void loadIniFile()
 {
 
@@ -101,6 +109,7 @@ void loadIniFile()
 			GameSet.LOW=true;
 		else
 			GameSet.LOW=false;
+		
 		GameSet.AA=GetPrivateProfileIntW(L"GameSet",L"AA",0,IniFileName);
 		GameSet.AF=float(GetPrivateProfileIntW(L"GameSet",L"AF",1,IniFileName));
 		GameSet.FPS=GetPrivateProfileIntW(L"GameSet",L"FPS",60,IniFileName);
@@ -111,9 +120,12 @@ void loadIniFile()
 		GameSet.Shadow=GetPrivateProfileIntW(L"GameSet",L"Shadow",0,IniFileName);
 		GameSet.MoveBlur=GetPrivateProfileIntW(L"GameSet",L"MoveBlur",0,IniFileName);
 		GameSet.Cloud=GetPrivateProfileIntW(L"GameSet",L"Cloud",0,IniFileName);
-
+		
 		GameSet.TouchMoveOverride=(float)GetPrivateProfileIntW(L"other",L"TouchMoveOverride",1,IniFileName);
 		GameSet.TouchZoomOverride=(float)GetPrivateProfileIntW(L"other",L"TouchZoomOverride",1,IniFileName);
+		GameSet.TouchPosFixX=GetIniFloat2(L"other",L"TouchPosFixX",IniFileName,L"0.0");
+		GameSet.TouchPosFixY=GetIniFloat2(L"other",L"TouchPosFixY",IniFileName,L"0.0");
+		GameSet.TouchPosFixRange=GetIniFloat2(L"other",L"TouchPosFixRange",IniFileName,L"20.0");
 
 		SoundSet.BGM=GetPrivateProfileIntW(L"SoundSet",L"BGM",100,IniFileName);
 		SoundSet.Effect=GetPrivateProfileIntW(L"SoundSet",L"Effect",100,IniFileName);

@@ -25,9 +25,11 @@ public:
 	GFxLoader gfxLoader;
 	GPtr<GFxMovieDef>   pUIMovieDef;
 	GPtr<GFxMovieDef>   pUIMovieDefStandBy;
+	GPtr<GFxMovieDef>   pUIMovieDefTXT;
 	GPtr<GRendererOGL>   pRenderer;
 	GPtr<GFxMovieView>  pUIMovie;
 	GPtr<GFxMovieView>  pUIMovieStandBy;
+	GPtr<GFxMovieView>  pUIMovieTXT;
 	#endif
 	DWORD  MovieLastTime;
 	bool InitGFX(void);
@@ -36,6 +38,9 @@ public:
 	void SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void GetCommend(void);
 	void TouchInput(DWORD dwFlags,int TouchX,int TouchY);
+	bool InitSwf(GPtr<GFxMovieDef> g_gfxdef, GPtr<GFxMovieView> g_gfxview,char * filename);
+	
+	
 };
 
 #endif
