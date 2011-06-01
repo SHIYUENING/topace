@@ -45,6 +45,7 @@ wchar_t ShowFPS[768]={0};
 int OmniLightNumBase=0;
 int SpotLightNumBase=0;
 CTopAceModel TopAceModelTest;
+CTopAceModel TAMBird;
 Textures LoadingTex;
 Textures WaterNormalTex;
 //Textures TestTEX;
@@ -91,6 +92,34 @@ extern char * pargchar;
 string strCommandchar[2];
 string strpargchar[2];
 bool fistDraw=true;
+CUnitMath BirdMaths[20];
+int BirdLife[20]={-1};
+__m128 ScenePosT=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+void DrawBird()
+{
+	for (int i=0;i<20;i++)
+	{
+		if(BirdLife[i]<1)
+		{
+			BirdLife[i]=3000;
+			BirdMaths[i].UnitPos=ScenePosT;
+			BirdMaths[i].UnitPos.m128_f32[0]=float(rand()%100)*0.1f+ScenePosT.m128_f32[0]+50.0f;
+			BirdMaths[i].UnitPos.m128_f32[2]=float(rand()%100)*0.1f+ScenePosT.m128_f32[2]+10.0f;
+			BirdMaths[i].PosTo(ScenePosT);
+		}
+		else
+		{
+			BirdMaths[i].MovInternal(_mm_set_ps(1.0f,-0.1f,0.0f,0.0f));
+			CUnitMath DrawBirdMathTMP;
+			DrawBirdMathTMP.UnitQuat=BirdMaths[i].UnitQuat;
+			DrawBirdMathTMP.UnitPos=BirdMaths[i].UnitPos;
+			DrawBirdMathTMP.RotInternal(-90,1.0f,0.0f,0.0f);
+			BirdLife[i]=BirdLife[i]-1;
+			TAMBird.FrameTAMBoneMatrixs(float(BirdLife[i]));
+			TAMBird.Draw(false);
+		}
+	}
+}
 inline void ToScene(int SceneID)
 {
 	if(SceneID>=0)
@@ -101,9 +130,9 @@ inline void ToScene(int SceneID)
 		moveZSpeed=TamScene.TamList[SceneID].MoveSpeed;
 		float ScenePosTMP[3];
 		Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneID].Pos);
-		ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
-		ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
-		ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
+		ScenePosT.m128_f32[0]=ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
+		ScenePosT.m128_f32[1]=ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
+		ScenePosT.m128_f32[2]=ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
 		ThreadDataDraw.DrawToData.ViewPos[0]=ScenePosTMP[0]-20.0f;
 		ThreadDataDraw.DrawToData.ViewPos[1]=ScenePosTMP[1]+50.0f;
 		ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
@@ -113,9 +142,9 @@ inline void ToScene(int SceneID)
 	if(SceneID<0)
 	{
 		moveZSpeed=25.0f;
-		ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
-		ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
-		ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
+		ScenePosT.m128_f32[0]=ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
+		ScenePosT.m128_f32[1]=ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
+		ScenePosT.m128_f32[2]=ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
 		ThreadDataDraw.DrawToData.ViewPos[0]=800.0f;
 		ThreadDataDraw.DrawToData.ViewPos[1]=800.0f;
 		ThreadDataDraw.DrawToData.ViewPos[2]=800.0f;
@@ -504,6 +533,8 @@ bool InitDraw()
 	TamScene.ToVRAM();
 	TamScene.SetUnitNamePos(GameSet.winW,GameSet.winH);
 	TAMFT3D.LoadFontFile()?ADD_LOG_Q("TAMFT3D.LoadFontFile() OK"):ADD_LOG_Q("TAMFT3D.LoadFontFile() fail","#FF0000");
+	TAMBird.ReadTAMFile(L"data/bird.tam");
+	TAMBird.LoadToVRAM();
 	swprintf_s(ShowFPS,64,L"-");
 	Easy_matrix_identity(CameraMatrix);
 	ADD_LOG_Q("InitDraw() OK");
@@ -531,6 +562,7 @@ void DeinitDraw()
 	if(GameSet.Light>1)
 		DeinitFBO();
 	DeinitGLSL();
+	TAMBird.DeleteVRAM();
 	TopAceModelTest.DeleteVRAM();
 	Inited=false;
 	TamScene.ClearScene();
@@ -764,7 +796,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	}
 	glClear ( GL_DEPTH_BUFFER_BIT);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
-	
+	DrawBird();
 	TamScene.Draw(false);
 	if(SceneSelect>-1)
 	TamScene.Draw(false,_TAM_Mesh_EXT_Type_Tree);
