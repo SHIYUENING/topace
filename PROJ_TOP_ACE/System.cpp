@@ -498,7 +498,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Get The Window Context
 	GL_Window* window = (GL_Window*)(GetWindowLong (hWnd, GWL_USERDATA));
-	//pGfxUI->SetInput(uMsg,wParam,lParam);
+	pGfxUI->SetInput(uMsg,wParam,lParam);
 	switch (uMsg)														// Evaluate Window Message
 	{
 		case WM_SYSCOMMAND:												// Intercept System Commands
