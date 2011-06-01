@@ -85,6 +85,10 @@ extern bool DrawStandby;
 extern float TestNum;
 extern float notouchtime;
 extern CFONTS2D FONTS2DSimple;
+bool InNavi=true;
+extern float TouchPosO[2];
+float TouchPosOFix[2]={0.0f};
+extern float GFXMoveMask[2];
 void KeyUpdate ( Keys* g_keys,GL_Window* g_window)								// Perform Motion Updates Here
 {
 
@@ -493,6 +497,10 @@ void DoDoubleTouch()
 					//TouchInputposs[0].m128_i32[0]-TouchInputposs[1].m128_i32[0]
 	
 }
+void DoTouchPosO(int inTouchPosX,int inTouchPosY)
+{
+	//float DoTouchPosOYMPX=float(inTouchPosX-1920/2)+GameSet.TouchPosFixX;
+}
 // Process Window Message Callbacks
 LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -610,6 +618,16 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					
 				}
+				bool tmphavetouch=false;
+				for(int i=0;i<4;i++)
+				{
+					if(Touchings[i]) tmphavetouch=true;
+				}
+				if(!tmphavetouch)
+				{
+				GFXMoveMask[0]=0;
+				GFXMoveMask[1]=0;
+				}
 				if(nInputsNow>1)
 				{
 					/*zoomsize=float(Easy_vector_Getlenth_2i(
@@ -645,6 +663,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				{
 					pGfxUI->TouchInput(ti[0].dwFlags,ti[0].x/100,ti[0].y/100);
 					DoubleTouchTime=0;
+					DoTouchPosO(ti[0].x/100,ti[0].y/100);
 					if(Touchings[0])
 					if(!((TouchInputposs[0].m128_i32[0]==0)&&(TouchInputposs[0].m128_i32[1]==0)))
 					{
@@ -787,7 +806,6 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 		window.init.isFullScreen = g_createFullScreen;
 		if (CreateWindowGL (&window) == TRUE)
 		{
-
 			ADD_LOG_Q("CreateWindow OK",NULL,NULL,NULL,NULL,true);
 			SwapHdc=window.hDC;
 			if(glewIsSupported("WGL_EXT_swap_control"))
@@ -863,8 +881,9 @@ unsigned int __stdcall RenderThread(LPVOID lpvoid)
 						pGfxUI->Draw();
 						glPopAttrib();
 						glColor4f(1.0f,1.0f,0.0f,0.4f);
-	FONTS2DSimple.DrawTexts(L"样品送审",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
+	FONTS2DSimple.DrawTexts(L"  ",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	DrawUIs();
 						glFlush();
 						hglSwapBuffers (SwapHdc);
 						if(GameSet.FPS>0) LockFPSRender.LockFPS();

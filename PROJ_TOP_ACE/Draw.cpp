@@ -95,6 +95,8 @@ bool fistDraw=true;
 CUnitMath BirdMaths[20];
 int BirdLife[20]={-1};
 __m128 ScenePosT=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+extern bool DrawTXTWIN;
+extern bool EnableTXTWIN;
 void DrawBird()
 {
 	for (int i=0;i<20;i++)
@@ -122,8 +124,14 @@ void DrawBird()
 }
 inline void ToScene(int SceneID)
 {
+
 	if(SceneID>=0)
-	if(MGroup.GetGroup(TamScene.TamList[SceneID].Name)==3) return;
+	if(MGroup.GetGroup(TamScene.TamList[SceneID].Name)==3)
+	{
+		EnableTXTWIN=true;
+		SceneSelect=-1;
+		return;
+	}
 	if(SceneID>=0)
 	if(SceneID<TamScene.TamList.size())
 	{
@@ -138,6 +146,7 @@ inline void ToScene(int SceneID)
 		ThreadDataDraw.DrawToData.ViewPos[2]=ScenePosTMP[2]-70.0f;
 		ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneID].Limitfar;
 		ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneID].Limitnear;
+		EnableTXTWIN=true;
 	}
 	if(SceneID<0)
 	{
@@ -150,6 +159,7 @@ inline void ToScene(int SceneID)
 		ThreadDataDraw.DrawToData.ViewPos[2]=800.0f;
 		ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
 		ThreadDataDraw.DrawToData.LimitZ[1]=800.0f;
+		DrawTXTWIN=false;
 	}
 }
 inline void SetTamSceneCheck()
@@ -302,7 +312,8 @@ void ShowTextAndBTN(wchar_t * Text)
 }
 void ShowText3D(wchar_t * Text)
 {
-	glColor4f(0.5f,0.5f,0.5f,0.75f);
+	//return;
+	/*glColor4f(0.5f,0.5f,0.5f,0.75f);
 		DrawQUADEX(
 		0,
 		960-800,
@@ -311,7 +322,7 @@ void ShowText3D(wchar_t * Text)
 		12,
 		1920,
 		1080);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);*/
 	/*DrawUnitText(Text);
 	DrawQUADEX(
 		TextTex,
@@ -323,11 +334,11 @@ void ShowText3D(wchar_t * Text)
 		1080);*/
 	FontText.DrawTexts(Text,
 		960-800,
-		320-20,
+		1080-320,
 		1920,
 		1080,
 		960+800,
-		32,4.0f);
+		48,4.0f);
 
 }
 void DrawLoadingTex(Textures * pLoadingTex)
@@ -710,7 +721,8 @@ void DrawUIs()
 			ShowTextAndBTN(TamScene.TamList[SceneSelectReady].text);
 		}
 	}*/
-	if(SceneSelect>=0) 
+	if(DrawTXTWIN)
+	if(SceneSelectReady>-1) 
 	{
 		ShowText3D(TamScene.TamList[SceneSelectReady].text);
 	}
@@ -796,7 +808,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	}
 	glClear ( GL_DEPTH_BUFFER_BIT);
 	GLSL_Enable_Light(SINGLBONE,min(GLSL150,GLSLver),OmniLightNumBase,SpotLightNumBase,TessLevel);
-	DrawBird();
+	//DrawBird();
 	TamScene.Draw(false);
 	if(SceneSelect>-1)
 	TamScene.Draw(false,_TAM_Mesh_EXT_Type_Tree);
@@ -859,7 +871,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//glDisable(GL_MULTISAMPLE_ARB);
 	
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
-	DrawUIs();
+	//DrawUIs();
 	BlurPass();
 	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	SetTamSceneCheck();

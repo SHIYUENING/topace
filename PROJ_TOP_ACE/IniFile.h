@@ -44,6 +44,9 @@ struct tGameSet
 	int Cloud;
 	float TouchMoveOverride;
 	float TouchZoomOverride;
+	float TouchPosFixX;
+	float TouchPosFixY;
+	float TouchPosFixRange;
 };
 struct tSoundSet
 {

@@ -15,9 +15,13 @@ char * Commandchar=NULL;
 char * pargchar=NULL;
 float blurSet[4]={-1.0f};
 float notouchtime=0.0f;
-bool DrawStandby=true;
+bool DrawStandby=false;
 extern float GFXPosMove[2];
 extern float TestNum;
+extern bool InNavi;
+float GFXMoveMask[2]={0};
+bool DrawTXTWIN=false;
+bool EnableTXTWIN=false;
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -32,6 +36,26 @@ public:
 			blurSet[3]=blurSet[2];
 			return;
 		}//
+		if(strcmp(pcommand,"MoveMask")==0)
+		{
+			if(strcmp(parg,"OutRange")==0)
+			{
+				GFXMoveMask[0]=0;
+				GFXMoveMask[1]=0;
+				return;
+			}
+	TestNum=float (GFXMoveMask[0]);
+			sscanf_s(parg,"%f,%f",&(GFXMoveMask[0]),&(GFXMoveMask[1]));
+			GFXMoveMask[0]=GFXMoveMask[0]*(192.0f/128.0f)-GameSet.winW/2;
+			GFXMoveMask[1]=GFXMoveMask[1]*(192.0f/128.0f)-GameSet.winH/2;
+			if(max(abs(GFXMoveMask[0]),abs(GFXMoveMask[1]))>120.0f)
+			{
+				GFXMoveMask[0]=0;
+				GFXMoveMask[1]=0;
+			}
+			
+			return;
+		}
 		
 		if(strcmp("Move",pcommand)==0)
 		{
@@ -52,6 +76,11 @@ public:
 				GFXPosMove[0]=10.0f;
 			}
 		}
+		if(strcmp("Text",pcommand)==0)
+			if(strcmp("Close",parg)==0)
+			{
+				DrawTXTWIN=false;
+			}
 		if(strcmp("MoveEnd",pcommand)==0)
 		{
 			GFXPosMove[0]=GFXPosMove[0]*0.925f;
@@ -93,6 +122,19 @@ void CGFXUI::Init(void)
 	GFxSystem::Init();
 	#endif
 }
+bool CGFXUI::InitSwf(GPtr<GFxMovieDef> g_gfxdef, GPtr<GFxMovieView> g_gfxview,char * filename)
+{
+	g_gfxdef = *(gfxLoader.CreateMovie(filename,
+		                                  GFxLoader::LoadKeepBindData |
+										  GFxLoader::LoadWaitFrame1));
+	if(!g_gfxdef) return false;
+	g_gfxview = *g_gfxdef->CreateInstance(GFxMovieDef::MemoryParams(), true);
+	if(!g_gfxview)
+		return false;
+	return true;
+	g_gfxview->Advance(0.0f, 0);
+	g_gfxview->SetBackgroundAlpha(0.0f);
+}
 
 
 bool CGFXUI::InitGFX(void)
@@ -119,20 +161,33 @@ bool CGFXUI::InitGFX(void)
 	pUIMovieDefStandBy = *(gfxLoader.CreateMovie("bg2.swf",
 		                                  GFxLoader::LoadKeepBindData |
 										  GFxLoader::LoadWaitFrame1));
+	pUIMovieDefTXT = *(gfxLoader.CreateMovie("txt.swf",
+		                                  GFxLoader::LoadKeepBindData |
+										  GFxLoader::LoadWaitFrame1));
+
 	if(!pUIMovieDef)
 		return false;
 	if(!pUIMovieDefStandBy) return false;
 	pUIMovie = *pUIMovieDef->CreateInstance(GFxMovieDef::MemoryParams(), true);
 	pUIMovieStandBy = *pUIMovieDefStandBy->CreateInstance(GFxMovieDef::MemoryParams(), true);
+
+		if(pUIMovieDefTXT)
+	pUIMovieTXT = *pUIMovieDefTXT->CreateInstance(GFxMovieDef::MemoryParams(), true);
+
 	if(!pUIMovie)
 		return false;
 	if(!pUIMovieStandBy)
 		return false;
+	else
+	{
+		DrawStandby=false;
+	}
 	ChangeWin(0,0,GameSet.winW,GameSet.winH);
 	//ChangeWin(0,0,GameSet.winW/2,GameSet.winH/2);
 		// Advance the movie to the first frame
 	pUIMovie->Advance(0.0f, 0);
 	pUIMovieStandBy->Advance(0.0f, 0);
+	if(pUIMovieTXT) pUIMovieTXT->Advance(0.0f, 0);
 
 	// Note the time to determine the amount of time elapsed between this frame and the next
 	MovieLastTime = timeGetTime();
@@ -140,6 +195,7 @@ bool CGFXUI::InitGFX(void)
 	// Set the background stage color to alpha blend with the underlying 3D environment
 	pUIMovie->SetBackgroundAlpha(0.0f);
 	pUIMovieStandBy->SetBackgroundAlpha(0.0f);
+	if(pUIMovieTXT) pUIMovieTXT->SetBackgroundAlpha(0.0f);
 	return true;
 	#else
 	return false;
@@ -155,6 +211,7 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 		return;
 	if(!pUIMovie)
 		return;
+	if(!pUIMovieStandBy) return;
 	pRenderer->SetDependentVideoMode();
 	pUIMovie->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
 	pUIMovie->SetViewScaleMode(GFxMovieView::SM_ExactFit);
@@ -162,6 +219,9 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 	pUIMovieStandBy->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
 	pUIMovieStandBy->SetViewScaleMode(GFxMovieView::SM_ExactFit);
 	pUIMovieStandBy->SetViewAlignment(GFxMovieView::Align_CenterRight);
+	if(pUIMovieTXT) pUIMovieTXT->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
+	if(pUIMovieTXT) pUIMovieTXT->SetViewScaleMode(GFxMovieView::SM_ExactFit);
+	if(pUIMovieTXT) pUIMovieTXT->SetViewAlignment(GFxMovieView::Align_CenterRight);
 	#endif
 }
 
@@ -177,28 +237,51 @@ void CGFXUI::Draw(void)
     float deltaTime = ((float)(mtime - MovieLastTime)) / 1000.0f;
 	MovieLastTime = mtime;
 	notouchtime=notouchtime+deltaTime;
-	if(notouchtime>(15.0f*60.0f))
+/*	if(notouchtime>(15.0f*60.0f))
 	{
-		DrawStandby=true;
+		DrawStandby=false;
 		pUIMovieStandBy->Restart();
-	}
+	}*/
 	//deltaTime=min(pUIMovie->GetFrameRate(),deltaTime);
 	if(!DrawStandby)
 	{
+		if(pUIMovie)
 	pUIMovie->Advance(deltaTime);
+		if(pUIMovie)
 	pUIMovie->Display();
 	}
 	else
 	{
+		if(pUIMovieStandBy)
 		pUIMovieStandBy->Advance(deltaTime);
+		if(pUIMovieStandBy)
 		pUIMovieStandBy->Display();
 	}
+	if(DrawTXTWIN)
+	{
+		if(pUIMovieTXT) 
+		{
+			pUIMovieTXT->Advance(deltaTime);
+			pUIMovieTXT->Display();
+		}
+	}
+	if(EnableTXTWIN)
+	{
+		EnableTXTWIN=false;
+		DrawTXTWIN=true;
+		if(pUIMovieTXT) 
+		{
+			pUIMovieTXT->Restart();
+		}
+	}
+	
 	#endif
 }
 
 
 void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	//return;
 	#ifdef USEGFX
 	int mx,my;
 	switch (uMsg)	
@@ -221,6 +304,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			pUIMovie->HandleEvent(mevent);
 			if(pUIMovieStandBy)
 			pUIMovieStandBy->HandleEvent(mevent);
+			if(pUIMovieTXT) pUIMovieTXT->HandleEvent(mevent);
 			return ;
 		}
 		case WM_LBUTTONDOWN:
@@ -233,6 +317,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			pUIMovie->HandleEvent(mevent);
 			if(pUIMovieStandBy)
 			pUIMovieStandBy->HandleEvent(mevent);
+			if(pUIMovieTXT) pUIMovieTXT->HandleEvent(mevent);
 			return ;
 		}
 	
@@ -242,24 +327,26 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 bool isTouchDown=false;
 void CGFXUI::TouchInput(DWORD dwFlags,int TouchX,int TouchY)
 {
+	return;
 	if(dwFlags & TOUCHEVENTF_MOVE)
 	{
-		if(isTouchDown)
-		{
+		//if(isTouchDown)
+	//	{
 			GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) TouchX,(float) TouchY);
 			if(pUIMovie)
 				pUIMovie->HandleEvent(mevent);
-		}
-		else
-		{
-			GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) 0,(float) 0);
-			if(pUIMovie)
-				pUIMovie->HandleEvent(mevent);
-		}
+			if(pUIMovieTXT) pUIMovieTXT->HandleEvent(mevent);
+	//	}
+	//	else
+	//	{
+	//		GFxMouseEvent mevent(GFxEvent::MouseMove, 0,(float) 0,(float) 0);
+	//		if(pUIMovie)
+	//			pUIMovie->HandleEvent(mevent);
+	//	}
 	}
 	if(dwFlags & TOUCHEVENTF_UP)
 	{
-		isTouchDown=false;
+	//	isTouchDown=false;
 		GFXPosMove[0]=GFXPosMove[0]*0.925f;
 		GFXPosMove[1]=GFXPosMove[1]*0.925f;
 		GFxMouseEvent mevent(GFxEvent::MouseUp, 0,(float) TouchX,(float) TouchY);
@@ -267,18 +354,20 @@ void CGFXUI::TouchInput(DWORD dwFlags,int TouchX,int TouchY)
 			pUIMovie->HandleEvent(mevent);
 		if(pUIMovieStandBy)
 			pUIMovieStandBy->HandleEvent(mevent);
-		GFxMouseEvent mevent2(GFxEvent::MouseUp, 0,(float) 0,(float) 0);
-		if(pUIMovie)
-			pUIMovie->HandleEvent(mevent2);
+		if(pUIMovieTXT) pUIMovieTXT->HandleEvent(mevent);
+	//	GFxMouseEvent mevent2(GFxEvent::MouseUp, 0,(float) 0,(float) 0);
+		//if(pUIMovie)
+			//pUIMovie->HandleEvent(mevent2);
 	}
 	if(dwFlags & TOUCHEVENTF_DOWN)
 	{
-		isTouchDown=true;
+		//isTouchDown=true;
 		GFxMouseEvent mevent(GFxEvent::MouseDown, 0,(float) TouchX,(float) TouchY);
 		if(pUIMovie)
 			pUIMovie->HandleEvent(mevent);
 		if(pUIMovieStandBy)
 			pUIMovieStandBy->HandleEvent(mevent);
+		if(pUIMovieTXT) pUIMovieTXT->HandleEvent(mevent);
 	}
 }
 
@@ -286,5 +375,7 @@ void CGFXUI::TouchInput(DWORD dwFlags,int TouchX,int TouchY)
 void CGFXUI::GetCommend(void)
 {
 }
+
+
 
 
