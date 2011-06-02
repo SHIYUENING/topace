@@ -127,7 +127,7 @@ bool CTamScene::AddUnit(wstring  ModelPath,_TamUnit * TamUnit)
 	ModelPathTMP=ModelPath;
 	ModelPathTMP+=L"\\set.ini";
 	GetPrivateProfileStringW(L"set",L"name",L"No Name",TamUnit->Name,64,ModelPathTMP.c_str());
-	GetPrivateProfileStringW(L"set",L"text",L"No Text",TamUnit->text,2048,ModelPathTMP.c_str());
+	GetPrivateProfileStringW(L"set",L"text",L" ",TamUnit->text,2048,ModelPathTMP.c_str());
 
 	TamUnit->Pos[0]=GetIniFloat(L"pos",L"x",ModelPathTMP.c_str(),L"0.0");
 	TamUnit->Pos[1]=GetIniFloat(L"pos",L"y",ModelPathTMP.c_str(),L"0.0");

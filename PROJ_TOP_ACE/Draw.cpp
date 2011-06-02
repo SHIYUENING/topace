@@ -78,6 +78,7 @@ void DrawShadowMapNULL();
 extern int InputPos[3];
 UINT uMsgDraw=0;
 float TestNum=0.0f;
+float TestNum2=0.0f;
 int SceneSelect=-1;
 int DrawSceneText=-1;
 int SceneSelectReady=-1;
@@ -97,8 +98,12 @@ int BirdLife[20]={-1};
 __m128 ScenePosT=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 extern bool DrawTXTWIN;
 extern bool EnableTXTWIN;
+extern bool DrawGM;
 void DrawBird()
 {
+			
+			
+			
 	for (int i=0;i<20;i++)
 	{
 		if(BirdLife[i]<1)
@@ -111,14 +116,20 @@ void DrawBird()
 		}
 		else
 		{
-			BirdMaths[i].MovInternal(_mm_set_ps(1.0f,-0.1f,0.0f,0.0f));
+			BirdMaths[i].MovInternal(_mm_set_ps(1.0f,-1.1f,0.0f,0.0f));
 			CUnitMath DrawBirdMathTMP;
 			DrawBirdMathTMP.UnitQuat=BirdMaths[i].UnitQuat;
 			DrawBirdMathTMP.UnitPos=BirdMaths[i].UnitPos;
 			DrawBirdMathTMP.RotInternal(-90,1.0f,0.0f,0.0f);
 			BirdLife[i]=BirdLife[i]-1;
 			TAMBird.FrameTAMBoneMatrixs(float(BirdLife[i]));
+			
+			__m128 DrawBirdMathTMPT[4];
+			DrawBirdMathTMP.GetMatrix(DrawBirdMathTMPT);
+	CommonMatrixs[CO_Matrix_World].Push();
+	CommonMatrixs[CO_Matrix_World].MultF(DrawBirdMathTMPT[0].m128_f32);
 			TAMBird.Draw(false);
+	CommonMatrixs[CO_Matrix_World].Pop();
 		}
 	}
 }
@@ -147,6 +158,9 @@ inline void ToScene(int SceneID)
 		ThreadDataDraw.DrawToData.LimitZ[0]=TamScene.TamList[SceneID].Limitfar;
 		ThreadDataDraw.DrawToData.LimitZ[1]=TamScene.TamList[SceneID].Limitnear;
 		EnableTXTWIN=true;
+		
+		if(wcscmp(TamScene.TamList[SceneID].Name,L"淮南市政府")==0)
+			DrawGM=true;
 	}
 	if(SceneID<0)
 	{
@@ -154,12 +168,13 @@ inline void ToScene(int SceneID)
 		ScenePosT.m128_f32[0]=ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
 		ScenePosT.m128_f32[1]=ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
 		ScenePosT.m128_f32[2]=ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-		ThreadDataDraw.DrawToData.ViewPos[0]=800.0f;
-		ThreadDataDraw.DrawToData.ViewPos[1]=800.0f;
-		ThreadDataDraw.DrawToData.ViewPos[2]=800.0f;
-		ThreadDataDraw.DrawToData.LimitZ[0]=3500.0f;
-		ThreadDataDraw.DrawToData.LimitZ[1]=800.0f;
+		ThreadDataDraw.DrawToData.ViewPos[0]=1300.0f;
+		ThreadDataDraw.DrawToData.ViewPos[1]=1300.0f;
+		ThreadDataDraw.DrawToData.ViewPos[2]=1300.0f;
+		ThreadDataDraw.DrawToData.LimitZ[0]=6000.0f;
+		ThreadDataDraw.DrawToData.LimitZ[1]=2000.0f;
 		DrawTXTWIN=false;
+		DrawGM=false;
 	}
 }
 inline void SetTamSceneCheck()
@@ -683,7 +698,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		swprintf_s(
 			ShowFPS,
 			sizeof(ShowFPS)/sizeof(ShowFPS[0]),
-			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU:%3.2f%%/%3.2f%% GPU:%3.2f%%\n %f",
+			L"FPS:%d %s\n当前触摸点数/最大触摸点数：%d/%d,触点位置1/2: %d %d / %d %d\nCPU:%3.2f%%/%3.2f%% GPU:%3.2f%%\n %f  %f",
 			FPSNumShow,
 			GPUName,
 			nInputsNow,
@@ -695,7 +710,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 			oneframetimepointCPUDraw,
 			oneframetimepointCPUSYS,
 			oneframetimepointGPU,
-			TestNum
+			TestNum,TestNum2
 			);
 		//swprintf_s(ShowFPS,64,L"FPS:%d, CPU:%3.3f%%, CPUDraw:%3.3f%%,\nGPU:%3.3f%%,GPU Tess:%d",FPSNumShow,oneframetimepointCPUSYS,oneframetimepointCPUDraw,oneframetimepointGPU,TessLevel);
 		//Font2D->inputTxt(ShowFPS);
