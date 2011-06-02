@@ -22,6 +22,7 @@ extern bool InNavi;
 float GFXMoveMask[2]={0};
 bool DrawTXTWIN=false;
 bool EnableTXTWIN=false;
+bool DrawGM=false;
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -36,7 +37,7 @@ public:
 			blurSet[3]=blurSet[2];
 			return;
 		}//
-		if(strcmp(pcommand,"MoveMask")==0)
+		/*if(strcmp(pcommand,"MoveMask")==0)
 		{
 			if(strcmp(parg,"OutRange")==0)
 			{
@@ -55,7 +56,7 @@ public:
 			}
 			
 			return;
-		}
+		}*/
 		
 		if(strcmp("Move",pcommand)==0)
 		{
@@ -164,6 +165,10 @@ bool CGFXUI::InitGFX(void)
 	pUIMovieDefTXT = *(gfxLoader.CreateMovie("txt.swf",
 		                                  GFxLoader::LoadKeepBindData |
 										  GFxLoader::LoadWaitFrame1));
+	pUIMovieDefGM = *(gfxLoader.CreateMovie("GM.swf",
+		                                  GFxLoader::LoadKeepBindData |
+										  GFxLoader::LoadWaitFrame1));
+	
 
 	if(!pUIMovieDef)
 		return false;
@@ -173,7 +178,7 @@ bool CGFXUI::InitGFX(void)
 
 		if(pUIMovieDefTXT)
 	pUIMovieTXT = *pUIMovieDefTXT->CreateInstance(GFxMovieDef::MemoryParams(), true);
-
+	if(pUIMovieDefGM) pUIMovieGM = *pUIMovieDefGM->CreateInstance(GFxMovieDef::MemoryParams(), true);
 	if(!pUIMovie)
 		return false;
 	if(!pUIMovieStandBy)
@@ -188,6 +193,7 @@ bool CGFXUI::InitGFX(void)
 	pUIMovie->Advance(0.0f, 0);
 	pUIMovieStandBy->Advance(0.0f, 0);
 	if(pUIMovieTXT) pUIMovieTXT->Advance(0.0f, 0);
+	if(pUIMovieDefGM) pUIMovieGM ->Advance(0.0f, 0);
 
 	// Note the time to determine the amount of time elapsed between this frame and the next
 	MovieLastTime = timeGetTime();
@@ -196,6 +202,7 @@ bool CGFXUI::InitGFX(void)
 	pUIMovie->SetBackgroundAlpha(0.0f);
 	pUIMovieStandBy->SetBackgroundAlpha(0.0f);
 	if(pUIMovieTXT) pUIMovieTXT->SetBackgroundAlpha(0.0f);
+	if(pUIMovieDefGM) pUIMovieGM ->SetBackgroundAlpha(0.0f);
 	return true;
 	#else
 	return false;
@@ -222,6 +229,9 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 	if(pUIMovieTXT) pUIMovieTXT->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
 	if(pUIMovieTXT) pUIMovieTXT->SetViewScaleMode(GFxMovieView::SM_ExactFit);
 	if(pUIMovieTXT) pUIMovieTXT->SetViewAlignment(GFxMovieView::Align_CenterRight);
+	if(pUIMovieDefGM) pUIMovieGM ->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
+	if(pUIMovieDefGM) pUIMovieGM ->SetViewScaleMode(GFxMovieView::SM_NoScale);
+	if(pUIMovieDefGM) pUIMovieGM ->SetViewAlignment(GFxMovieView::Align_Center);
 	#endif
 }
 
@@ -257,6 +267,7 @@ void CGFXUI::Draw(void)
 		if(pUIMovieStandBy)
 		pUIMovieStandBy->Display();
 	}
+	if(!DrawGM)
 	if(DrawTXTWIN)
 	{
 		if(pUIMovieTXT) 
@@ -274,14 +285,18 @@ void CGFXUI::Draw(void)
 			pUIMovieTXT->Restart();
 		}
 	}
-	
+	if(DrawGM)
+	if(pUIMovieDefGM)
+	{
+		pUIMovieGM->Display();
+	}
 	#endif
 }
 
 
 void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	//return;
+	return;
 	#ifdef USEGFX
 	int mx,my;
 	switch (uMsg)	
@@ -327,7 +342,7 @@ void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 bool isTouchDown=false;
 void CGFXUI::TouchInput(DWORD dwFlags,int TouchX,int TouchY)
 {
-	return;
+	//return;
 	if(dwFlags & TOUCHEVENTF_MOVE)
 	{
 		//if(isTouchDown)

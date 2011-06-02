@@ -26,10 +26,12 @@ public:
 	GPtr<GFxMovieDef>   pUIMovieDef;
 	GPtr<GFxMovieDef>   pUIMovieDefStandBy;
 	GPtr<GFxMovieDef>   pUIMovieDefTXT;
+	GPtr<GFxMovieDef>   pUIMovieDefGM;
 	GPtr<GRendererOGL>   pRenderer;
 	GPtr<GFxMovieView>  pUIMovie;
 	GPtr<GFxMovieView>  pUIMovieStandBy;
 	GPtr<GFxMovieView>  pUIMovieTXT;
+	GPtr<GFxMovieView>  pUIMovieGM;
 	#endif
 	DWORD  MovieLastTime;
 	bool InitGFX(void);

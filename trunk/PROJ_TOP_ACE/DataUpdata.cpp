@@ -41,9 +41,10 @@ __m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
 float GFXPosMove[2]={0.0f};
 float PosMove[3]={0.0f};
 float PosTurn[2]={0.0f};
-float LimitZ[2]={3500.0f,1900.0f};
+float LimitZ[2]={6000.0f,1900.0f};
 float ViewLen=100.0f;
 extern float TestNum;
+extern float TestNum2;
 float MoveLimit=0.0f;
 extern int SceneSelect;
 
@@ -57,8 +58,13 @@ void UpdataKeys()
 	PosMove[2]=0.0f;
 	PosTurn[0]=0.0f;
 	PosTurn[1]=0.0f;
-	PosMove[0]=-moveZSpeed*float(GFXMoveMask[0])*0.01f;
-	PosMove[1]=-moveZSpeed*float(GFXMoveMask[1])*0.01f;
+	if(blurnumtmp1!=blurnumtmp1) blurnumtmp1=0.0f;
+	if(sqrt(GFXMoveMask[0]*GFXMoveMask[0]+GFXMoveMask[1]*GFXMoveMask[1])<200.0f)
+	if(blurnumtmp1<0.1f)
+	{
+		PosMove[0]=-moveZSpeed*float(GFXMoveMask[0])*0.01f;
+		PosMove[1]=-moveZSpeed*float(GFXMoveMask[1])*0.01f;
+	}
 	if(GFXPosMove[0]<-1.0f)
 		PosMove[0]=moveZSpeed;
 
@@ -83,22 +89,22 @@ void UpdataKeys()
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['W'] == TRUE)
 	{
 		PosMove[1]=moveZSpeed;
-		GoZ=GoZ+moveZSpeed;
+		//GoZ=GoZ+moveZSpeed;
 	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['S'] == TRUE)
 	{
 		PosMove[1]=-moveZSpeed;
-		GoZ=GoZ-moveZSpeed;
+		//GoZ=GoZ-moveZSpeed;
 	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['A'] == TRUE)
 	{
 		PosMove[0]=moveZSpeed;
-		GoX=GoX+moveZSpeed;
+		//GoX=GoX+moveZSpeed;
 	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now['D'] == TRUE)
 	{
 		PosMove[0]=-moveZSpeed;
-		GoX=GoX-moveZSpeed;
+		//GoX=GoX-moveZSpeed;
 	}
 	if(ThreadDataUpdata.DrawToData.Global_Data_Key.keyDown_Now[VK_UP] == TRUE)
 	{
@@ -144,15 +150,15 @@ void UpdataKeys()
 		TouchangY=1000.0f;
 	if(TouchangY<-1000.0f) 
 		TouchangY=-1000.0f;
-	PosMove[0]+=TouchMoveOverride*Touchang/500.0f*moveZSpeed/25.0f;
-	PosMove[1]+=TouchMoveOverride*TouchangY/500.0f*moveZSpeed/25.0f;
+	//PosMove[0]+=TouchMoveOverride*Touchang/500.0f*moveZSpeed/25.0f;
+	//PosMove[1]+=TouchMoveOverride*TouchangY/500.0f*moveZSpeed/25.0f;
 	GoX=GoX+Touchang*0.01f;
 	//LimitZ
 	//if(moveZ<0.0f) moveZ=0.0f;
 	//if(moveZ<-350.0f) moveZ=-350.0f;
 	moveZ=max(moveZ,LimitZ[1]);
 	moveZ=min(moveZ,LimitZ[0]);
-	//TestNum=moveZ;
+	TestNum=moveZ;
 	Touchang=Touchang*0.90f;
 	if(abs(Touchang)<0.0001f) Touchang=0.0f;
 	TouchangY=TouchangY*0.90f;
@@ -216,11 +222,11 @@ void InitDataThread()
 }
 inline void LimitTurnUP()
 {
-	float Dlimit=min(1.0f,(ViewLen+moveZ-2000.0f)/1600.0f);
+	float Dlimit=max(0.0f,min(1.0f,(ViewLen+moveZ-3000.0f)/4000.0f));
 	//TestNum=ViewLen+moveZ;
 	float TurnUP=Easy_vector_dot(_mm_set_ps(1.0f,0.0f,1.0f,0.0f),ViewMat[2]);
 	if(SceneSelect>-1) Dlimit=0.0f;
-	if(TurnUP<0.25f+Dlimit*0.499f)
+	if(TurnUP<0.35f+Dlimit*0.385f)
 	{
 		//ViewUnit.RotInternal(min(0.0f,PosTurn[1]),1.0f,0.0f,0.0f);
 		__m128 ViewUnitMATTMP1[4];
@@ -228,7 +234,7 @@ inline void LimitTurnUP()
 		float TurnUPTMP2=Easy_vector_dot(_mm_set_ps(1.0f,0.0f,1.0f,0.0f),ViewUnitMATTMP1[2]);
 		if(SceneSelect==-1)
 		{
-			while(TurnUPTMP2<(0.25f+Dlimit*0.499f))
+			while(TurnUPTMP2<(0.35f+Dlimit*0.385f))
 			{
 				ViewUnit.RotInternal(-0.001f,1.0f,0.0f,0.0f);
 				ViewUnit.GetMatrix(ViewUnitMATTMP1);
@@ -249,10 +255,10 @@ void DataUpdata()
 	UpdataKeys();
 	TotalFrame=TotalFrame+1;
 	Test3dsFrame=Test3dsFrame+0.25f;
-	if(abs(GFXPosMove[0])<9.5f)
-	GFXPosMove[0]=GFXPosMove[0]*0.8f;
-	if(abs(GFXPosMove[1])<9.5f)
-	GFXPosMove[1]=GFXPosMove[1]*0.8f;
+	//if(abs(GFXPosMove[0])<9.5f)
+	//GFXPosMove[0]=GFXPosMove[0]*0.8f;
+	//if(abs(GFXPosMove[1])<9.5f)
+	//GFXPosMove[1]=GFXPosMove[1]*0.8f;
 	angleR=angleR+0.2f;
 	//TestView.Reset();
 	//TestView.RotInternal(moveX,0.0f,1.0f,0.0f);
@@ -308,7 +314,7 @@ void DataUpdata()
 	else
 	{
 		ViewTGTUnit.PosTo(ViewTGTPos);
-		ViewTGTUnit.MovInternal(_mm_set_ps(1.0f,-ViewLen*0.002f*moveZSpeed,0.0f,0.0f));
+		ViewTGTUnit.MovInternal(_mm_set_ps(1.0f,-ViewLen*0.02f*moveZSpeed,0.0f,0.0f));
 	}
 	ViewUnit.GetMatrix(ViewMat);
 	//TestNum=sqrt(Easy_vector_Getlenth_2(TestPos1,TestPos2));

@@ -83,6 +83,7 @@ CGFXUI * pGfxUI=NULL;
 float framegfxtmp=0.0f;
 extern bool DrawStandby;
 extern float TestNum;
+extern float TestNum2;
 extern float notouchtime;
 extern CFONTS2D FONTS2DSimple;
 bool InNavi=true;
@@ -430,8 +431,8 @@ void DoDoubleTouch()
 	TouchPointOrg.m128_i32[3],
 	TouchInputposs[1].m128_i32[1]))
 	};
-	if((movePosTMP[0]>2000)&&(movePosTMP[1]>2000))
-	{
+	//if((movePosTMP[0]>2000)&&(movePosTMP[1]>2000))
+	//{
 	zoomsize=sqrt(float(Easy_vector_Getlenth_2i(
 					TouchPointOrg.m128_i32[0],
 					TouchPointOrg.m128_i32[2],
@@ -444,10 +445,10 @@ void DoDoubleTouch()
 					TouchInputposs[0].m128_i32[1],
 					TouchInputposs[1].m128_i32[1])));
 	zoomsize=zoomsize/3000.0f;
-	if(zoomsize>3.0f)
+	if(zoomsize>5.0f)
 		return;
-	}
-	if((movePosTMP[0]<3000)&&(movePosTMP[1]>5000))
+	//}
+	/*if((movePosTMP[0]<3000)&&(movePosTMP[1]>5000))
 	{
 		Touchang=float(TouchPointOrg.m128_i32[2]-TouchInputposs[1].m128_i32[0]);
 		TouchangY=float(TouchPointOrg.m128_i32[3]-TouchInputposs[1].m128_i32[1]);
@@ -458,7 +459,7 @@ void DoDoubleTouch()
 		Touchang=float(TouchPointOrg.m128_i32[0]-TouchInputposs[0].m128_i32[0]);
 		TouchangY=float(TouchPointOrg.m128_i32[1]-TouchInputposs[0].m128_i32[1]);
 		zoomsize=0.0f;
-	}
+	}*/
 /*
 	int movePosTMP[2]={
 			Easy_vector_Getlenth_2i(
@@ -630,7 +631,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				}
 				if(nInputsNow>1)
 				{
-					/*zoomsize=float(Easy_vector_Getlenth_2i(
+					zoomsize=float(Easy_vector_Getlenth_2i(
 						TouchInputposs[0].m128_i32[2],
 						TouchInputposs[1].m128_i32[2],
 						TouchInputposs[0].m128_i32[3],
@@ -642,8 +643,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						TouchInputposs[0].m128_i32[1],
 						TouchInputposs[1].m128_i32[1]
 						));
-						zoomsize=max(-0.1f,min(0.1f,zoomsize));
-						NoTouchMoveTimes=20.0f;*/
+						zoomsize=max(-2.f,min(2.0f,zoomsize));
+						NoTouchMoveTimes=20.0f;
 					if(DoubleTouchTime==0)
 					{
 						TouchPointOrg.m128_i32[0]=TouchInputposs[0].m128_i32[0];
@@ -654,13 +655,27 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					DoubleTouchTime=DoubleTouchTime+1;
 					if(DoubleTouchTime>10)
 					{
-						DoDoubleTouch();
+					//	DoDoubleTouch();
 						DoubleTouchTime=0;
 					}
 					//TouchInputposs[0].m128_i32[0]-TouchInputposs[1].m128_i32[0]
 				}
 				else
 				{
+					for(int i=0;i<4;i++)
+					{
+						if(Touchings[i])
+						{
+							GFXMoveMask[0]=ti[i].x/100;
+							GFXMoveMask[0]=GFXMoveMask[0]-GameSet.winW/2;
+							GFXMoveMask[1]=ti[i].y/100;
+							GFXMoveMask[1]=GFXMoveMask[1]-GameSet.winH/2;
+							
+	//TestNum=GFXMoveMask[0];
+	//TestNum2=GFXMoveMask[1];
+	break;
+						};
+					}
 					pGfxUI->TouchInput(ti[0].dwFlags,ti[0].x/100,ti[0].y/100);
 					DoubleTouchTime=0;
 					DoTouchPosO(ti[0].x/100,ti[0].y/100);
