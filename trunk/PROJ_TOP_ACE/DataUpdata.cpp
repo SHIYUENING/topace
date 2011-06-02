@@ -37,12 +37,12 @@ float TouchZoomOverride=0.0f;
 __m128 ViewMat[4];
 CUnitMath ViewTGTUnit,ViewUnit;
 __m128 ViewTGTPos=_mm_set_ps(1.0f,0.0f,0.0f,0.0f);
-__m128 ViewPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
+__m128 ViewPos=_mm_set_ps(1.0f,250.0f,600.0f,250.0f);
 float GFXPosMove[2]={0.0f};
 float PosMove[3]={0.0f};
 float PosTurn[2]={0.0f};
-float LimitZ[2]={6000.0f,1900.0f};
-float ViewLen=100.0f;
+float LimitZ[2]={7000.0f,1000.0f};
+float ViewLen=500.0f;
 extern float TestNum;
 extern float TestNum2;
 float MoveLimit=0.0f;
@@ -51,6 +51,7 @@ extern int SceneSelect;
 extern float blurnumtmp1;
 float TouchPosO[2]={0.0f};
 extern float GFXMoveMask[2];
+extern bool EnableTXTWIN;
 void UpdataKeys()
 {
 	PosMove[0]=0.0f;
@@ -139,9 +140,9 @@ void UpdataKeys()
 	if(zoomsize!=zoomsize) 
 		zoomsize=0.0f;
 	if(SceneSelect==-1)
-		moveZ=moveZ-zoomsize*TouchZoomOverride*moveZSpeed*0.1f;
+		moveZ=moveZ+zoomsize*TouchZoomOverride*moveZSpeed*0.1f;
 	else
-		moveZ=moveZ-zoomsize*TouchZoomOverride*moveZSpeed*0.05f;
+		moveZ=moveZ+zoomsize*TouchZoomOverride*moveZSpeed*0.05f;
 	if(Touchang>1000.0f) 
 		Touchang=1000.0f;
 	if(Touchang<-1000.0f) 
@@ -188,12 +189,20 @@ void UpdataKeys()
 		PosTurn[0]=0.0f;
 		PosTurn[1]=0.0f;
 	}
+	if(EnableTXTWIN)
+	{
+		PosMove[0]=0.0f;
+		PosMove[1]=0.0f;
+		PosTurn[0]=0.0f;
+		PosTurn[1]=0.0f;
+	}
+
 }
 void InitDataThread()
 {
-	ViewUnit.UnitPos=_mm_set_ps(1.0f,250.0f,250.0f,250.0f);
+	ViewUnit.UnitPos=_mm_set_ps(1.0f,6000.0f,5000.0f,0.0f);
 	Easy_matrix_identity(ViewMat);
-	moveZ=2000.0f;
+	moveZ=4000.0f;
 	moveX=0.0f;
 	moveY=0.0f;
 	SoundSysTest=new CSoundSys;
@@ -226,7 +235,7 @@ inline void LimitTurnUP()
 	//TestNum=ViewLen+moveZ;
 	float TurnUP=Easy_vector_dot(_mm_set_ps(1.0f,0.0f,1.0f,0.0f),ViewMat[2]);
 	if(SceneSelect>-1) Dlimit=0.0f;
-	if(TurnUP<0.35f+Dlimit*0.385f)
+	if(TurnUP<0.45f+Dlimit*0.285f)
 	{
 		//ViewUnit.RotInternal(min(0.0f,PosTurn[1]),1.0f,0.0f,0.0f);
 		__m128 ViewUnitMATTMP1[4];
@@ -234,7 +243,7 @@ inline void LimitTurnUP()
 		float TurnUPTMP2=Easy_vector_dot(_mm_set_ps(1.0f,0.0f,1.0f,0.0f),ViewUnitMATTMP1[2]);
 		if(SceneSelect==-1)
 		{
-			while(TurnUPTMP2<(0.35f+Dlimit*0.385f))
+			while(TurnUPTMP2<(0.45f+Dlimit*0.285f))
 			{
 				ViewUnit.RotInternal(-0.001f,1.0f,0.0f,0.0f);
 				ViewUnit.GetMatrix(ViewUnitMATTMP1);
@@ -266,6 +275,7 @@ void DataUpdata()
 	//TestView.MovInternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ+30,PosOrgY,0));
 	//TestView.MovInternal(_mm_set_ps(1.0f,GoZ,0,GoX));
 	//TestView.PosTo(IdentityMatrix3,180.0f);
+	
 	if(ThreadDataUpdata.DrawToData.ChangePos)
 	{
 		ViewPos=_mm_set_ps(1.0f,ThreadDataUpdata.DrawToData.ViewPos[2],ThreadDataUpdata.DrawToData.ViewPos[1],ThreadDataUpdata.DrawToData.ViewPos[0]);
@@ -277,6 +287,11 @@ void DataUpdata()
 		moveZ=0;
 		LimitZ[0]=ThreadDataUpdata.DrawToData.LimitZ[0];
 		LimitZ[1]=ThreadDataUpdata.DrawToData.LimitZ[1];
+		if(SceneSelect==-1)
+		{
+			ViewLen=500;
+			moveZ=1300;
+		}
 	}
 	else
 	{
@@ -285,7 +300,8 @@ void DataUpdata()
 	ViewUnit.PosTo(&ViewTGTUnit);
 	ViewUnit.UnitPos=ViewTGTUnit.UnitPos;
 	ViewUnit.RotExternal(PosTurn[0],0.0f,1.0f,0.0f);
-
+	TestNum=ViewLen;
+	TestNum2=moveZ;
 	LimitTurnUP();
 
 	ViewUnit.MovInternal(_mm_set_ps(1.0f,ViewLen+moveZ,0.0f,0.0f));
@@ -300,8 +316,8 @@ void DataUpdata()
 	__m128 TestPos1=ViewTGTUnit.UnitPos;//TestPos1.m128_f32[1]=0.0f;
 	__m128 TestPos2=ViewTGTPos;//TestPos2.m128_f32[1]=0.0f;
 	//if((LimitZ[0]+ViewLen)>sqrt(Easy_vector_Getlenth_2(ViewUnitTMP.UnitPos,ViewTGTPos)))
-	float LimitFix=0.5f;
-	if(LimitZ[0]>300) LimitFix=1.5f;
+	float LimitFix=0.75f;
+	if(LimitZ[0]>300) LimitFix=1.75f;
 	if((LimitZ[0]+ViewLen)*LimitFix>sqrt(Easy_vector_Getlenth_2(TestPos1,TestPos2)))
 	{
 	ViewUnit.UnitPos.m128_f32[0]=ViewUnitTMP.UnitPos.m128_f32[0];
@@ -317,6 +333,8 @@ void DataUpdata()
 		ViewTGTUnit.MovInternal(_mm_set_ps(1.0f,-ViewLen*0.02f*moveZSpeed,0.0f,0.0f));
 	}
 	ViewUnit.GetMatrix(ViewMat);
+	TestNum=ViewMat[3].m128_f32[0];
+	TestNum2=ViewMat[3].m128_f32[2];
 	//TestNum=sqrt(Easy_vector_Getlenth_2(TestPos1,TestPos2));
 	GoZ=GoX=0.0f;
 	//TestView.MovExternal(_mm_set_ps(1.0f,-25-moveZ-PosOrgZ,moveY+PosOrgY,moveX));

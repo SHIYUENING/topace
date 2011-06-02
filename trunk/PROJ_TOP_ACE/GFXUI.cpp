@@ -23,6 +23,7 @@ float GFXMoveMask[2]={0};
 bool DrawTXTWIN=false;
 bool EnableTXTWIN=false;
 bool DrawGM=false;
+bool DrawGMLast=false;
 class OurFSCommandHandler : public GFxFSCommandHandler
 {
 public:
@@ -81,6 +82,7 @@ public:
 			if(strcmp("Close",parg)==0)
 			{
 				DrawTXTWIN=false;
+				DrawGM=false;
 			}
 		if(strcmp("MoveEnd",pcommand)==0)
 		{
@@ -229,7 +231,8 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 	if(pUIMovieTXT) pUIMovieTXT->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
 	if(pUIMovieTXT) pUIMovieTXT->SetViewScaleMode(GFxMovieView::SM_ExactFit);
 	if(pUIMovieTXT) pUIMovieTXT->SetViewAlignment(GFxMovieView::Align_CenterRight);
-	if(pUIMovieDefGM) pUIMovieGM ->SetViewport(gfxw,gfxh,gfxx,gfxy-200,gfxw,gfxh);
+	if(pUIMovieDefGM) pUIMovieGM ->SetViewport(gfxw,gfxh+34,gfxx,gfxy-200,gfxw,gfxh+64);
+	//if(pUIMovieDefGM) pUIMovieGM ->SetViewport(gfxw/2,gfxh/2,gfxx,gfxy-200,gfxw/2,gfxh/2);
 	if(pUIMovieDefGM) pUIMovieGM ->SetViewScaleMode(GFxMovieView::SM_NoScale);
 	if(pUIMovieDefGM) pUIMovieGM ->SetViewAlignment(GFxMovieView::Align_Center);
 	#endif
@@ -267,7 +270,7 @@ void CGFXUI::Draw(void)
 		if(pUIMovieStandBy)
 		pUIMovieStandBy->Display();
 	}
-	if(!DrawGM)
+	//if(!DrawGM)
 	if(DrawTXTWIN)
 	{
 		if(pUIMovieTXT) 
@@ -285,11 +288,21 @@ void CGFXUI::Draw(void)
 			pUIMovieTXT->Restart();
 		}
 	}
+	if(DrawTXTWIN)
 	if(DrawGM)
-	if(pUIMovieDefGM)
 	{
-		pUIMovieGM->Display();
+		if(!DrawGMLast)
+		{
+			DrawGMLast=true;
+			pUIMovieGM->Restart();
+		}
+		if(pUIMovieDefGM)
+		{
+			pUIMovieGM->Display();
+		}
 	}
+	else
+		DrawGMLast=false;
 	#endif
 }
 

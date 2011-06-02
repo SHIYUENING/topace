@@ -121,8 +121,10 @@ void loadIniFile()
 		GameSet.MoveBlur=GetPrivateProfileIntW(L"GameSet",L"MoveBlur",0,IniFileName);
 		GameSet.Cloud=GetPrivateProfileIntW(L"GameSet",L"Cloud",0,IniFileName);
 		
-		GameSet.TouchMoveOverride=(float)GetPrivateProfileIntW(L"other",L"TouchMoveOverride",1,IniFileName);
-		GameSet.TouchZoomOverride=(float)GetPrivateProfileIntW(L"other",L"TouchZoomOverride",1,IniFileName);
+		//GameSet.TouchMoveOverride=(float)GetPrivateProfileIntW(L"other",L"TouchMoveOverride",1,IniFileName);
+		//GameSet.TouchZoomOverride=(float)GetPrivateProfileIntW(L"other",L"TouchZoomOverride",1,IniFileName);
+		GameSet.TouchMoveOverride=GetIniFloat2(L"other",L"TouchMoveOverride",IniFileName,L"1.0f");
+		GameSet.TouchZoomOverride=GetIniFloat2(L"other",L"TouchZoomOverride",IniFileName,L"1.0f");
 		GameSet.TouchPosFixX=GetIniFloat2(L"other",L"TouchPosFixX",IniFileName,L"0.0");
 		GameSet.TouchPosFixY=GetIniFloat2(L"other",L"TouchPosFixY",IniFileName,L"0.0");
 		GameSet.TouchPosFixRange=GetIniFloat2(L"other",L"TouchPosFixRange",IniFileName,L"20.0");
