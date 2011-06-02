@@ -888,6 +888,17 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	//DrawUIs();
 	BlurPass();
+		glColor4f(0.5f,0.5f,0.5f,0.75f);
+	if(DrawGM)
+		DrawQUADEX(
+		0,
+		960-320,
+		960+320,
+		920,
+		150,
+		1920,
+		1080);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);

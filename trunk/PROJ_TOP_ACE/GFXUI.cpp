@@ -229,7 +229,7 @@ void CGFXUI::ChangeWin(int gfxx,int gfxy ,int gfxw,int gfxh)
 	if(pUIMovieTXT) pUIMovieTXT->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
 	if(pUIMovieTXT) pUIMovieTXT->SetViewScaleMode(GFxMovieView::SM_ExactFit);
 	if(pUIMovieTXT) pUIMovieTXT->SetViewAlignment(GFxMovieView::Align_CenterRight);
-	if(pUIMovieDefGM) pUIMovieGM ->SetViewport(gfxw,gfxh,gfxx,gfxy,gfxw,gfxh);
+	if(pUIMovieDefGM) pUIMovieGM ->SetViewport(gfxw,gfxh,gfxx,gfxy-200,gfxw,gfxh);
 	if(pUIMovieDefGM) pUIMovieGM ->SetViewScaleMode(GFxMovieView::SM_NoScale);
 	if(pUIMovieDefGM) pUIMovieGM ->SetViewAlignment(GFxMovieView::Align_Center);
 	#endif
