@@ -141,6 +141,18 @@ inline void ToScene(int SceneID)
 	{
 		EnableTXTWIN=true;
 		SceneSelect=-1;
+		float ScenePosTMP[3];
+		Easy_matrix_mult_vector3X3(ScenePosTMP,ThreadDataDraw.DataList[4].Matrix,TamScene.TamList[SceneID].Pos);
+		ScenePosT.m128_f32[0]=ThreadDataDraw.DrawToData.ViewTGTPos[0]=ScenePosTMP[0];
+		ScenePosT.m128_f32[1]=ThreadDataDraw.DrawToData.ViewTGTPos[1]=ScenePosTMP[1];
+		ScenePosT.m128_f32[2]=ThreadDataDraw.DrawToData.ViewTGTPos[2]=ScenePosTMP[2];
+		
+		ThreadDataDraw.DrawToData.ViewPos[0]=800.0f;
+		ThreadDataDraw.DrawToData.ViewPos[1]=800.0f;
+		//ThreadDataDraw.DrawToData.ViewPos[2]=600.0f;
+		ThreadDataDraw.DrawToData.LimitZ[0]=7000.0f;
+		ThreadDataDraw.DrawToData.LimitZ[1]=1000.0f;
+
 		return;
 	}
 	if(SceneID>=0)
@@ -168,11 +180,11 @@ inline void ToScene(int SceneID)
 		ScenePosT.m128_f32[0]=ThreadDataDraw.DrawToData.ViewTGTPos[0]=0.0f;
 		ScenePosT.m128_f32[1]=ThreadDataDraw.DrawToData.ViewTGTPos[1]=0.0f;
 		ScenePosT.m128_f32[2]=ThreadDataDraw.DrawToData.ViewTGTPos[2]=0.0f;
-		ThreadDataDraw.DrawToData.ViewPos[0]=1300.0f;
-		ThreadDataDraw.DrawToData.ViewPos[1]=1300.0f;
-		ThreadDataDraw.DrawToData.ViewPos[2]=1300.0f;
-		ThreadDataDraw.DrawToData.LimitZ[0]=6000.0f;
-		ThreadDataDraw.DrawToData.LimitZ[1]=2000.0f;
+		ThreadDataDraw.DrawToData.ViewPos[0]=3000.0f;
+		ThreadDataDraw.DrawToData.ViewPos[1]=3000.0f;
+		ThreadDataDraw.DrawToData.ViewPos[2]=3000.0f;
+		ThreadDataDraw.DrawToData.LimitZ[0]=7000.0f;
+		ThreadDataDraw.DrawToData.LimitZ[1]=1000.0f;
 		DrawTXTWIN=false;
 		DrawGM=false;
 	}
@@ -719,7 +731,7 @@ void DrawFPS(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	glColor4f(1.0f,1.0f,0.0f,1.0f);
 	glEnable( GL_TEXTURE_2D );
 	//Font2D->DrawTXT(GameSet.winW,GameSet.winH,0,0,24,24,GameSet.winW,3);
-	FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
+	//FONTS2D.DrawTexts(ShowFPS,4,GameSet.winH-22,GameSet.winW,GameSet.winH,GameSet.winW,20,1.0f);
 	glColor4f(1.0f,1.0f,0.0f,0.4f);
 //	FONTS2DSimple.DrawTexts(L"样品送审",16,256-272*GameSet.winH/GameSet.winW,544,544*GameSet.winH/GameSet.winW,544,20,32.0f);
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
@@ -888,7 +900,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 	//TamScene.DrawUnitName(GameSet.winW,GameSet.winH);
 	//DrawUIs();
 	BlurPass();
-		glColor4f(0.5f,0.5f,0.5f,0.75f);
+	/*	glColor4f(0.5f,0.5f,0.5f,0.75f);
 	if(DrawGM)
 		DrawQUADEX(
 		0,
@@ -898,7 +910,7 @@ void Draw(float oneframetimepointCPUSYS,float oneframetimepointGPU)
 		150,
 		1920,
 		1080);
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
+	glColor4f(1.0f,1.0f,1.0f,1.0f);*/
 	//TAMFT3D.Draw3DText(L"测试",20,20,600);
 	SetTamSceneCheck();
 	QueryPerformanceCounter(&CPUTestStart);
