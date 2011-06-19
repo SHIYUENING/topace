@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TOP_ACE_2", "TOP_ACE_2\TOP_ACE_2.vcxproj", "{A1428F43-331C-4B2C-91F6-70C2C495F789}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogViewer", "LogViewer\LogViewer.vcxproj", "{EC1B63F8-C267-43A9-87FF-1942C1492E59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1428F43-331C-4B2C-91F6-70C2C495F789}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1428F43-331C-4B2C-91F6-70C2C495F789}.Debug|Win32.Build.0 = Debug|Win32
+		{A1428F43-331C-4B2C-91F6-70C2C495F789}.Release|Win32.ActiveCfg = Release|Win32
+		{A1428F43-331C-4B2C-91F6-70C2C495F789}.Release|Win32.Build.0 = Release|Win32
+		{EC1B63F8-C267-43A9-87FF-1942C1492E59}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EC1B63F8-C267-43A9-87FF-1942C1492E59}.Debug|Win32.Build.0 = Debug|Win32
+		{EC1B63F8-C267-43A9-87FF-1942C1492E59}.Release|Win32.ActiveCfg = Release|Win32
+		{EC1B63F8-C267-43A9-87FF-1942C1492E59}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
