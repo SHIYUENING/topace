@@ -309,7 +309,7 @@ void CGFXUI::Draw(void)
 
 void CGFXUI::SetInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	return;
+	//return;
 	#ifdef USEGFX
 	int mx,my;
 	switch (uMsg)	
