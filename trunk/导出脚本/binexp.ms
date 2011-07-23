@@ -1008,7 +1008,19 @@ if(sceneMaterials.count>0) then
 		WriteFloat w sceneMaterials[i].specularLevel
 		WriteFloat w sceneMaterials[i].Glossiness
 		WriteFloat w sceneMaterials[i].opacity
-		WriteFloat w 0.0 
+		--WriteFloat w 0.0 
+		if(sceneMaterials[i].twoSided) then (WriteByte w 1)
+		else WriteByte w 0
+		
+		local matalp=0;
+		if((classof sceneMaterials[i].diffusemap)==Bitmaptexture) then
+		(
+			if(sceneMaterials[i].diffusemap.alphasource==0) then matalp=1;
+		)
+		if((classof sceneMaterials[i].opacityMap)==Bitmaptexture) then matalp=1;
+		WriteByte w matalp;
+		WriteByte w 0;WriteByte w 0;
+		
 
 		if((classof sceneMaterials[i].diffusemap)==Bitmaptexture) then
 		(
