@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MD5">
+      <UniqueIdentifier>{272fdb14-6906-4e45-9d6d-e2ec23aaf8ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{1b9e57d8-ecb6-4c23-9e04-4359dc853422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UNITS">
+      <UniqueIdentifier>{165cb103-3873-4517-ac6e-b00d61c2c58d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{765aa995-25d7-4cab-860f-b7f6c8ca1ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mathematics">
+      <UniqueIdentifier>{51fc4ca7-e867-46b1-842a-e3cc35bd0bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Res">
+      <UniqueIdentifier>{4bb7d7b0-d42e-4e43-a7fd-a1ce30ffe5aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tech">
+      <UniqueIdentifier>{0f83a252-24b9-457b-b6d8-31efaea103db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{96ad0713-7a3b-4e74-a71f-b0cdf705ce34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\GLSL">
+      <UniqueIdentifier>{9ea7c007-82f2-4e22-8eeb-efff82867661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\CG">
+      <UniqueIdentifier>{cea35c38-8058-4250-af17-9614b2f4892d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MD5Model.cpp">
+      <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="Quat.cpp">
+      <Filter>MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="HUDUI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MyFont.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Print.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Redar.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TGALoader.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Video.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="missle.cpp">
+      <Filter>UNITS</Filter>
+    </ClCompile>
+    <ClCompile Include="MissleList.cpp">
+      <Filter>UNITS</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>UNITS</Filter>
+    </ClCompile>
+    <ClCompile Include="Smoke.cpp">
+      <Filter>UNITS</Filter>
+    </ClCompile>
+    <ClCompile Include="unitdata.cpp">
+      <Filter>UNITS</Filter>
+    </ClCompile>
+    <ClCompile Include="Bloom.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="BomsSet.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="BomTeams.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Cloud.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectImpact.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Mathematics.cpp">
+      <Filter>Mathematics</Filter>
+    </ClCompile>
+    <ClCompile Include="TBN.cpp">
+      <Filter>Mathematics</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Mathematics</Filter>
+    </ClCompile>
+    <ClCompile Include="DDS.cpp">
+      <Filter>Res</Filter>
+    </ClCompile>
+    <ClCompile Include="VBMD.cpp">
+      <Filter>Res</Filter>
+    </ClCompile>
+    <ClCompile Include="ARB_Multisample.cpp">
+      <Filter>Tech</Filter>
+    </ClCompile>
+    <ClCompile Include="FBO.cpp">
+      <Filter>Tech</Filter>
+    </ClCompile>
+    <ClCompile Include="shaders.cpp">
+      <Filter>Tech</Filter>
+    </ClCompile>
+    <ClCompile Include="Cpuid.cpp" />
+    <ClCompile Include="KeyInput.cpp" />
+    <ClCompile Include="NeHeGL.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="TOP_ACE.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MD5Model.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="Quat.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="HUDUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MyFont.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Tga.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Video.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="missle.h">
+      <Filter>UNITS</Filter>
+    </ClInclude>
+    <ClInclude Include="MissleList.h">
+      <Filter>UNITS</Filter>
+    </ClInclude>
+    <ClInclude Include="Shell.h">
+      <Filter>UNITS</Filter>
+    </ClInclude>
+    <ClInclude Include="Smoke.h">
+      <Filter>UNITS</Filter>
+    </ClInclude>
+    <ClInclude Include="unitdata.h">
+      <Filter>UNITS</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloom.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="BomsSet.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="BomTeams.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Cloud.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectImpact.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Mathematics.h">
+      <Filter>Mathematics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Mathematics</Filter>
+    </ClInclude>
+    <ClInclude Include="TBN.h">
+      <Filter>Mathematics</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Mathematics</Filter>
+    </ClInclude>
+    <ClInclude Include="DDS.h">
+      <Filter>Res</Filter>
+    </ClInclude>
+    <ClInclude Include="Models.h">
+      <Filter>Res</Filter>
+    </ClInclude>
+    <ClInclude Include="VBMD.h">
+      <Filter>Res</Filter>
+    </ClInclude>
+    <ClInclude Include="ARB_Multisample.h">
+      <Filter>Tech</Filter>
+    </ClInclude>
+    <ClInclude Include="FBO.h">
+      <Filter>Tech</Filter>
+    </ClInclude>
+    <ClInclude Include="shaders.h">
+      <Filter>Tech</Filter>
+    </ClInclude>
+    <ClInclude Include="chars.h" />
+    <ClInclude Include="Cpuid.h" />
+    <ClInclude Include="DefinesFile.h" />
+    <ClInclude Include="initdata.h" />
+    <ClInclude Include="KeyInput.h" />
+    <ClInclude Include="lock.h" />
+    <ClInclude Include="NeHeGL.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="structs.h" />
+    <ClInclude Include="testNum.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\BackFire_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\BackFire_vertex.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\BloomH_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\BloomMap_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\BloomW_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\pixel_NOBloom.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\pixel_NOBloom_HighShadow.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\pixel_NONormalMap.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\RenderShadowMap_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\RenderShadowMap_vertex.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\Sea_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\Sea_vertex.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\ToneMapping_pixel.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\vertex_t.glsl">
+      <Filter>Shaders\GLSL</Filter>
+    </None>
+    <None Include="..\Bin\BackFire_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\BackFire_vertex.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\BloomH_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\BloomMap_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\BloomW_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\pixel_NOBloom.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\pixel_NOBloom_HighShadow.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\pixel_NONormalMap.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\RenderShadowMap_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\RenderShadowMap_vertex.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\Sea_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\Sea_vertex.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\ToneMapping_pixel.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="..\Bin\vertex_t.cg">
+      <Filter>Shaders\CG</Filter>
+    </None>
+    <None Include="TOP_ACE.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TOP_ACE.rc" />
+  </ItemGroup>
+</Project>
