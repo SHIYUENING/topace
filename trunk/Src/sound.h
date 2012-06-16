@@ -49,7 +49,10 @@ FMOD_CHANNEL* missvoicechannel;
 FMOD_CHANNEL* BGMchannel;
 FMOD_VECTOR pos;
 */
-
+namespace hgl
+{
+	void CloseCore();										///<¹Ø±ÕºËÐÄ
+}
 #define MAX_missleWarning 10
 #define MAX_fox2voice 3
 #define MAX_hitvoice 4

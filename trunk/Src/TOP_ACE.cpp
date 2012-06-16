@@ -25,7 +25,7 @@
 #include "EffectImpact.h"
 #include "SkyBox.h"
 #include "Bloom.h"
-#include "Video.h"
+//#include "Video.h"
 #include "FBO.h"
 #include "BomTeams.h"
 //#include "Cloud.h"
@@ -53,7 +53,7 @@ CSmoke		PSmokes;
 
 CKeyInput KeyInput;
 CSkyBox SkyBox;
-CVideo Video;
+//CVideo Video;
 int gamestage=0;
 CPUID cpu;//²éÑ¯cpu
 char cpubrand[128]={0};
@@ -211,10 +211,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 #ifdef _RELEASELOG 
 	WritePrivateProfileString("Initialize","initJoyStick","OK",".\\Log.ini");
 #endif
-	Video.InitVideo();
-#ifdef _RELEASELOG 
-	WritePrivateProfileString("Initialize","InitVideo","OK",".\\Log.ini");
-#endif	
+//	Video.InitVideo();
+//#ifdef _RELEASELOG 
+//	WritePrivateProfileString("Initialize","InitVideo","OK",".\\Log.ini");
+//#endif	
 
 	strcpy( cpubrand, cpu.GetBrand().c_str() );
 	while(cpubrand[0]==' ')
@@ -412,7 +412,9 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	FMOD_System_Release(sys);
 	*/
 	BGMplayer->Clear();
-	openal::CloseOpenALEE();
+	//openal::CloseOpenALEE();
+	CloseOpenAL();
+	hgl::CloseCore();
 	//delete m_nj;
 	delete m_VBMD;
 	//delete m_VBMD;
@@ -1200,9 +1202,9 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		IsSkip=true;
 	else
 		IsSkip=false;
-	
-	if(playTime%4==0)
-		Video.DrawVideo();
+	//
+	//if(playTime%4==0)
+	//	Video.DrawVideo();
 //	FMOD_System_Update(sys);
 	
 	if(StartShowTime>0)

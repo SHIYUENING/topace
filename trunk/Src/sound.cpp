@@ -1,4 +1,8 @@
 
+#include<hgl/platform/SystemInfo.H>
+#include <hgl/external.h>
+#include <hgl/OpenALEE.h>
+
 #include "sound.h"
 #include "MyFont.h"
 extern CMyFont MyFont;
@@ -20,12 +24,22 @@ AudioSource * soundSource[MAX_soundSource];
 Vector3d soundSourcePos[MAX_soundSource];
 AudioPlayer * BGMplayer;
 tSoundSourceDate SoundSourceDate[MAX_soundSource];
+namespace hgl
+{
+	bool InitCore(SystemInfo &si,bool create_log);			///<³õÊ¼»¯ºËÐÄ
+}
 void initsound()
 {
-	float BGMvol	=(float)GetPrivateProfileInt("Sound","BGM",50,".\\set.ini")/100.0f;
-	Effectvol	=(float)GetPrivateProfileInt("Sound","Effect",100,".\\set.ini")/100.0f;
-	Voicevol	=(float)GetPrivateProfileInt("Sound","Voice",100,".\\set.ini")/100.0f;
-	openal::InitOpenALEE();
+	float BGMvol	=(float)GetPrivateProfileIntA("Sound","BGM",50,".\\set.ini")/100.0f;
+	Effectvol	=(float)GetPrivateProfileIntA("Sound","Effect",100,".\\set.ini")/100.0f;
+	Voicevol	=(float)GetPrivateProfileIntA("Sound","Voice",100,".\\set.ini")/100.0f;
+	hgl::SystemInfo si;
+	bool InitOK=false;
+	InitOK=hgl::InitCore(si,false);
+	if(!InitOK)
+		return ;
+	InitOK=InitOpenAL((const wchar_t *)0,(const wchar_t *)0);
+	//openal::InitOpenALEE();
 	BGMplayer= new AudioPlayer;
 	BGMplayer->Load(L"Data/bgm.ogg");
 	BGMplayer->Gain=BGMvol;
@@ -305,7 +319,7 @@ void SoundPause()
 	}
 	if(BGMplayer->State==AL_PAUSED)
 	{
-		BGMplayer->Rewind();
+		BGMplayer->Resume();
 		return;
 	}
 }

@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLog|Win32">
+      <Configuration>ReleaseLog</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>TOP_ACE_VS2008</ProjectName>
+    <ProjectGuid>{A0D4C2AC-3D4C-49E8-955D-841E8AA2D26B}</ProjectGuid>
+    <RootNamespace>StrangeFighter</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\Bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)..\Bin\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\Bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)..\Bin\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'">$(SolutionDir)..\Bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'">$(SolutionDir)..\Bin\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TOP_ACE</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TOP_ACE</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'">TOP_ACE</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <BuildLog>
+      <Path>$(SolutionDir)..\Bin\BuildLog.htm</Path>
+    </BuildLog>
+    <CustomBuildStep>
+      <Inputs>%(Inputs)</Inputs>
+    </CustomBuildStep>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.;.\Mathematics;.\Physics;.\Mathematics\tvmet-1.7.2\include;.\Graphics\include;.\Sound\inc;.\Controls\include;.\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)vc90.pdb</ProgramDataBaseFileName>
+      <XMLDocumentationFileName>$(IntDir)Bin\</XMLDocumentationFileName>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Windows_X86_32_VC2010_Debug_Static_Base.lib;Windows_X86_32_VC2010_Debug_Static_OpenALEE.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)TOP_ACE.exe</OutputFile>
+      <AdditionalLibraryDirectories>.\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ManifestFile>$(IntDir)$(TargetFileName).intermediate.manifest</ManifestFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(TargetDir)\$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <Manifest>
+      <OutputManifestFile>$(IntDir)$(TargetFileName).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetFileName).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
+    <Xdcmake>
+      <OutputFile>$(TargetDir)$(TargetName).xml</OutputFile>
+    </Xdcmake>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)" md "$(OutDir)"
+copy "$(SolutionDir)Graphics\lib\*.dll" "$(OutDir)" /Y
+copy "$(SolutionDir)Controls\SDL.dll" "$(OutDir)" /Y
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <BuildLog>
+      <Path>$(SolutionDir)..\Bin\BuildLog.htm</Path>
+    </BuildLog>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;.\Mathematics;.\Physics;.\Mathematics\tvmet-1.7.2\include;.\Graphics\include;.\Sound\inc;.\Controls\include;.\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4204;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Windows_X86_32_VC2010_Release_Static_Base.lib;Windows_X86_32_VC2010_Release_Static_OpenALEE.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)TOP_ACE.exe</OutputFile>
+      <AdditionalLibraryDirectories>.\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)" md "$(OutDir)"
+copy "$(SolutionDir)Graphics\lib\*.dll" "$(OutDir)" /Y
+copy "$(SolutionDir)Controls\SDL.dll" "$(OutDir)" /Y
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLog|Win32'">
+    <BuildLog>
+      <Path>$(SolutionDir)..\Bin\BuildLog.htm</Path>
+    </BuildLog>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.;.\Mathematics;.\Physics;.\Mathematics\tvmet-1.7.2\include;.\Graphics\include;.\Sound\inc;.\Controls\include;.\Sound\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_RELEASELOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;4204;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Windows_X86_32_VC2010_Release_Static_Base.lib;Windows_X86_32_VC2010_Release_Static_OpenALEE.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)TOP_ACE.exe</OutputFile>
+      <AdditionalLibraryDirectories>.\Graphics\lib;.\Sound\lib;.\Controls\lib;.\Sound\Library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>if not exist "$(OutDir)" md "$(OutDir)"
+copy "$(SolutionDir)Graphics\lib\*.dll" "$(OutDir)" /Y
+copy "$(SolutionDir)Controls\SDL.dll" "$(OutDir)" /Y
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="MD5Model.cpp" />
+    <ClCompile Include="Quat.cpp" />
+    <ClCompile Include="HUDUI.cpp" />
+    <ClCompile Include="MyFont.cpp" />
+    <ClCompile Include="Print.cpp" />
+    <ClCompile Include="Redar.cpp" />
+    <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="TGALoader.cpp" />
+    <ClCompile Include="Video.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="missle.cpp" />
+    <ClCompile Include="MissleList.cpp" />
+    <ClCompile Include="Shell.cpp" />
+    <ClCompile Include="Smoke.cpp" />
+    <ClCompile Include="unitdata.cpp" />
+    <ClCompile Include="Bloom.cpp" />
+    <ClCompile Include="BomsSet.cpp" />
+    <ClCompile Include="BomTeams.cpp" />
+    <ClCompile Include="Cloud.cpp" />
+    <ClCompile Include="EffectImpact.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
+    <ClCompile Include="Mathematics.cpp" />
+    <ClCompile Include="TBN.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="DDS.cpp" />
+    <ClCompile Include="VBMD.cpp" />
+    <ClCompile Include="ARB_Multisample.cpp" />
+    <ClCompile Include="FBO.cpp" />
+    <ClCompile Include="shaders.cpp" />
+    <ClCompile Include="Cpuid.cpp" />
+    <ClCompile Include="KeyInput.cpp" />
+    <ClCompile Include="NeHeGL.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="TOP_ACE.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MD5Model.h" />
+    <ClInclude Include="Quat.h" />
+    <ClInclude Include="Vector3.h" />
+    <ClInclude Include="HUDUI.h" />
+    <ClInclude Include="MyFont.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Textures.h" />
+    <ClInclude Include="Tga.h" />
+    <ClInclude Include="Video.h" />
+    <ClInclude Include="missle.h" />
+    <ClInclude Include="MissleList.h" />
+    <ClInclude Include="Shell.h" />
+    <ClInclude Include="Smoke.h" />
+    <ClInclude Include="unitdata.h" />
+    <ClInclude Include="Bloom.h" />
+    <ClInclude Include="BomsSet.h" />
+    <ClInclude Include="BomTeams.h" />
+    <ClInclude Include="Cloud.h" />
+    <ClInclude Include="EffectImpact.h" />
+    <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="Mathematics.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="TBN.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="DDS.h" />
+    <ClInclude Include="Models.h" />
+    <ClInclude Include="VBMD.h" />
+    <ClInclude Include="ARB_Multisample.h" />
+    <ClInclude Include="FBO.h" />
+    <ClInclude Include="shaders.h" />
+    <ClInclude Include="chars.h" />
+    <ClInclude Include="Cpuid.h" />
+    <ClInclude Include="DefinesFile.h" />
+    <ClInclude Include="initdata.h" />
+    <ClInclude Include="KeyInput.h" />
+    <ClInclude Include="lock.h" />
+    <ClInclude Include="NeHeGL.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="structs.h" />
+    <ClInclude Include="testNum.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\BackFire_pixel.glsl" />
+    <None Include="..\Bin\BackFire_vertex.glsl" />
+    <None Include="..\Bin\BloomH_pixel.glsl" />
+    <None Include="..\Bin\BloomMap_pixel.glsl" />
+    <None Include="..\Bin\BloomW_pixel.glsl" />
+    <None Include="..\Bin\pixel_NOBloom.glsl" />
+    <None Include="..\Bin\pixel_NOBloom_HighShadow.glsl" />
+    <None Include="..\Bin\pixel_NONormalMap.glsl" />
+    <None Include="..\Bin\RenderShadowMap_pixel.glsl" />
+    <None Include="..\Bin\RenderShadowMap_vertex.glsl" />
+    <None Include="..\Bin\Sea_pixel.glsl" />
+    <None Include="..\Bin\Sea_vertex.glsl" />
+    <None Include="..\Bin\ToneMapping_pixel.glsl" />
+    <None Include="..\Bin\vertex_t.glsl" />
+    <None Include="..\Bin\BackFire_pixel.cg" />
+    <None Include="..\Bin\BackFire_vertex.cg" />
+    <None Include="..\Bin\BloomH_pixel.cg" />
+    <None Include="..\Bin\BloomMap_pixel.cg" />
+    <None Include="..\Bin\BloomW_pixel.cg" />
+    <None Include="..\Bin\pixel_NOBloom.cg" />
+    <None Include="..\Bin\pixel_NOBloom_HighShadow.cg" />
+    <None Include="..\Bin\pixel_NONormalMap.cg" />
+    <None Include="..\Bin\RenderShadowMap_pixel.cg" />
+    <None Include="..\Bin\RenderShadowMap_vertex.cg" />
+    <None Include="..\Bin\Sea_pixel.cg" />
+    <None Include="..\Bin\Sea_vertex.cg" />
+    <None Include="..\Bin\ToneMapping_pixel.cg" />
+    <None Include="..\Bin\vertex_t.cg" />
+    <None Include="TOP_ACE.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TOP_ACE.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
