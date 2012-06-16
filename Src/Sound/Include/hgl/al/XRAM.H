@@ -1,4 +1,4 @@
-#ifndef HGL_XRAM_INCLUDE
+﻿#ifndef HGL_XRAM_INCLUDE
 #define HGL_XRAM_INCLUDE
 
 #include<hgl/al/al.h>

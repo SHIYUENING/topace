@@ -1,4 +1,4 @@
-#ifndef HGL_EFX_INCLUDE
+﻿#ifndef HGL_EFX_INCLUDE
 #define HGL_EFX_INCLUDE
 
 #include<hgl/al/al.h>

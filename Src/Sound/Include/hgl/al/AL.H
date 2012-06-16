@@ -1,4 +1,4 @@
-#ifndef HGL_AL_INCLUDE
+﻿#ifndef HGL_AL_INCLUDE
 #define HGL_AL_INCLUDE
 
 #define OPENAL

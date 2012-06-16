@@ -1,4 +1,4 @@
-#ifndef HGL_ALC_INCLUDE
+﻿#ifndef HGL_ALC_INCLUDE
 #define HGL_ALC_INCLUDE
 
 #define ALCAPI ALC_API
