@@ -92,7 +92,7 @@ float lightPositionSea[]= { 0.0f, 0.0f, 2.0f };
 float HDglobalAmbient[3]={1.0f,1.0f,1.0f};
 float Ppos1=30.0f;
 float Ppos2=150.0f;
-float pixelfogColor[3];
+float pixelfogColor[3]={201,207,210};
 float seatime=0.0f;
 GLfloat ShadowMapmvmatrix[16],ShadowMapprojmatrix[16];
 GLfloat ShadowMapMVPmatrix[16]={0};
@@ -760,6 +760,7 @@ void DrawSeaGLSL(float seaframe)
 	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"paraLightDirection"),1,LightSunPos);
 	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"eyePosition"),1,eyePositionSea);
 	glUniform3fv(glGetUniformLocation(GLSL_DrawSea,"FogColor"),1,pixelfogColor);
+	glActiveTexture(GL_TEXTURE0);              
 }
 void DrawBloomMap(int WinW,int WinH)
 {

@@ -25,7 +25,8 @@ void main()
     float specularLight = pow(max(dot(normalize(vReflBump), HightLight), 0.0), 1000.0);
 
     OUTcolor.xyz = (Fresnel*reflection.xyz + (1.0 - Fresnel)*vec3(0.1,0.5,1.0))*(light*paraLightColor + globalAmbient) + specularLight*paraLightColor;
-    float fogb = min((100000.0-gl_TexCoord[5].z)/70000.0,1.0);
+	float seapos=length(gl_TexCoord[0].xyz*1000.0 - eyePosition);
+    float fogb = max(0.0,min((100000.0-seapos)/80000.0,1.0));
     OUTcolor.xyz = OUTcolor.xyz*fogb + (1.0 - fogb)*FogColor;
     OUTcolor.w = 1.0;
     gl_FragColor = OUTcolor;

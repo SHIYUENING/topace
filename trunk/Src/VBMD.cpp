@@ -392,6 +392,7 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 			if(VBMD[MID].UseTangentArray)
 				glDisableClientState( GL_COLOR_ARRAY );	
 		}
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0);
 		return true;
 	}
 	else

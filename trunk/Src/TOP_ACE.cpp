@@ -1,7 +1,4 @@
-//#include "ms3d.h"
-
 #include <stdlib.h>
-
 #include <GL/glew.h>
 #include <math.h>
 #include "testNum.h"
@@ -9,15 +6,10 @@
 #include <windows.h>											// Header File For Windows
 #include <stdio.h>												// Header File For Standard Input/Output
 #include "NeHeGL.h"												// Header File For NeHeGL
-//#include "ACMD.h"												// Header File For ACMD
 #include "smoke.h"	
 #include "KeyInput.h"
 #include "shaders.h"
-//#include "Textures.h"
-//#include "Prints.h"
 #include "lock.h"
-//#include "redar.h"
-//#include "UI.h"
 #include "VBMD.h"
 #include "Cpuid.h"
 #include "sound.h"
@@ -25,11 +17,8 @@
 #include "EffectImpact.h"
 #include "SkyBox.h"
 #include "Bloom.h"
-//#include "Video.h"
 #include "FBO.h"
 #include "BomTeams.h"
-//#include "Cloud.h"
-//#include "MD5Model.h"
 #include "ARB_MULTISAMPLE.h"
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
@@ -82,8 +71,6 @@ void Delay(__int64 Us)
     while(CurrTicks.QuadPart<TicksCount.QuadPart)
         QueryPerformanceCounter(&CurrTicks);
 }
-
-
 void InitFogAndLight(void)
 {
 	glClearColorR=(float)GetPrivateProfileInt("Fog","glClearColorR",184,".\\set.ini")/255.0f;
@@ -307,10 +294,13 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		ShaderWater=false;
 
 	if((GetPrivateProfileInt("Light","Use_Bloom",0,".\\set.ini")==0)||(!IsSupportFBO))
-		ShaderBloom=false;
+		ShaderBloom=false;/*
 	pixelfogColor[0]=(float)GetPrivateProfileInt("Fog","fogColorR",201,".\\set.ini")/255.0f;
 	pixelfogColor[1]=(float)GetPrivateProfileInt("Fog","fogColorG",207,".\\set.ini")/255.0f;
-	pixelfogColor[2]=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255.0f;
+	pixelfogColor[2]=(float)GetPrivateProfileInt("Fog","fogColorB",210,".\\set.ini")/255.0f;*/
+	pixelfogColor[0]=201.0f/255.0f;
+	pixelfogColor[1]=207.0f/255.0f;
+	pixelfogColor[2]=210.0f/255.0f;
 	
 	lockX=winwidth/2;
 	lockY=winheight/2;
@@ -369,7 +359,6 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 	QueryPerformanceCounter(&t1);
 	return TRUE;												// Return TRUE (Initialization Successful)
 }
-
 void Deinitialize (void)										// Any User DeInitialization Goes Here
 {
 	DeleteFont();
@@ -422,8 +411,6 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	//SDL_Quit();
 	KeyInput.de();
 }
-
-
 void Inertia()              //处理惯性
 {
 	//testNum=InertiaSpeed;
@@ -494,7 +481,6 @@ void Inertia()              //处理惯性
 	
 
 }
-
 void DrawDataLine1 (void)
 {
 	glColor3f(0.0f,1.0f,0.0f);
@@ -611,59 +597,6 @@ void DrawFightersData(float DFDX, float DFDY, float DFDZ, float DFDL=-1.0, char 
 
 	
 }
-/*
-void ShowUNITSFlag(double SUFposX,double SUFposY,double SUFposZ,int SUFnum)
-{
-		GLint viewport[4];
-		GLdouble mvmatrix[16],projmatrix[16];
-		GLdouble SUFwinX,SUFwinY,SUFwinZ;
-		glGetIntegerv(GL_VIEWPORT,viewport);
-		glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
-		glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
-		gluProject(0.0,0.0,0.0,mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
-
-
-		float tmpX=(float)(MFighter.RefPos()(0)-SUFposX);
-		float tmpY=(float)(MFighter.RefPos()(1)-SUFposY);
-		float tmpZ=(float)(MFighter.RefPos()(2)-SUFposZ);
-		float SUFDistance=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-		//SUFDistance=sqrt(SUFDistance);
-		UDfighers[SUFnum].UDwinl=SUFDistance;
-		UDfighers[SUFnum].UDwinx=(float)SUFwinX;
-		UDfighers[SUFnum].UDwiny=(float)SUFwinY;
-		UDfighers[SUFnum].UDwinz=(float)SUFwinZ;
-
-		glEnable(GL_BLEND);
-		if((SUFwinZ<1.0)&&(SUFDistance<(tmpredarRenge*tmpredarRenge)))
-			DrawFightersData((float)SUFwinX,(float)SUFwinY,(float)SUFwinZ,SUFDistance,UDfighers[SUFnum].UDname,UDfighers[SUFnum].UDflag,false,UDfighers[SUFnum].UDlife);
-		
-		//if(UDfighers[SUFnum].UDlockselect)
-			//lockmove(SUFwinX,SUFwinY,SUFwinZ);
-		//glDisable(GL_BLEND);
-
-		if(UDfighers[SUFnum].UDwinl<(tmpredarRenge*tmpredarRenge))//目标距离
-		{
-			if(UDfighers[SUFnum].UDwinz<1.0f)//目标在屏幕前方
-			if(!(UDfighers[SUFnum].UDflag==2))//目标不是友军
-			if(UDfighers[SUFnum].UDlife>0)//目标还存在
-			if( (UDfighers[SUFnum].UDwinx<winwidth) && (UDfighers[SUFnum].UDwinx>0.0) && (UDfighers[SUFnum].UDwiny<winheight) && (UDfighers[SUFnum].UDwiny>0.0) )//目标可见
-			{
-
-				locklists[locklists_index].TGTnum=SUFnum;
-				//locklists[locklists_index].TGTwinL=UDfighers[SUFnum].UDwinl;
-				//locklists[locklists_index].TGTwinLin=(UDfighers[SUFnum].UDwinx-winwidth*0.5)*(UDfighers[SUFnum].UDwinx-winwidth*0.5)+(UDfighers[SUFnum].UDwiny-winheight*0.5)*(UDfighers[SUFnum].UDwiny-winheight*0.5);
-				locklists_index=locklists_index+1;
-			}
-		}
-		else
-		{
-			UDfighers[SUFnum].UDlockselect=false;
-		}
-
-		
-
-}
-*/
 void DrawDataLine2 (double high,double news,double latitude)
 {
 	char szshowSpeed[16]={0};
@@ -786,8 +719,6 @@ void DrawDataLine2 (double high,double news,double latitude)
 	//int txtpringsize=((winheight/30)/8)*8;
 	//MyFont.DrawTXT(winwidth,winheight,128,128,txtpringsize,txtpringsize,winwidth);
 }
-
-
 void fireShell()
 {
 
@@ -809,7 +740,6 @@ void fireShell()
 		{
 			GunFiresound=true;
 			voiceSourceGunFire->Play(true);
-//			FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, soundGunFire, 0, &channelGunFire);
 		
 		}
 		
@@ -1202,10 +1132,7 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 		IsSkip=true;
 	else
 		IsSkip=false;
-	//
-	//if(playTime%4==0)
-	//	Video.DrawVideo();
-//	FMOD_System_Update(sys);
+	
 	
 	if(StartShowTime>0)
 		StartShow();
@@ -1222,24 +1149,8 @@ void Update (DWORD milliseconds)								// Perform Motion Updates Here
 	}
 	else
 		UIPlayerControl();
-
-
-	
-
-	//	MissleSign.UDMplane=MFighter;
-	//	MissleSign.UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
-	//ViewPoint.UDPstate.MaxSpeed=0.0;
-	//ViewPoint.UDPstate.MaxAngleSpeed=50.0;
-	//ViewPoint.UDPstate.VelocityResistance=0.0;
-	//ViewPoint.UDPstate.AngleVelocityResistance=0.1;
-	//	MissleSign.TurnTo(MisslePosition);
-	//	MissleSign.UDPstate.NextState();
-
-
 	
 }
-
-
 void LockFPS (void)
 {
 	double waitTime=0.0;
@@ -1279,17 +1190,6 @@ void LockFPS (void)
 	Delay(__int64((oneframetimelimit-waitTime)*1000000));
 	QueryPerformanceCounter(&t1);//测前跳动次数
 }
-/*
-void testFPS (void)
-{
-	QueryPerformanceFrequency(&feq);//每秒跳动次数
-	QueryPerformanceCounter(&t3);//测后跳动次数 
-	oneframetimeT=((double)t3.QuadPart-(double)t1.QuadPart)/((double)feq.QuadPart);//时间差秒
-	//Delay((oneframetimelimit-oneframetime)*1000000);
-	//QueryPerformanceCounter(&t1);//测前跳动次数
-}
-*/
-
 void DrawRadioTXT(void)
 {
 
@@ -2131,20 +2031,6 @@ void UnitAI(int i)
 }
 void UnitMove(void)
 {
-   
-/*
-    for(int i=1;i<4;i++)
-	{
-       // UDfighers[i].UDPstate.Acceleration = UDfighers[i].UDMplane.Matrix() * Vector3d(0, 0, 1) * 0.2;
-		//UDfighers[i].UDPstate.NextState();
-		if(UDfighers[i].UDlife>0)
-		{
-			UDfighers[i].TurnTo(UDfighers[0].UDMplane.RefPos());
-		//UDfighers[i].UDPstate.NextState();
-		//UDfighers[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*3));
-		}
-	}
-*/
 	for(int i=0;i<MAXSMOKESLIST;i++)
 	{
 		if(PSmokes.SmokesList[i].life>0.0f)//存在
@@ -2238,53 +2124,7 @@ void UnitMove(void)
 	}
 
 	PlayerLocked=false;
-/*
-	for(int num=1;num<maxUnits;num++)
-	{
-		for(int i=0;i<MAXUNITMISSLES;i++)
-		{
-			if(UDfighers[num].UNITMissles[i].UDlife>0)
-			{
-				int MISSLETGTnum=UDfighers[num].UNITMissles[i].TGTnum;
-				if(UDfighers[MISSLETGTnum].UDlife>0)
-				{
-					float tmpX=(float)(UDfighers[MISSLETGTnum].UDMplane.RefPos()(0) - UDfighers[num].UNITMissles[i].UDMplane.RefPos()(0));
-					float tmpY=(float)(UDfighers[MISSLETGTnum].UDMplane.RefPos()(1) - UDfighers[num].UNITMissles[i].UDMplane.RefPos()(1));
-					float tmpZ=(float)(UDfighers[MISSLETGTnum].UDMplane.RefPos()(2) - UDfighers[num].UNITMissles[i].UDMplane.RefPos()(2));
-					float tmpD=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-					if((tmpD<8000000)&&(!UDfighers[MISSLETGTnum].waringde))
-					{
-						UDfighers[MISSLETGTnum].waringde=true;
-					}
-					UDfighers[num].UNITMissles[i].TurnTo(UDfighers[MISSLETGTnum].UDMplane.RefPos());
-					if(UDfighers[num].UNITMissles[i].timer>15)
-						UDfighers[num].UNITMissles[i].UDPstate.NextState();
-					UDfighers[num].UNITMissles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*10));
-					if(tmpD<10000)
-					{
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, sound1, 0, &channel1);
-						UDfighers[MISSLETGTnum].UDlife=UDfighers[MISSLETGTnum].UDlife-55;
-						if(UDfighers[MISSLETGTnum].UDlife<0)
-						{
-							UDfighers[MISSLETGTnum].smokeTime=100;
-						}
-						UDfighers[num].UNITMissles[i].UDlife=-1;
-						UDfighers[num].UNITMissles[i].smokeTime=100;
-						Boms[Bom_index].Frame=0;
-						UDfighers[MISSLETGTnum].waringde=false;
-						Bomings[Bomings_index].NewBom((float)UDfighers[num].UNITMissles[i].UDMplane.RefPos()(0),(float)UDfighers[num].UNITMissles[i].UDMplane.RefPos()(1),(float)UDfighers[num].UNITMissles[i].UDMplane.RefPos()(2),&PlaneBom[0]);
-						Bomings_index=Bomings_index+1;
-						if(Bomings_index==MAXBom)
-							Bomings_index=0;
-					}
-				}
-				else
-					UDfighers[num].UNITMissles[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*8));
-			}
 
-		}
-	}
-*/
 	for(int i=0;i<MAXMISSLE;i++)
 	{
 		if(PMissleList.Missles[i].UDlife>0)
@@ -2376,13 +2216,7 @@ void UnitMove(void)
 					Bomings_index=Bomings_index+1;
 					if(Bomings_index==MAXBom)
 						Bomings_index=0;
-/*
-					//Boms[missle_index].pos=MView.Matrix() * missle[i].UDMplane.RefPos()+MView.RefPos();
-					Boms[Bom_index].pos=missle[i].UDMplane.RefPos();
-					Bom_index=Bom_index+1;
-						if(Bom_index==MAXBom)
-							Bom_index=0;
-						*/
+
 				}
 			
 			
@@ -2394,69 +2228,7 @@ void UnitMove(void)
 		}
 	
 	}
-/*
-	for(int i=0;i<maxMissles;i++)
-	{
-		if(missle[i].UDlife>0)
-		{
-			float MisslePos[3];
-			MisslePos[0]=(float)missle[i].UDMplane.RefPos()(0);
-			MisslePos[1]=(float)missle[i].UDMplane.RefPos()(1);
-			MisslePos[2]=(float)missle[i].UDMplane.RefPos()(2);
 
-			PSmokes.AddSmoke(MisslePos,(float)(rand()%40+80)/100.0f);
-			if(!GraphicsLOW)
-			PSmokes.AddSmoke(MisslePos,0.4f,0.06f,15.0f,1);
-			if(UDfighers[missle[i].TGTnum].UDlife>0)
-			{
-				float tmpX=(float)(UDfighers[missle[i].TGTnum].UDMplane.RefPos()(0)-missle[i].UDMplane.RefPos()(0));
-				float tmpY=(float)(UDfighers[missle[i].TGTnum].UDMplane.RefPos()(1)-missle[i].UDMplane.RefPos()(1));
-				float tmpZ=(float)(UDfighers[missle[i].TGTnum].UDMplane.RefPos()(2)-missle[i].UDMplane.RefPos()(2));
-				float tmpD=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-				if((tmpD<8000000)&&(!UDfighers[missle[i].TGTnum].waringde))
-				{
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, missleWarning[rand()%10], 0, &missleWarningchannel);
-						UDfighers[missle[i].TGTnum].waringde=true;
-				}
-				
-				missle[i].TurnTo(UDfighers[missle[i].TGTnum].UDMplane.RefPos());
-				if(missle[i].timer>15)
-				missle[i].UDPstate.NextState();
-				missle[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*10));
-				if(tmpD<10000)//临时爆炸范围
-				{
-					FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, sound1, 0, &channel1);
-					UDfighers[missle[i].TGTnum].UDlife=UDfighers[missle[i].TGTnum].UDlife-55;
-					if(UDfighers[missle[i].TGTnum].UDlife>0)
-					
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, hitvoice[rand()%4], 0, &hitvoicechannel);
-					else
-					{
-						UDfighers[missle[i].TGTnum].smokeTime=100;
-						FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, killvoice[rand()%7], 0, &killvoicechannel);
-					}
-					missle[i].UDlife=-1;
-					missle[i].smokeTime=100;
-					Boms[Bom_index].Frame=0;
-					
-	
-					UDfighers[missle[i].TGTnum].waringde=false;
-	
-					Bomings[Bomings_index].NewBom((float)missle[i].UDMplane.RefPos()(0),(float)missle[i].UDMplane.RefPos()(1),(float)missle[i].UDMplane.RefPos()(2),&PlaneBom[0]);
-					Bomings_index=Bomings_index+1;
-					if(Bomings_index==MAXBom)
-						Bomings_index=0;
-
-				}
-			}
-			else
-			{
-				missle[i].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0*8));
-				//missle[i].UDlife=-1;
-			}
-		}
-	}
-*/
 }
 
 
@@ -2488,16 +2260,9 @@ float GetSunHDlight(float x,float y,float z,int winwidth,int winheight)
 }
 void DrawPlayer(void)
 {
-	//glGetFloatv(GL_MODELVIEW_MATRIX,Worldmatrix);
 	for(int i=0;i<16;i++)
 	Worldmatrix[i]=UDfighers[0].UDMplane.Matrix4()[i];
 	glEnable(GL_CULL_FACE);
-	//glPushMatrix();
-    //glLoadIdentity();
-	
-
-    //paraLightDirection = MView * d
-    //d = {200.0f, 0.0f, 0.0f}
 
 	Vector3d tmp3d;
 	tmp3d=MView.Matrix() * Vector3d(0.0,100000.0,0.0) + MView.RefPos();
@@ -2506,138 +2271,73 @@ void DrawPlayer(void)
 	lightPosition[2]=(float)tmp3d(2);
 	glLightfv(GL_LIGHT1,GL_POSITION,lightPosition);
 
-		
-	//BasicLight();
-	//cgGLDisableProfile( g_CGprofile_vertex );
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_BLEND);
 	
-	//HighLight();
-/*
-	glPushMatrix();
-    //glLoadIdentity();
-		glBindTexture(GL_TEXTURE_2D, RedarTexture);	
-		glTranslatef(0.0, 0.0, -10*testNum);
-		glScaled(0.002, 0.002, 0.002);
-		
-		m_VBMD->ShowVBMD(6,false);
-	glPopMatrix();
-*/
 	if(ShaderLight)
 	{
 		glPushMatrix();										
-		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-		//	glPushMatrix();	
-		//		glLoadIdentity();									// Reset The Modelview Matrix
-		//		gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-		//					10.0f,265.0f);	
-		//		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-		//		glPushMatrix();										// Store The Modelview Matrix
-					glLoadIdentity();	
+		
+			glLoadIdentity();	
 
-					glLoadMatrixd(MView.Matrix4());
-	//				Transform ViewPlayer;
-	//				ViewPlayer=UDfighers[0].UDMplane;
-	//				ViewPlayer.RotateInternal(Vector3d(CRad(270.0f), 0.0f, 0.0f));
-					glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
-					//glRotatef(270.0, 1.0, 0.0, 0.0);
+			glLoadMatrixd(MView.Matrix4());
+	
+			glMultMatrixd(UDfighers[0].UDMplane.Matrix4());
 
 					
-					if(hited>0)
-						glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
-					//glTranslatef(0, -Ppos1, -Ppos2);
-					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-					//glRotatef(180.0, 0.0, 0.0, 1.0);
-					//glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-					glRotatef(-InertiaZ*0.75f, 0.0, 0.0, 1.0);
-					//glScaled(0.02, 0.02, 0.02);
-					//m_nj->ShowACMD(0,1,0,0,0,0,180,0,1.0,1.0,1.0);
-					//glRotatef(40.0f*testNum2+40.0f,0.0f,1.0f,0.0f);
-					//glRotatef(90.0f,1.0f,0.0f,0.0f);	
-					//glScaled(1.0, 1.0, 1.0);
-					//shaderT(m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel));
+			if(hited>0)
+				glTranslated(float(rand()%4-2)*0.5,float(rand()%4-2)*0.5,0);
+			glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
+			glRotatef(-InertiaZ*0.75f, 0.0, 0.0, 1.0);
+			if(ShadowLevel>1)
+			{
+				glBindTexture(GL_TEXTURE_2D, dtex);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
+			}
+			if(ShadowLevel>1)
+				shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
+			else
+				shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
 					
-					//m_VBMD->ShowVBMD(PlayerMainModel);
-					
-					if(ShadowLevel>1)
-					{
-						glBindTexture(GL_TEXTURE_2D, dtex);
-						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_COMPARE_R_TO_TEXTURE_ARB);
-						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LEQUAL);
-					}
-					if(ShadowLevel>1)
-						shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),dtex,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
-					else
-						shaderT(m_VBMD->GetTextureID(PlayerMainModel) ,m_VBMD->GetNormalTexID(PlayerMainModel),m_VBMD->GetSpecularTexID(PlayerMainModel),img,GetSunHDlight((float)SunPos3d(0),(float)SunPos3d(1),(float)SunPos3d(2),winwidth,winheight));
-					
-					m_VBMD->ShowVBMD(PlayerMainModel);
-/*					glPushMatrix();
-						glMultMatrixd(MavePart_BackL.Matrix4());
-						m_VBMD->ShowVBMD(ModelID_MavePart_BackL,false);
-					glPopMatrix();
-					glPushMatrix();
-						glMultMatrixd(MavePart_BackR.Matrix4());
-						m_VBMD->ShowVBMD(ModelID_MavePart_BackR,false);
-					glPopMatrix();
-					glPushMatrix();
-						glMultMatrixd(MavePart_FL.Matrix4());
-						m_VBMD->ShowVBMD(ModelID_MavePart_FL,false);
-					glPopMatrix();
-					glPushMatrix();
-						glMultMatrixd(MavePart_FR.Matrix4());
-						m_VBMD->ShowVBMD(ModelID_MavePart_FR,false);
-					glPopMatrix();
-					glPushMatrix();
-						glMultMatrixd(MavePart_WL.Matrix4());
-						m_VBMD->ShowVBMD(ModelID_MavePart_WL,false);
-					glPopMatrix();
-					glPushMatrix();
-						glMultMatrixd(MavePart_WR.Matrix4());
-						m_VBMD->ShowVBMD(ModelID_MavePart_WR,false);
-					glPopMatrix();
-*/
+			m_VBMD->ShowVBMD(PlayerMainModel);
 
-					glCullFace(GL_FRONT);
-					md5_weiyiL.render();
-					md5_weiyiR.render();
-					md5_wingL.render();
-					md5_wingR.render();
-					md5_yayiL.render();
-					md5_yayiR.render();
-					md5_yinqingL.render();
-					md5_yinqingR.render();
-					md5_chuiweiL.render();
-					md5_chuiweiR.render();
-					md5_jinyiL.render();
-					md5_jinyiR.render();
-					md5_MissleBox.render();
-					glGetDoublev(GL_MODELVIEW_MATRIX,DrawPlayermatrix);
-					glDisable(GL_CULL_FACE);
-					glEnable(GL_BLEND);
-					glDepthMask(GL_FALSE);
-					glColor4f(1.0f,1.0f,1.0f,0.0f);
-					m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
-					glColor4f(1.0f,1.0f,1.0f,1.0f);
-					glDepthMask(GL_TRUE);
-					glCullFace(GL_BACK);
+			glCullFace(GL_FRONT);
+			md5_weiyiL.render();
+			md5_weiyiR.render();
+			md5_wingL.render();
+			md5_wingR.render();
+			md5_yayiL.render();
+			md5_yayiR.render();
+			md5_yinqingL.render();
+			md5_yinqingR.render();
+			md5_chuiweiL.render();
+			md5_chuiweiR.render();
+			md5_jinyiL.render();
+			md5_jinyiR.render();
+			md5_MissleBox.render();
+			glGetDoublev(GL_MODELVIEW_MATRIX,DrawPlayermatrix);
+			glDisable(GL_CULL_FACE);
+			glEnable(GL_BLEND);
+			glDepthMask(GL_FALSE);
+			glColor4f(1.0f,1.0f,1.0f,0.0f);
+			m_VBMD->ShowVBMD(ModelID_MavePart_Glass,false);
+			glColor4f(1.0f,1.0f,1.0f,1.0f);
+			glDepthMask(GL_TRUE);
+			glCullFace(GL_BACK);
 
-					CGDisableProfilePixel();
-					CGDisableProfileVertex();
-					CGDisableTextureParameterShadowMap();
-					CGDisableTextureParameterAmbientReflective();
-					CGDisableTextureParameterNormalMap();
-					CGDisableTextureParameterSpecularMap();
-					if(ShadowLevel>1)
-					{
-						glBindTexture(GL_TEXTURE_2D, dtex);
-						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
-						glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
-					}
-
-		//		glPopMatrix();
-		//	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-		//	glPopMatrix();										// Restore The Old Projection Matrix
-		//glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
+			CGDisableProfilePixel();
+			CGDisableProfileVertex();
+			CGDisableTextureParameterShadowMap();
+			CGDisableTextureParameterAmbientReflective();
+			CGDisableTextureParameterNormalMap();
+			CGDisableTextureParameterSpecularMap();
+			if(ShadowLevel>1)
+			{
+				glBindTexture(GL_TEXTURE_2D, dtex);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE_ARB, GL_NONE);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC_ARB, GL_LUMINANCE);
+			}
 		glPopMatrix();										
 
 	}
@@ -2661,42 +2361,7 @@ void DrawPlayer(void)
 		glPopMatrix();	
 	}
 
-
-
-   // glPopMatrix();
-
 	glDisable(GL_CULL_FACE);
-
-/*
-	glEnable(GL_BLEND);
-		glPushMatrix();										
-			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-			glPushMatrix();	
-				glLoadIdentity();									// Reset The Modelview Matrix
-				gluPerspective (45.0f, (GLfloat)(winwidth)/(GLfloat)(winheight),			// Calculate The Aspect Ratio Of The Window
-							10.0f,265.0f);	
-				glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-				glPushMatrix();										// Store The Modelview Matrix
-					glLoadIdentity();	
-					
-					glTranslatef(0, -Ppos1, -Ppos2);
-					glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-
-					glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-				glDepthMask(GL_FALSE);
-				glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_COLOR   );
-				glColor4f(testNum2,testNum2,testNum2,1.0f);
-					m_VBMD->ShowVBMD(ModelID[2].MainDD1);
-					m_VBMD->ShowVBMD(ModelID[2].MainDD2);
-				glColor4f(1.0f,1.0f,1.0f,1.0f);
-				glDepthMask(GL_TRUE);
-				glPopMatrix();
-			glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-			glPopMatrix();										// Restore The Old Projection Matrix
-		glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-		glPopMatrix();
-	glDisable(GL_BLEND);
-*/
 }
 void DrawPlayerTranslucent(void)
 {
@@ -2723,128 +2388,44 @@ void DrawPlayerTranslucent(void)
 void DrawSky(Transform viewSky,float ne=0.0)
 {
 	glDisable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_COLOR   );
-	//glBindTexture(GL_TEXTURE_2D,SkyTexture);
-	//glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_COLOR   );
+	
 	glPushMatrix();
-	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(ne));
 	double fogbackY;
-	//double skybackY;
 	if(viewSky.RefPos()(1)>20000.0)
 		fogbackY=viewSky.RefPos()(1);
 	else
 	{
 		fogbackY=20000.0;
-		//skybackY=(10000.0-MFighter.RefPos()(1))/10.0;
 	}
 	Msky.Translate( Vector3d( viewSky.RefPos()(0) ,viewSky.RefPos()(1), viewSky.RefPos()(2) ) );
 	glMultMatrixd(Msky.Matrix4());	
 
-//glBindTexture(GL_TEXTURE_2D, PlayerSign);
-	
-	
 	glScaled(5000.0,5000.0,5000.0);
 	glDisable(GL_DEPTH_TEST);
 	if(!IsSkip)
 		SkyBox.Draw();
-	//m_VBMD->ShowVBMD(3);
-	/*
-	glBindTexture(GL_TEXTURE_2D, SkyTex[2].texID);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
-   
-	glBegin(GL_QUADS);
-		// 前面
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的左上
-	glEnd();
-		// 后面
-		glBindTexture(GL_TEXTURE_2D, SkyTex[0].texID);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
-   
-	glBegin(GL_QUADS);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的右下
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的右上
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的左下
-	glEnd();
-		// 顶面
-		glBindTexture(GL_TEXTURE_2D, SkyTex[5].texID);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
-   
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的左下
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// 纹理和四边形的右下
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// 纹理和四边形的右上
-	glEnd();
-		// 底面
-		glBindTexture(GL_TEXTURE_2D, SkyTex[1].texID);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
-   
-	glBegin(GL_QUADS);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的右上
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的左上
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
-	glEnd();
-		// 右面
-		glBindTexture(GL_TEXTURE_2D, SkyTex[4].texID);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
-   
-	glBegin(GL_QUADS);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的右下
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	// 纹理和四边形的右上
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	// 纹理和四边形的左上
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
-	glEnd();
-		// 左面
-		glBindTexture(GL_TEXTURE_2D, SkyTex[3].texID);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
-   
-	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的左下
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	// 纹理和四边形的右上
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
-	glEnd();
-	*/
+	
 	glEnable(GL_DEPTH_TEST);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 	
-	//Msky.Translate(MFighter.RefPos()*(-1.0));
 	Msky.Translate( Vector3d( -viewSky.RefPos()(0) ,  -viewSky.RefPos()(1) , -viewSky.RefPos()(2) ) );
-	//Msky.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-ne));
 	glEnable(GL_BLEND);
 }
 void DrawUnitTrack(void)
 {
 	if(!VBOSupported)
 		return;
-	//if(!TrackTexID)
-	//	return;
-	//glBindTexture(GL_TEXTURE_2D, TrackTexID);	
 	glColor4f(1.0f,1.0f,1.0f,1.0f);
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
 	glDepthMask(GL_FALSE);
 	glEnableClientState( GL_VERTEX_ARRAY );	
 	glEnableClientState( GL_COLOR_ARRAY );
-	//glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 	for(int i=1;i<maxUnits;i++)
 		UDfighers[i].DrawTrack();
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_COLOR_ARRAY );
-	//glDisableClientState( GL_TEXTURE_COORD_ARRAY );
 	glDepthMask(GL_TRUE);
 	glEnable(GL_TEXTURE_2D);
 }
@@ -2863,58 +2444,13 @@ void showloading(void)
 	case 5:glPrint(16,16,"6/7 Loading Sound",0);initsound();break;
 	case 6:glPrint(16,16,"7/7 Loading Model",0);LoadVBMDModels(IsSupportFBO);break;
 	case 7:loadover=true;
-	/*MavePart_BackL.TranslateInternal(Vector3d(0.0,-4.0,37.0));
-	MavePart_BackR.TranslateInternal(Vector3d(0.0,-4.0,37.0));
-	MavePart_FL.TranslateInternal(Vector3d(-8.5,3.5,-20.0));
-	MavePart_FR.TranslateInternal(Vector3d( 8.5,3.5,-20.0));
-	MavePart_WL.TranslateInternal(Vector3d(0.0,0.0,55.0));
-	MavePart_WR.TranslateInternal(Vector3d(0.0,0.0,55.0));
-*/
+	
 	if(!MyFont.LoadFont("Data/FontCH"))
 		::MessageBox(HWND_DESKTOP,"Font error","Error",MB_OK | MB_ICONEXCLAMATION);
 	break;
 	
 	}
 	MyFont.inputTxt(C_TITLE);
-
-	//MyFont.inputTxt("测试单纹理字库。测试单纹理字库。测试单纹理字库。测试单纹理字库。测试单纹理字库。测试单纹理字库。");
-	/*
-	
-	if(needloadfile==1)
-	{
-
-		LoadGLTextures();
-		
-//		glPrint(16,16,"Loading Bom",0);
-		PlaneBom[0].m_IsSupportFBO=IsSupportFBO;
-		if(!PlaneBom[0].InitBomType(0))
-		::MessageBox(HWND_DESKTOP,"InitBom Error","Error",MB_OK | MB_ICONEXCLAMATION);
-//		glPrint(16,16,"Loading Sky",0);
-		SkyBox.IsSupportFBO=IsSupportFBO;
-		SkyBox.Init();
-		Cloud.Init();
-//		glPrint(16,16,"Loading Smoke",0);
-		PSmokes.Init(1);
-//		glPrint(16,16,"Loading Sound",0);
-		initsound();
-
-	//	glPrint(16,16,"Loading Model",0);
-		LoadVBMDModels(IsSupportFBO);
-		needloadfile=2;
-		
-	
-	}
-		
-	if(needloadfile<2)
-	{
-		//char loadingFileName[128];
-		//sprintf(loadingFileName,"Now Loading");
-		glEnable(GL_BLEND);
-		glPrint(16,16,"Now Loading",0);
-		needloadfile=1;
-	}
-*/
-
 
 }
 void DrawShadowMap(void)
@@ -3097,69 +2633,6 @@ void DrawShadowMap(void)
 		//glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
 	}
 }
-/*
-void DrawHighLight(void)
-{
-	
-	glDisable(GL_BLEND);
-	glPushAttrib(GL_VIEWPORT_BIT);
-		glViewport(0,0,bloomMAPSize, bloomMAPSize);
-		glPushMatrix();	
-			//glLoadIdentity();	
-			//glTranslatef(0, -Ppos1, -Ppos2);
-			//glRotatef(-InertiaX*0.5f, 1.0, 0.0, 0.0);
-			//glRotatef(-InertiaZ*0.3f, 0.0, 0.0, 1.0);
-			//BasicLight();
-			//glBindTexture(GL_TEXTURE_2D, img);	
-			HighLight();
-			//m_VBMD->ShowVBMD(0,false);
-
-			cgGLDisableProfile( g_CGprofile_vertex );
-			cgGLDisableProfile( g_CGprofile_pixel );
-		glPopMatrix();
-		//glBindTexture(GL_TEXTURE_2D,blurtexture2);
-		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, bloomMAPSize, bloomMAPSize, 0);
-	glPopAttrib();
-	glEnable(GL_BLEND);
-	
-
-}
-*/
-/*
-void glPrintHighLight(void)
-{
-
-
-
-	glDisable(GL_TEXTURE_GEN_S);
-	glDisable(GL_TEXTURE_GEN_T);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPushMatrix();										// Store The Projection Matrix
-	glLoadIdentity();									// Reset The Projection Matrix
-	glOrtho(0,winwidth,0,winheight,-1,1);							// Set Up An Ortho Screen
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPushMatrix();										// Store The Modelview Matrix
-	glLoadIdentity();									// Reset The Modelview Matrix
-
-	glEnable(GL_BLEND);
-
-	glBindTexture(GL_TEXTURE_2D, fboBloomImg);	
-
-	glTranslated(winwidth/2.0,winheight/2.0,0.0);
-	glScaled(winwidth/2.0,winheight/2.0,1.0);
-	BasicLight();
-	m_VBMD->ShowVBMD(ModelID_smoke,false);
-	cgGLDisableProfile( g_CGprofile_pixel );
-	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
-	glPopMatrix();										// Restore The Old Projection Matrix
-	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
-	glPopMatrix();										// Restore The Old Projection Matrix
-	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-	glBindTexture(GL_TEXTURE_2D,0);
-}
-*/
 void DrawGround(void)
 {
 
@@ -3179,7 +2652,6 @@ void DrawGround(void)
 			
 			glScaled(1000.0,1000.0,1000.0);
 			glDisable(GL_BLEND);
-			//m_VBMD->ShowVBMD(ModelID_SHAN);
 			int mapx,mapz;
 			mapx=int(MFighter.RefPos()(0))/40000;
 			mapz=int(MFighter.RefPos()(2))/40000;
@@ -3206,7 +2678,6 @@ void DrawGround(void)
 			glEnable(GL_FOG);
 			glScaled(1000.0,1000.0,1000.0);
 			glDisable(GL_BLEND);
-			//m_VBMD->ShowVBMD(ModelID_SHAN);
 			int mapx,mapz;
 			mapx=int(MFighter.RefPos()(0))/40000;
 			mapz=int(MFighter.RefPos()(2))/40000;
@@ -3377,7 +2848,6 @@ void SetPlayerTransform(void)
 	
 	}
 }
-
 void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 {
 	glDisable(GL_DEPTH_TEST);							// Disables Depth Testing
@@ -3441,7 +2911,6 @@ void DrawHP(int HPset,Transform& FighterModel,Transform& tfWorld)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 }
-
 void stage0(void)
 {
 
@@ -3473,8 +2942,7 @@ void stage0(void)
     double rotation = acos_s(dir2(0) * intersect[0] + dir2(1) * intersect[1] + dir2(2) * intersect[2]) * 180.0f / PI;
     if (dir2(1) < 0){ rotation = -rotation; }
 	SetPlayerTransform();
-	//if(ShaderBloom)
-	//	DrawHighLight();
+	
 	if(!IsSkip)
 	{
 		//glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -3560,11 +3028,6 @@ void stage0(void)
 		else
 			DrawRedar((float)longitude);
 	}
-	
-	//Maptexture=bloomTexId1;
-	//Maptexture=Video.VideoTexID;
-	//Maptexture=MyFont.TXTTexID;
-//	Maptexture=img;
 
 
 }

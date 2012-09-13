@@ -57,7 +57,7 @@ pixel main(
 	half specularLight = pow(MaxDotMaH0, 1000.0);
 	pixel OUT;
 	OUT.color.xyz = (Fresnel*reflection.xyz+(1.0-Fresnel)*diffuse)*(light*paraLightColor+globalAmbient)+specularLight*paraLightColor;
-	float fogb=min((100000.0-IN.objectPos.z)/70000.0,1.0);
+	float fogb=min((100000.0-IN.objectPos.z)/80000.0,1.0);
 	OUT.color.xyz=OUT.color.xyz*fogb+(1.0-fogb)*FogColor;
 
 	OUT.color.a=1.0;
