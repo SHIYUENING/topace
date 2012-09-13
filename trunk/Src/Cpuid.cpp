@@ -40,18 +40,6 @@ void CPUID::Executecpuid(DWORD veax)
  m_edx = dedx;
 }
 
-/*
-string CPUID::GetVID()
-{
- char cVID[S*3+1];   // 字符串，用来存储制造商信息
- memset(cVID, 0, sizeof(cVID));  // 把数组清0
- Executecpuid(0);  // 执行cpuid指令，使用输入参数 eax = 0
- memcpy(cVID+S*0, &m_ebx, S); // 复制前四个字符到数组
- memcpy(cVID+S*1, &m_edx, S); // 复制中间四个字符到数组
- memcpy(cVID+S*2, &m_ecx, S); // 复制最后四个字符到数组
-
- return string(cVID);  // 以string的形式返回
-}*/
 
 string CPUID::GetBrand()
 {
@@ -71,54 +59,3 @@ string CPUID::GetBrand()
  return string(cBrand);  // 以string的形式返回
 }
 
-/*
-LONGLONG CPUID:: GetFrequency(DWORD sleepTime)
-{
- HANDLE hp = ::GetCurrentProcess(); //获取当前进程
- HANDLE ht = ::GetCurrentThread(); //获取当前线程
-
- DWORD  pc = ::GetPriorityClass( hp ); //获取当前进程优先度
- DWORD  tp = ::GetThreadPriority( ht ); //获取当前线程优先度
-
- BOOL   flag1 = FALSE , flag2 = FALSE;
- DWORD  low1  = 0 , high1 = 0 , low2 = 0 , high2 = 0;
-
- flag1 = ::SetPriorityClass( hp , REALTIME_PRIORITY_CLASS );  //将当前进程优先度设置最高
- flag2 = ::SetThreadPriority( ht , THREAD_PRIORITY_HIGHEST ); //将当前线程优先度设置最高
-
- ::Sleep( 10 );
- LARGE_INTEGER fq,st,ed;
- ::QueryPerformanceFrequency(&fq); //精确计时
- ::QueryPerformanceCounter(&st);  //获得起始时间
- __asm        //获得当前cpu的时间周期数
- {
-  rdtsc
-  mov low1 , eax
-  mov high1 , edx
- }
- ::Sleep( sleepTime );     //将线程挂起片刻
- ::QueryPerformanceCounter(&ed);  //获得结束时间
- __asm        //获得当前cpu的时间周期数
- {
-  rdtsc
-  mov low2  ,eax
-  mov high2 ,edx
- }
- 
-
- if( flag1 )
-  ::SetPriorityClass( hp , pc );  //将当前进程优先度恢复原样
- if( flag2 )
-  ::SetThreadPriority( ht , tp );  //将当前线程优先度恢复原样
-
- ::CloseHandle( hp );
- ::CloseHandle( ht );
-
- //将cpu的时间周期数转化成64位整数
- LONGLONG begin = (LONGLONG)high1<<32 | low1;
- LONGLONG end = (LONGLONG)high2<<32 | low2;
-
- //将两次获得的cpu时间周期数除以间隔时间，即得到cpu的频率。
- //由于windows的Sleep函数有大约15毫秒的误差，故以windows的精确计时为准
- return (end - begin)*fq.QuadPart/(ed.QuadPart-st.QuadPart);
-}*/

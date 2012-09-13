@@ -1710,7 +1710,6 @@ void DrawUnit(void)
 	}
 	glDisable(GL_CULL_FACE);
 }
-
 void DrawMisslesign(const Vector3d& MisslePosition)
 {
 	glDisable(GL_TEXTURE_2D);
@@ -2230,8 +2229,6 @@ void UnitMove(void)
 	}
 
 }
-
-
 float GetSunHDlight(float x,float y,float z,int winwidth,int winheight)
 {
 	if(!isDraw)

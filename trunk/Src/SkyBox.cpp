@@ -9,6 +9,7 @@ CSkyBox::CSkyBox(void)
 CSkyBox::~CSkyBox(void)
 {
 }
+unsigned int SunQuery=0;
 unsigned int CSkyBox::LoadTGAFile(char *filename)
 {
 	Texture LoadTexture;
@@ -32,6 +33,7 @@ unsigned int CSkyBox::LoadTGAFile(char *filename)
 }
 bool CSkyBox::Init(void)
 {
+	glGenQueries(1,&SunQuery);
 	if(!IsSupportFBO)
 	{
 		SunTexID=LoadTGAFile("Data/sky/sun.tga");
@@ -70,6 +72,8 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[4].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[4].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -96,6 +100,8 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[3].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[3].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -122,6 +128,8 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[5].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[5].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -150,6 +158,8 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[1].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[1].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -176,6 +186,8 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[0].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[0].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -201,6 +213,8 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[2].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[2].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -222,8 +236,6 @@ void CSkyBox::Draw(void)
 {
 	glDisable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, SkyTexID[2]);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
    
 	glBegin(GL_QUADS);
 		// 前面
@@ -234,8 +246,6 @@ void CSkyBox::Draw(void)
 	glEnd();
 		// 后面
 		glBindTexture(GL_TEXTURE_2D, SkyTexID[0]);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
    
 	glBegin(GL_QUADS);
 		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的右下
@@ -245,8 +255,6 @@ void CSkyBox::Draw(void)
 	glEnd();
 		// 顶面
 		glBindTexture(GL_TEXTURE_2D, SkyTexID[5]);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
    
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// 纹理和四边形的左上
@@ -256,8 +264,6 @@ void CSkyBox::Draw(void)
 	glEnd();
 		// 底面
 		glBindTexture(GL_TEXTURE_2D, SkyTexID[1]);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
    
 	glBegin(GL_QUADS);
 		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的右上
@@ -266,9 +272,7 @@ void CSkyBox::Draw(void)
 		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	// 纹理和四边形的右下
 	glEnd();
 		// 右面
-		glBindTexture(GL_TEXTURE_2D, SkyTexID[4]);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+		glBindTexture(GL_TEXTURE_2D, SkyTexID[4]); 
    
 	glBegin(GL_QUADS);
 		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	// 纹理和四边形的右下
@@ -277,9 +281,7 @@ void CSkyBox::Draw(void)
 		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	// 纹理和四边形的左下
 	glEnd();
 		// 左面
-		glBindTexture(GL_TEXTURE_2D, SkyTexID[3]);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);   
+		glBindTexture(GL_TEXTURE_2D, SkyTexID[3]);  
    
 	glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	// 纹理和四边形的左下
@@ -289,7 +291,6 @@ void CSkyBox::Draw(void)
 	glEnd();
 	glEnable(GL_BLEND);
 }
-
 void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 {
 	glPushMatrix();	
@@ -318,20 +319,31 @@ void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 	glPushMatrix();										// Store The Modelview Matrix
 	glLoadIdentity();									// Reset The Modelview Matrix
 
-
+	unsigned int QUERY_RESULT=0;
+	glGetQueryObjectuiv(SunQuery,GL_QUERY_RESULT,&QUERY_RESULT);
 	glEnable(GL_BLEND);
 	glBindTexture(GL_TEXTURE_2D, SunTexID);	
+	
+	glAlphaFunc(GL_GREATER, 0.99f);
+	glEnable(GL_ALPHA_TEST); 
+	glBeginQuery(GL_SAMPLES_PASSED,SunQuery);
+	glBegin(GL_QUADS);							// Use A Quad For Each Character
+		glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX-(float)(winwidth/10),(float)SUFwinY-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
+		glTexCoord2f(1.0f,0.5f)	;glVertex2f((float)SUFwinX+(float)(winwidth/10),(float)SUFwinY-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
+		glTexCoord2f(1.0f,1.0f)	;glVertex2f((float)SUFwinX+(float)(winwidth/10),(float)SUFwinY+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
+		glTexCoord2f(0.5f,1.0f)	;glVertex2f((float)SUFwinX-(float)(winwidth/10),(float)SUFwinY+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
+	glEnd();
+	glEndQuery(GL_SAMPLES_PASSED);
+	glDisable(GL_ALPHA_TEST); 
 
-	//glTranslated(0,SUFwinY,0);
-
-
+	if(QUERY_RESULT!=0)
+	{
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
 			glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX-(float)(winwidth/10),(float)SUFwinY-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
 			glTexCoord2f(1.0f,0.5f)	;glVertex2f((float)SUFwinX+(float)(winwidth/10),(float)SUFwinY-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
 			glTexCoord2f(1.0f,1.0f)	;glVertex2f((float)SUFwinX+(float)(winwidth/10),(float)SUFwinY+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
 			glTexCoord2f(0.5f,1.0f)	;glVertex2f((float)SUFwinX-(float)(winwidth/10),(float)SUFwinY+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 		glEnd();
-
 		glColor4f(1.0f,0.0f,0.0f,1.0f);
 		glBegin(GL_QUADS);							// Use A Quad For Each Character
 			glTexCoord2f(0.0f,0.5f)	;glVertex2f((float)SUFwinX*0.75f-(float)(winwidth/20),(float)SUFwinY*0.75f-(float)(winwidth/20));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
@@ -355,38 +367,10 @@ void CSkyBox::DrawSun(float x,float y,float z,int winwidth,int winheight)
 			glTexCoord2f(0.5f,1.0f)	;glVertex2f((float)SUFwinX*0.25f+(float)(winwidth/20),(float)SUFwinY*0.25f+(float)(winwidth/20));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
 			glTexCoord2f(0.0f,1.0f)	;glVertex2f((float)SUFwinX*0.25f-(float)(winwidth/20),(float)SUFwinY*0.25f+(float)(winwidth/20));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
 		glEnd();
-		glColor4f(1.0f,1.0f,1.0f,1.0f);
-/*
-		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0f,0.0f)	;glVertex2f((float)SUFwinX*0.75f-(float)(winwidth/10),(float)SUFwinY*0.75f-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(0.5f,0.0f)	;glVertex2f((float)SUFwinX*0.75f+(float)(winwidth/10),(float)SUFwinY*0.75f-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX*0.75f+(float)(winwidth/10),(float)SUFwinY*0.75f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0f,0.5f)	;glVertex2f((float)SUFwinX*0.75f-(float)(winwidth/10),(float)SUFwinY*0.75f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-		glEnd();
 
-		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.0f,0.5f)	;glVertex2f((float)SUFwinX*0.5f-(float)(winwidth/10),(float)SUFwinY*0.5f-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX*0.5f+(float)(winwidth/10),(float)SUFwinY*0.5f-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(0.5f,1.0f)	;glVertex2f((float)SUFwinX*0.5f+(float)(winwidth/10),(float)SUFwinY*0.5f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.0f,1.0f)	;glVertex2f((float)SUFwinX*0.5f-(float)(winwidth/10),(float)SUFwinY*0.5f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-		glEnd();
+	}
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 
-		glBegin(GL_QUADS);							// Use A Quad For Each Character
-			glTexCoord2f(0.5f,0.0f)	;glVertex2f((float)SUFwinX*0.25f-(float)(winwidth/10),(float)SUFwinY*0.25f-(float)(winwidth/10));	// Texture Coord (Bottom Left)// Vertex Coord (Bottom Left)
-			glTexCoord2f(1.0f,0.0f)	;glVertex2f((float)SUFwinX*0.25f+(float)(winwidth/10),(float)SUFwinY*0.25f-(float)(winwidth/10));	// Texture Coord (Bottom Right)// Vertex Coord (Bottom Right)
-			glTexCoord2f(1.0f,0.5f)	;glVertex2f((float)SUFwinX*0.25f+(float)(winwidth/10),(float)SUFwinY*0.25f+(float)(winwidth/10));	// Texture Coord (Top Right)// Vertex Coord (Top Right)
-			glTexCoord2f(0.5f,0.5f)	;glVertex2f((float)SUFwinX*0.25f-(float)(winwidth/10),(float)SUFwinY*0.25f+(float)(winwidth/10));	// Texture Coord (Top Left)// Vertex Coord (Top Left)
-		glEnd();
-		*/
-/*
-			glBegin(GL_QUADS);							// Use A Quad For Each Character
-				glTexCoord2f(0.5,0.5);	glVertex2i(-80,-80);						// Vertex Coord (Bottom Left)
-				glTexCoord2f(1,0.5);	glVertex2i(80,-80);						// Vertex Coord (Bottom Right)
-				glTexCoord2f(1,1);		glVertex2i(80,80);						// Vertex Coord (Top Right)
-				glTexCoord2f(0.5,1);	glVertex2i(-80,80);						// Vertex Coord (Top Left)
-			glEnd();
-	
-*/
 	glMatrixMode(GL_PROJECTION);						// Select The Projection Matrix
 	glPopMatrix();										// Restore The Old Projection Matrix
 	glMatrixMode(GL_MODELVIEW);							// Select The Modelview Matrix
