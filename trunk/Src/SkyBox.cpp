@@ -53,6 +53,12 @@ bool CSkyBox::Init(void)
 	SkyTexID[3]=loadDDS.loadCompressedTexture("Data/sky/LF.dds");
 	SkyTexID[4]=loadDDS.loadCompressedTexture("Data/sky/RT.dds");
 	SkyTexID[5]=loadDDS.loadCompressedTexture("Data/sky/UP.dds");
+	for(int i=0;i<6;i++)
+	{
+		glBindTexture(GL_TEXTURE_2D, SkyTexID[i]);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+	}
 	//if(SkyTexID[0]==0)
 	glGenTextures(1, &SunCubeID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP_EXT, SunCubeID);
@@ -72,8 +78,6 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
 		if (SkyTex[4].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[4].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -100,8 +104,7 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+
 		if (SkyTex[3].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[3].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -128,8 +131,7 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+
 		if (SkyTex[5].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[5].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -158,8 +160,7 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+
 		if (SkyTex[1].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[1].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -186,8 +187,7 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+
 		if (SkyTex[0].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[0].imageData);					// Free The Texture Image Memory ( CHANGE )
@@ -213,8 +213,7 @@ bool CSkyBox::Init(void)
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 		}
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);   
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); 
+
 		if (SkyTex[2].imageData)						// If Texture Image Exists ( CHANGE )
 			{
 				free(SkyTex[2].imageData);					// Free The Texture Image Memory ( CHANGE )

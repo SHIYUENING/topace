@@ -185,9 +185,6 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 		if(ddsTexId>0)
 		{
 			VBMD[MID].TextureID=ddsTexId;
-
-
-		
 		}
 		else
 		{
@@ -233,17 +230,17 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	}
 	else
 		VBMD[MID].TextureID=UserTexture;
-VBMD[MID].UseTangentArray=true;
+	VBMD[MID].UseTangentArray=true;
 	if(VBMD[MID].UseTangentArray)
 	{
-			for(unsigned int i=0;i<VBMD[MID].VertexCount;i++)
-			{
-				if((i*2+1)<(VBMD[MID].VertexCount*2))
-				VBMD[MID].pTexCoords[i*2+1]=1.0f-VBMD[MID].pTexCoords[i*2+1];
+		for(unsigned int i=0;i<VBMD[MID].VertexCount;i++)
+		{
+			if((i*2+1)<(VBMD[MID].VertexCount*2))
+			VBMD[MID].pTexCoords[i*2+1]=1.0f-VBMD[MID].pTexCoords[i*2+1];
 			
-			}
-		//*
-		//if(tangent==false)	//模型不含切线信息	
+		}
+		
+		if(tangent==false)	//模型不含切线信息	
 
 		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
 		{
