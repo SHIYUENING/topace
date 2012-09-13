@@ -15,7 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>TOP_ACE_VS2008</ProjectName>
+    <ProjectName>TOP_ACE_VS2010</ProjectName>
     <ProjectGuid>{A0D4C2AC-3D4C-49E8-955D-841E8AA2D26B}</ProjectGuid>
     <RootNamespace>StrangeFighter</RootNamespace>
     <Keyword>Win32Proj</Keyword>
