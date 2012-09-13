@@ -1,5 +1,7 @@
 #include "TBN.h"
 #include "Mathematics.h"
+
+#include"EasyMatrix.h"
 CTBN::CTBN(void)
 {
 }
