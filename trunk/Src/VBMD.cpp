@@ -1,7 +1,7 @@
 #include "Mathematics.h"
 #include "VBMD.h"
 
-
+#include"EasyMatrix.h"
 using namespace std;
 
 const unsigned int MAX_VBMD = 100;								// 最大模型数量
@@ -240,56 +240,57 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 			
 		}
 		
-		if(tangent==false)	//模型不含切线信息	
+		//if(tangent==false)	//模型不含切线信息	
 
 		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
 		{
 			if(((i+1)*3+2)<(VBMD[MID].VertexCount*3))
 			{
-				VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
-				VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
-				VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
+				CreateTangent(VBMD[MID].pVertices+i*3,VBMD[MID].pNormals+i*3,VBMD[MID].pTexCoords+i*2,VBMD[MID].pTangent+i*3);
+				//VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
+				//VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
+				//VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
 
-				VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
-				VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
-				VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
+				//VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
+				//VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
+				//VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
 
-				VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
-				VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
-				VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
+				//VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
+				//VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
+				//VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
 
-				NormalsInToTBN[0][0]=VBMD[MID].pNormals[i*3+0];
-				NormalsInToTBN[0][1]=VBMD[MID].pNormals[i*3+1];
-				NormalsInToTBN[0][2]=VBMD[MID].pNormals[i*3+2];
+				//NormalsInToTBN[0][0]=VBMD[MID].pNormals[i*3+0];
+				//NormalsInToTBN[0][1]=VBMD[MID].pNormals[i*3+1];
+				//NormalsInToTBN[0][2]=VBMD[MID].pNormals[i*3+2];
 
-				NormalsInToTBN[1][0]=VBMD[MID].pNormals[(i+1)*3+0];
-				NormalsInToTBN[1][1]=VBMD[MID].pNormals[(i+1)*3+1];
-				NormalsInToTBN[1][2]=VBMD[MID].pNormals[(i+1)*3+2];
+				//NormalsInToTBN[1][0]=VBMD[MID].pNormals[(i+1)*3+0];
+				//NormalsInToTBN[1][1]=VBMD[MID].pNormals[(i+1)*3+1];
+				//NormalsInToTBN[1][2]=VBMD[MID].pNormals[(i+1)*3+2];
 
-				NormalsInToTBN[2][0]=VBMD[MID].pNormals[(i+2)*3+0];
-				NormalsInToTBN[2][1]=VBMD[MID].pNormals[(i+2)*3+1];
-				NormalsInToTBN[2][2]=VBMD[MID].pNormals[(i+2)*3+2];
+				//NormalsInToTBN[2][0]=VBMD[MID].pNormals[(i+2)*3+0];
+				//NormalsInToTBN[2][1]=VBMD[MID].pNormals[(i+2)*3+1];
+				//NormalsInToTBN[2][2]=VBMD[MID].pNormals[(i+2)*3+2];
 
-				TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
-				TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
+				//TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
+				//TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
 
-				TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
-				TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
+				//TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
+				//TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
 
-				TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
-				TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
-				TBN();
-				VBMD[MID].pTangent[i*3+0]=TBNout[0][0];
-				VBMD[MID].pTangent[i*3+1]=TBNout[0][1];
-				VBMD[MID].pTangent[i*3+2]=TBNout[0][2];
+				//TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
+				//TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
+				//TBN();
+				//VBMD[MID].pTangent[i*3+0]=TBNout[0][0];
+				//VBMD[MID].pTangent[i*3+1]=TBNout[0][1];
+				//VBMD[MID].pTangent[i*3+2]=TBNout[0][2];
 
-				VBMD[MID].pTangent[(i+1)*3+0]=TBNout[1][0];
-				VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1][1];
-				VBMD[MID].pTangent[(i+1)*3+2]=TBNout[1][2];
+				//VBMD[MID].pTangent[(i+1)*3+0]=TBNout[1][0];
+				//VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1][1];
+				//VBMD[MID].pTangent[(i+1)*3+2]=TBNout[1][2];
 
-				VBMD[MID].pTangent[(i+2)*3+0]=TBNout[2][0];
-				VBMD[MID].pTangent[(i+2)*3+1]=TBNout[2][1];
-				VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2][2];
+				//VBMD[MID].pTangent[(i+2)*3+0]=TBNout[2][0];
+				//VBMD[MID].pTangent[(i+2)*3+1]=TBNout[2][1];
+				//VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2][2];
 			}
 		
 		}

@@ -16,8 +16,8 @@ void main()
     vec3 Binormal	=	normalize(cross(Tangent,NormalIn));
 
     vec3 NN2 = texture2D(NormalMapTexture, gl_TexCoord[0].xy).xyz*2.0-vec3(1.0,1.0,1.0);
-    mat3 TBN = mat3(Tangent,Binormal,NormalIn);
-    vec3 Normal = -normalize(TBN*NN2);
+    mat3 TBN = transpose(mat3(Tangent,Binormal,NormalIn));
+    vec3 Normal = normalize(NormalIn);
     vec3 LightDir = normalize(paraLightDirection);
     //float diffuseLight = max(dot(Normal, LightDir), 0.0);
     //vec3 diffuse = paraLightColor*diffuseLight;
@@ -54,6 +54,7 @@ void main()
     vec3 Reflective=reflect(ViewDir,Normal);
     vec4 ReflectiveWorld = Worldmatrix*vec4(Reflective,0.0);
     gl_FragColor = MainColor*Ocolor*(textureCube(AmbientReflectiveTexture, ReflectiveWorld.xyz) + 1.0);
+	gl_FragColor.xyz=vec3(dot(Normal, LightDir));
     gl_FragColor.w = 0.5;
     return;
 } 
