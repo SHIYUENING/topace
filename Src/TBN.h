@@ -10,6 +10,6 @@ public:
 	float VerticesInToTBN[3][3];
 	float NormalsInToTBN[3][3];
 	float TexCoordsInToTBN[3][2];
-	float TBNout[3];
+	float TBNout[3][3];
 };
 #endif

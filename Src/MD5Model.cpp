@@ -1094,16 +1094,26 @@ void MD5Model::buildTBNs() {
 	  TBN.VerticesInToTBN[2][0]=v2.pos[0];
 	  TBN.VerticesInToTBN[2][1]=v2.pos[1];
 	  TBN.VerticesInToTBN[2][2]=v2.pos[2];
+
+	  TBN.NormalsInToTBN[0][0]=v0.n[0];
+	  TBN.NormalsInToTBN[0][1]=v0.n[1];
+	  TBN.NormalsInToTBN[0][2]=v0.n[2];
+	  TBN.NormalsInToTBN[1][0]=v1.n[0];
+	  TBN.NormalsInToTBN[1][1]=v1.n[1];
+	  TBN.NormalsInToTBN[1][2]=v1.n[2];
+	  TBN.NormalsInToTBN[2][0]=v2.n[0];
+	  TBN.NormalsInToTBN[2][1]=v2.n[1];
+	  TBN.NormalsInToTBN[2][2]=v2.n[2];
 	  TBN.TBN();
-	  v0.nt[0]=TBN.TBNout[0];
-	  v0.nt[1]=TBN.TBNout[1];
-	  v0.nt[2]=TBN.TBNout[2];
-	  v1.nt[0]=TBN.TBNout[0];
-	  v1.nt[1]=TBN.TBNout[1];
-	  v1.nt[2]=TBN.TBNout[2];
-	  v2.nt[0]=TBN.TBNout[0];
-	  v2.nt[1]=TBN.TBNout[1];
-	  v2.nt[2]=TBN.TBNout[2];
+	  v0.nt[0]=TBN.TBNout[0][0];
+	  v0.nt[1]=TBN.TBNout[0][1];
+	  v0.nt[2]=TBN.TBNout[0][2];
+	  v1.nt[0]=TBN.TBNout[1][0];
+	  v1.nt[1]=TBN.TBNout[1][1];
+	  v1.nt[2]=TBN.TBNout[1][2];
+	  v2.nt[0]=TBN.TBNout[2][0];
+	  v2.nt[1]=TBN.TBNout[2][1];
+	  v2.nt[2]=TBN.TBNout[2][2];
 
 
 
