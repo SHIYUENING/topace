@@ -23,8 +23,8 @@
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
-#pragma comment( lib, "cg.lib" )	
-#pragma comment( lib, "cgGL.lib" )	
+//#pragma comment( lib, "cg.lib" )	
+//#pragma comment( lib, "cgGL.lib" )	
 #pragma comment( lib, "glew32.lib" )	
 #pragma comment( lib, "glew32d.lib" )
 #pragma comment( lib, "SDL.lib" )
@@ -56,6 +56,7 @@ bool IsUseJoyStick=false;
 bool UseEffectImpact=false;
 bool DrawEffectImpact=false;
 bool GraphicsLOW=false;
+bool ShowMsg=false;
 CEffectImpact EffectImpact;
 //用于等待时间以保持稳定速度
 void Delay(__int64 Us)
@@ -182,6 +183,10 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
 		GraphicsLOW=true;
 	else
 		GraphicsLOW=false;
+	if(GetPrivateProfileInt("UI","ShowMsg",0,".\\set.ini")!=0)
+		ShowMsg=true;
+	else
+		ShowMsg=false;
 
 #ifdef _RELEASELOG 
 	WritePrivateProfileString("Initialize","Begin","OK",".\\Log.ini");
@@ -222,8 +227,7 @@ BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User I
         ))&&(!GraphicsLOW))
 		IsSupportFBO=true;
 	ShadowLevel=GetPrivateProfileInt("Light","Shadow",4,".\\set.ini");
-	if(ShadowLevel<2)
-		UseHighShadow=false;
+
 	if(ShadowLevel<1)
 	{
 		UseShadow=false;
@@ -609,105 +613,31 @@ void DrawDataLine2 (double high,double news,double latitude)
 	char PlayerHP[128]={0};
 	char StrWarning[128]={0};
 	
-
-	//testNum=UDfighers[0].UDMplane.RefPos()(2);
-	
 	sprintf(PlayerHP,"%d%%",UDfighers[0].UDlife);
 	sprintf(StrWarning,"WARNING");
 	sprintf(test,"%f %f %f",testNum,testNum2,testNum3);
 
 	sprintf(szshowflag1,"|");
 	sprintf(szshowflag2,"|");
-	//sprintf(szshownews,"|");
-	//sprintf(szshowPitch,"Pitch:%3.0f",latitude);
-	/*
-	for(int i=11;i>0;i--)
-	{
-		int tmp= (int)news-23+i*4;
-		char tmpC[8]={0};
-		if(tmp>180)
-			tmp=tmp-360;
-		if(tmp<-179)
-			tmp=tmp+360;
-
-
-		switch (tmp)
-		{
-			case -1:sprintf(tmpC,"  N |");break;
-			case 0:sprintf(tmpC,"  N |");break;
-			case 1:sprintf(tmpC,"  N |");break;
-			case 2:sprintf(tmpC,"  N |");break;
-			case 44:sprintf(tmpC,"  NE|");break;
-			case 45:sprintf(tmpC,"  NE|");break;
-			case 46:sprintf(tmpC,"  NE|");break;
-			case 47:sprintf(tmpC,"  NE|");break;
-			case 89:sprintf(tmpC,"  E |");break;
-			case 90:sprintf(tmpC,"  E |");break;
-			case 91:sprintf(tmpC,"  E |");break;
-			case 92:sprintf(tmpC,"  E |");break;
-			case 134:sprintf(tmpC,"  EW|");break;
-			case 135:sprintf(tmpC,"  EW|");break;
-			case 136:sprintf(tmpC,"  EW|");break;
-			case 137:sprintf(tmpC,"  EW|");break;
-			case 179:sprintf(tmpC,"  W |");break;
-			case 180:sprintf(tmpC,"  W |");break;
-			case -179:sprintf(tmpC,"  W |");break;
-			case -178:sprintf(tmpC,"  W |");break;
-			case -136:sprintf(tmpC,"  WS|");break;
-			case -135:sprintf(tmpC,"  WS|");break;
-			case -134:sprintf(tmpC,"  WS|");break;
-			case -133:sprintf(tmpC,"  WS|");break;
-			case -91:sprintf(tmpC,"  S |");break;
-			case -90:sprintf(tmpC,"  S |");break;
-			case -89:sprintf(tmpC,"  S |");break;
-			case -88:sprintf(tmpC,"  S |");break;
-			case -46:sprintf(tmpC,"  SE|");break;
-			case -45:sprintf(tmpC,"  SE|");break;
-			case -44:sprintf(tmpC,"  SE|");break;
-			case -43:sprintf(tmpC,"  SE|");break;
-			default:sprintf(tmpC,"%4.0d|",tmp);
-		}
-
-
-		
-		strcat(szshownews,tmpC);
-		
-
-	}
-	*/
-
-	
 	sprintf(szshowSpeed,"%4.0f-",moveSpeed*60.0f*60.0f*60.0f*2000.0f/10000.0f);
 	sprintf(szshowHigh,"-%d",(int)(high*0.1));
 	
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 	
-
-
-	
-	
-	//sprintf(szshownews,"-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-%3.0f-",szshownews-5.0,,szshownews-4.0,szshownews-3.0,szshownews-2.0,szshownews-1.0,szshownews,szshownews+1.0,szshownews+2.0,szshownews+3.0,szshownews+4.0,szshownews+5.0);
-	//glDisable(GL_BLEND);
-	//glPrint(winwidth*0.7f,winheight*0.5-16,szshowSpeed,0,true);
-	//glPrint(winwidth*0.25f,winheight*0.5-16,szshowHigh,0,true);
-	//glPrint(winwidth*0.25f,winheight*0.5-32,szshowPitch,0);
-	//glEnable(GL_BLEND);
-	//glPrint(130,400,szshownews,0);
-	//glPrint(402,416,szshowflag1,0);
-	//glPrint(402,384,szshowflag2,0);
-
 	glColor3f(0.0f,1.0f,0.0f);
 	if(PlayerLocked)
 		glColor3f(1.0f,0.0f,0.0f);
 	glPrint((GLint)(winwidth*0.65f),winheight/2-16,szshowSpeed,0,true);
 	glPrint((GLint)(winwidth*0.29f),winheight/2-16,szshowHigh,0,true);
 	glPrint((GLint)(winwidth*0.85f),winheight/5-16,PlayerHP,0,true);
+	if(ShowMsg)
 	if(voiceSourceAWACS->State!=AL_PLAYING)
 	{
 		glPrint(0,winheight-16,szTitle,0);
 		glPrint(0,winheight-32,szVERSION,0);
 		glPrint(0,winheight-48,cpubrand,0);
 	}
+	if(ShowMsg)
 	glPrint(winwidth/4,0,test,0);
 	glColor3f(1.0f,1.0f,1.0f);
 
@@ -716,8 +646,6 @@ void DrawDataLine2 (double high,double news,double latitude)
 	glPrint((GLint)(winwidth*0.47f),winheight*3/5-16,StrWarning,0,true);
 
 	glColor3f(1.0f,1.0f,1.0f);
-	//int txtpringsize=((winheight/30)/8)*8;
-	//MyFont.DrawTXT(winwidth,winheight,128,128,txtpringsize,txtpringsize,winwidth);
 }
 void fireShell()
 {
@@ -748,15 +676,6 @@ void fireShell()
 }
 void PlayerControl()
 {
-
-
-
-
-/*
-	if (g_keys->keyDown [VK_F1] == TRUE)						// Is F1 Being Pressed?
-	{
-		ToggleFullscreen (g_window);							// Toggle Fullscreen Mode
-	}*/
 	if (g_keys->keyDown [VK_PRIOR] == TRUE)	
 		testNum=testNum+0.003f;
 	if (g_keys->keyDown [VK_NEXT] == TRUE)
@@ -962,36 +881,6 @@ void PlayerControl()
 		ViewTurnX=0.0f;
 		ViewTurnY=0.0f;
 	}
-/*
-	if (g_keys->keyDown ['R'] && !KeyR )	
-	{
-		FILE	*m_Filefighter;
-		
-		if(ModelsNO==707)
-			ModelsNO=499;
-
-		KeyR=true;
-		
-		char tmpNum1[16]={0};
-		sprintf(tmpNum1,"0%d",ModelsNO);
-		char tmpNum2[16]={0};
-		sprintf(tmpNum2,"0020/",ModelsNO);
-		strcat(tmpNum2,tmpNum1);
-		strcat(tmpNum2,"/0002");
-
-		if (!((m_Filefighter=fopen(tmpNum2,"rb"))==NULL))
-		{
-			delete m_nj;
-			m_nj= new CLoadACMD;
-			m_nj->Init(tmpNum2,0,1);
-		}
-		ModelsNO=ModelsNO+1;
-
-	}
-	if(!g_keys->keyDown ['R'])
-		KeyR=false;
-*/
-
 	if ((g_keys->keyDown [KeyInput.m_keyboardSetHUD]||KeyInput.m_IskeySetHUD) && !pushkeyHUD )
 	{
 		pushkeyHUD=true;
@@ -1281,381 +1170,13 @@ void DrawBom(void)
 
 	//glEnable(GL_DEPTH_TEST);
 }
-void DrawSmoke(void)
-{
 
-
-
-	//PSmokes.DrawSmoke(UDfighers[0].UDMplane.RefPos(),MView,winwidth,winheight,tmpLookRenge);
-
-	//glEnable(GL_CULL_FACE);
-
-//	smokeArray_index=0;
-	//glDisable(GL_DEPTH_TEST);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthMask(GL_FALSE);
-
-	//glEnable(GL_BLEND);
-//	if(SmokeNumber==0)
-//		return;
-//	for(int num=1;num<maxUnits;num++)
-//	{
-		
-//		if((UDfighers[num].UDlife>0)||(UDfighers[num].smokeTime>0))
-//		{
-//			UDfighers[num].smokeTime=UDfighers[num].smokeTime-1;
-			//if(((lockflash%3)==0)&&(UDfighers[num].UDlife>0))
-			//UDfighers[num].setLinePos();
-			//UDfighers[num].setpos(((int)rand())%SmokeNumber);
-/*
-			if(UDfighers[num].UDwinl<(tmpLookRenge*tmpLookRenge*1.5))
-			{
-				
-				UDfighers[num].PrintLinePos(MView);
-				//qsort((void *) &UDfighers->UDposz, 100, sizeof(float UDfighers), (compfn)Compare );
-				/*
-				for(int i=0;i<MAXUNITSMOKE;i++)
-				{
-					GLint viewport[4];
-					GLdouble mvmatrix[16],projmatrix[16];
-					GLdouble SUFwinX,SUFwinY,SUFwinZ;
-					glGetIntegerv(GL_VIEWPORT,viewport);
-					glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
-					glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
-					gluProject(UDfighers[num].UDposx[i],UDfighers[num].UDposy[i],UDfighers[num].UDposz[i],mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
-					Smokes[i].x=UDfighers[num].UDposx[i];
-					Smokes[i].y=UDfighers[num].UDposy[i];
-					Smokes[i].z=UDfighers[num].UDposz[i];
-					Smokes[i].smokeNum=UDfighers[num].smokeNum[i];
-					Smokes[i].winx=(float)SUFwinX;
-					Smokes[i].winy=(float)SUFwinY;
-					Smokes[i].winz=(float)SUFwinZ;
-					UDfighers[num].UDposx[i]=UDfighers[num].UDposx[i]+UDfighers[num].UDposxMove[i];
-					UDfighers[num].UDposy[i]=UDfighers[num].UDposy[i]+UDfighers[num].UDposyMove[i];
-					UDfighers[num].UDposz[i]=UDfighers[num].UDposz[i]+UDfighers[num].UDposzMove[i];
-				}
-				//qsort((void *) &Smokes, 100, sizeof(struct Smoke), (compfn)Compare );
-
-
-				for(int i=0;i<MAXUNITSMOKE;i++)
-				{
-					//int tmp=i+UDfighers[num].UDposflag;
-					int tmp=i;
-					if(tmp==MAXUNITSMOKE)
-						tmp=0;
-
-
-
-					//float tmpx=
-					//if(UDfighers[i].)
-					if((Smokes[i].winz<1.0)&&(Smokes[i].winz>0.0))//可视范围内
-					if((Smokes[i].winx>(-0.1*winwidth))&&(Smokes[i].winy>(-0.1*winheight))&&(Smokes[i].winx<(winwidth*1.1))&&(Smokes[i].winy<(winheight*1.1)))//窗口内
-					{
-						int smokelife=i-UDfighers[num].UDposflag;
-						if(smokelife<0)
-							smokelife=smokelife+MAXUNITSMOKE;
-						if(smokelife>(MAXUNITSMOKE-10))
-							smokelife=MAXUNITSMOKE-(smokelife-(MAXUNITSMOKE-10))*(MAXUNITSMOKE/10);
-						else
-						{
-							if(smokelife<(MAXUNITSMOKE/2))
-								smokelife=smokelife*2;
-							else
-								smokelife=MAXUNITSMOKE;
-						
-						}
-						float alpha1;
-						if(UDfighers[num].UDlife>0)
-							alpha1=smokelife/(float)MAXUNITSMOKE;
-						else
-							alpha1=smokelife*(UDfighers[num].smokeTime/(float)MAXUNITSMOKE)/(float)MAXUNITSMOKE;
-						Vector3d tmp3d;
-						//tmp3d=MView.Matrix() * Vector3d(UDfighers[num].UDposx[tmp],UDfighers[num].UDposy[tmp],UDfighers[num].UDposz[tmp]) + MView.RefPos();
-						tmp3d=MView.Matrix() * Vector3d(Smokes[tmp].x,Smokes[tmp].y,Smokes[tmp].z) + MView.RefPos();
-						//if(!GraphicsLOW)
-						//glPrintSmoke((float)tmp3d(0),(float)tmp3d(1),(float)tmp3d(2),alpha1,Smokes[i].smokeNum);
-						
-
-					}
-				}*/
-		//	}
-//		}
-//	}
-	/*
-	for(int num=0;num<maxUnits;num++)
-	{
-		for(int num2=0;num2<MAXUNITMISSLES;num2++)
-		{
-			if((UDfighers[num].UNITMissles[num2].UDlife>0)||(UDfighers[num].UNITMissles[num2].smokeTime>0))
-			{
-				UDfighers[num].UNITMissles[num2].smokeTime = UDfighers[num].UNITMissles[num2].smokeTime - 1;
-				if(UDfighers[num].UNITMissles[num2].UDlife>0)
-					UDfighers[num].UNITMissles[num2].setpos(((int)rand())%SmokeNumber);
-				if(UDfighers[num].UNITMissles[num2].UDwinl<(tmpLookRenge*tmpLookRenge))
-				{
-					for(int i=0;i<MAXMISSLESMOKE;i++)
-					{
-						float SmokePosX;
-						float SmokePosY;
-						float SmokePosZ;
-						float SmokeAlpha;
-						float SmokeMAlpha;
-						UDfighers[num].UNITMissles[num2].m_DrawSmoke(winwidth,winheight,i,SmokePosX,SmokePosY,SmokePosZ,SmokeAlpha,SmokeMAlpha);
-						if((SmokeMAlpha>0.0f)||(SmokeAlpha>0.0f))
-						{
-							Vector3d tmp3d;
-							tmp3d=MView.Matrix() * Vector3d(SmokePosX,SmokePosY,SmokePosZ) + MView.RefPos();
-							if(SmokeMAlpha>0.0f)
-							{
-
-								glPrintSmokeM((float)tmp3d(0),(float)tmp3d(1),(float)tmp3d(2),SmokeMAlpha);
-							
-							
-							}
-							if(SmokeAlpha>0.0f)
-							{
-								if(!GraphicsLOW)
-									glPrintSmoke((float)tmp3d(0),(float)tmp3d(1),(float)tmp3d(2),SmokeAlpha,UDfighers[num].UNITMissles[num2].smokeNum[i],UDfighers[num].UNITMissles[num2].UDposzSIZE[i]);
-							}
-						}
-					}
-				}
-			}
-		
-		}
-	
-	}
-
-*/
-	/*
-	for(int num=0;num<maxMissles;num++)
-	{
-		
-		if((missle[num].UDlife>0)||(missle[num].smokeTime>0))
-		{
-			missle[num].smokeTime=missle[num].smokeTime-1;
-			
-			if(missle[num].UDlife>0)
-			missle[num].setpos(((int)rand())%SmokeNumber);
-			if(missle[num].UDlife>0)
-			missle[num].setposF();
-	
-			if(missle[num].UDwinl<(tmpLookRenge*tmpLookRenge))
-			{
-				for(int i=0;i<MAXMISSLESMOKE;i++)
-				{
-					GLint viewport[4];
-					GLdouble mvmatrix[16],projmatrix[16];
-					GLdouble SUFwinX,SUFwinY,SUFwinZ;
-					glGetIntegerv(GL_VIEWPORT,viewport);
-					glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
-					glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
-					gluProject(missle[num].UDposx[i],missle[num].UDposy[i],missle[num].UDposz[i],mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
-					Smokes[i].x=missle[num].UDposx[i];
-					Smokes[i].y=missle[num].UDposy[i];
-					Smokes[i].z=missle[num].UDposz[i];
-					Smokes[i].smokeNum=missle[num].smokeNum[i];
-					Smokes[i].winx=(float)SUFwinX;
-					Smokes[i].winy=(float)SUFwinY;
-					Smokes[i].winz=(float)SUFwinZ;
-					Smokes[i].SmokeSize=missle[num].UDposzSIZE[i];
-					missle[num].UDposzSIZE[i]=missle[num].UDposzSIZE[i]+0.001f;
-					
-					
-					missle[num].UDposx[i]=missle[num].UDposx[i]+missle[num].UDposxMove[i];
-					missle[num].UDposy[i]=missle[num].UDposy[i]+missle[num].UDposyMove[i];
-					missle[num].UDposz[i]=missle[num].UDposz[i]+missle[num].UDposzMove[i];
-					
-				}
-
-
-				for(int i=0;i<MAXMISSLESMOKE;i++)
-				{
-					//int tmp=i+missle[num].UDposflag;
-					int tmp=i;
-					if(tmp==100)
-						tmp=0;
-
-
-
-
-					if((Smokes[i].winz<1.0)&&(Smokes[i].winz>0.0))//可视范围内
-					if((Smokes[i].winx>(-0.1*winwidth))&&(Smokes[i].winy>(-0.1*winheight))&&(Smokes[i].winx<(winwidth*1.1))&&(Smokes[i].winy<(winheight*1.1)))//窗口内
-					{
-						Vector3d tmp3d;
-						tmp3d=MView.Matrix() * Vector3d(Smokes[tmp].x,Smokes[tmp].y,Smokes[tmp].z) + MView.RefPos();
-						int smokelife=i-missle[num].UDposflag;
-						if(smokelife<0)
-							smokelife=smokelife+MAXMISSLESMOKE;
-						if(smokelife<(MAXMISSLESMOKE-1))
-						{
-							if(smokelife>(MAXMISSLESMOKE-10))
-							{
-								//if(missle[num].UDlife>0)
-								//glPrintSmokeM((float)tmp3d(0),(float)tmp3d(1),(float)tmp3d(2),(smokelife-(MAXMISSLESMOKE-10))/9.0f);
-								smokelife=MAXMISSLESMOKE-(smokelife-(MAXMISSLESMOKE-10))*(MAXMISSLESMOKE/10);
-
-								
-							}
-							else
-							{
-								if(smokelife<(MAXMISSLESMOKE/2))
-									smokelife=smokelife*2;
-								else
-									smokelife=MAXMISSLESMOKE;
-
-								
-								
-							
-							}
-							float alpha1;
-							if(missle[num].UDlife>0)
-								alpha1=(float)smokelife/(float)MAXMISSLESMOKE;
-							else
-								alpha1=smokelife*((float)missle[num].smokeTime/100.0f)/(float)MAXMISSLESMOKE;
-							//if(!GraphicsLOW)
-							//	glPrintSmoke((float)tmp3d(0),(float)tmp3d(1),(float)tmp3d(2),alpha1,Smokes[i].smokeNum,Smokes[i].SmokeSize);
-						}
-						
-						
-					}
-				}
-			}
-		}
-	}
-	glDisable(GL_BLEND);
-	glDepthMask(GL_TRUE);
-
-	glEnable(GL_DEPTH_TEST);
-
-	glDisable(GL_CULL_FACE);
-	*/
-}
 void DrawMissle(void)
 {
-	/*
-	for(int num=1;num<maxUnits;num++)
-	{
-		UDfighers[num].m_DrawMissle(MFighter.RefPos(),winwidth,winheight,tmpLookRenge);
-		
-		if(UDfighers[num].UDlife>0)
-		for(int i=0;i<MAXUNITMISSLES;i++)
-		{
-			if(UDfighers[num].UNITMissles[i].UDlife>0)
-			{
-				UDfighers[num].UNITMissles[i].UDlife=UDfighers[num].UNITMissles[i].UDlife-1;
-				UDfighers[num].UNITMissles[i].timer=UDfighers[num].UNITMissles[i].timer+1;
-
-				float tmpX=(float)(MFighter.RefPos()(0)-UDfighers[num].UNITMissles[i].UDMplane.RefPos()(0));
-				float tmpY=(float)(MFighter.RefPos()(1)-UDfighers[num].UNITMissles[i].UDMplane.RefPos()(1));
-				float tmpZ=(float)(MFighter.RefPos()(2)-UDfighers[num].UNITMissles[i].UDMplane.RefPos()(2));
-				UDfighers[num].UNITMissles[i].UDwinl=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-				if(UDfighers[num].UNITMissles[i].UDwinl<tmpLookRenge*tmpLookRenge)
-				{
-					glPushMatrix();
-						glMultMatrixd(UDfighers[num].UNITMissles[i].UDMplane.Matrix4());	
-						GLint viewport[4];
-						GLdouble mvmatrix[16],projmatrix[16];
-						GLdouble SUFwinX,SUFwinY,SUFwinZ;
-						glGetIntegerv(GL_VIEWPORT,viewport);
-						glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
-						glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
-						gluProject(0.0,0.0,0.0,mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
-						UDfighers[num].UNITMissles[i].UDwinx=(float)SUFwinX;
-						UDfighers[num].UNITMissles[i].UDwiny=(float)SUFwinY;
-						UDfighers[num].UNITMissles[i].UDwinz=(float)SUFwinZ;
-						if(UDfighers[num].UNITMissles[i].UDwinz<1.0f)//目标在屏幕前方
-						if(((UDfighers[num].UNITMissles[i].UDwinx>-winwidth*0.1f)&&(UDfighers[num].UNITMissles[i].UDwinx<winwidth*1.1f)&&(UDfighers[num].UNITMissles[i].UDwiny>-winheight*0.1f)&&(UDfighers[num].UNITMissles[i].UDwiny<winheight*1.1f)))
-						{
-								glDisable(GL_BLEND);
-								glPushMatrix();
-
-								//glScaled(10, 10, 10);
-								glRotatef(180.0, 0.0, 1.0, 0.0);
-								m_VBMD->ShowVBMD(4);
-								//m_nj->ShowACMD(0,2,0,0,0,0,180,0,1.0,1.0,1.0);
-
-								glPopMatrix();
-								glEnable(GL_BLEND);
-				
-						}
-
-
-
-					glPopMatrix();
-				}
-
-			}
-
-		}
-		
-	}
-*/
-
 	PMissleList.DrawMissle(MFighter.RefPos(),winwidth,winheight,tmpLookRenge);
-	/*
-	for(int i=0;i<maxMissles;i++)
-	{
-		if(missle[i].UDlife>0)
-		{
-			missle[i].UDlife=missle[i].UDlife-1;
-			missle[i].timer=missle[i].timer+1;
-			if(missle[i].UDlife==0)
-			{
-				FMOD_System_PlaySound(sys, FMOD_CHANNEL_REUSE, missvoice[rand()%4], 0, &missvoicechannel);
-				missle[i].smokeTime=100;
-				UDfighers[missle[i].TGTnum].waringde=false;
-			}
-			float tmpX=(float)(MFighter.RefPos()(0)-missle[i].UDMplane.RefPos()(0));
-			float tmpY=(float)(MFighter.RefPos()(1)-missle[i].UDMplane.RefPos()(1));
-			float tmpZ=(float)(MFighter.RefPos()(2)-missle[i].UDMplane.RefPos()(2));
-			missle[i].UDwinl=tmpX*tmpX+tmpY*tmpY+tmpZ*tmpZ;
-			if(missle[i].UDwinl<tmpLookRenge*tmpLookRenge)
-			{
-				glPushMatrix();
-					glMultMatrixd(missle[i].UDMplane.Matrix4());	
-					GLint viewport[4];
-					GLdouble mvmatrix[16],projmatrix[16];
-					GLdouble SUFwinX,SUFwinY,SUFwinZ;
-					glGetIntegerv(GL_VIEWPORT,viewport);
-					glGetDoublev(GL_MODELVIEW_MATRIX,mvmatrix);
-					glGetDoublev(GL_PROJECTION_MATRIX,projmatrix);
-					gluProject(0.0,0.0,0.0,mvmatrix,projmatrix,viewport,&SUFwinX,&SUFwinY,&SUFwinZ);
-					missle[i].UDwinx=(float)SUFwinX;
-					missle[i].UDwiny=(float)SUFwinY;
-					missle[i].UDwinz=(float)SUFwinZ;
-					if(missle[i].UDwinz<1.0f)//目标在屏幕前方
-					if(((missle[i].UDwinx>-winwidth*0.1f)&&(missle[i].UDwinx<winwidth*1.1f)&&(missle[i].UDwiny>-winheight*0.1f)&&(missle[i].UDwiny<winheight*1.1f)))
-					{
-							glDisable(GL_BLEND);
-							glPushMatrix();
-
-							//glScaled(10, 10, 10);
-							glRotatef(180.0, 0.0, 1.0, 0.0);
-							m_VBMD->ShowVBMD(4);
-							//m_nj->ShowACMD(0,2,0,0,0,0,180,0,1.0,1.0,1.0);
-
-							glPopMatrix();
-							glEnable(GL_BLEND);
-			
-					}
-
-
-
-				glPopMatrix();
-			}
-		}
-	}
-	*/
 }
 void DrawUnit(void)
 {
-
-
-	//glPushMatrix();
-	//	glMultMatrixd(LightSun.UDMplane.Matrix4());
-	//	m_VBMD->ShowVBMD(4);
-	//glPopMatrix();
 
 	glEnable(GL_CULL_FACE);
 	locklists_index=0;
@@ -1673,40 +1194,7 @@ void DrawUnit(void)
 					locklists_index=0;
 			}
 		}
-		/*
-		if((UDfighers[i].UDlife>0)||(UDfighers[i].smokeTime>90))
-		{
-			glPushMatrix();
-				//glScaled(0.01, 0.01, 0.01);
-				glMultMatrixd(UDfighers[i].UDMplane.Matrix4());		
-				
-				if(UDfighers[i].UDwinl<(tmpLookRenge*tmpLookRenge))//目标距离
-				{
-					if(UDfighers[i].UDwinz<1.0f)
-					{
-						if(((UDfighers[i].UDwinx>-winwidth*0.1f)&&(UDfighers[i].UDwinx<winwidth*1.1f)&&(UDfighers[i].UDwiny>-winheight*0.1f)&&(UDfighers[i].UDwiny<winheight*1.1f))||(UDfighers[i].UDwinl<tmpLookRenge*tmpLookRenge))
-						{
-							glDisable(GL_BLEND);
-							glPushMatrix();
-							if(UDfighers[i].UDfighterType==1)
-							{//glScaled(0.01, 0.01, 0.01);
-								m_VBMD->ShowVBMD(2);
-							}
-							if(UDfighers[i].UDfighterType==2)
-								m_nj->ShowACMD(0,7,0,0,0,0,180,0,1.0,1.0,1.0);
-							glPopMatrix();
-							glEnable(GL_BLEND);
-						}
-					}
-					
-					
-				}
-
-				ShowUNITSFlag(UDfighers[i].UDMplane.RefPos()(0),UDfighers[i].UDMplane.RefPos()(1),UDfighers[i].UDMplane.RefPos()(2),i);
-			glPopMatrix();
-			//DrawSmoke(i);
-		}
-		*/
+		
 	}
 	glDisable(GL_CULL_FACE);
 }
@@ -1747,8 +1235,6 @@ void DrawMisslesign(const Vector3d& MisslePosition)
 			glVertex3f(1.0f, 0.0f, 30.0f);
 			glVertex3f(0.0f, 0.0f, 35.0f);
 			glVertex3f(-1.0f, 0.0f, 30.0f);
-		glEnd();
-		glBegin(GL_TRIANGLES);
 			glVertex3f(0.0f, 1.0f, 30.0f);
 			glVertex3f(0.0f, 0.0f, 35.0f);
 			glVertex3f(0.0f, -1.0f, 30.0f);
@@ -1773,8 +1259,6 @@ void Drawlocksign(void)
 		if(lockUnits[i].locksTGT>-1)
 		if(UDfighers[lockUnits[i].locksTGT].UDlockselect||lockUnits[i].lockON)
 		{	
-			//::MessageBox(HWND_DESKTOP,"123","123",MB_OK | MB_ICONEXCLAMATION);
-			//testNum=lockUnits[i].locksTGT;
 			glPushMatrix();
 			LockSign[i].UDMplane=MFighter;
 			LockSign[i].UDMplane.TranslateInternal(Vector3d(0.0f, 0.0f, -100.0f));
@@ -1784,24 +1268,18 @@ void Drawlocksign(void)
 			LockSign[i].UDPstate.AngleVelocityResistance=0.1;
 			LockSign[i].TurnTo(UDfighers[lockUnits[i].locksTGT].UDMplane.RefPos());
 			LockSign[i].UDPstate.NextState();
-			//glLoadIdentity();
 			glMultMatrixd(LockSign[i].UDMplane.Matrix4());
-			//glScaled(0.001, 0.001, 0.005);
-			//glRotatef(180.0, 0.0, 1.0, 0.0);
-			//m_VBMD->ShowVBMD(8);
+			
+			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA   );
 			glColor3f(0.0f,1.0f,0.0f);
 			glBegin(GL_TRIANGLES);
 			   glVertex3f(1.0f, 0.0f, 30.0f);
 			   glVertex3f(0.0f, 0.0f, 35.0f);
 			   glVertex3f(-1.0f, 0.0f, 30.0f);
-			glEnd();
-			glBegin(GL_TRIANGLES);
 			   glVertex3f(0.0f, 1.0f, 30.0f);
 			   glVertex3f(0.0f, 0.0f, 35.0f);
 			   glVertex3f(0.0f, -1.0f, 30.0f);
 			glEnd();
-			//testNum=LockSign[i].UDMplane.RefPos()(0);
-			//testNum2=MFighter.RefPos()(0);
 
 			glColor3f(1.0f,1.0f,1.0f);
 			glPopMatrix();
@@ -2959,6 +2437,7 @@ void stage0(void)
 		if(!KeyT)
 			DrawRedarToTexture();
 		glClearColor (glClearColorR, glClearColorG, glClearColorB, glClearColorA);	
+		if(ShowMsg)
 		DrawDataLine1();
 		if(!IsHUD)
 		DrawShadowMap();

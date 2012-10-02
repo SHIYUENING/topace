@@ -11,13 +11,13 @@ uniform sampler2D SpecularMapTexture;
 void main()
 {
 	vec4 MainColor	=	texture2D(testTexture, gl_TexCoord[0].xy);
-    vec3 Tangent	=	normalize(gl_Color.xyz);
+    //vec3 Tangent	=	normalize(gl_Color.xyz);
     vec3 NormalIn	=	normalize(gl_TexCoord[1].xyz);
-    vec3 Binormal	=	normalize(cross(Tangent,NormalIn));
+    //vec3 Binormal	=	normalize(cross(Tangent,NormalIn));
 
     vec3 NN2 = texture2D(NormalMapTexture, gl_TexCoord[0].xy).xzy*2.0-vec3(1.0,1.0,1.0);
-    mat3 TBN = transpose(mat3(Tangent,Binormal,NormalIn));
-    vec3 Normal = normalize(TBN*NN2);
+    //mat3 TBN = transpose(mat3(Tangent,Binormal,NormalIn));
+    vec3 Normal = normalize(NormalIn+NN2);
     vec3 LightDir = normalize(paraLightDirection);
     //float diffuseLight = max(dot(Normal, LightDir), 0.0);
     //vec3 diffuse = paraLightColor*diffuseLight;
