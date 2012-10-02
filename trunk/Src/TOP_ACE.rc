@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,40,1
- PRODUCTVERSION 1,0,40,1
+ FILEVERSION 1,0,50,1
+ PRODUCTVERSION 1,0,50,1
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "TOP_ACE"
-            VALUE "FileVersion", "1.0.40.1"
+            VALUE "FileVersion", "1.0.50.1"
             VALUE "InternalName", "TOP_ACE"
             VALUE "LegalCopyright", "Copyright (C) 2009-2012 TOP ACE Team"
             VALUE "OriginalFilename", "TOP_ACE.exe"
             VALUE "ProductName", "TOP_ACE"
-            VALUE "ProductVersion", "1.0.40.1"
+            VALUE "ProductVersion", "1.0.50.1"
         END
     END
     BLOCK "VarFileInfo"
