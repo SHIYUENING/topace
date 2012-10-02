@@ -169,7 +169,7 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 
 	fclose(m_FilePointer);
 
-	VBMD[MID].UseTangentArray=UseTangent;
+	VBMD[MID].UseTangentArray=false;
 
 	// 载入贴图
 	if((UserTexture==0)&&UseTexture)
@@ -230,72 +230,78 @@ int CLoadVBMD::Init(char *filename,bool UseTexture,GLint UserTexture,bool UseTan
 	}
 	else
 		VBMD[MID].TextureID=UserTexture;
-	VBMD[MID].UseTangentArray=true;
-	if(VBMD[MID].UseTangentArray)
-	{
+	VBMD[MID].UseTangentArray=false;	
 		for(unsigned int i=0;i<VBMD[MID].VertexCount;i++)
 		{
 			if((i*2+1)<(VBMD[MID].VertexCount*2))
 			VBMD[MID].pTexCoords[i*2+1]=1.0f-VBMD[MID].pTexCoords[i*2+1];
 			
 		}
-		
-		//if(tangent==false)	//模型不含切线信息	
+	//if(VBMD[MID].UseTangentArray)
+	//{
+	//	for(unsigned int i=0;i<VBMD[MID].VertexCount;i++)
+	//	{
+	//		if((i*2+1)<(VBMD[MID].VertexCount*2))
+	//		VBMD[MID].pTexCoords[i*2+1]=1.0f-VBMD[MID].pTexCoords[i*2+1];
+	//		
+	//	}
+	//	
+	//	//if(tangent==false)	//模型不含切线信息	
 
-		for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
-		{
-			if(((i+1)*3+2)<(VBMD[MID].VertexCount*3))
-			{
-				CreateTangent(VBMD[MID].pVertices+i*3,VBMD[MID].pNormals+i*3,VBMD[MID].pTexCoords+i*2,VBMD[MID].pTangent+i*3);
-				//VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
-				//VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
-				//VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
+	//	for(unsigned int i=0;i<VBMD[MID].VertexCount;i=i+3)
+	//	{
+	//		if(((i+1)*3+2)<(VBMD[MID].VertexCount*3))
+	//		{
+	//			CreateTangent(VBMD[MID].pVertices+i*3,VBMD[MID].pNormals+i*3,VBMD[MID].pTexCoords+i*2,VBMD[MID].pTangent+i*3);
+	//			//VerticesInToTBN[0][0]=VBMD[MID].pVertices[i*3+0];
+	//			//VerticesInToTBN[0][1]=VBMD[MID].pVertices[i*3+1];
+	//			//VerticesInToTBN[0][2]=VBMD[MID].pVertices[i*3+2];
 
-				//VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
-				//VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
-				//VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
+	//			//VerticesInToTBN[1][0]=VBMD[MID].pVertices[(i+1)*3+0];
+	//			//VerticesInToTBN[1][1]=VBMD[MID].pVertices[(i+1)*3+1];
+	//			//VerticesInToTBN[1][2]=VBMD[MID].pVertices[(i+1)*3+2];
 
-				//VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
-				//VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
-				//VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
+	//			//VerticesInToTBN[2][0]=VBMD[MID].pVertices[(i+2)*3+0];
+	//			//VerticesInToTBN[2][1]=VBMD[MID].pVertices[(i+2)*3+1];
+	//			//VerticesInToTBN[2][2]=VBMD[MID].pVertices[(i+2)*3+2];
 
-				//NormalsInToTBN[0][0]=VBMD[MID].pNormals[i*3+0];
-				//NormalsInToTBN[0][1]=VBMD[MID].pNormals[i*3+1];
-				//NormalsInToTBN[0][2]=VBMD[MID].pNormals[i*3+2];
+	//			//NormalsInToTBN[0][0]=VBMD[MID].pNormals[i*3+0];
+	//			//NormalsInToTBN[0][1]=VBMD[MID].pNormals[i*3+1];
+	//			//NormalsInToTBN[0][2]=VBMD[MID].pNormals[i*3+2];
 
-				//NormalsInToTBN[1][0]=VBMD[MID].pNormals[(i+1)*3+0];
-				//NormalsInToTBN[1][1]=VBMD[MID].pNormals[(i+1)*3+1];
-				//NormalsInToTBN[1][2]=VBMD[MID].pNormals[(i+1)*3+2];
+	//			//NormalsInToTBN[1][0]=VBMD[MID].pNormals[(i+1)*3+0];
+	//			//NormalsInToTBN[1][1]=VBMD[MID].pNormals[(i+1)*3+1];
+	//			//NormalsInToTBN[1][2]=VBMD[MID].pNormals[(i+1)*3+2];
 
-				//NormalsInToTBN[2][0]=VBMD[MID].pNormals[(i+2)*3+0];
-				//NormalsInToTBN[2][1]=VBMD[MID].pNormals[(i+2)*3+1];
-				//NormalsInToTBN[2][2]=VBMD[MID].pNormals[(i+2)*3+2];
+	//			//NormalsInToTBN[2][0]=VBMD[MID].pNormals[(i+2)*3+0];
+	//			//NormalsInToTBN[2][1]=VBMD[MID].pNormals[(i+2)*3+1];
+	//			//NormalsInToTBN[2][2]=VBMD[MID].pNormals[(i+2)*3+2];
 
-				//TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
-				//TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
+	//			//TexCoordsInToTBN[0][0]=VBMD[MID].pTexCoords[i*2+0];
+	//			//TexCoordsInToTBN[0][1]=VBMD[MID].pTexCoords[i*2+1];
 
-				//TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
-				//TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
+	//			//TexCoordsInToTBN[1][0]=VBMD[MID].pTexCoords[(i+1)*2+0];
+	//			//TexCoordsInToTBN[1][1]=VBMD[MID].pTexCoords[(i+1)*2+1];
 
-				//TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
-				//TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
-				//TBN();
-				//VBMD[MID].pTangent[i*3+0]=TBNout[0][0];
-				//VBMD[MID].pTangent[i*3+1]=TBNout[0][1];
-				//VBMD[MID].pTangent[i*3+2]=TBNout[0][2];
+	//			//TexCoordsInToTBN[2][0]=VBMD[MID].pTexCoords[(i+2)*2+0];
+	//			//TexCoordsInToTBN[2][1]=VBMD[MID].pTexCoords[(i+2)*2+1];
+	//			//TBN();
+	//			//VBMD[MID].pTangent[i*3+0]=TBNout[0][0];
+	//			//VBMD[MID].pTangent[i*3+1]=TBNout[0][1];
+	//			//VBMD[MID].pTangent[i*3+2]=TBNout[0][2];
 
-				//VBMD[MID].pTangent[(i+1)*3+0]=TBNout[1][0];
-				//VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1][1];
-				//VBMD[MID].pTangent[(i+1)*3+2]=TBNout[1][2];
+	//			//VBMD[MID].pTangent[(i+1)*3+0]=TBNout[1][0];
+	//			//VBMD[MID].pTangent[(i+1)*3+1]=TBNout[1][1];
+	//			//VBMD[MID].pTangent[(i+1)*3+2]=TBNout[1][2];
 
-				//VBMD[MID].pTangent[(i+2)*3+0]=TBNout[2][0];
-				//VBMD[MID].pTangent[(i+2)*3+1]=TBNout[2][1];
-				//VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2][2];
-			}
-		
-		}
-		//*/
-	}
+	//			//VBMD[MID].pTangent[(i+2)*3+0]=TBNout[2][0];
+	//			//VBMD[MID].pTangent[(i+2)*3+1]=TBNout[2][1];
+	//			//VBMD[MID].pTangent[(i+2)*3+2]=TBNout[2][2];
+	//		}
+	//	
+	//	}
+	//	//*/
+	//}
 
 	TotalMid=TotalMid+1;
 	BuildVBO(MID);
@@ -329,12 +335,12 @@ void CLoadVBMD::BuildVBO(unsigned int MID)
 		// Load The Data
 		glBufferDataARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VertexCount*2*sizeof(float), VBMD[MID].pTexCoords, GL_STATIC_DRAW_ARB );
 
-		if(VBMD[MID].UseTangentArray)
-		{
-			glGenBuffersARB( 1, &VBMD[MID].VBOTangent);					// 获取一个有效顶点VBO编号
-			glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );	// 绑定VBO
-			glBufferDataARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VertexCount*3*sizeof(float), VBMD[MID].pTangent, GL_STATIC_DRAW_ARB );
-		}
+		//if(VBMD[MID].UseTangentArray)
+		//{
+		//	glGenBuffersARB( 1, &VBMD[MID].VBOTangent);					// 获取一个有效顶点VBO编号
+		//	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );	// 绑定VBO
+		//	glBufferDataARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VertexCount*3*sizeof(float), VBMD[MID].pTangent, GL_STATIC_DRAW_ARB );
+		//}
 
 		// 已将需要的数据复制到显卡中, 这些数据已经无用
 		delete [] VBMD[MID].pVertices; VBMD[MID].pVertices = NULL;
@@ -357,8 +363,8 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 			glEnableClientState( GL_VERTEX_ARRAY );						// 开启顶点数组
 			glEnableClientState( GL_NORMAL_ARRAY );						// 开启法线数组
 			glEnableClientState( GL_TEXTURE_COORD_ARRAY );				// 开启纹理坐标数组
-			if(VBMD[MID].UseTangentArray)
-				glEnableClientState( GL_COLOR_ARRAY );
+			//if(VBMD[MID].UseTangentArray)
+			//	glEnableClientState( GL_COLOR_ARRAY );
 			// 设置数据指针
 			if( VBMD[MID].VBOVertices && VBOSupported ) 
 			{
@@ -368,11 +374,11 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 				glNormalPointer( GL_FLOAT, 0, (char *) NULL );		// Set The Vertex Pointer To The Vertex Buffer
 				glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTexCoords );
 				glTexCoordPointer( 2, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
-				if(VBMD[MID].UseTangentArray)
-				{
-					glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );
-					glColorPointer( 3, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
-				}
+				//if(VBMD[MID].UseTangentArray)
+				//{
+				//	glBindBufferARB( GL_ARRAY_BUFFER_ARB, VBMD[MID].VBOTangent );
+				//	glColorPointer( 3, GL_FLOAT, 0, (char *) NULL );		// Set The TexCoord Pointer To The TexCoord Buffer
+				//}
 			}
 			else
 			{
@@ -387,8 +393,8 @@ bool CLoadVBMD::ShowVBMD(unsigned int MID,bool BindSelfTexture)
 			glDisableClientState( GL_VERTEX_ARRAY );					// Disable Vertex Arrays
 			glDisableClientState( GL_NORMAL_ARRAY );
 			glDisableClientState( GL_TEXTURE_COORD_ARRAY );				// Disable Texture Coord Arrays
-			if(VBMD[MID].UseTangentArray)
-				glDisableClientState( GL_COLOR_ARRAY );	
+			//if(VBMD[MID].UseTangentArray)
+			//	glDisableClientState( GL_COLOR_ARRAY );	
 		}
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0);
 		return true;

@@ -66,10 +66,11 @@ void LoadGLTextures(bool UseDDS)
 		CompassTexID=loadDDS.loadCompressedTexture("Data/Compass.dds");
 		UItexture4=loadDDS.loadCompressedTexture("Data/UI1.dds");
 		PlayerSign=loadDDS.loadCompressedTexture("Data/PlayerSign.dds");
-		LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
+		//LockTexID=loadDDS.loadCompressedTexture("Data/lock.dds");
 		Maptexture=loadDDS.loadCompressedTexture("Data/map.dds");
 		SeaTexID=loadDDS.loadCompressedTexture("Data/sea.dds",GL_LINEAR_MIPMAP_LINEAR);
 		//TrackTexID=loadDDS.loadCompressedTexture("Data/track.dds");
+		LockTexID=LoadTGAFile("Data/lock.tga");
 	}
 	else
 	{
