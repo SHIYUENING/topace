@@ -139,7 +139,7 @@ bool GetGLSLLinkSTATUS(GLhandleARB g_programObj)
 		glGetInfoLogARB( g_programObj, sizeof(str), NULL, str );
 		MessageBox( NULL, str, "Linking Error", MB_OK|MB_ICONEXCLAMATION );
 	}
-	return bLinked;
+	return (bool)bLinked;
 }
 void InitGLSL()
 {

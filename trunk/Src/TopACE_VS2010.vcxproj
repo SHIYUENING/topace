@@ -201,6 +201,7 @@ copy "$(SolutionDir)Controls\SDL.dll" "$(OutDir)" /Y
     <ClCompile Include="MyFont.cpp" />
     <ClCompile Include="Print.cpp" />
     <ClCompile Include="Redar.cpp" />
+    <ClCompile Include="RS232DEV.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TGALoader.cpp" />
     <ClCompile Include="Video.cpp">
@@ -234,6 +235,7 @@ copy "$(SolutionDir)Controls\SDL.dll" "$(OutDir)" /Y
   <ItemGroup>
     <ClInclude Include="MD5Model.h" />
     <ClInclude Include="Quat.h" />
+    <ClInclude Include="RS232DEV.h" />
     <ClInclude Include="Vector3.h" />
     <ClInclude Include="HUDUI.h" />
     <ClInclude Include="MyFont.h" />
