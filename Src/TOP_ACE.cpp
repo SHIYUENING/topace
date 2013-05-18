@@ -2246,8 +2246,18 @@ void SetPlayerTransform(void)
 
 
 	SetMD5Frame();
+	if(::UseVR)
+	{
+	float * pmv=rs->GetVRMat();
 
-	ViewPoint.UDMplane=UDfighers[0].UDMplane;
+	Transform vr;
+	double * pvrd=(double *)vr.Matrix4();
+	for(int i=0;i<16;i++)
+		pvrd[i]=pmv[i];
+	ViewPoint.UDMplane=UDfighers[0].UDMplane*vr;
+	}
+	else
+		ViewPoint.UDMplane=UDfighers[0].UDMplane;
 	if(!IsHUD)
 	ViewPoint.UDMplane.TranslateInternal(Vector3d(0.0f, 30.0f, 0.0f));
 	//ViewPoint.UDMplane.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(testNum * 360));
@@ -2457,11 +2467,11 @@ void stage0(void)
 	
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
-		if(UseVR)
-		{
-			glMultMatrixf(
-			rs->GetVRMat());
-		}
+		//if(UseVR)
+		//{
+		//	glMultMatrixf(
+		//	rs->GetVRMat());
+		//}
 		if(!IsSkip)
 		{
 			DrawSky(MFighter,(float)longitude);
