@@ -1166,7 +1166,7 @@ void DrawBom(void)
 	}
 	for(int num=1;num<maxUnits;num++)
 	{
-		if((UDfighers[num].smokeTime>70)&&((UDfighers[num].smokeTime%5)==0))
+		if((UDfighers[num].smokeTime>640)&&((UDfighers[num].smokeTime%5)==0))
 		{
 			UDfighers[num].UDMplane.TranslateInternal(Vector3d(0.0,0.0,5.0));
 			Bomings[Bomings_index].NewBom((float)UDfighers[num].UDMplane.RefPos()(0),(float)UDfighers[num].UDMplane.RefPos()(1),(float)UDfighers[num].UDMplane.RefPos()(2),&PlaneBom[0]);
@@ -1593,7 +1593,7 @@ void UnitMove(void)
 
 					if(UDfighers[Shell.ShellList[i].TGTNum].UDlife==UDfighers[Shell.ShellList[i].TGTNum].UDlife<1)
 					{
-						UDfighers[Shell.ShellList[i].TGTNum].smokeTime=100;
+						UDfighers[Shell.ShellList[i].TGTNum].smokeTime=700;
 						Playkillvoice(rand()%10);
 	//					FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);			
 					}
@@ -1687,7 +1687,7 @@ void UnitMove(void)
 					}
 					else
 					{
-						UDfighers[PMissleList.Missles[i].TGTnum].smokeTime=100;
+						UDfighers[PMissleList.Missles[i].TGTnum].smokeTime=700;
 						Playkillvoice(rand()%10);
 //						FMOD_System_PlaySound(sys, FMOD_CHANNEL_FREE, killvoice[rand()%7], 0, &killvoicechannel);
 					}
@@ -2248,12 +2248,32 @@ void SetPlayerTransform(void)
 	SetMD5Frame();
 	if(::UseVR)
 	{
-	float * pmv=rs->GetVRMat();
+	float * f=rs->GetVRMat();
+	Matrix33d m;
+	m(0, 0) = f[0+0*4];
+	m(1, 0) = f[1+0*4];
+	m(2, 0) = f[2+0*4];
+	m(0, 1) = f[0+1*4];
+	m(1, 1) = f[1+1*4];
+	m(2, 1) = f[2+1*4];
+	m(0, 2) = f[0+2*4];
+	m(1, 2) = f[1+2*4];
+	m(2, 2) = f[2+2*4];
+	Transform vr(m);
+	//double * pvrd=(double *)vr.Matrix4();
+	//for(int i=0;i<16;i++)
+	//	pvrd[i]=pmv[i];
 
-	Transform vr;
-	double * pvrd=(double *)vr.Matrix4();
-	for(int i=0;i<16;i++)
-		pvrd[i]=pmv[i];
+
+	vr.Rotate(Vector3d(1.0f, 0.0f, 0.0f) * CRad(90));
+	vr.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-90));
+	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
+	vr.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-180));
+	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
+	vr.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
+	vr.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(180));
+	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
+
 	ViewPoint.UDMplane=UDfighers[0].UDMplane*vr;
 	}
 	else
@@ -2278,6 +2298,13 @@ void SetPlayerTransform(void)
 		
 	MFighter=ViewPoint.UDMplane;
 
+	//TestCam.RotExternal( 90.0f,1.0f,0.0f,0.0f);
+	//TestCam.RotInternal( -90.0f,1.0f,0.0f,0.0f);
+	//TestCam.RotExternal( 180.0f,0.0f,1.0f,0.0f);
+	//TestCam.RotInternal( 180.0f,0.0f,1.0f,0.0f);
+	//TestCam.RotExternal( 180.0f,0.0f,0.0f,1.0f);
+	//TestCam.RotInternal( 180.0f,0.0f,0.0f,1.0f);
+	//TestCam.RotExternal( 180.0f,0.0f,1.0f,0.0f);
 
     // Position, Velocity Direction
     

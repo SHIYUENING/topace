@@ -61,7 +61,7 @@ void CRS232::SetComSettings(int _numPort, long _speedInBaud, int _nbBit, int _pa
 bool CRS232::open()
 {	
 	
-	char buf[] = "\\\\.\\COM1";
+	char buf[] = "\\\\.\\COM7";
 
 			
 	if(numPort<1 || numPort>999)		
@@ -81,7 +81,7 @@ bool CRS232::open()
 
 
 
-	itoa(numPort, &buf[7], 10); 
+	//itoa(numPort, &buf[7], 10); 
 
 
 	hcom=CreateFile(buf, GENERIC_READ | GENERIC_WRITE , 0, NULL, OPEN_EXISTING , 0, NULL);
@@ -588,16 +588,41 @@ inline void Easy_quat_to_matrix(__m128 MatrixOut[4],const __m128 QuatIn)
 	//	POPAD
 	}
 }
+
+
+__m128 IdentityMatrix0 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
+__m128 IdentityMatrix1 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
+__m128 IdentityMatrix2 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
+__m128 IdentityMatrix3 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
+__m128 mat[4]={IdentityMatrix0,IdentityMatrix1,IdentityMatrix2,IdentityMatrix3};
+
 float * CRS232::GetVRMat()
 {
-	__m128 IdentityMatrix0 = _mm_set_ps(0.0f,0.0f,0.0f,1.0f);
-	__m128 IdentityMatrix1 = _mm_set_ps(0.0f,0.0f,1.0f,0.0f);
-	__m128 IdentityMatrix2 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
-	__m128 IdentityMatrix3 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
-	__m128 mat[4]={IdentityMatrix0,IdentityMatrix1,IdentityMatrix2,IdentityMatrix3};
+	byte tembyte[21];
+	int * revquats32;
+	float revquat[4];
+	
+	tembyte[0]=0x77;
+	sendData(1,tembyte);
+	receiveData(21,tembyte);
 
-	__m128 Quat=IdentityMatrix3;
+	revquats32=(int*)(&(tembyte[0])+2);
+	revquat[0]=(float)revquats32[0] / 1073741824.0f; //w
+	revquat[1]=(float)revquats32[1] / 1073741824.0f; //x
+	revquat[2]=(float)revquats32[2] / 1073741824.0f; //y
+	revquat[3]=(float)revquats32[3] / 1073741824.0f; //z
 
-	//Easy_quat_to_matrix(mat,Quat);
+	/*
+
+	tempp[0] = ((float)BitConverter.ToInt32(rawBuf, 6) / 1073741824.0f);
+	tempp[1] = ((float)BitConverter.ToInt32(rawBuf, 10) / 1073741824.0f);
+	tempp[2] = ((float)BitConverter.ToInt32(rawBuf, 14) / 1073741824.0f);
+	tempp[3] = ((float)BitConverter.ToInt32(rawBuf, 2) / 1073741824.0f);
+	*/
+
+
+	__m128 Quat=_mm_set_ps(revquat[0],revquat[3],revquat[2],revquat[1]);
+
+	Easy_quat_to_matrix(mat,Quat);
 	return mat[0].m128_f32;
 }
