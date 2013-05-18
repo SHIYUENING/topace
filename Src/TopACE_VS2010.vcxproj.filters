@@ -122,6 +122,7 @@
     <ClCompile Include="NeHeGL.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="TOP_ACE.cpp" />
+    <ClCompile Include="RS232DEV.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MD5Model.h">
@@ -225,6 +226,7 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="testNum.h" />
+    <ClInclude Include="RS232DEV.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\BackFire_pixel.glsl">

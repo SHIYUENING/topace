@@ -20,6 +20,8 @@
 #include "FBO.h"
 #include "BomTeams.h"
 #include "ARB_MULTISAMPLE.h"
+
+#include "rs232dev.h"
 #pragma comment( lib, "opengl32.lib" )							// Search For OpenGL32.lib While Linking
 #pragma comment( lib, "glu32.lib" )								// Search For GLu32.lib While Linking
 #pragma comment( lib, "glaux.lib" )								// Search For GLaux.lib While Linking
@@ -58,6 +60,8 @@ bool DrawEffectImpact=false;
 bool GraphicsLOW=false;
 bool ShowMsg=false;
 CEffectImpact EffectImpact;
+CRS232 * rs;
+bool UseVR=false;
 //用于等待时间以保持稳定速度
 void Delay(__int64 Us)
 {
@@ -177,6 +181,10 @@ void InitTile(void)
 }
 BOOL Initialize (GL_Window* window, Keys* keys)					// Any GL Init Code & User Initialiazation Goes Here
 {
+	UseVR=GetPrivateProfileInt("VR","Enable",0,".\\set.ini")!=0?true:false;
+	rs=new CRS232;
+	if(UseVR)
+	rs->open();
 	g_window	= window;
 	g_keys		= keys;
 	if(GetPrivateProfileInt("Graphics","LOW",0,".\\set.ini")!=0)
@@ -413,6 +421,9 @@ void Deinitialize (void)										// Any User DeInitialization Goes Here
 	//delete m_VBMD;
 	//SDL_JoystickClose(joystick);
 	//SDL_Quit();
+	if(UseVR)
+	rs->closeCom();
+	delete rs;
 	KeyInput.de();
 }
 void Inertia()              //处理惯性
@@ -2446,6 +2457,11 @@ void stage0(void)
 	
     glPushMatrix();
 		glLoadMatrixd(MView.Matrix4());
+		if(UseVR)
+		{
+			glMultMatrixf(
+			rs->GetVRMat());
+		}
 		if(!IsSkip)
 		{
 			DrawSky(MFighter,(float)longitude);
