@@ -2248,23 +2248,36 @@ void SetPlayerTransform(void)
 	SetMD5Frame();
 	if(::UseVR)
 	{
-	float * f=rs->GetVRMat();
-	Matrix33d m;
-	m(0, 0) = f[0+0*4];
-	m(1, 0) = f[1+0*4];
-	m(2, 0) = f[2+0*4];
-	m(0, 1) = f[0+1*4];
-	m(1, 1) = f[1+1*4];
-	m(2, 1) = f[2+1*4];
-	m(0, 2) = f[0+2*4];
-	m(1, 2) = f[1+2*4];
-	m(2, 2) = f[2+2*4];
-	Transform vr(m);
+		float * f=rs->GetVRMat();
+		Matrix33d m;
+		m(0, 0) = f[0+0*4];
+		m(1, 0) = f[1+0*4];
+		m(2, 0) = f[2+0*4];
+		m(0, 1) = f[0+1*4];
+		m(1, 1) = f[1+1*4];
+		m(2, 1) = f[2+1*4];
+		m(0, 2) = f[0+2*4];
+		m(1, 2) = f[1+2*4];
+		m(2, 2) = f[2+2*4];
+		Transform vr(m);
+
+		f=rs->GetVRMat(rs->basevr);
+		m(0, 0) = f[0+0*4];
+		m(1, 0) = f[1+0*4];
+		m(2, 0) = f[2+0*4];
+		m(0, 1) = f[0+1*4];
+		m(1, 1) = f[1+1*4];
+		m(2, 1) = f[2+1*4];
+		m(0, 2) = f[0+2*4];
+		m(1, 2) = f[1+2*4];
+		m(2, 2) = f[2+2*4];
+		Transform bvr(m);
 	//double * pvrd=(double *)vr.Matrix4();
 	//for(int i=0;i<16;i++)
 	//	pvrd[i]=pmv[i];
 
-
+		vr=bvr*vr;
+		/*
 	vr.Rotate(Vector3d(1.0f, 0.0f, 0.0f) * CRad(90));
 	vr.RotateInternal(Vector3d(1.0f, 0.0f, 0.0f) * CRad(-90));
 	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
@@ -2272,9 +2285,16 @@ void SetPlayerTransform(void)
 	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
 	vr.RotateInternal(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
 	vr.Rotate(Vector3d(0.0f, 1.0f, 0.0f) * CRad(180));
-	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));
+	vr.Rotate(Vector3d(0.0f, 0.0f, 1.0f) * CRad(180));*/
+		//vr.RotateInternal(Vector3d(0.0f, 1.0f, 0.0f) * CRad(-180));
 
-	ViewPoint.UDMplane=UDfighers[0].UDMplane*vr;
+		ViewPoint.UDMplane=UDfighers[0].UDMplane*vr;
+		//ViewPoint.UDMplane=vr*UDfighers[0].UDMplane*bvr;
+		//ViewPoint.UDMplane=bvr*vr*UDfighers[0].UDMplane;
+		//ViewPoint.UDMplane=bvr*UDfighers[0].UDMplane*vr;
+		//ViewPoint.UDMplane=UDfighers[0].UDMplane*vr*bvr;
+		//ViewPoint.UDMplane=UDfighers[0].UDMplane*bvr*vr;
+		//ViewPoint.UDMplane=ViewPoint.UDMplane;
 	}
 	else
 		ViewPoint.UDMplane=UDfighers[0].UDMplane;

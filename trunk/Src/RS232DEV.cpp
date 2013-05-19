@@ -24,6 +24,7 @@
 
 
 
+
 ///  set serial communication over COM1 with 115200 Bauds, 8 bitand no parity.  
 CRS232::CRS232()
 {
@@ -61,7 +62,7 @@ void CRS232::SetComSettings(int _numPort, long _speedInBaud, int _nbBit, int _pa
 bool CRS232::open()
 {	
 	
-	char buf[] = "\\\\.\\COM7";
+	char buf[] = "\\\\.\\COM5";
 
 			
 	if(numPort<1 || numPort>999)		
@@ -143,6 +144,10 @@ bool CRS232::open()
 	}
 
 
+	GetRAWFloat(basevr);
+	basevr[1]=-basevr[1];
+	basevr[2]=-basevr[2];
+	basevr[3]=-basevr[3];
 
 	  if (!SetCommState(hcom, &dcb))
 		return false;
@@ -596,22 +601,21 @@ __m128 IdentityMatrix2 = _mm_set_ps(0.0f,1.0f,0.0f,0.0f);
 __m128 IdentityMatrix3 = _mm_set_ps(1.0f,0.0f,0.0f,0.0f);
 __m128 mat[4]={IdentityMatrix0,IdentityMatrix1,IdentityMatrix2,IdentityMatrix3};
 
-float * CRS232::GetVRMat()
+void CRS232::GetRAWFloat(float * tQuat)
 {
 	byte tembyte[21];
 	int * revquats32;
-	float revquat[4];
-	
-	tembyte[0]=0x77;
-	sendData(1,tembyte);
-	receiveData(21,tembyte);
+	if(isConnected)
+	{
+		tembyte[0]=0x77;
+		sendData(1,tembyte);
+		receiveData(21,tembyte);
 
-	revquats32=(int*)(&(tembyte[0])+2);
-	revquat[0]=(float)revquats32[0] / 1073741824.0f; //w
-	revquat[1]=(float)revquats32[1] / 1073741824.0f; //x
-	revquat[2]=(float)revquats32[2] / 1073741824.0f; //y
-	revquat[3]=(float)revquats32[3] / 1073741824.0f; //z
-
+		revquats32=(int*)(&(tembyte[0])+2);
+		tQuat[0]=(float)revquats32[0] / -1073741824.0f; //w
+		tQuat[1]=(float)revquats32[1] / -1073741824.0f; //x
+		tQuat[2]=(float)revquats32[3] / -1073741824.0f; //y
+		tQuat[3]=(float)revquats32[2] / 1073741824.0f; //z
 	/*
 
 	tempp[0] = ((float)BitConverter.ToInt32(rawBuf, 6) / 1073741824.0f);
@@ -619,10 +623,33 @@ float * CRS232::GetVRMat()
 	tempp[2] = ((float)BitConverter.ToInt32(rawBuf, 14) / 1073741824.0f);
 	tempp[3] = ((float)BitConverter.ToInt32(rawBuf, 2) / 1073741824.0f);
 	*/
+	}
+	else
+	{
+		tQuat[0]=1;
+		tQuat[1]=0;
+		tQuat[2]=0;
+		tQuat[3]=0;
+	}
+}
 
+float * CRS232::GetVRMat()
+{
+	float revquat[4];
+
+
+	GetRAWFloat(revquat);
 
 	__m128 Quat=_mm_set_ps(revquat[0],revquat[3],revquat[2],revquat[1]);
 
+	Easy_quat_to_matrix(mat,Quat);
+	return mat[0].m128_f32;
+}
+
+
+float * CRS232::GetVRMat(float * tQuat)
+{
+	__m128 Quat=_mm_set_ps(tQuat[0],tQuat[3],tQuat[2],tQuat[1]);
 	Easy_quat_to_matrix(mat,Quat);
 	return mat[0].m128_f32;
 }
